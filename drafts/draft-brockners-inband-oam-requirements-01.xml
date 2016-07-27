@@ -30,6 +30,127 @@
 <!ENTITY I-D.SPUD SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
+<!-- Comments received 
+From Jen Linkova:
+1) You are saying:
+"In-band mechanisms also don't suffer from implementations, where
+probe traffic is handled differently (and potentially forwarded
+differently) by a router than regular data traffic"
+
+It is known that in most cases packets with HbH header are processed
+differently (CPU/slow path) so the proposed
+solution still might suffer from that problem...Do you think it worth
+mentioning?
+
+2) The Section 4.2.  MTU and Packet Size
+is a bit confusing.
+
+"Based on the transport protocol used MTU is discovered as a
+configuration parameter or Path MTU (PMTU) is discovered dynamically."
+
+PMTU can be discovered by a host which sends packet. The intermediate
+routers (ingress routers of OAM domain) can not discover PMTU as it
+would be reported to the host which sends the packet.
+
+"Example: IPv6 recommends PMTU discovery before data packets are sent
+to prevent packet fragmentation."
+
+You can not do PMTUD *before* sending packets. I assume you were going
+to say that IPv6 nodes are strongly recommended to *support* PMTUD -
+however they can just use MTU of 1280 instead and do not perform
+PMTUD.
+
+The next statement:
+"It specifies 1280 octets as the default PDU to be carried in a IPv6
+datagram.  " is also inaccurate. It is not a default. It is minimal
+MTU each IPv6 device must support (so any node could assume that
+1280-bytes packet is small enough to be delivered).
+If a node supports PMTUD it would use the interface MTU. If it does
+not it may use 1280.
+
+IMHO that text should be deleted and the section should say that if
+OAM data is inserted at the edge of the domain (by intermediate
+routers) than a) MTU on all interfaces with the domain (MTU_INT) MUST
+be >= the maximum MTU on any "external" facing interfaces (MTU_EXT)
+b) The total size of data to be recorded MUST be <= (MTU_INT - MTU_EXT).
+
+
+3)" REQ-G5: MTU size: With in-band OAM information added, packets should
+            not become larger than the path MTU."
+
+IMHO s/should/MUST/
+
+Obviously MTU and data insertion/removal seem to be the biggest issue.
+It would be nice to clarify what happens in the following situations:
+a) a packet containing OAM data can not be delivered for some reasons
+and ICMP needs to be sent back. If we expect the data to be removed -
+then it should be a requirement to support such data removal.
+b) what if - despite all effort - the ingress router can not add OAM
+data because of the resulting packet size exceeding MTU (it might be a
+misconfiguration on a router, for example or smth else. I understand
+that it should not happen with the administrative domain normally
+but....). Shall it send ICMP "packet too big" back?
+
+4)  REQ-H3 - do you consider a case when you need to record both
+logical and physical interfaces? (Looking at OAM-trace-type in another
+draft it seems that only one interface ID can be recorded...)
+
+
+Ignas Bagdonas:
+
+Some assorted comments on your document from the operational perspective.
+
+Overlay and underlay correlation - the information about this
+correlation is important to the operator itself, and arguable more
+important than to the customer. Ability to find out which underlay
+elements are shared by overlays and ability to know which overlays are
+mapped to the same underlay elements is needed for capacity and
+protection planning. The recorded path information does not directly
+answer those two questions, it would require actual overlay traffic to
+be present on all possible overlay paths, and even if present, it will
+provide reactive feedback. We can argue that this steps into the
+pre-deployment plannign aspects, however, it is a function of OAM
+mechanism to provide possible indications of how different topologies
+corrrelate and map.
+
+Layering awareness should be more than just for overlay and underlay.
+Underlay using a form of tunneling dataplanes for protection or traffic
+engineering is used in actual deployments. IOAM should be aware of
+different layers and be able to record selectively only for the layer of
+interest.
+
+SLA verification would be available for the normal conditions of working
+path, it would not be able to quantify the standby protection path.
+
+MTU and PMTUD operation on topologies that involve protection - it might
+be that the actual MTU of the link changes due to the protection or some
+other topology change event, and the MTU negotiated initially is no
+longer valid, therefore this would change the ability to transport the
+same amount of OAM information as on the previous topology.
+
+Identifiers used for IOAM and "traditional" (for a lack of better word)
+OAM should be the same ideally, equivalent if not possible otherwise.
+From practical deployment perspective IOAM will be used together with
+other OAM and instrumentation mechanisms, and having the same set of
+identifiers is definitely a strong requirement.
+
+Security considerations - while it is fashionable to leave it fir future
+versions of the documents ;-) it is in fact has severe importance. There
+must be a mechanism to control the flooding of IOAM-enabled packets
+within the device that is disjoint from the topology control (ie, if
+topology changes, it should not be assumed that IOAM enabled packets are
+allowed to egress on the new interface by default). Mechanisms must be
+in place to prevent injection of IOAM enabled packets into the domain.
+
+Overall this is a useful mechanism, it is not a replacement for out of
+band OAM mechanisms, nor should it be positioned as one. What should be
+ensured is the equivalence of IOAM and OOB OAM mechanisms protocol
+mechanics. It takes substantial amount of time for network operations to
+gain competence with new network instrumentation mechanisms, and if it
+reuses the majority of concepts and protocol mechanics, the adoption
+will see less resistance.
+
+-->
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
 <!-- For a complete list and description of processing instructions (PIs), 

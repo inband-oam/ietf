@@ -28,6 +28,33 @@
 <!ENTITY I-D.SPUD SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
+<!-- Comments received
+Jen Linkova
+
+0) "n=max number of nodes to be allocated"
+Shall it be "maximum number of nodes updating OAM data"?
+BTW I can not see 'n' used in the formulas later...
+
+1)
+"Based on PMTU advertised in the domain" - I do not think PMTU is
+advertized. MTU on a given link might be advertized somehow.
+But end2end PMTU is not advertized. Probably it should be re-phrased
+like 'calculated based on the packet size and the minimal MTU on all
+links within the OAM domain'
+
+2) "Let k = number of node data that can be allocated by this node" -
+IMHO "number of node data" sounds a bit confusing...at elast to me,
+but it might be just me...
+
+3) Procedures to insert/update IPv6 headers keep referring to
+Segments_Left field, while there is no such field in HbH header. Such
+field does exist in Routing Header, but not in HbH.
+
+In addition to that, in all those procedures one more step needs to be
+added: modifying "next header" value in the basic IPv6 header and in
+HbH header (after it is inserted).
+
+-->
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
 <!-- For a complete list and description of processing instructions (PIs), 

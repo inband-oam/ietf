@@ -27,6 +27,72 @@
 <!ENTITY I-D.SPUD SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
+<!-- Comments received
+Jen Linkova:
+
+1)
+
+"In-band OAM data is added to a packet on entering the in-band
+OAM-domain and is removed from the packet when exiting the domain. " -
+it might be just me but I found the terminology a bit confusing. When
+I read it for the first time I assumed that "data" means "data in OAM
+header. While it looks like by "data" you mean "the data container".
+Shall the container and the data be called differently?
+
+2) IMHO calling a node "in-band OAM encapsulating" is a bit confusing
+as at least for some cases there is no encapsulation. Maybe smth like
+'pop/push' MPLS terminology? Or would it confuse people even more?
+
+3) (sorry for nitpicking)
+
+"Hop_Lim:  1 octet Hop limit that is set to the TTL value in the
+packet at the node that records this data."
+s/TTL/TTL or Hop Limit/ - that field is called Hop Limit in IPv6, not TTL.
+
+
+Deepak Kumar:
+
+I believe just I-oam header should be placed flexibly, if network is l2/l3 leaf and traffic is within one data center then current format is fine.
+If traffic is going over L2 and L3 vxlan seperated, or Border Leaf, Data Center Interconnect I-oam header can come fixed byte inside data and configuration policy can determine this behavior if required.
+Now How to indicate if common OAM header is starting immediately or after Fixed byte, I will left to community. 
+Using single "O" bit is also fine for active OAM as we can look at two places if we use optional Fixed byte.
+
+As I-OAM is for real data it will be issue and they might not support that mode or getting extra bit in Datapath header will solve this issue.
+
+L2/L3 distributed scenario is currently deployed by operator.
+
+   In-band OAM header in VXLAN GPE header:
+ 
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Outer Ethernet Header                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Outer IP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Outer UDP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |R|R|Ver|I|P|R|O|          Reserved             | NP = i.b.OAM  |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+   |     Virtual Network Identifier (VNI)          | Reserved      |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+
+            Fixed Byte of Inner Packet Real Data (Optional)
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   | Type =i.b.OAM | i.b.OAM HDR len |  Reserved     | NP = IP/Eth |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+iOAM
+   |                     in-band OAM options                       |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |                                                               |
+   |                                                               |
+   |                     Payload + Padding (L2/L3/ESP/...)         |
+   |                                                               |
+   |                                                               |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+-->
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
 <!-- For a complete list and description of processing instructions (PIs), 
