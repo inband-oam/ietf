@@ -532,7 +532,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             is public and need not be kept secret. The nodes can be
             pre-configured with the non-constant coefficients (for example, 7
             and 10 in this case could be configured through the Controller on
-            each node).</t>
+            each node). So precisely only RND value changes per packet and is public 
+			and the rest of the non-constant co-efficients of POLY-2 kept secret.</t>
           </section>
 
           <section title="Reconstruction">
@@ -613,14 +614,16 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             private polynomials are picked such that the x component of the
             points match. This lends to the LPC values which are used to
             calculate the cumulative value CML to be constant. Note that the
-            LPC are only depending on the x components. The can be computed at
+            LPC are only depending on the x components. They can be computed at
             the controller and communicated to the nodes. Otherwise, one would
             need to distributed the x components to all the nodes.</t>
 
             <t>A pre-evaluated portion of the public polynomial for each of
             the nodes is calculated and added to the POT-profile. Without this
             all the coefficients of the public polynomial had to be added to
-            the POT profile and each node had to evaluate them.</t>
+            the POT profile and each node had to evaluate them. As stated before,
+			the public portion is only the constant co-efficent RND value, the 
+			pre-evaluated portion for each nodes should be kept secret as well.</t>
 
             <t>To provide flexibility on the size of the cumulative and random
             numbers carried in the POT data a field to indicate this is shared
@@ -928,27 +931,38 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             re-construct the k degree polynomial (POLY-3) only when all the
             points are correctly retrieved.</t>
 
-            <t>The Shares of the SECRET (i.e., points on POLY-1 ) are kept
+            <t>The Shares of the SECRET (i.e., points on POLY-1,2 and LPC ) are kept
             secret by individual nodes.</t>
           </list> An attacker bypassing a few nodes will miss adding a
         respective point on POLY-1 to corresponding point on POLY-2 , thus the
         verifier cannot construct POLY-3 for cross verification.</t>
+		
+		<t>Also it is highly recommended that different polynomials should be used
+		as POLY-1 across different paths, traffic profiles or service chains. </t>
       </section>
 
+	  <section title="Cryptanalysis">
+		  <t>A passive attacker could try to harvest the POT data (i.e CML, RND values) in order to 
+			  determine the configured secrets. Subsequently two types of differential analysis 
+			  for guessing the secrets could be done.
+			  <list style="symbols">
+			  <t>Inter-Node: A passive attacker observing CML values across nodes (i.e., as the
+				  packets entering and leaving), cannot perform differential analysis to
+				  construct the points on POLY-1 as the operations are done modulo prime.  </t>
+			  <t>Inter-Packets: Doing differential analysis across packets could be mitigated with
+				  POLY-2 being be random. </t>
+		  	</list></t>
+	  </section>
       <section title="Anti Replay">
-        <t>A passive attacker observing CML values across nodes (i.e., as the
-        packets entering and leaving), cannot perform differential analysis to
-        construct the points on POLY-1 as the operations are done modulo
-        prime. The solution approach is flexible, one could use different
-        points on POLY-1 or different polynomials as POLY-1 across different
-        paths, traffic profiles or service chains.</t>
-
-        <t>Doing differential analysis across packets could be mitigated with
-        POLY-2 being be random. Further an attacker could reuse a set of RND
-        and all the intermediate CML values to bypass certain nodes in later
+        <t>A passive attacker could reuse a set of RND
+        and the intermediate CML values to bypass certain nodes in later
         packets. Such attacks could be avoided by carefully choosing POLY-2 as
         a timestamp concatenated with a random string. The verifier could use
         the timestamp to mitigate reuse within a time window.</t>
+      </section>
+	  
+      <section title="Anti Preplay">
+        <t>A active attacker .</t>
       </section>
 
       <section title="Anti Tampering">
