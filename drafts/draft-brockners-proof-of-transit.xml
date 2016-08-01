@@ -931,8 +931,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             re-construct the k degree polynomial (POLY-3) only when all the
             points are correctly retrieved.</t>
 
-            <t>The Shares of the SECRET (i.e., points on POLY-1,2 and LPC ) are kept
-            secret by individual nodes.</t>
+            <t>Precisely three values are kept secret by individual nodes.
+			 Share of SECRET (i.e. points on POLY-1), Share of POLY-2, LPC, P.
+		 	 Note that only constant coefficient, RND, of POLY-2 is public.
+			 x values and non-constant coefficient of POLY-2 are secret</t>
           </list> An attacker bypassing a few nodes will miss adding a
         respective point on POLY-1 to corresponding point on POLY-2 , thus the
         verifier cannot construct POLY-3 for cross verification.</t>
@@ -948,21 +950,43 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 			  <list style="symbols">
 			  <t>Inter-Node: A passive attacker observing CML values across nodes (i.e., as the
 				  packets entering and leaving), cannot perform differential analysis to
-				  construct the points on POLY-1 as the operations are done modulo prime.  </t>
-			  <t>Inter-Packets: Doing differential analysis across packets could be mitigated with
-				  POLY-2 being be random. </t>
-		  	</list></t>
+				  construct the points on POLY-1. This is because at each point there are four
+				  unknowns (i.e. Share(POLY-1), Share(Poly-2) LPC and prime number P) and 
+				  three known values (i.e. RND, CML-before, CML-after). </t>
+			  <t>Inter-Packets: A passive attacker could observe CML values across packets (i.e.,
+				  values of PKT-1 and  subsequent PKT-2), in order to predict the secrets. 
+				  Differential analysis across packets could be mitigated using a good PRNG for generating 
+				  RND. Note that if constant coefficient is a sequence number than CML values become quite
+				  predictable and the scheme would be broken</t>
+		  	</list>
+			</t>
 	  </section>
       <section title="Anti Replay">
-        <t>A passive attacker could reuse a set of RND
+        <t>A passive attacker could reuse a set of older RND
         and the intermediate CML values to bypass certain nodes in later
         packets. Such attacks could be avoided by carefully choosing POLY-2 as
-        a timestamp concatenated with a random string. The verifier could use
-        the timestamp to mitigate reuse within a time window.</t>
+        a (SEQ_NO + RND). For example if 64 bits are being used for POLY-2 then 
+		first 16 bits could be a sequence number SEQ_NO and next 48 bits could be a random number.
+		</t>
+		<t>Subsequently, the verifier could use the SEQ_NO bits to run classic anti-replay techniques like 
+			sliding window used in IPSEC. The verifier could buffer upto 2^16 packets as a sliding window. 
+			Packets arriving with a higher SEQ_NO than current buffer could be flagged legitimate. Packets 
+			arriving with a lower SEQ_NO than current buffer could be flagged as suspicious. </t>
+			
+			<t>For all practical purposes in the rest of the document by RND we mean SEQ_NO + RND to keep it 
+				simple </t>
       </section>
 	  
       <section title="Anti Preplay">
-        <t>A active attacker .</t>
+        <t>An active attacker could try to perform a man-in-the-middle (MITM) attack by extracting the POT of 
+			PKT-1 and using it in PKT-2. Subsequently attacker drops the PKT-1 in order to avoid duplicate POT
+			values reaching the verifier. Although such attacks are highly difficult to launch, below 
+			recommendations are provided </t>
+	  <list style="symbols">
+	  <t>Any such MITM attack would add delay in the packets arrival at verifier. Carefully chosing the SEQ_NO 
+		  could thwart such attacks, as such crafted packets would be out of sliding window due to delay. </t>
+	  <t>Also integrity checks performed at higher level protocols using POT schemes could identify that the packets were tampered</t>
+  	</list>
       </section>
 
       <section title="Anti Tampering">
