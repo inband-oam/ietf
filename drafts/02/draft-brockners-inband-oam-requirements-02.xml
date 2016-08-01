@@ -1,0 +1,1173 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced. 
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC4884 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4884.xml">
+<!ENTITY RFC4950 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.4950.xml">
+<!ENTITY RFC5837 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5837.xml">
+<!ENTITY RFC7665 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7665.xml">
+<!ENTITY RFC7872 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7872.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC6830 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6830.xml">
+<!ENTITY RFC7112 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7112.xml">
+<!ENTITY RFC6833 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6833.xml">
+<!ENTITY RFC7276 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7276.xml">
+<!ENTITY RFC2460 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2460.xml">
+<!ENTITY RFC791 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC6564 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
+<!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
+<!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-6man-pdm-option.xml">
+<!ENTITY I-D.brockners-lisp-sr SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-lisp-sr.xml">
+<!ENTITY I-D.hildebrand-spud-prototype SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY I-D.ietf-sfc-nsh SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-nsh.xml">
+<!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
+<!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.SPUD SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+]>
+<!-- Comments received 
+From Jen Linkova:
+1) You are saying:
+"In-band mechanisms also don't suffer from implementations, where
+probe traffic is handled differently (and potentially forwarded
+differently) by a router than regular data traffic"
+
+It is known that in most cases packets with HbH header are processed
+differently (CPU/slow path) so the proposed
+solution still might suffer from that problem...Do you think it worth
+mentioning?
+
+2) The Section 4.2.  MTU and Packet Size
+is a bit confusing.
+
+"Based on the transport protocol used MTU is discovered as a
+configuration parameter or Path MTU (PMTU) is discovered dynamically."
+
+PMTU can be discovered by a host which sends packet. The intermediate
+routers (ingress routers of OAM domain) can not discover PMTU as it
+would be reported to the host which sends the packet.
+
+"Example: IPv6 recommends PMTU discovery before data packets are sent
+to prevent packet fragmentation."
+
+You can not do PMTUD *before* sending packets. I assume you were going
+to say that IPv6 nodes are strongly recommended to *support* PMTUD -
+however they can just use MTU of 1280 instead and do not perform
+PMTUD.
+
+The next statement:
+"It specifies 1280 octets as the default PDU to be carried in a IPv6
+datagram.  " is also inaccurate. It is not a default. It is minimal
+MTU each IPv6 device must support (so any node could assume that
+1280-bytes packet is small enough to be delivered).
+If a node supports PMTUD it would use the interface MTU. If it does
+not it may use 1280.
+
+IMHO that text should be deleted and the section should say that if
+OAM data is inserted at the edge of the domain (by intermediate
+routers) than a) MTU on all interfaces with the domain (MTU_INT) MUST
+be >= the maximum MTU on any "external" facing interfaces (MTU_EXT)
+b) The total size of data to be recorded MUST be <= (MTU_INT - MTU_EXT).
+
+
+3)" REQ-G5: MTU size: With in-band OAM information added, packets should
+            not become larger than the path MTU."
+
+IMHO s/should/MUST/
+
+Obviously MTU and data insertion/removal seem to be the biggest issue.
+It would be nice to clarify what happens in the following situations:
+a) a packet containing OAM data can not be delivered for some reasons
+and ICMP needs to be sent back. If we expect the data to be removed -
+then it should be a requirement to support such data removal.
+b) what if - despite all effort - the ingress router can not add OAM
+data because of the resulting packet size exceeding MTU (it might be a
+misconfiguration on a router, for example or smth else. I understand
+that it should not happen with the administrative domain normally
+but....). Shall it send ICMP "packet too big" back?
+
+4)  REQ-H3 - do you consider a case when you need to record both
+logical and physical interfaces? (Looking at OAM-trace-type in another
+draft it seems that only one interface ID can be recorded...)
+
+
+Ignas Bagdonas:
+
+Some assorted comments on your document from the operational perspective.
+
+Overlay and underlay correlation - the information about this
+correlation is important to the operator itself, and arguable more
+important than to the customer. Ability to find out which underlay
+elements are shared by overlays and ability to know which overlays are
+mapped to the same underlay elements is needed for capacity and
+protection planning. The recorded path information does not directly
+answer those two questions, it would require actual overlay traffic to
+be present on all possible overlay paths, and even if present, it will
+provide reactive feedback. We can argue that this steps into the
+pre-deployment plannign aspects, however, it is a function of OAM
+mechanism to provide possible indications of how different topologies
+corrrelate and map.
+
+Layering awareness should be more than just for overlay and underlay.
+Underlay using a form of tunneling dataplanes for protection or traffic
+engineering is used in actual deployments. IOAM should be aware of
+different layers and be able to record selectively only for the layer of
+interest.
+
+SLA verification would be available for the normal conditions of working
+path, it would not be able to quantify the standby protection path.
+
+MTU and PMTUD operation on topologies that involve protection - it might
+be that the actual MTU of the link changes due to the protection or some
+other topology change event, and the MTU negotiated initially is no
+longer valid, therefore this would change the ability to transport the
+same amount of OAM information as on the previous topology.
+
+Identifiers used for IOAM and "traditional" (for a lack of better word)
+OAM should be the same ideally, equivalent if not possible otherwise.
+From practical deployment perspective IOAM will be used together with
+other OAM and instrumentation mechanisms, and having the same set of
+identifiers is definitely a strong requirement.
+
+Security considerations - while it is fashionable to leave it fir future
+versions of the documents ;-) it is in fact has severe importance. There
+must be a mechanism to control the flooding of IOAM-enabled packets
+within the device that is disjoint from the topology control (ie, if
+topology changes, it should not be assumed that IOAM enabled packets are
+allowed to egress on the new interface by default). Mechanisms must be
+in place to prevent injection of IOAM enabled packets into the domain.
+
+Overall this is a useful mechanism, it is not a replacement for out of
+band OAM mechanisms, nor should it be positioned as one. What should be
+ensured is the equivalence of IOAM and OOB OAM mechanisms protocol
+mechanics. It takes substantial amount of time for network operations to
+gain competence with new network instrumentation mechanisms, and if it
+reuses the majority of concepts and protocol mechanics, the adoption
+will see less resistance.
+
+-->
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs), 
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space 
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="info" docName="draft-brockners-inband-oam-requirements-01"
+     ipr="trust200902">
+  <!-- ipr="full3978"-->
+
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the 
+         full title is longer than 39 characters -->
+
+    <title abbrev="In-band OAM Requirements">Requirements for In-band
+    OAM</title>
+
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+
+    <!-- Another author who claims to be an editor -->
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Sashank Dara" initials="S." surname="Dara">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>sadara@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>7200-11 Kit Creek Road</street>
+
+          <city>Research Triangle Park</city>
+
+          <region>NC</region>
+
+          <code>27709</code>
+
+          <country>United States</country>
+        </postal>
+
+        <email>cpignata@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+      <organization>RtBrick Inc.</organization>
+
+      <address>
+        <email>hannes@rtbrick.com</email>
+      </address>
+    </author>
+
+    <author fullname="John Leddy" initials="J." surname="Leddy">
+      <organization abbrev="Comcast">Comcast</organization>
+
+      <address>
+        <email>John_Leddy@cable.comcast.com</email>
+      </address>
+    </author>
+
+    <author fullname="Stephen Youell" initials="S." surname="Youell">
+      <organization abbrev="JMPC">JP Morgan Chase</organization>
+
+      <address>
+        <postal>
+          <street>25 Bank Street</street>
+
+          <city>London</city>
+
+          <code>E14 5JP</code>
+
+          <country>United Kingdom</country>
+        </postal>
+
+        <email>stephen.youell@jpmorgan.com</email>
+      </address>
+    </author>
+
+    <date day="18" month="July" year="2016"/>
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
+         in the current day for you. If only the current year is specified, xml2rfc will fill 
+	 in the current day and month for you. If the year is not the current one, it is 
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the 
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to 
+	 specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>ops</area>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.  
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>Telemetry, Tracing,</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>This document discusses the motivation and requirements for including
+      specific operational and telemetry information into data packets while
+      the data packet traverses a path between two points in the network. This
+      method is referred to as "in-band" Operations, Administration, and
+      Maintenance (OAM), given that the OAM information is carried with the
+      data packets as opposed to in "out-of-band" packets dedicated to OAM.
+      In-band OAM complements other OAM mechanisms which use dedicated probe
+      packets to convey OAM information.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction" toc="default">
+      <t>This document discusses requirements for "in-band" Operations,
+      Administration, and Maintenance (OAM) mechanisms. "In-band" OAM means to
+      record OAM and telemetry information within the data packet while the
+      data packet traverses a network or a particular network domain. The term
+      "in-band" refers to the fact that the OAM and telemetry data is carried
+      within data packets rather than being sent within packets specifically
+      dedicated to OAM. In-band OAM mechanisms, which are sometimes also
+      referred to as embedded network telemetry are a current topic of
+      discussion. In-band network telemetry has been defined for P4 <xref
+      target="P4"/>. The SPUD prototype <xref
+      target="I-D.hildebrand-spud-prototype"/> uses a similar logic that
+      allows network devices on the path between endpoints to participate
+      explicitly in the tube outside the end-to-end context. Even the IPv4
+      route-record option defined in <xref target="RFC0791"/> can be
+      considered an in-band OAM mechanism. In-band OAM complements
+      "out-of-band" mechanisms such as ping or traceroute, or more recent
+      active probing mechanisms, as described in <xref
+      target="I-D.lapukhov-dataplane-probe"/>. In-band OAM mechanisms can be
+      leveraged where current out-of-band mechanisms do not apply or do not
+      offer the desired characteristics or requirements, such as proving that
+      a certain set of traffic takes a pre-defined path, strict congruency is
+      desired, checking service level agreements for the live data traffic,
+      detailed statistics on traffic distribution paths in networks that
+      distribute traffic across multiple paths, or scenarios where probe
+      traffic is potentially handled differently from regular data traffic by
+      the network devices. <xref target="RFC7276"/> presents an overview of
+      OAM tools.</t>
+
+      <t>Compared to probably the most basic example of "in-band OAM" which is
+      IPv4 route recording <xref target="RFC0791"/>, an in-band OAM approach
+      has the following capabilities:<list style="letters">
+          <t>A flexible data format to allow different types of information to
+          be captured as part of an in-band OAM operation, including not only
+          path tracing information, but additional operational and telemetry
+          information such as timestamps, sequence numbers, or even generic
+          data such as queue size, geo-location of the node that forwarded the
+          packet, etc.</t>
+
+          <t>A data format to express node as well as link identifiers to
+          record the path a packet takes with a fixed amount of added
+          data.</t>
+
+          <t>The ability to detect whether any nodes were skipped while
+          recording in-band OAM information (i.e., in-band OAM is not
+          supported or not enabled on those nodes).</t>
+
+          <t>The ability to actively process information in the packet, for
+          example to prove in a cryptographically secure way that a packet
+          really took a pre-defined path using some traffic steering method
+          such as service chaining or traffic engineering.</t>
+
+          <t>The ability to include OAM data beyond simple path information,
+          such as timestamps or even generic data of a particular use
+          case.</t>
+
+          <t>The ability to include OAM data in various different transport
+          protocols.</t>
+        </list></t>
+    </section>
+
+    <section anchor="Conventions" title="Conventions">
+      <!--
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119"/>.</t>
+-->
+
+      <t>Abbreviations used in this document:</t>
+
+      <t><list hangIndent="11" style="hanging">
+          <t hangText="ECMP:">Equal Cost Multi-Path</t>
+
+          <t hangText="MTU:">Maximum Transmit Unit</t>
+
+          <t hangText="NFV:">Network Function Virtualization</t>
+
+          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="PMTU:">Path MTU</t>
+
+          <t hangText="SLA:">Service Level Agreement</t>
+
+          <t hangText="SFC:">Service Function Chain</t>
+
+          <t hangText="SR:">Segment Routing</t>
+
+          <!--
+
+          <t hangText="SID:">Segment Identifier</t>
+
+          <t hangText="NSH:">Network Service Header</t>
+
+          <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
+             Generic Protocol Extension</t>
+
+-->
+        </list></t>
+
+      <t>This document defines in-band Operations, Administration, and
+      Maintenance (in-band OAM), as the subset in which OAM information is
+      carried along with data packets. This is as opposed to "out-of-band
+      OAM", where specific packets are dedicated to carrying OAM
+      information.</t>
+    </section>
+
+    <section title="Motivation for In-band OAM">
+      <t>In several scenarios it is beneficial to make information about which
+      path a packet took through the network available to the operator. This
+      includes not only tasks like debugging, troubleshooting, as well as
+      network planning and network optimization but also policy or service
+      level agreement compliance checks. This section discusses the motivation
+      to introduce new methods for enhanced in-band network diagnostics.</t>
+
+      <section title="Path Congruency Issues with Dedicated OAM Packets">
+        <t>Mechanisms which add tracing information to the regular data
+        traffic, sometimes also referred to as "in-band" or "passive OAM" can
+        complement active, probe-based mechanisms such as ping or traceroute,
+        which are sometimes considered as "out-of-band", because the messages
+        are transported independently from regular data traffic. "In-band"
+        mechanisms do not require extra packets to be sent and hence don't
+        change the packet traffic mix within the network. Traceroute and ping
+        for example use ICMP messages: New packets are injected to get tracing
+        information. Those add to the number of messages in a network, which
+        already might be highly loaded or suffering performance issues for a
+        particular path or traffic type.</t>
+
+        <t>Packet scheduling algorithms, especially for balancing traffic
+        across equal cost paths or links, often leverage information contained
+        within the packet, such as protocol number, IP-address or MAC-address.
+        Probe packets would thus either need to be sent from the exact same
+        endpoints with the exact same parameters, or probe packets would need
+        to be artificially constructed as "fake" packets and inserted along
+        the path. Both approaches are often not feasible from an operational
+        perspective, be it that access to the end-system is not feasible, or
+        that the diversity of parameters and associated probe packets to be
+        created is simply too large. An in-band mechanism is an alternative in
+        those cases.</t>
+
+        <t>In-band mechanisms also don't suffer from implementations, where
+        probe traffic is handled differently (and potentially forwarded
+        differently) by a router than regular data traffic.</t>
+      </section>
+
+      <section title="Results Sent to a System Other Than the Sender">
+        <t>Traditional ping and traceroute tools return the OAM results to the
+        sender of the probe. Even when the ICMP messages that are used with
+        these tools are enhanced, and additional telemetry is collected (e.g.,
+        ICMP Multi-Part <xref target="RFC4884"/> supporting MPLS information
+        <xref target="RFC4950"/>, Interface and Next-Hop Identification <xref
+        target="RFC5837"/>, etc.), it would be advantageous to separate the
+        sending of an OAM probe from the receiving of the telemetry data. In
+        this context, it is desired to not assume there is a bidirectional
+        working path.</t>
+      </section>
+
+      <section title="Overlay and Underlay Correlation">
+        <t>Several network deployments leverage tunneling mechanisms to create
+        overlay or service-layer networks. Examples include VXLAN-GPE, GRE, or
+        LISP. One often observed attribute of overlay networks is that they do
+        not offer the user of the overlay any insight into the underlay
+        network. This means that the path that a particular tunneled packet
+        takes, nor other operational details such as the per-hop delay/jitter
+        in the underlay are visible to the user of the overlay network, giving
+        rise to diagnosis and debugging challenges in case of connectivity or
+        performance issues. The scope of OAM tools like ping or traceroute is
+        limited to either the overlay or the underlay which means that the
+        user of the overlay has typically no access to OAM in the underlay,
+        unless specific operational procedures are put in place. With in-band
+        OAM the operator of the underlay can offer details of the connectivity
+        in the underlay to the user of the overlay. The operator of the egress
+        tunnel router could choose to share the recorded information about the
+        path with the user of the overlay.</t>
+
+        <t>Coupled with mechanisms such as Segment Routing (SR) <xref
+        target="I-D.ietf-spring-segment-routing"/>, overlay network and
+        underlay network can be more tightly coupled: The user of the overlay
+        has detailed diagnostic information available in case of failure
+        conditions. The user of the overlay can also use the path recording
+        information as input to traffic steering or traffic engineering
+        mechanisms, to for example achieve path symmetry for the traffic
+        between two endpoints. <xref target="I-D.brockners-lisp-sr"/> is an
+        example for how these methods can be applied to LISP.</t>
+      </section>
+
+      <section title="SLA Verification">
+        <t>In-band OAM can help users of an overlay-service to verify that
+        negotiated SLAs for the real traffic are met by the underlay network
+        provider. Different from solutions which rely on active probes to test
+        an SLA, in-band OAM based mechanisms avoid wrong interpretations and
+        "cheating", which can happen if the probe traffic that is used to
+        perform SLA-check is prioritized by the network provider of the
+        underlay.</t>
+      </section>
+
+      <section title="Analytics and Diagnostics">
+        <t>Network planners and operators benefit from knowledge of the actual
+        traffic distribution in the network. When deriving an overall network
+        connectivity traffic matrix one typically needs to correlate data
+        gathered from each individual devices in the network. If the path of a
+        packet is recorded while the packet is forwarded, the entire path that
+        a packet took through the network is available to the egress system.
+        This obviates the need to retrieve individual traffic statistics from
+        every device in the network and correlate those statistics, or employ
+        other mechanisms such as leveraging traffic engineering with
+        null-bandwidth tunnels just to retrieve the appropriate statistics to
+        generate the traffic matrix.</t>
+
+        <t>In addition, with individual path tracing, information is available
+        at packet level granularity, rather than only at aggregate level - as
+        is usually the case with IPFIX-style methods which employ flow-filters
+        at the network elements. Data-center networks which use equal-cost
+        multipath (ECMP) forwarding are one example where detailed statistics
+        on flow distribution in the network are highly desired. If a network
+        supports ECMP, one can create detailed statistics for the different
+        paths packets take through the network at the egress system, without a
+        need to correlate/aggregate statistics from every router in the
+        system. Transit devices are off-loaded from the task of gathering
+        packet statistics.</t>
+      </section>
+
+      <section title="Frame Replication/Elimination Decision for Bi-casting/Active-active Networks">
+        <t>Bandwidth- and power-constrained, time-sensitive, or
+        loss-intolerant networks (e.g., networks for industry
+        automation/control, health care) require efficient OAM methods to
+        decide when to replicate packets to a secondary path in order to keep
+        the loss/error-rate for the receiver at a tolerable level - and also
+        when to stop replication and eliminate the redundant flow. Many IoT
+        networks are time sensitive and cannot leverage automatic
+        retransmission requests (ARQ) to cope with transmission errors or lost
+        packets. Transmitting the data over multiple disparate paths (often
+        called bi-casting or live-live) is a method used to reduce the error
+        rate observed by the receiver. TSN receive a lot of attention from the
+        manufacturing industry as shown by a various standardization
+        activities and industry forums being formed (see e.g., IETF 6TiSCH,
+        IEEE P802.1CB, AVnu).</t>
+      </section>
+
+      <section anchor="usecase_proof_of_transit" title="Proof of Transit">
+        <t>Several deployments use traffic engineering, policy routing,
+        segment routing or Service Function Chaining (SFC) <xref
+        target="RFC7665"/> to steer packets through a specific set of nodes.
+        In certain cases regulatory obligations or a compliance policy require
+        to prove that all packets that are supposed to follow a specific path
+        are indeed being forwarded across the exact set of nodes specified. If
+        a packet flow is supposed to go through a series of service functions
+        or network nodes, it has to be proven that all packets of the flow
+        actually went through the service chain or collection of nodes
+        specified by the policy. In case the packets of a flow weren't
+        appropriately processed, a verification device would be required to
+        identify the policy violation and take corresponding actions (e.g.,
+        drop or redirect the packet, send an alert etc.) corresponding to the
+        policy. In today's deployments, the proof that a packet traversed a
+        particular service chain is typically delivered in an indirect way:
+        Service appliances and network forwarding are in different trust
+        domains. Physical hand-off-points are defined between these trust
+        domains (i.e., physical interfaces). Or in other terms, in the
+        "network forwarding domain" things are wired up in a way that traffic
+        is delivered to the ingress interface of a service appliance and
+        received back from an egress interface of a service appliance. This
+        "wiring" is verified and trusted. The evolution to Network Function
+        Virtualization (NFV) and modern service chaining concepts (using
+        technologies such as LISP, NSH, Segment Routing, etc.) blurs the line
+        between the different trust domains, because the hand-off-points are
+        no longer clearly defined physical interfaces, but are virtual
+        interfaces. Because of that very reason, networks operators require
+        that different trust layers not to be mixed in the same device. For an
+        NFV scenario a different proof is required. Offering a proof that a
+        packet traversed a specific set of service functions would allow
+        network operators to move away from the above described indirect
+        methods of proving that a service chain is in place for a particular
+        application.</t>
+
+        <t>Deployed service chains without the presence of a "proof of
+        transit" mechanism are typically operated as fail-open system: The
+        packets that arrive at the end of a service chain are processed.
+        Adding "proof of transit" capabilites to a service chain allows an
+        operator to turn a fail-open system into a fail-close system, i.e.
+        packets that did not properly traverse the service chain can be
+        blocked.</t>
+
+        <t>A solution approach could be based on OAM data which is added to
+        every packet for achieving Proof Of Transit. The OAM data is updated
+        at every hop and is used to verify whether a packet traversed all
+        required nodes. When the verifier receives each packet, it can
+        validate whether the packet traversed the service chain correctly. The
+        detailed mechanisms used for path verification along with the
+        procedures applied to the OAM data carried in the packet for path
+        verification are beyond the scope of this document. Details are
+        addressed in <xref target="draft-brockners-proof-of-transit"/>. In
+        this document the term "proof" refers to a discrete set of bits that
+        represents an integer or string carried as OAM data. The OAM data is
+        used to verify whether a packet traversed the nodes it is supposed to
+        traverse.</t>
+      </section>
+
+      <section title="Use Cases">
+        <t>In-band OAM could be leveraged for several use cases,
+        including:<list style="symbols">
+            <t>Traffic Matrix: Derive the network traffic matrix: Traffic for
+            a given time interval between any two edge nodes of a given
+            domain. Could be performed for all traffic or per QoS-class.</t>
+
+            <t>Flow Debugging: Discover which path(s) a particular set of
+            traffic (identified by an n-tuple) takes in the network. Such a
+            procedure is particularly useful in case traffic is balanced
+            across multiple paths, like with link aggregation (LACP) or equal
+            cost multi-pathing (ECMP).</t>
+
+            <t>Loss Statistics per Path: Retrieve loss statistics per flow and
+            path in the network.</t>
+
+            <t>Path Heat Maps: Discover highly utilized links in the
+            network.</t>
+
+            <t>Trend Analysis on Traffic Patterns: Analyze if (and if so how)
+            the forwarding path for a specific set of traffic changes over
+            time (can give hints to routing issues, unstable links etc.).</t>
+
+            <t>Network Delay Distribution: Show delay distribution across
+            network by node or links. If enabled per application or for a
+            specific flow then display the path taken along with the delay
+            incurred at every hop.</t>
+
+            <t>SLA Verification: Verify that a negotiated service level
+            agreement (SLA), e.g., for packet drop rates or delay/jitter is
+            conformed to by the actual traffic.</t>
+
+            <t>Low-power Networks: Include application level OAM information
+            (e.g., battery charge level, cache or buffer fill level) into data
+            traffic to avoid sending extra OAM traffic which incur an extra
+            cost on the devices. Using the battery charge level as example,
+            one could avoid sending extra OAM packets just to communicate
+            battery health, and as such would save battery on sensors.</t>
+
+            <t>Path Verification or Service Function Path Verification: Proof
+            and verification of packets traversing check points in the
+            network, where check points can be nodes in the network or service
+            functions.</t>
+
+            <t>Geo-location Policy: Network policy implemented based on which
+            path packets took. Example: Only if packets originated and stayed
+            within the trading-floor department, access to specific
+            applications or servers is granted.</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section title="Considerations for In-band OAM">
+      <t>The implementation of an in-band OAM mechanism needs to take several
+      considerations into account, including administrative boundaries, how
+      information is recorded, Maximum Transfer Unit (MTU), Path MTU discovery
+      and packet size, etc.</t>
+
+      <section anchor="type_of_iOAM_data"
+               title="Type of information to be recorded">
+        <t>The information gathered for in-band OAM can be categorized into
+        three main categories: Information with a per-hop scope, such as path
+        tracing; information which applies to a specific set of nodes, such as
+        path or service chain verification; information which only applies to
+        the edges of a domain, such as sequence numbers.</t>
+
+        <t><list style="symbols">
+            <t>"edge to edge": Information that needs to be shared between
+            network edges (the "edge" of a network could either be a host or a
+            domain edge device): Edge to edge data e.g., packet and octet
+            count of data entering a well-defined domain and leaving it is
+            helpful in building traffic matrix, sequence number (also called
+            &ldquo;path packet counters&rdquo;) is useful for the flow to
+            detect packet loss.</t>
+
+            <t>"selected hops": Information that applies to a specific set of
+            nodes only. In case of path verification, only the nodes which are
+            "check points" are required to interpret and update the
+            information in the packet.</t>
+
+            <t>"per hop": Information that is gathered at every hop along the
+            path a packet traverses within an administrative domain:<list
+                style="symbols">
+                <t>Hop by Hop information e.g., Nodes visited for path
+                tracing, Timestamps at each hop to find delays along the
+                path</t>
+
+                <t>Stats collection at each hop to optimize communication in
+                resource constrained networks e.g., Battery, CPU, memory
+                status of each node piggy backed in a data packet is useful in
+                low power lossy networks where network nodes are mostly asleep
+                and communication is expensive</t>
+              </list></t>
+          </list></t>
+      </section>
+
+      <section title="MTU and packet size">
+        <t>The recorded data at every hop may lead to packet size exceeding
+        the Maximum Transmit Unit (MTU). Based on the transport protocol used
+        MTU is discovered as a configuration parameter or Path MTU (PMTU) is
+        discovered dynamically. Example: IPv6 recommends PMTU discovery before
+        data packets are sent to prevent packet fragmentation. It specifies
+        1280 octets as the default PDU to be carried in a IPv6 datagram. A
+        detailed discussion of the implications of oversized IPv6 header
+        chains if found in <xref target="RFC7112"/>.</t>
+
+        <t>The Path MTU restricts the amount of data that can be recorded for
+        purpose of OAM within a data packet. The total size of data to be
+        recorded needs to be preset to avoid packet size exceeding the MTU. It
+        is recommended to pre-calculate and configures network devices to
+        limit the in-band OAM data that is attached to a packet.</t>
+      </section>
+
+      <section title="Administrative boundaries">
+        <t>There are several challenges in enabling in-band OAM in the public
+        Internet as well as in corporate/enterprise networks across
+        administrative domains, which include but are not limited to:</t>
+
+        <t><list style="symbols">
+            <t>Deployment dependent, the data fields that in-band OAM requires
+            as part of a specific transport protocol may not be supported
+            across administrative boundaries.</t>
+
+            <t>Current OAM implementations are often done in the slow path,
+            i.e., OAM packets are punted to router&rsquo;s CPU for processing.
+            This leads to performance and scaling issues and opens up routers
+            for attacks such as Denial of Service (DoS) attacks.</t>
+
+            <t>Discovery of network topology and details of the network
+            devices across administrative boundaries may open up attack
+            vectors compromising network security.</t>
+
+            <t>Specifically on IPv6: At the administrative boundaries IPv6
+            packets with extension headers are dropped for several reasons
+            described in <xref target="RFC7872"/>.</t>
+          </list></t>
+
+        <t>The following considerations will be discussed in a future version
+        of this document: If the packet is dropped due to the presence of the
+        in-band OAM; If the policy failure is treated as feature disablement
+        and any further recording is stopped but the packet itself is not
+        dropped, it may lead to every node in the path to make this policy
+        decision. </t>
+      </section>
+
+      <section title="Selective enablement">
+        <t>Deployment dependent, in-band OAM could either be used for all, or
+        only a subset of the overall traffic. While it might be desirable to
+        apply in-band OAM to all traffic and then selectively use the data
+        gathered in case needed, it might not always be feasible. Depending on
+        the forwarding infrastructure used, in-band OAM can have an impact on
+        forwarding performance. The SPUD prototype for example uses the notion
+        of "pipes" to describe the portion of the traffic that could be
+        subject to in-path inspection. Mechanisms to decide which traffic
+        would be subject to in-band OAM are outside the scope of this
+        document.</t>
+      </section>
+
+      <section title="Optimization of node and interface identifiers">
+        <t>Since packets have a finite maximum size, the data recording or
+        carrying capacity of one packet in which the in-band OAM meta data is
+        present is limited. In-band OAM should use its own dedicated namespace
+        (confined to the domain in-band OAM operates in) to represent node and
+        interface IDs to save space in the header. Generic representations of
+        node and interface identifiers which are globally unique (such as a
+        UUID) would consume significantly more bits of in-band OAM data.</t>
+      </section>
+
+      <section title="Loop communication path (IPv6-specifics)">
+        <t>When recorded data is required to be analyzed on a source node that
+        issues a packet and inserts in-band OAM data, the recorded data needs
+        to be carried back to the source node.</t>
+
+        <t>One way to carry the in-band OAM data back to the source is to
+        utilize an ICMP Echo Request/Reply (ping) or ICMPv6 Echo Request/Reply
+        (ping6) mechanism. In order to run the in-band OAM mechanism
+        appropriately on the ping/ping6 mechanism, the following two
+        operations should be implemented by the ping/ping6 target node:</t>
+
+        <t><list style="numbers">
+            <t>All of the in-band OAM fields would be copied from an Echo
+            Request message to an Echo Reply message.</t>
+
+            <t>The Hop Limit field of the IPv6 header of these messages would
+            be copied as a continuous sequence. Further considerations are
+            addressed in a future version of this document.</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section title="Requirements for In-band OAM Data Types">
+      <t>The above discussed use cases require different types of in-band OAM
+      data. This section details requirements for in-band OAM derived from the
+      discussion above.</t>
+
+      <section title="Generic Requirements">
+        <t><list style="format REQ-G%d:">
+            <t>Classification: It should be possible to enable in-band OAM on
+            a selected set of traffic. The selected set of traffic can also be
+            all traffic.</t>
+
+            <t>Scope: If in-band OAM is used only within a specific domain,
+            provisions need to be put in place to ensure that in-band OAM data
+            stays within the specific domain only.</t>
+
+            <t>Transport independence: Data formats for in-band OAM shall be
+            defined in a transport independent way. In-band OAM applies to a
+            variety of transport protocols. Encapsulations should be defined
+            how the generic data formats are carried by a specific
+            protocol.</t>
+
+            <t>Layering: It should be possible to have in-band OAM information
+            for different transport protocol layers be present in several
+            fields within a single packet. This could for example be the case
+            when tunnels are employed and in-band OAM information is to be
+            gathered for both the underlay as well as the overlay network.</t>
+
+            <t>MTU size: With in-band OAM information added, packets should
+            not become larger than the path MTU.</t>
+
+            <t>Data Structure Reusability: The data types and data formats
+            defined and used for in-band OAM ought to be reusable for
+            out-of-band OAM telemetry as well.</t>
+          </list></t>
+      </section>
+
+      <section title="In-band OAM Data with Per-hop Scope">
+        <t><list style="format REQ-H%d:">
+            <t>Missing nodes detection: Data shall be present that allows a
+            node to detect whether all nodes that should participate in
+            in-band OAM operations have indeed participated.</t>
+
+            <t>Node, instance or device identifier: Data shall be present that
+            allows to retrieve the identity of the entity reporting telemetry
+            information. The entity can be a device, or a subsystem/component
+            within a device. The latter will allow for packet tracing within a
+            device in much the same way as between devices.</t>
+
+            <t>Ingress interface identifier: Data shall be present that allows
+            the identification of the interface a particular packet was
+            received from. The interface can be a logical or physical
+            entity.</t>
+
+            <t>Egress interface identifier: Data shall be present that allows
+            the identification of the interface a particular packet was
+            forwarded to. Interface can be a logical or physical entity.</t>
+
+            <t>Time-related requirements<list style="format REQ-H5.%d:">
+                <t>Delay: Data shall be present that allows to retrieve the
+                delay between two or more points of interest within the
+                system. Those points can be within the same device or on
+                different devices.</t>
+
+                <t>Jitter: Data shall be present that allows to retrieve the
+                jitter between two or more points of interest within the
+                system. Those points can be within the same device or on
+                different devices.</t>
+
+                <t>Wall-clock time: Data shall be present that allows to
+                retrieve the wall-clock time visited a particular point of
+                interest in the system.</t>
+
+                <t>Time precision: The precision of the time related data
+                should be configurable. Use-case dependent, the required
+                precision could e.g., be nano-seconds, micro-seconds,
+                milli-seconds, or seconds.</t>
+              </list></t>
+
+            <t>Generic data records (like e.g., GPS/Geo-location information):
+            It should be possible to add user-defined OAM data at select hops
+            to the packet. The semantics of the data are defined by the
+            user.</t>
+          </list></t>
+      </section>
+
+      <section title="In-band OAM with Selected Hop Scope">
+        <t><list style="format REQ-S%d:">
+            <t>Proof of transit: Data shall be present which allows to
+            securely prove that a packet has visited or ore several particular
+            points of interest (i.e., a particular set of nodes). <list
+                style="format REQ-S1.%d:">
+                <t>In case "Shamir's secret sharing scheme" is used for proof
+                of transit, two data records, "random" and "cumulative" shall
+                be present. The number of bits used for "random" and
+                "cumulative" data records can vary between deployments and
+                should thus be configurable.</t>
+
+                <t>Enable a fail-open service chaining system to be converted
+                into a fail-closed service chaining system.</t>
+              </list></t>
+          </list></t>
+      </section>
+
+      <section title="In-band OAM with End-to-end Scope">
+        <t><list style="format REQ-E%d:">
+            <t>Sequence numbering:<list style="format REQ-E1.%d:">
+                <t>Reordering detection: It should be possible to detect
+                whether packets have been reordered while traversing an
+                in-band OAM domain.</t>
+
+                <t>Duplicates detection: It should be possible to detect
+                whether packets have been duplicated while traversing an
+                in-band OAM domain.</t>
+
+                <t>Detection of packet drops: It should be possible to detect
+                whether packets have been dropped while traversing an in-band
+                OAM domain.</t>
+              </list></t>
+          </list></t>
+      </section>
+    </section>
+
+    <!--
+    <section title="Manageability Considerations">
+      <t>Manageability considerations will be addressed &iacute;n a later
+      version of this document.</t>
+    </section>
+-->
+
+    <section anchor="Security"
+             title="Security Considerations and Requirements">
+      <t>General Security considerations will be addressed &iacute;n a later
+      version of this document. Security considerations for Proof of Transit
+      alone are discussed below.</t>
+
+      <section title="Proof of Transit">
+        <t>Threat Model: Attacks on the deployments could be due to malicious
+        administrators or accidental misconfigurations resulting in bypassing
+        of certain nodes. The solution approach should meet the following
+        requirements:</t>
+
+        <t><list style="format REQ-SEC%d:">
+            <t>Sound Proof of Transit: A valid and verifiable proof that the
+            packet definitively traversed through all the nodes as expected.
+            Probabilistic methods to achieve this should be avoided, as the
+            same could be exploited by an attacker.</t>
+
+            <t>Tampering of meta data: An active attacker should not be able
+            to insert or modify or delete meta data in whole or in parts and
+            bypass few (or all) nodes. Any deviation from the expected path
+            should be accurately determined.</t>
+
+            <t>Replay Attacks: A attacker (active/passive) should not be able
+            to reuse the proof of transit bits in the packet by observing the
+            OAM data in the packet, packet characteristics (like IP addresses,
+            octets transferred, timestamps) or even the proof bits themselves.
+            The solution approach should consider usage of these parameters
+            for deriving any secrets cautiously. Mitigating replay attacks
+            beyond a window of longer duration could be intractable to achieve
+            with fixed number of bits allocated for proof.</t>
+
+            <t>Recycle Secrets: Any configuration of the secrets (like
+            cryptographic keys, initialisation vectors etc.) either in the
+            controller or service functions should be reconfigurable. Solution
+            approach should enable controls, API calls etc. needed in order to
+            perform such recycling. It is desirable to provide recommendations
+            on the duration of rotation cycles needed for the secure
+            functioning of the overall system.</t>
+
+            <t>Secret storage and distribution: Secrets should be shared with
+            the devices over secure channels. Methods should be put in place
+            so that secrets cannot be retrieved by non authorized personnel
+            from the devices.</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>[RFC Editor: please remove this section prior to publication.]</t>
+
+      <t>This document has no IANA actions.</t>
+    </section>
+
+    <section title="Acknowledgements">
+      <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+      Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+      Nadahalli, and Andrew Yourtchenko for the comments and advice. This
+      document leverages and builds on top of several concepts described in
+      <xref target="draft-kitamura-ipv6-record-route"/>. The authors would
+      like to acknowledge the work done by the author Hiroshi Kitamura and
+      people involved in writing it.</t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <!-- References split into informative and normative -->
+
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
+     1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+     2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+        (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+
+     Both are cited textually in the same manner: by using xref elements.
+     If you use the PI option, xml2rfc will, by default, try to find included files in the same
+     directory as the including file. You can also define the XML_LIBRARY environment variable
+     with a value containing a set of directories to search.  These can be either in the local
+     filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+    <!--
+    <references title="Normative References">
+
+      &RFC2119;
+
+    </references>
+-->
+
+    <references title="Informative References">
+      &RFC791;
+
+      &RFC7665;
+
+      &RFC4884;
+
+      &RFC4950;
+
+      &RFC5837;
+
+      <!--
+      &RFC2460;
+      &I-D.ietf-sfc-nsh;
+      &I-D.ietf-6man-segment-routing-header;
+      &I-D.ietf-nvo3-vxlan-gpe;
+      &I-D.ietf-ippm-6man-pdm-option;
+-->
+
+      &I-D.ietf-spring-segment-routing;
+
+      &I-D.lapukhov-dataplane-probe;
+
+      <reference anchor="draft-kitamura-ipv6-record-route">
+        <front>
+          <title>Record Route for IPv6 (PR6),Hop-by-Hop Option
+          Extension</title>
+
+          <author fullname="H. Kitamura" initials="H" surname="Kitamura"/>
+
+          <date month="November" year="2000"/>
+        </front>
+      </reference>
+
+      &RFC7276;
+
+      &RFC7112;
+
+      <!--
+      <reference anchor="draft-brockners-inband-oam-transport">
+        <front>
+          <title>Encapsulations for in-band OAM</title>
+            <author initials="F." surname="Brockners" fullname="Frank Brockners">
+                <organization />
+            </author>
+            <author initials="S." surname="Bhandari" fullname="Shwetha Bhandari">
+                <organization />
+            </author>
+            <date month="July" day="8" year="2016"/>
+        </front>
+      </reference>
+-->
+
+      <reference anchor="draft-brockners-proof-of-transit">
+        <front>
+          <title>Proof of transit</title>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <author fullname="Sashank Dara" initials="S." surname="Dara">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
+        </front>
+      </reference>
+
+      <!--
+      <reference anchor="draft-brockners-inband-oam-data">
+        <front>
+          <title>Data Formats for in-band OAM</title>
+            <author initials="F." surname="Brockners" fullname="Frank Brockners">
+                <organization />
+            </author>
+            <author initials="S." surname="Bhandari" fullname="Shwetha Bhandari">
+                <organization />
+            </author>
+            <date month="July" day="8" year="2016"/>
+        </front>
+      </reference>
+-->
+
+      &I-D.brockners-lisp-sr;
+
+      &RFC7872;
+
+      &I-D.SPUD;
+
+      <reference anchor="P4">
+        <front>
+          <title>P4: In-band Network Telemetry (INT)</title>
+
+          <author fullname="Changhoon Kim" surname="Kim"/>
+
+          <date month="September" year="2015"/>
+        </front>
+      </reference>
+
+      <!--
+      <reference anchor="FD.io" target="https://fd.io/">
+        <front>
+          <title>Fast Data Project: FD.io</title>
+
+          <author/>
+
+          <date/>
+        </front>
+      </reference>
+-->
+    </references>
+  </back>
+</rfc>

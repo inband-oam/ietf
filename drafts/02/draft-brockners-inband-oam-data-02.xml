@@ -1,0 +1,938 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced. 
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC7665 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7665.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC6830 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6830.xml">
+<!ENTITY RFC7276 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7276.xml">
+<!ENTITY RFC7112 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7112.xml">
+<!ENTITY RFC6833 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6833.xml">
+<!ENTITY RFC2460 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2460.xml">
+<!ENTITY RFC791 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC6564 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
+<!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
+<!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-6man-pdm-option.xml">
+<!ENTITY I-D.gont-v6ops-ipv6-ehs-in-real-world SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.gont-v6ops-ipv6-ehs-in-real-world.xml">
+<!ENTITY I-D.brockners-lisp-sr SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-lisp-sr.xml">
+<!ENTITY I-D.hildebrand-spud-prototype SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY I-D.ietf-sfc-nsh SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-nsh.xml">
+<!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
+<!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.SPUD SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+]>
+<!-- Comments received
+Jen Linkova:
+
+1)
+
+"In-band OAM data is added to a packet on entering the in-band
+OAM-domain and is removed from the packet when exiting the domain. " -
+it might be just me but I found the terminology a bit confusing. When
+I read it for the first time I assumed that "data" means "data in OAM
+header. While it looks like by "data" you mean "the data container".
+Shall the container and the data be called differently?
+
+2) IMHO calling a node "in-band OAM encapsulating" is a bit confusing
+as at least for some cases there is no encapsulation. Maybe smth like
+'pop/push' MPLS terminology? Or would it confuse people even more?
+
+3) (sorry for nitpicking)
+
+"Hop_Lim:  1 octet Hop limit that is set to the TTL value in the
+packet at the node that records this data."
+s/TTL/TTL or Hop Limit/ - that field is called Hop Limit in IPv6, not TTL.
+
+
+Deepak Kumar:
+
+I believe just I-oam header should be placed flexibly, if network is l2/l3 leaf and traffic is within one data center then current format is fine.
+If traffic is going over L2 and L3 vxlan seperated, or Border Leaf, Data Center Interconnect I-oam header can come fixed byte inside data and configuration policy can determine this behavior if required.
+Now How to indicate if common OAM header is starting immediately or after Fixed byte, I will left to community. 
+Using single "O" bit is also fine for active OAM as we can look at two places if we use optional Fixed byte.
+
+As I-OAM is for real data it will be issue and they might not support that mode or getting extra bit in Datapath header will solve this issue.
+
+L2/L3 distributed scenario is currently deployed by operator.
+
+   In-band OAM header in VXLAN GPE header:
+ 
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Outer Ethernet Header                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Outer IP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Outer UDP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |R|R|Ver|I|P|R|O|          Reserved             | NP = i.b.OAM  |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+   |     Virtual Network Identifier (VNI)          | Reserved      |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+
+            Fixed Byte of Inner Packet Real Data (Optional)
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   | Type =i.b.OAM | i.b.OAM HDR len |  Reserved     | NP = IP/Eth |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+iOAM
+   |                     in-band OAM options                       |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |                                                               |
+   |                                                               |
+   |                     Payload + Padding (L2/L3/ESP/...)         |
+   |                                                               |
+   |                                                               |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+-->
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs), 
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space 
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="exp" docName="draft-brockners-inband-oam-data-01"
+     ipr="trust200902">
+  <!-- ipr="full3978"-->
+
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the 
+         full title is longer than 39 characters -->
+
+    <title abbrev="In-band OAM Data Formats">Data Formats for In-band
+    OAM</title>
+
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+
+    <!-- Another author who claims to be an editor -->
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>7200-11 Kit Creek Road</street>
+
+          <city>Research Triangle Park</city>
+
+          <region>NC</region>
+
+          <code>27709</code>
+
+          <country>United States</country>
+        </postal>
+
+        <email>cpignata@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+      <organization>RtBrick Inc.</organization>
+
+      <address>
+        <email>hannes@rtbrick.com</email>
+      </address>
+    </author>
+
+    <author fullname="John Leddy" initials="J." surname="Leddy">
+      <organization abbrev="Comcast">Comcast</organization>
+
+      <address>
+        <email>John_Leddy@cable.comcast.com</email>
+      </address>
+    </author>
+
+    <author fullname="Stephen Youell" initials="S." surname="Youell">
+      <organization abbrev="JMPC">JP Morgan Chase</organization>
+
+      <address>
+        <postal>
+          <street>25 Bank Street</street>
+
+          <city>London</city>
+
+          <code>E14 5JP</code>
+
+          <country>United Kingdom</country>
+        </postal>
+
+        <email>stephen.youell@jpmorgan.com</email>
+      </address>
+    </author>
+
+    <date day="18" month="July" year="2016"/>
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
+         in the current day for you. If only the current year is specified, xml2rfc will fill 
+	 in the current day and month for you. If the year is not the current one, it is 
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the 
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to 
+	 specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>ops</area>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.  
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>Telemetry, Tracing,</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>In-band operation, administration and maintenance (OAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      discusses the data types and data formats for in-band OAM data records.
+      In-band OAM data records can be embedded into a variety of transports
+      such as NSH, Segment Routing, VXLAN-GPE, native IPv6 (via extension
+      header), or IPv4. In-band OAM is to complement current out-of-band OAM
+      mechanisms based on ICMP or other types of probe packets.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction" toc="default">
+      <t>This document defines data record types for "in-band" operation,
+      administration, and maintenance (OAM). In-band OAM records OAM
+      information within the packet while the packet traverses a particular
+      network domain. The term "in-band" refers to the fact that the OAM data
+      is added to the data packets rather than is being sent within packets
+      specifically dedicated to OAM. A discussion of the motivation and
+      requirements for in-band OAM can be found in <xref
+      target="draft-brockners-inband-oam-requirements"/>. In-band OAM is to
+      complement "out-of-band" or "active" mechanisms such as ping or
+      traceroute, or more recent active probing mechanisms as described in
+      <xref target="I-D.lapukhov-dataplane-probe"/>. In-band OAM mechanisms
+      can be leveraged where current out-of-band mechanisms do not apply or do
+      not offer the desired results, such as proving that a certain set of
+      traffic takes a pre-defined path, SLA verification for the live data
+      traffic, detailed statistics on traffic distribution paths in networks
+      that distribute traffic across multiple paths, or scenarios where probe
+      traffic is potentially handled differently from regular data traffic by
+      the network devices.</t>
+
+      <t>This document defines the data types and data formats for in-band OAM
+      data records. The in-band OAM data records can be transported by a
+      variety of transport protocols, including NSH, Segment Routing,
+      VXLAN-GPE, IPv6, IPv4. Encapsulation details for these different
+      transport protocols are outside the scope of this document.</t>
+    </section>
+
+    <section anchor="Conventions" title="Conventions">
+      <!--
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119"/>.</t>
+-->
+
+      <t>Abbreviations used in this document:</t>
+
+      <t><list hangIndent="11" style="hanging">
+          <t hangText="MTU:">Maximum Transmit Unit</t>
+
+          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="SR:">Segment Routing</t>
+
+          <t hangText="SID:">Segment Identifier</t>
+
+          <t hangText="NSH:">Network Service Header</t>
+
+          <t hangText="SFC:">Service Function Chain</t>
+
+          <t hangText="TLV:">Type-Length-Value</t>
+
+          <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
+          Generic Protocol Extension</t>
+        </list></t>
+    </section>
+
+    <section anchor="iOAM_option_format"
+             title="In-band OAM Data Types and Data Format">
+      <t>This section defines in-band OAM data types and data formats of the
+      data records required for in-band OAM. The different uses of in-band OAM
+      require the definition of different types of data. The in-band OAM data
+      format for the data being carried corresponds to the three main
+      categories of in-band OAM data defined in <xref
+      target="draft-brockners-inband-oam-requirements"/>, which are
+      edge-to-edge, per node, and for selected nodes only.</t>
+
+      <t>Transport options for in-band OAM data are found in <xref
+      target="draft-brockners-inband-oam-transport"/>. In-band OAM data is
+      defined as options in Type-Length-Value (TLV) format. The TLV format for
+      each of the three different types of in-band OAM data is defined in this
+      document.</t>
+
+      <t>In-band OAM is expected to be deployed in a specific domain rather
+      than on the overall Internet. The part of the network which employs
+      in-band OAM is referred to as "in-band OAM-domain". In-band OAM data is
+      added to a packet on entering the in-band OAM-domain and is removed from
+      the packet when exiting the domain. Within the in-band OAM-domain, the
+      in-band OAM data may be updated by network nodes that the packet
+      traverses. The device which adds in-band OAM data to the packet is
+      called the "in-band OAM encapsulating node", whereas the device which
+      removed the in-band OAM data is referred to as the "in-band OAM
+      decapsulating node". Nodes within the domain which are aware of in-band
+      OAM data and read and/or write or process the in-band OAM data are
+      called "in-band OAM transit nodes". Note that not every node in an
+      in-band OAM domain needs to be an in-band OAM transit node. For example,
+      a Segment Routing deployment might require the segment routing path to
+      be verified. In that case, only the SR nodes would also be in-band OAM
+      transit nodes rather than all nodes.</t>
+
+      <section anchor="iOAM_tracing_option" title="In-band OAM Tracing Option">
+        <t>"In-band OAM tracing data" is expected to be collected at every hop
+        that a packet traverses, i.e., in a typical deployment all nodes in an
+        in-band OAM-domain would participate in in-band OAM and thus be
+        in-band OAM transit nodes, in-band OAM encapsulating or in-band OAM
+        decapsulating nodes. The network diameter of the in-band OAM domain is
+        assumed to be known. For in-band OAM tracing, the in-band OAM
+        encapsulating node allocates an array which is to store operational
+        data retrieved from every node while the packet traverses the domain.
+        Every entry is to hold information for a particular in-band OAM
+        transit node that is traversed by a packet. In-band OAM transit nodes
+        update the content of the array. A pointer which is part of the
+        in-band OAM trace data points to the next empty slot in the array,
+        which is where the next in-band OAM transit node fills in its data.
+        The in-band OAM decapsulating node removes the in-band OAM data and
+        process and/or export the metadata. In-band OAM data uses its own
+        name-space for information such as node identifier or interface
+        identifier. This allows for a domain-specific definition and
+        interpretation. For example: In one case an interface-id could point
+        to a physical interface (e.g., to understand which physical interface
+        of an aggregated link is used when receiving or transmitting a packet)
+        whereas in another case it could refer to a logical interface (e.g.,
+        in case of tunnels).</t>
+
+        <t>The following in-band OAM data is defined for in-band OAM
+        tracing:</t>
+
+        <t><list style="symbols">
+            <t>Identification of the in-band OAM node. An in-band OAM node
+            identifier can match to a device identifier or a particular
+            control point or subsystem within a device.</t>
+
+            <t>Identification of the interface that a packet was received
+            on.</t>
+
+            <t>Identification of the interface that a packet was sent out
+            on.</t>
+
+            <t>Time of day when the packet was processed by the node.
+            Different definitions of processing time are feasible and
+            expected, though it is important that all devices of an in-band
+            OAM domain follow the same definition.</t>
+
+            <t>Generic data: Format-free information where syntax and semantic
+            of the information is defined by the operator in a specific
+            deployment. For a specific deployment, all in-band OAM nodes
+            should interpret the generic data the same way. Examples for
+            generic in-band OAM data include geo-location information
+            (location of the node at the time the packet was processed),
+            buffer queue fill level or cache fill level at the time the packet
+            was processed, or even a battery charge level.</t>
+
+            <t>A mechanism to detect whether in-band OAM trace data was added
+            at every hop or whether certain hops in the domain weren't in-band
+            OAM transit nodes.</t>
+          </list>The "Node data List" array in the packet is populated
+        iteratively as the packet traverses the network, starting with the
+        last entry of the array, i.e., "Node data List [n]" is the first entry
+        to be populated, "Node data List [n-1]" is the second one, etc.</t>
+
+        <t><figure>
+            <artwork><![CDATA[ 
+In-band OAM Tracing Option: 
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Option Type  |  Opt Data Len | OAM-trace-type| Elements-left |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        Node data List [0]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        Node data List [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
+.                              .                                .  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        Node data List [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        Node data List [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+
+]]></artwork>
+          </figure></t>
+
+        <t><list style="hanging">
+            <t hangText="Option Type:">8-bit identifier of the type of option.
+            Option number is defined based on the encapsulation protocol.</t>
+
+            <t hangText="Opt Data Len:">8-bit unsigned integer. Length of the
+            Option Data field of this option, in octets.</t>
+
+            <!--
+            <t hangText="OAM-trace-type:">8-bit identifier of a particular
+            trace element variant. Following trace types are defined in this
+            document.<list style="hanging">
+                <t hangText="0x00011111:">Format defined in <xref
+                target="trace-type-node-data"/>.</t>
+
+                <t hangText="0x00000111:">Format defined in <xref
+                target="trace-type-node-data"/>.</t>
+
+                <t hangText="0x00001001:">Format defined in <xref
+                target="trace-type-node-data"/>.</t>
+
+                <t hangText="0x00010001:">Format defined in <xref
+                target="trace-type-node-data"/>.</t>
+
+                <t hangText="0x00011001:">Format defined in <xref
+                target="trace-type-node-data"/>.</t>
+              </list>
+-->
+
+            <t hangText="OAM-trace-type:">8-bit identifier of a particular
+            trace element variant.</t>
+
+            <t hangText=" ">The trace type value can be interpreted as a bit
+            field. The following bit fields are defined in this document, with
+            details on each field described in the next section. The order of
+            packing the trace data in each Node-data element follows the bit
+            order for setting each trace data element. Only a valid
+            combination of these fields defined in this document are valid
+            in-band OAM-trace-types.<list hangIndent="9" style="hanging">
+                <t hangText="Bit 0">When set indicates presence of node_id in
+                the Node data.</t>
+
+                <t hangText="Bit 1">When set indicates presence of
+                ingress_if_id in the Node data.</t>
+
+                <t hangText="Bit 2">When set indicates presence of
+                egress_if_id in the Node data.</t>
+
+                <t hangText="Bit 3">When set indicates presence of timestamp
+                in the Node data.</t>
+
+                <t hangText="Bit 4">When set indicates presence of app_data in
+                the Node data.</t>
+
+                <t hangText="Bit 5-7">Undefined in this document.</t>
+              </list></t>
+
+            <t hangText=" "><xref target="trace-type-node-data"/> describes
+            the format of a number of trace types. Specifically, it
+            exemplifies OAM-trace-types 0x00011111, 0x00000111, 0x00001001,
+            0x00010001, and 0x00011001.</t>
+
+            <t hangText="Elements-left:">8-bit unsigned integer. A pointer
+            that indicates the next data recording point in the data space of
+            the packet in octets. It is the index into the "Node data List"
+            array shown above.</t>
+
+            <t hangText="Node data List [n]:">Variable-length field. The
+            format of which is determined by the OAM Type representing the
+            n-th Node data in the Node data List. The Node data List is
+            encoded starting from the last Node data of the path. The first
+            element of the node data list (Node data List [0]) contains the
+            last node of the path while the last node data of the Node data
+            List (Node data List[n]) contains the first Node data of the path
+            traced. The index contained in "Elements-left" identifies the
+            current active Node data to be populated.</t>
+          </list></t>
+
+        <section anchor="trace-type-node-data"
+                 title=" In-band OAM Trace Type and Node Data Element">
+          <t>An entry in the "Node data List" array can have different
+          formats, following the needs of the a deployment. Some deployments
+          might only be interested in recording the node identifiers, whereas
+          others might be interested in recording node identifier and
+          timestamp. The section defines different formats that an entry in
+          "Node data List" can take.</t>
+
+          <t>Node data has the following format:</t>
+
+          <figure>
+            <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |   Hop_Lim     |    <trace-data elements packed as indicated   ~
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ ~             by in-band OAM-trace-type bits> .....             ~
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+          </figure>
+
+          <t/>
+
+          <t><list style="hanging">
+              <t hangText="0x00011111:">In-band OAM-trace-type is 0x00011111
+              then the format of node data is:<figure>
+                  <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   Hop_Lim     |              node_id                          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |     ingress_if_id             |         egress_if_id          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                           timestamp                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                            app_data                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+                </figure></t>
+
+              <t hangText="0x00000111:">In-band OAM-trace-type is 0x00000111
+              then the format is:<figure>
+                  <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   Hop_Lim     |              node_id                          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |     ingress_if_id             |         egress_if_id          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   
+
+]]></artwork>
+                </figure></t>
+
+              <t hangText="0x00001001:">In-band OAM-trace-type is 0x00001001
+              then the format is: <figure>
+                  <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   Hop_Lim     |              node_id                          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                           timestamp                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+                </figure></t>
+
+              <t hangText="0x00010001:">In-band OAM-trace-type is 0x00010001
+              then the format is:<figure>
+                  <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   Hop_Lim     |              node_id                          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                            app_data                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+                </figure></t>
+
+              <t hangText="0x00011001:">In-band OAM-trace-type is 0x00011001
+              then the format is:<figure>
+                  <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   Hop_Lim     |              node_id                          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                           timestamp                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                            app_data                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+                </figure></t>
+            </list></t>
+
+          <t>Trace data elements in Node data are defined as follows:</t>
+
+          <t><list style="hanging">
+              <t hangText="Hop_Lim:">1 octet Hop limit that is set to the TTL
+              value in the packet at the node that records this data.</t>
+
+              <t hangText="node_id:">Node identifier node_id is a 3 octet
+              field to uniquely identify a node within in-band OAM domain. The
+              procedure to allocate, manage and map the node_ids is beyond the
+              scope of this document.</t>
+
+              <t hangText="ingress_if_id:">2 octet interface identifier to
+              record the ingress interface the packet was received on.</t>
+
+              <t hangText="egress_if_id:">2 octet interface identifier to
+              record the egress interface the packet is forwarded out of.</t>
+
+              <t hangText="timestamp:">4 octet timestamp when packet has been
+              processed by the node.</t>
+
+              <t hangText="app_data:">4 octet placeholder which can be used by
+              the node to add application specific data.</t>
+            </list></t>
+
+          <t>Hop Limit information is used to identify the location of the
+          node in the communication path.</t>
+        </section>
+      </section>
+
+      <section anchor="iOAM_proof_of_transit_option"
+               title="In-band OAM Proof of Transit Option">
+        <t>In-band OAM Proof of Transit data is to support the path or service
+        function chain <xref target="RFC7665"/> verification use cases.
+        Proof-of-transit uses methods like nested hashing or nested encryption
+        of the in-band OAM data or mechanisms such as Shamir's Secret Sharing
+        Schema (SSSS). While details on how the in-band OAM data for the proof
+        of transit option is processed at in-band OAM encapsulating,
+        decapsulating and transit nodes are outside the scope of the document,
+        all of these approaches share the need to uniquely identify a packet
+        as well as iteratively operate on a set of information that is handed
+        from node to node. Correspondingly, two pieces of information are
+        added as in-band OAM data to the packet:</t>
+
+        <t><list style="symbols">
+            <t>Random: Unique identifier for the packet (e.g., 64-bits allow
+            for the unique identification of 2^64 packets).</t>
+
+            <t>Cumulative: Information which is handed from node to node and
+            updated by every node according to a verification algorithm.</t>
+          </list></t>
+
+        <t><figure>
+            <artwork><![CDATA[ 
+In-band OAM Proof of Transit option:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Option Type  |  Opt Data Len |  POT type = 0 |F|  reserved   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                           Random                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+|                        Random(contd)                          |  O
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+|                         Cumulative                            |  | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                         Cumulative (contd)                    |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+
+]]></artwork>
+          </figure><list style="hanging">
+            <t hangText="Option Type:">8-bit identifier of the type of
+            option.</t>
+
+            <t hangText="Opt Data Len:">8-bit unsigned integer. Length of the
+            Option Data field of this option, in octets.</t>
+
+            <t hangText="POT Type:">8-bit identifier of a particular POT
+            variant that dictates the POT data that is included.<list
+                style="symbols">
+                <t>16 Octet field as described below</t>
+              </list></t>
+
+            <t hangText="Flag (F):">1-bit. Indicates which POT-profile is
+            active. 0 means the even POT-profile is active, 1 means the odd
+            POT-profile is active.</t>
+
+            <t hangText="Reserved:">7-bit. (Reserved Octet) Reserved octet for
+            future use.</t>
+
+            <t hangText="Random:">64-bit Per packet Random number.</t>
+
+            <t hangText="Cumulative:">64-bit Cumulative that is updated at
+            specific nodes by processing per packet Random number field and
+            configured parameters.</t>
+          </list>Note: Larger or smaller sizes of "Random" and "Cumulative"
+        data are feasible and could be required for certain deployments (e.g.
+        in case of space constraints in the transport protocol used). Future
+        versions of this document will address different sizes of data for
+        "proof of transit".</t>
+      </section>
+
+      <section anchor="iOAM_edge_to_edge_opt"
+               title="In-band OAM Edge-to-Edge Option">
+        <t>The in-band OAM Edge-to-Edge Option is to carry data which is to be
+        interpreted only by the in-band OAM encapsulating and in-band OAM
+        decapsulating node, but not by in-band OAM transit nodes.</t>
+
+        <t>Currently only sequence numbers use the in-band OAM Edge-to-Edge
+        option. In order to detect packet loss, packet reordering, or packet
+        duplication in an in-band OAM-domain, sequence numbers can be added to
+        packets of a particular tube (see <xref
+        target="I-D.hildebrand-spud-prototype"/>). Each tube leverages a
+        dedicated namespace for its sequence numbers.</t>
+
+        <t><figure>
+            <artwork><![CDATA[
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Option Type  |  Opt Data Len | OAM-E2E-Type  |    reserved   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      E2E Option data format determined by iOAM-E2E-Type       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+          </figure><list style="hanging">
+            <t hangText="Option Type:">8-bit identifier of the type of
+            option.</t>
+
+            <t hangText="Opt Data Len:">8-bit unsigned integer. Length of the
+            Option Data field of this option, in octets.</t>
+
+            <t hangText="iOAM-E2E-Type:">8-bit identifier of a particular
+            in-band OAM E2E variant.<list style="empty">
+                <t>0: E2E option data is a 64-bit sequence number added to a
+                specific tube which is used to identify packet loss and
+                reordering for that tube.</t>
+              </list></t>
+
+            <t hangText="Reserved:">8-bit. (Reserved Octet) Reserved octet for
+            future use.</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section title="In-band OAM Data Export">
+      <t>In-band OAM nodes collect information for packets traversing a domain
+      that supports in-band OAM. The device at the domain edge (which could
+      also be an end-host) which receives a packet with in-band OAM
+      information chooses how to process the in-band OAM data collected within
+      the packet. This decapsulating node can simply discard the information
+      collected, can process the information further, or export the
+      information using e.g., IPFIX.</t>
+
+      <t>The discussion of in-band OAM data processing and export is left for
+      a future version of this document.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>IANA considerations will be added in a future version of this
+      document.</t>
+    </section>
+
+    <section title="Manageability Considerations">
+      <t>Manageability considerations will be addressed &iacute;n a later
+      version of this document..</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>Security considerations will be addressed &iacute;n a later version
+      of this document. For a discussion of security requirements of in-band
+      OAM, please refer to <xref
+      target="draft-brockners-inband-oam-requirements"/>.</t>
+    </section>
+
+    <section title="Acknowledgements">
+      <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+      Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+      Nadahalli, and Andrew Yourtchenko for the comments and advice. This
+      document leverages and builds on top of several concepts described in
+      <xref target="draft-kitamura-ipv6-record-route"/>. The authors would
+      like to acknowledge the work done by the author Hiroshi Kitamura and
+      people involved in writing it.</t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <!-- References split into informative and normative -->
+
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
+     1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+     2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+        (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+
+     Both are cited textually in the same manner: by using xref elements.
+     If you use the PI option, xml2rfc will, by default, try to find included files in the same
+     directory as the including file. You can also define the XML_LIBRARY environment variable
+     with a value containing a set of directories to search.  These can be either in the local
+     filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+    <references title="Normative References">
+      <reference anchor="draft-brockners-inband-oam-requirements">
+        <front>
+          <title>Requirements for in-band OAM</title>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <author fullname="Sashank Dara" initials="S." surname="Dara">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
+        </front>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      &RFC7665;
+
+      &I-D.lapukhov-dataplane-probe;
+
+      <reference anchor="draft-kitamura-ipv6-record-route">
+        <front>
+          <title>Record Route for IPv6 (PR6),Hop-by-Hop Option
+          Extension</title>
+
+          <author fullname="H. Kitamura" initials="H" surname="Kitamura"/>
+
+          <date month="November" year="2000"/>
+        </front>
+      </reference>
+
+      <reference anchor="draft-brockners-inband-oam-transport">
+        <front>
+          <title>Encapsulations for in-band OAM</title>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <author fullname="Carlos Pignataro" initials="C."
+                  surname="Pignataro">
+            <organization/>
+          </author>
+
+          <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
+        </front>
+      </reference>
+
+      <reference anchor="draft-brockners-proof-of-transit">
+        <front>
+          <title>Proof of transit</title>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <author fullname="Sashank Dara" initials="S." surname="Dara">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
+        </front>
+      </reference>
+
+      &I-D.SPUD;
+
+      <reference anchor="P4">
+        <front>
+          <title>P4: In-band Network Telemetry (INT)</title>
+
+          <author fullname="Changhoon Kim" surname="Kim"/>
+
+          <date month="September" year="2015"/>
+        </front>
+      </reference>
+
+      <reference anchor="FD.io" target="https://fd.io/">
+        <front>
+          <title>Fast Data Project: FD.io</title>
+
+          <author/>
+
+          <date/>
+        </front>
+      </reference>
+    </references>
+  </back>
+</rfc>
