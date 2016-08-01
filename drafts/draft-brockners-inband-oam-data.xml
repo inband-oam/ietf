@@ -27,6 +27,72 @@
 <!ENTITY I-D.SPUD SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
+<!-- Comments received
+Jen Linkova:
+
+1)
+
+"In-band OAM data is added to a packet on entering the in-band
+OAM-domain and is removed from the packet when exiting the domain. " -
+it might be just me but I found the terminology a bit confusing. When
+I read it for the first time I assumed that "data" means "data in OAM
+header. While it looks like by "data" you mean "the data container".
+Shall the container and the data be called differently?
+
+2) IMHO calling a node "in-band OAM encapsulating" is a bit confusing
+as at least for some cases there is no encapsulation. Maybe smth like
+'pop/push' MPLS terminology? Or would it confuse people even more?
+
+3) (sorry for nitpicking)
+
+"Hop_Lim:  1 octet Hop limit that is set to the TTL value in the
+packet at the node that records this data."
+s/TTL/TTL or Hop Limit/ - that field is called Hop Limit in IPv6, not TTL.
+
+
+Deepak Kumar:
+
+I believe just I-oam header should be placed flexibly, if network is l2/l3 leaf and traffic is within one data center then current format is fine.
+If traffic is going over L2 and L3 vxlan seperated, or Border Leaf, Data Center Interconnect I-oam header can come fixed byte inside data and configuration policy can determine this behavior if required.
+Now How to indicate if common OAM header is starting immediately or after Fixed byte, I will left to community. 
+Using single "O" bit is also fine for active OAM as we can look at two places if we use optional Fixed byte.
+
+As I-OAM is for real data it will be issue and they might not support that mode or getting extra bit in Datapath header will solve this issue.
+
+L2/L3 distributed scenario is currently deployed by operator.
+
+   In-band OAM header in VXLAN GPE header:
+ 
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Outer Ethernet Header                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Outer IP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Outer UDP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |R|R|Ver|I|P|R|O|          Reserved             | NP = i.b.OAM  |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+   |     Virtual Network Identifier (VNI)          | Reserved      |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+
+            Fixed Byte of Inner Packet Real Data (Optional)
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   | Type =i.b.OAM | i.b.OAM HDR len |  Reserved     | NP = IP/Eth |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+iOAM
+   |                     in-band OAM options                       |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |                                                               |
+   |                                                               |
+   |                     Payload + Padding (L2/L3/ESP/...)         |
+   |                                                               |
+   |                                                               |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+-->
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
 <!-- For a complete list and description of processing instructions (PIs), 
@@ -52,7 +118,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-brockners-inband-oam-data-00"
+<rfc category="exp" docName="draft-brockners-inband-oam-data-01"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -115,31 +181,61 @@
       </address>
     </author>
 
-    <author fullname="Carlos Pignataro" initials="C."
-            surname="Pignataro">
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
       <address>
         <postal>
           <street>7200-11 Kit Creek Road</street>
+
           <city>Research Triangle Park</city>
+
           <region>NC</region>
+
           <code>27709</code>
+
           <country>United States</country>
         </postal>
+
         <email>cpignata@cisco.com</email>
       </address>
     </author>
 
     <author fullname="Hannes Gredler" initials="H." surname="Gredler">
       <organization>RtBrick Inc.</organization>
+
       <address>
         <email>hannes@rtbrick.com</email>
       </address>
     </author>
 
+    <author fullname="John Leddy" initials="J." surname="Leddy">
+      <organization abbrev="Comcast">Comcast</organization>
 
-    <date day="8" month="July" year="2016" />
+      <address>
+        <email>John_Leddy@cable.comcast.com</email>
+      </address>
+    </author>
 
+    <author fullname="Stephen Youell" initials="S." surname="Youell">
+      <organization abbrev="JMPC">JP Morgan Chase</organization>
+
+      <address>
+        <postal>
+          <street>25 Bank Street</street>
+
+          <city>London</city>
+
+          <code>E14 5JP</code>
+
+          <country>United Kingdom</country>
+        </postal>
+
+        <email>stephen.youell@jpmorgan.com</email>
+      </address>
+    </author>
+
+    <date day="18" month="July" year="2016"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -172,8 +268,7 @@
       In-band OAM data records can be embedded into a variety of transports
       such as NSH, Segment Routing, VXLAN-GPE, native IPv6 (via extension
       header), or IPv4. In-band OAM is to complement current out-of-band OAM
-      mechanisms based on ICMP or other
-      types of probe packets.</t>
+      mechanisms based on ICMP or other types of probe packets.</t>
     </abstract>
   </front>
 
@@ -206,8 +301,7 @@
     </section>
 
     <section anchor="Conventions" title="Conventions">
-
-<!--
+      <!--
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
       document are to be interpreted as described in <xref
@@ -216,8 +310,7 @@
 
       <t>Abbreviations used in this document:</t>
 
-
-      <t><list style="hanging" hangIndent="11">
+      <t><list hangIndent="11" style="hanging">
           <t hangText="MTU:">Maximum Transmit Unit</t>
 
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
@@ -232,19 +325,17 @@
 
           <t hangText="TLV:">Type-Length-Value</t>
 
-          <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network, 
-             Generic Protocol Extension</t>
+          <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
+          Generic Protocol Extension</t>
         </list></t>
-
-
     </section>
 
     <section anchor="iOAM_option_format"
              title="In-band OAM Data Types and Data Format">
       <t>This section defines in-band OAM data types and data formats of the
       data records required for in-band OAM. The different uses of in-band OAM
-      require the definition of different types of data. The in-band OAM
-      data format for the data being carried corresponds to the three main
+      require the definition of different types of data. The in-band OAM data
+      format for the data being carried corresponds to the three main
       categories of in-band OAM data defined in <xref
       target="draft-brockners-inband-oam-requirements"/>, which are
       edge-to-edge, per node, and for selected nodes only.</t>
@@ -293,8 +384,8 @@
         interpretation. For example: In one case an interface-id could point
         to a physical interface (e.g., to understand which physical interface
         of an aggregated link is used when receiving or transmitting a packet)
-        whereas in another case it could refer to a logical interface (e.g., in
-        case of tunnels).</t>
+        whereas in another case it could refer to a logical interface (e.g.,
+        in case of tunnels).</t>
 
         <t>The following in-band OAM data is defined for in-band OAM
         tracing:</t>
@@ -371,7 +462,7 @@ In-band OAM Tracing Option:
             <t hangText="Opt Data Len:">8-bit unsigned integer. Length of the
             Option Data field of this option, in octets.</t>
 
-<!--
+            <!--
             <t hangText="OAM-trace-type:">8-bit identifier of a particular
             trace element variant. Following trace types are defined in this
             document.<list style="hanging">
@@ -393,16 +484,15 @@ In-band OAM Tracing Option:
 -->
 
             <t hangText="OAM-trace-type:">8-bit identifier of a particular
-            trace element variant. 
+            trace element variant.</t>
 
-</t><t hangText=" ">
-            The trace type value can be interpreted as a bit field.
-            The following bit fields are defined in this document, with
+            <t hangText=" ">The trace type value can be interpreted as a bit
+            field. The following bit fields are defined in this document, with
             details on each field described in the next section. The order of
             packing the trace data in each Node-data element follows the bit
             order for setting each trace data element. Only a valid
             combination of these fields defined in this document are valid
-            in-band OAM-trace-types.<list style="hanging" hangIndent="9">
+            in-band OAM-trace-types.<list hangIndent="9" style="hanging">
                 <t hangText="Bit 0">When set indicates presence of node_id in
                 the Node data.</t>
 
@@ -419,14 +509,12 @@ In-band OAM Tracing Option:
                 the Node data.</t>
 
                 <t hangText="Bit 5-7">Undefined in this document.</t>
-              </list>
-</t><t hangText=" ">
-<xref target="trace-type-node-data"/> describes the format of a number
-of trace types. Specifically, it
-exemplifies OAM-trace-types 0x00011111, 0x00000111, 0x00001001, 0x00010001,
-and 0x00011001.
+              </list></t>
 
-</t>
+            <t hangText=" "><xref target="trace-type-node-data"/> describes
+            the format of a number of trace types. Specifically, it
+            exemplifies OAM-trace-types 0x00011111, 0x00000111, 0x00001001,
+            0x00010001, and 0x00011001.</t>
 
             <t hangText="Elements-left:">8-bit unsigned integer. A pointer
             that indicates the next data recording point in the data space of
@@ -557,8 +645,8 @@ and 0x00011001.
               <t hangText="timestamp:">4 octet timestamp when packet has been
               processed by the node.</t>
 
-              <t hangText="app_data:">4 octet placeholder which can be used
-              by the node to add application specific data.</t>
+              <t hangText="app_data:">4 octet placeholder which can be used by
+              the node to add application specific data.</t>
             </list></t>
 
           <t>Hop Limit information is used to identify the location of the
@@ -569,17 +657,16 @@ and 0x00011001.
       <section anchor="iOAM_proof_of_transit_option"
                title="In-band OAM Proof of Transit Option">
         <t>In-band OAM Proof of Transit data is to support the path or service
-        function chain <xref target="RFC7665" /> 
-        verification use cases. Proof-of-transit uses methods like
-        nested hashing or nested encryption of the in-band OAM data or
-        mechanisms such as Shamir's Secret Sharing Schema (SSSS). While
-        details on how the in-band OAM data for the proof of transit option is
-        processed at in-band OAM encapsulating, decapsulating and transit
-        nodes are outside the scope of the document, all of these approaches
-        share the need to uniquely identify a packet as well as iteratively
-        operate on a set of information that is handed from node to node.
-        Correspondingly, two pieces of information are added as in-band OAM
-        data to the packet:</t>
+        function chain <xref target="RFC7665"/> verification use cases.
+        Proof-of-transit uses methods like nested hashing or nested encryption
+        of the in-band OAM data or mechanisms such as Shamir's Secret Sharing
+        Schema (SSSS). While details on how the in-band OAM data for the proof
+        of transit option is processed at in-band OAM encapsulating,
+        decapsulating and transit nodes are outside the scope of the document,
+        all of these approaches share the need to uniquely identify a packet
+        as well as iteratively operate on a set of information that is handed
+        from node to node. Correspondingly, two pieces of information are
+        added as in-band OAM data to the packet:</t>
 
         <t><list style="symbols">
             <t>Random: Unique identifier for the packet (e.g., 64-bits allow
@@ -716,15 +803,16 @@ In-band OAM Proof of Transit option:
     </section>
 
     <section title="Acknowledgements">
-      <t>The authors would like to thank Steve Youell, Eric Vyncke, Nalini
-      Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu Harichandra
-      Babu, Akshaya Nadahalli, and Andrew Yourtchenko for the comments and
-      advice. This document leverages and builds on top of several concepts
-      described in <xref target="draft-kitamura-ipv6-record-route"/>. The
-      authors would like to acknowledge the work done by the author Hiroshi
-      Kitamura and people involved in writing it.</t>
+      <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+      Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+      Nadahalli, and Andrew Yourtchenko for the comments and advice. This
+      document leverages and builds on top of several concepts described in
+      <xref target="draft-kitamura-ipv6-record-route"/>. The authors would
+      like to acknowledge the work done by the author Hiroshi Kitamura and
+      people involved in writing it.</t>
     </section>
   </middle>
+
   <!--  *****BACK MATTER ***** -->
 
   <back>
@@ -742,7 +830,6 @@ In-band OAM Proof of Transit option:
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
-
       <reference anchor="draft-brockners-inband-oam-requirements">
         <front>
           <title>Requirements for in-band OAM</title>
@@ -762,11 +849,9 @@ In-band OAM Proof of Transit option:
           <date day="8" month="July" year="2016"/>
         </front>
       </reference>
-
     </references>
 
     <references title="Informative References">
-
       &RFC7665;
 
       &I-D.lapukhov-dataplane-probe;
@@ -782,47 +867,52 @@ In-band OAM Proof of Transit option:
         </front>
       </reference>
 
-
-
       <reference anchor="draft-brockners-inband-oam-transport">
         <front>
           <title>Encapsulations for in-band OAM</title>
-            <author initials="F." surname="Brockners" fullname="Frank Brockners">
-                <organization />
-            </author>
-            <author initials="S." surname="Bhandari" fullname="Shwetha Bhandari">
-                <organization />
-            </author>
-           <author initials="C." surname="Pignataro" fullname="Carlos Pignataro">
-                <organization />
-            </author>
-            <author initials="H." surname="Gredler" fullname="Hannes Gredler">
-                <organization />
-            </author>
-            <date month="July" day="8" year="2016"/>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <author fullname="Carlos Pignataro" initials="C."
+                  surname="Pignataro">
+            <organization/>
+          </author>
+
+          <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
         </front>
       </reference>
-
 
       <reference anchor="draft-brockners-proof-of-transit">
         <front>
           <title>Proof of transit</title>
-            <author initials="F." surname="Brockners" fullname="Frank Brockners">
-                <organization />
-            </author>
-            <author initials="S." surname="Bhandari" fullname="Shwetha Bhandari">
-                <organization />
-            </author>
-            <author initials="S." surname="Dara" fullname="Sashank Dara">
-                <organization />
-            </author>
-            <date month="July" day="8" year="2016"/>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <author fullname="Sashank Dara" initials="S." surname="Dara">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
         </front>
       </reference>
 
-
       &I-D.SPUD;
-
 
       <reference anchor="P4">
         <front>
@@ -843,9 +933,6 @@ In-band OAM Proof of Transit option:
           <date/>
         </front>
       </reference>
-
-
     </references>
   </back>
-
 </rfc>

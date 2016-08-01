@@ -28,6 +28,37 @@
 <!ENTITY I-D.SPUD SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
+<!-- Comments received
+Jen Linkova
+
+0) "n=max number of nodes to be allocated"
+Shall it be "maximum number of nodes updating OAM data"?
+BTW I can not see 'n' used in the formulas later...
+
+1)
+"Based on PMTU advertised in the domain" - I do not think PMTU is
+advertized. MTU on a given link might be advertized somehow.
+But end2end PMTU is not advertized. Probably it should be re-phrased
+like 'calculated based on the packet size and the minimal MTU on all
+links within the OAM domain'
+
+2) "Let k = number of node data that can be allocated by this node" -
+IMHO "number of node data" sounds a bit confusing...at elast to me,
+but it might be just me...
+
+3) Procedures to insert/update IPv6 headers keep referring to
+Segments_Left field, while there is no such field in HbH header. Such
+field does exist in Routing Header, but not in HbH.
+
+In addition to that, in all those procedures one more step needs to be
+added: modifying "next header" value in the basic IPv6 header and in
+HbH header (after it is inserted).
+
+Hemant Singh:
+
+It's good you have configuration on ingress and egress nodes to add/strip the EH.  Maybe add some text to say if the original packet is close to 1280 bytes in size (MTU for IPv6 on Ethernet) an OAM EH can't be added and an error is reported.   Likewise if an ICMPv6 forwarding error occurs between ingress and egress routers, the router generating the ICMPv6 error should strip the OAM EH before sending the ICMPv6 message to the source.   See if any other failure conditions makes sense to document in your draft.
+
+-->
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
 <!-- For a complete list and description of processing instructions (PIs), 
@@ -53,7 +84,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-brockners-inband-oam-transport-00"
+<rfc category="info" docName="draft-brockners-inband-oam-transport-01"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -116,31 +147,61 @@
       </address>
     </author>
 
-    <author fullname="Carlos Pignataro" initials="C."
-            surname="Pignataro">
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
       <address>
         <postal>
           <street>7200-11 Kit Creek Road</street>
+
           <city>Research Triangle Park</city>
+
           <region>NC</region>
+
           <code>27709</code>
+
           <country>United States</country>
         </postal>
+
         <email>cpignata@cisco.com</email>
       </address>
     </author>
 
     <author fullname="Hannes Gredler" initials="H." surname="Gredler">
       <organization>RtBrick Inc.</organization>
+
       <address>
         <email>hannes@rtbrick.com</email>
       </address>
     </author>
 
+    <author fullname="John Leddy" initials="J." surname="Leddy">
+      <organization abbrev="Comcast">Comcast</organization>
 
+      <address>
+        <email>John_Leddy@cable.comcast.com</email>
+      </address>
+    </author>
 
-    <date day="8" month="July" year="2016" />
+    <author fullname="Stephen Youell" initials="S." surname="Youell">
+      <organization abbrev="JMPC">JP Morgan Chase</organization>
+
+      <address>
+        <postal>
+          <street>25 Bank Street</street>
+
+          <city>London</city>
+
+          <code>E14 5JP</code>
+
+          <country>United Kingdom</country>
+        </postal>
+
+        <email>stephen.youell@jpmorgan.com</email>
+      </address>
+    </author>
+
+    <date day="18" month="July" year="2016"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -193,11 +254,11 @@
 
       <t>This document outlines transport encapsulations for the in-band OAM
       data defined in <xref target="draft-brockners-inband-oam-data"/>. This
-      document is to serve informational purposes only. As part of an in-band OAM
-      implementation study different protocol encapsulations for in-band OAM
-      data are being explored. Once data formats and encapsulation approaches
-      are settled, protocol specific specifications for in-band OAM data
-      transport will address the standardization aspect.</t>
+      document is to serve informational purposes only. As part of an in-band
+      OAM implementation study different protocol encapsulations for in-band
+      OAM data are being explored. Once data formats and encapsulation
+      approaches are settled, protocol specific specifications for in-band OAM
+      data transport will address the standardization aspect.</t>
 
       <t>The data for in-band OAM defined in <xref
       target="draft-brockners-inband-oam-data"/> can be carried in a variety
@@ -207,7 +268,7 @@
       <t><list style="symbols">
           <t>IPv6</t>
 
-<!--
+          <!--
           <t>IPv4</t>
 -->
 
@@ -218,9 +279,9 @@
           <t>Segment Routing (IPv6 and MPLS)</t>
         </list></t>
 
-<t>This list is non-exhaustive, as it is possible to carry the in-band OAM data 
-in several other protocols and transports.
-</t>
+      <t>This list is non-exhaustive, as it is possible to carry the in-band
+      OAM data in several other protocols and transports.</t>
+
       <t>A feasibility study of in-band OAM is currently underway as part of
       the FD.io project <xref target="FD.io"/>. The in-band OAM implementation
       study should be considered as a "tool box" to showcase how "in-band" OAM
@@ -237,7 +298,7 @@ in several other protocols and transports.
 
       <t>Abbreviations used in this document:</t>
 
-      <t><list style="hanging" hangIndent="11">
+      <t><list hangIndent="11" style="hanging">
           <t hangText="MTU:">Maximum Transmit Unit</t>
 
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
@@ -252,10 +313,9 @@ in several other protocols and transports.
 
           <t hangText="SFC:">Service Function Chain</t>
 
-          <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network, 
-             Generic Protocol Extension</t>
+          <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
+          Generic Protocol Extension</t>
         </list></t>
-
     </section>
 
     <section title="In-Band OAM Metadata Transport in IPv6">
@@ -265,22 +325,19 @@ in several other protocols and transports.
       target="I-D.ietf-ippm-6man-pdm-option"/>. The IP Performance and
       Diagnostic Metrics Destination Option is destination focused and
       specific to IPv6, whereas in-band OAM is performed between end-points of
-      the network or a network domain where it is enabled and used.
-</t><t>
-       
-      A historical note: The idea of IPv6 route recording was originally introduced
-      by <xref target="draft-kitamura-ipv6-record-route"/> back in year 2000.
-      With IPv6 now being generally deployed and new concepts such as Segment
-      Routing <xref target="I-D.ietf-spring-segment-routing"/> being
-      introduced, it is imperative to further mature the operations,
+      the network or a network domain where it is enabled and used.</t>
+
+      <t>A historical note: The idea of IPv6 route recording was originally
+      introduced by <xref target="draft-kitamura-ipv6-record-route"/> back in
+      year 2000. With IPv6 now being generally deployed and new concepts such
+      as Segment Routing <xref target="I-D.ietf-spring-segment-routing"/>
+      being introduced, it is imperative to further mature the operations,
       administration, and maintenance mechanisms available to IPv6
       networks.</t>
 
       <t>The in-band OAM options translate into options for an IPv6 extension
-      header. The extension header would be inserted by
-      either a host source of the packet, or by a transit/domain-edge node.
-
-<!--
+      header. The extension header would be inserted by either a host source
+      of the packet, or by a transit/domain-edge node. <!--
       In
       case in-band OAM is applied by a transit/domain-edge node, the node
       would choose to "double-encapsulate" (i.e., "tunnel") the traffic: The IPv6 packet would
@@ -288,9 +345,7 @@ in several other protocols and transports.
       the encapsulating node, carries the in-band OAM data in an IPv6
       extension header and uses the destination address of the encapsulated
       packet.
--->
-
-</t>
+--></t>
 
       <section title="In-band OAM in IPv6 Hop by Hop Extension Header">
         <t>This section defines in-band OAM for IPv6 transport. In-band OAM
@@ -441,7 +496,7 @@ if (in-band OAM hbyh ext header is present) {
       </section>
     </section>
 
-<!--
+    <!--
     <section title="In-band OAM Metadata Transport in IPv4">
       <t>Transport of in-band OAM data in IPv4 will be detailed in a future
       version of this document.</t>
@@ -449,11 +504,11 @@ if (in-band OAM hbyh ext header is present) {
 -->
 
     <section title="In-band OAM Metadata Transport in VXLAN-GPE">
-      <t>VXLAN-GPE <xref target="I-D.ietf-nvo3-vxlan-gpe"/>
-      encapsulation is somewhat similar to IPv6 extension headers
-      in that a series of headers can be contained in the header as a linked
-      list. The different in-band OAM types are added as options within a new
-      in-band OAM protocol header in VXLAN GPE.</t>
+      <t>VXLAN-GPE <xref target="I-D.ietf-nvo3-vxlan-gpe"/> encapsulation is
+      somewhat similar to IPv6 extension headers in that a series of headers
+      can be contained in the header as a linked list. The different in-band
+      OAM types are added as options within a new in-band OAM protocol header
+      in VXLAN GPE.</t>
 
       <t><figure>
           <artwork><![CDATA[
@@ -490,8 +545,8 @@ In-band OAM header in VXLAN GPE header:
           <t hangText="Type:">8-bit unsigned integer defining in-band OAM
           header type</t>
 
-          <t hangText="in-band OAM HDR len:">8-bit unsigned integer. Length
-          of the in-band OAM HDR in 8-octet units</t>
+          <t hangText="in-band OAM HDR len:">8-bit unsigned integer. Length of
+          the in-band OAM HDR in 8-octet units</t>
 
           <t hangText="in-band OAM options:">Variable-length field, of length
           such that the complete in-band OAM header is an integer multiple of
@@ -511,8 +566,8 @@ In-band OAM header in VXLAN GPE header:
    Option Data          Variable-length field.  Option-Type-specific
                         data.]]></artwork>
         </figure>The in-band OAM options defined in <xref
-      target="draft-brockners-inband-oam-data" /> are encoded with an
-      option type allocated in the new in-band OAM IANA registry - in-band
+      target="draft-brockners-inband-oam-data"/> are encoded with an option
+      type allocated in the new in-band OAM IANA registry - in-band
       OAM_PROTOCOL_OPTION_REGISTRY_IANA_TBD. In addition the following padding
       options are defined to be used when necessary to align subsequent
       options and to pad out the containing header to a multiple of 8 octets
@@ -546,13 +601,12 @@ PadN option  (alignment requirement: none)
     </section>
 
     <section title="In-band OAM Metadata Transport in NSH">
-      <t>In Service Function Chaining (SFC) <xref target="RFC7665" />, the
+      <t>In Service Function Chaining (SFC) <xref target="RFC7665"/>, the
       Network Service Header (NSH) <xref target="I-D.ietf-sfc-nsh"/> already
-      includes path tracing capabilities <xref target="I-D.penno-sfc-trace" />,
-      but currently does not offer a
-      solution to securely prove that packets really traversed the service
-      chain. The "Proof of Transit" capabilities (see <xref
-      target="draft-brockners-inband-oam-requirements"/> and <xref
+      includes path tracing capabilities <xref target="I-D.penno-sfc-trace"/>,
+      but currently does not offer a solution to securely prove that packets
+      really traversed the service chain. The "Proof of Transit" capabilities
+      (see <xref target="draft-brockners-inband-oam-requirements"/> and <xref
       target="draft-brockners-proof-of-transit"/>) of in-band OAM can be
       leveraged within NSH. Proof of transit in-band OAM data is added as NSH
       Type 2 metadata:</t>
@@ -573,8 +627,8 @@ PadN option  (alignment requirement: none)
 |                         Cumulative (contd)                    |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
         </figure><list style="hanging">
-          <t hangText="TLV Class:">Describes the scope of the "Type" field.
-          In some cases, the TLV Class will identify a specific vendor, in
+          <t hangText="TLV Class:">Describes the scope of the "Type" field. In
+          some cases, the TLV Class will identify a specific vendor, in
           others, the TLV Class will identify specific standards body
           allocated types. POT is currently defined using the Cisco (0x0009)
           TLV class.</t>
@@ -584,8 +638,8 @@ PadN option  (alignment requirement: none)
           responsibility of the TLV Class owner. Currently a type value of
           0x94 is used for proof of transit</t>
 
-          <t hangText="Reserved bits:">Two reserved bit are present for
-          future use. The reserved bits MUST be set to 0x0.</t>
+          <t hangText="Reserved bits:">Two reserved bit are present for future
+          use. The reserved bits MUST be set to 0x0.</t>
 
           <t hangText="F:">One bit. Indicates which POT-profile is active. 0
           means the even POT-profile is active, 1 means the odd POT-profile is
@@ -678,9 +732,9 @@ PadN option  (alignment requirement: none)
     </section>
 
     <section title="Acknowledgements">
-      <t>The authors would like to thank Steve Youell, Eric Vyncke, Nalini
-      Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu Harichandra
-      Babu, Akshaya Nadahalli, and Andrew Yourtchenko for the comments and
+      <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+      Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+      Nadahalli, Stefano Previdi and Andrew Yourtchenko for the comments and
       advice. For the IPv6 encapsulation, this document leverages and builds
       on top of several concepts described in <xref
       target="draft-kitamura-ipv6-record-route"/>. The authors would like to
@@ -706,7 +760,6 @@ PadN option  (alignment requirement: none)
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
-
       <reference anchor="draft-brockners-inband-oam-requirements">
         <front>
           <title>Requirements for in-band OAM</title>
@@ -726,11 +779,9 @@ PadN option  (alignment requirement: none)
           <date day="8" month="July" year="2016"/>
         </front>
       </reference>
-
     </references>
 
     <references title="Informative References">
-
       &RFC2119;
 
       &RFC7665;
@@ -754,40 +805,48 @@ PadN option  (alignment requirement: none)
         </front>
       </reference>
 
-
       <reference anchor="draft-brockners-inband-oam-data">
         <front>
           <title>Data Formats for in-band OAM</title>
-            <author initials="F." surname="Brockners" fullname="Frank Brockners">
-                <organization />
-            </author>
-            <author initials="S." surname="Bhandari" fullname="Shwetha Bhandari">
-                <organization />
-            </author>
-            <author initials="C." surname="Pignataro" fullname="Carlos Pignataro">
-                <organization />
-            </author>
-            <author initials="H." surname="Gredler" fullname="Hannes Gredler">
-                <organization />
-            </author>
-            <date month="July" day="8" year="2016"/>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <author fullname="Carlos Pignataro" initials="C."
+                  surname="Pignataro">
+            <organization/>
+          </author>
+
+          <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
         </front>
       </reference>
-
 
       <reference anchor="draft-brockners-proof-of-transit">
         <front>
           <title>Proof of transit</title>
-            <author initials="F." surname="Brockners" fullname="Frank Brockners">
-                <organization />
-            </author>
-            <author initials="S." surname="Bhandari" fullname="Shwetha Bhandari">
-                <organization />
-            </author>
-            <author initials="S." surname="Dara" fullname="Sashank Dara">
-                <organization />
-            </author>
-            <date month="July" day="8" year="2016"/>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <author fullname="Sashank Dara" initials="S." surname="Dara">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
         </front>
       </reference>
 
@@ -816,9 +875,6 @@ PadN option  (alignment requirement: none)
       </reference>
 
       &I-D.penno-sfc-trace;
-
     </references>
   </back>
-
-
 </rfc>

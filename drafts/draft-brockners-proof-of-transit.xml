@@ -13,6 +13,7 @@
 <!ENTITY RFC791 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC6564 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6564.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
+<!ENTITY I-D.draft-ietf-anima-autonomic-control-plane SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-anima-autonomic-control-plane-03.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
 <!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-6man-pdm-option.xml">
 <!ENTITY I-D.gont-v6ops-ipv6-ehs-in-real-world SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.gont-v6ops-ipv6-ehs-in-real-world.xml">
@@ -25,6 +26,14 @@
 <!ENTITY I-D.SPUD SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
+<!-- Comments received
+Tal Mizrahi [mailto:talmi@marvell.com]
+To summarize my take on this thread:
+The proposed mechanism has two significant vulnerabilities that (in my understanding) are currently not addressed:
+1.       A man-in-the-middle can replace the POT of packet A with the POT of packet B.
+2.       It is possible to replay POTs within a certain time window, whose length is determined by the timestamp resolution.
+ 
+-->
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
 <!-- For a complete list and description of processing instructions (PIs), 
@@ -50,7 +59,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-brockners-proof-of-transit-00"
+<rfc category="exp" docName="draft-brockners-proof-of-transit-01"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -139,24 +148,53 @@
       </address>
     </author>
 
-    <author fullname="Carlos Pignataro" initials="C."
-            surname="Pignataro">
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
       <address>
         <postal>
           <street>7200-11 Kit Creek Road</street>
+
           <city>Research Triangle Park</city>
+
           <region>NC</region>
+
           <code>27709</code>
+
           <country>United States</country>
         </postal>
+
         <email>cpignata@cisco.com</email>
       </address>
     </author>
 
+    <author fullname="John Leddy" initials="J." surname="Leddy">
+      <organization abbrev="Comcast">Comcast</organization>
 
-    <date day="8" month="July" year="2016" />
+      <address>
+        <email>John_Leddy@cable.comcast.com</email>
+      </address>
+    </author>
 
+    <author fullname="Stephen Youell" initials="S." surname="Youell">
+      <organization abbrev="JMPC">JP Morgan Chase</organization>
+
+      <address>
+        <postal>
+          <street>25 Bank Street</street>
+
+          <city>London</city>
+
+          <code>E14 5JP</code>
+
+          <country>United Kingdom</country>
+        </postal>
+
+        <email>stephen.youell@jpmorgan.com</email>
+      </address>
+    </author>
+
+    <date day="18" month="July" year="2016"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -182,23 +220,23 @@
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>Several technologies such as traffic engineering, service function chaining,
-      or policy based routing, are used to steer traffic through a specific,
-      user-defined path. This document defines mechanisms to securely prove
-      that traffic transited the defined path. The mechanisms allow to
-      securely verify whether all packets traversed all those nodes of a given
-      path that they are supposed to visit.</t>
+      <t>Several technologies such as traffic engineering, service function
+      chaining, or policy based routing, are used to steer traffic through a
+      specific, user-defined path. This document defines mechanisms to
+      securely prove that traffic transited the defined path. The mechanisms
+      allow to securely verify whether all packets traversed all those nodes
+      of a given path that they are supposed to visit.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
       <t>Several deployments use traffic engineering, policy routing, segment
-      routing or Service Function Chaining (SFC) <xref target="RFC7665" /> to steer packets through a
-      specific set of nodes. In certain cases regulatory obligations or a
-      compliance policy require operators to prove that all packets that are
-      supposed to follow a specific path are indeed being forwarded across and
-      exact set of pre-determined nodes.</t>
+      routing or Service Function Chaining (SFC) <xref target="RFC7665"/> to
+      steer packets through a specific set of nodes. In certain cases
+      regulatory obligations or a compliance policy require operators to prove
+      that all packets that are supposed to follow a specific path are indeed
+      being forwarded across and exact set of pre-determined nodes.</t>
 
       <t>If a packet flow is supposed to go through a series of service
       functions or network nodes, it has to be proven that indeed all packets
@@ -217,14 +255,15 @@
       egress interface of a service appliance. This "wiring" is verified and
       then trusted upon. The evolution to Network Function Virtualization
       (NFV) and modern service chaining concepts (using technologies such as
-      LISP, NSH, Segment Routing (SR), etc.) blurs the line between the different
-      trust domains, because the hand-off-points are no longer clearly defined
-      physical interfaces, but are virtual interfaces. As a consequence,
-      different trust layers should not to be mixed in the same device. For an
-      NFV scenario a different type of proof is required. Offering a proof
-      that a packet indeed traversed a specific set of service functions or
-      nodes allows operators to evolve from the above described indirect
-      methods of proving that packets visit a predetermined set of nodes.</t>
+      LISP, NSH, Segment Routing (SR), etc.) blurs the line between the
+      different trust domains, because the hand-off-points are no longer
+      clearly defined physical interfaces, but are virtual interfaces. As a
+      consequence, different trust layers should not to be mixed in the same
+      device. For an NFV scenario a different type of proof is required.
+      Offering a proof that a packet indeed traversed a specific set of
+      service functions or nodes allows operators to evolve from the above
+      described indirect methods of proving that packets visit a predetermined
+      set of nodes.</t>
 
       <t>The solution approach presented in this document is based on a small
       portion of operational data added to every packet. This "in-band"
@@ -244,8 +283,7 @@
     </section>
 
     <section anchor="Conventions" title="Conventions">
-
-<!--
+      <!--
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
       document are to be interpreted as described in <xref
@@ -254,7 +292,7 @@
 
       <t>Abbreviations used in this document:</t>
 
-      <t><list style="hanging" hangIndent="11">
+      <t><list hangIndent="11" style="hanging">
           <t hangText="MTU:">Maximum Transmit Unit</t>
 
           <t hangText="SR:">Segment Routing</t>
@@ -265,11 +303,9 @@
 
           <t hangText="POT:">Proof of Transit</t>
 
-          <t hangText="POT-profile:">Proof of Transit Profile that has the necessary data
-          for nodes to participate in proof of transit</t>
+          <t hangText="POT-profile:">Proof of Transit Profile that has the
+          necessary data for nodes to participate in proof of transit</t>
         </list></t>
-
-
     </section>
 
     <section title="Proof of Transit">
@@ -394,8 +430,8 @@
 
           <t>Choices: Prime = 53. POLY-1(x) = (3x^2 + 3x + 10) mod 53. The
           secret to be re-constructed is the constant coefficient of POLY-1,
-          i.e., SECRET=10. It is important to note that all operations are done
-          over a finite field (i.e., modulo prime).</t>
+          i.e., SECRET=10. It is important to note that all operations are
+          done over a finite field (i.e., modulo prime).</t>
 
           <section title="Secret Shares">
             <t>The shares of the secret are the points on POLY-1 chosen for
@@ -562,7 +598,13 @@
         the verification is provided with the verification key. The
         information provided from the Controller to each of the nodes
         participating in proof of transit is referred to as a proof of transit
-        profile (POT-profile).</t>
+        profile (POT-profile). Also note that the set of nodes for which the
+        transit has to be proven are typically associated to a different trust
+        domain than the verifier. Note that building the trust relationship
+        between the Controller and the nodes is outside the scope of this
+        document. Techniques such as those described in <xref
+        target="I-D.ietf-anima-autonomic-control-plane"/> might be
+        applied.</t>
 
         <t>To optimize the overall data amount of exchanged and the processing
         at the nodes the following optimizations are performed:<list
@@ -927,9 +969,9 @@
       <section title="Redundant Nodes and Failover">
         <t>A "node" or "service" in terms of POT can be implemented by one or
         multiple physical entities. In case of multiple physical entities
-        (e.g., for load-balancing, or business continuity situations - consider
-        for example a set of firewalls), all physical entities which are
-        implementing the same POT node are given that same share of the
+        (e.g., for load-balancing, or business continuity situations -
+        consider for example a set of firewalls), all physical entities which
+        are implementing the same POT node are given that same share of the
         secret. This makes multiple physical entities represent the same POT
         node from an algorithm perspective.</t>
       </section>
@@ -946,8 +988,8 @@
         operator chooses to switch to a new set of secrets. In case 64 bits
         are used for the data-records "CML" and "RND" which are carried within
         the data packet, the regular intervals are expected to be quite long
-        (e.g., at 100 Gbps, a profile would only be used up after 3100 years) -
-        see <xref target="metadata-for-pot"/> above, thus even a "headless"
+        (e.g., at 100 Gbps, a profile would only be used up after 3100 years)
+        - see <xref target="metadata-for-pot"/> above, thus even a "headless"
         operation without a Controller can be considered feasible. In such a
         case, the Controller would only be used for the initial configuration
         of the POT-profiles.</t>
@@ -968,8 +1010,8 @@
           visited by a data packet. It does not verify the order in which the
           data packet visited the nodes. In case the order in which a data
           packet traversed a particular set of nodes needs to be verified as
-          well, alternate schemes that e.g., rely on nested encryption could to
-          be considered.</t>
+          well, alternate schemes that e.g., rely on nested encryption could
+          to be considered.</t>
         </section>
 
         <section title="Stealth Nodes">
@@ -984,10 +1026,9 @@
     </section>
 
     <section title="Acknowledgements">
-      <t>The authors would like to thank Steve Youell, Eric Vyncke, Nalini
-      Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu Harichandra
-      Babu, Akshaya Nadahalli, and Andrew Yourtchenko for the comments and
-      advice.</t>
+      <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+      Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+      Nadahalli, and Andrew Yourtchenko for the comments and advice.</t>
     </section>
   </middle>
 
@@ -1008,7 +1049,6 @@
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
-
       &RFC7665;
 
       <reference anchor="SSS"
@@ -1022,8 +1062,6 @@
         </front>
       </reference>
 
-
-<!--
       <reference anchor="draft-kitamura-ipv6-record-route">
         <front>
           <title>Record Route for IPv6 (PR6),Hop-by-Hop Option
@@ -1034,16 +1072,9 @@
           <date month="November" year="2000"/>
         </front>
       </reference>
--->
-
-
-<!--
     </references>
 
     <references title="Informative References">
--->
-
-<!--
       <reference anchor="draft-brockners-inband-oam-requirements">
         <front>
           <title>Requirements for in-band OAM</title>
@@ -1061,7 +1092,6 @@
           </author>
 
           <date day="8" month="July" year="2016"/>
-
         </front>
       </reference>
 
@@ -1078,28 +1108,28 @@
           </author>
 
           <date day="8" month="July" year="2016"/>
-
         </front>
       </reference>
 
       <reference anchor="draft-brockners-inband-oam-transport">
         <front>
           <title>Encapsulations for in-band OAM</title>
-            <author initials="F." surname="Brockners" fullname="Frank Brockners">
-                <organization />
-            </author>
-            <author initials="S." surname="Bhandari" fullname="Shwetha Bhandari">
-                <organization />
-            </author>
-            <date month="July" day="8" year="2016"/>
+
+          <author fullname="Frank Brockners" initials="F." surname="Brockners">
+            <organization/>
+          </author>
+
+          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+            <organization/>
+          </author>
+
+          <date day="8" month="July" year="2016"/>
         </front>
       </reference>
--->
-
-
-<!--
 
       &I-D.SPUD;
+
+      &I-D.draft-ietf-anima-autonomic-control-plane;
 
       <reference anchor="P4">
         <front>
@@ -1110,11 +1140,7 @@
           <date month="September" year="2015"/>
         </front>
       </reference>
--->
 
-
-
-<!--
       <reference anchor="FD.io" target="https://fd.io/">
         <front>
           <title>Fast Data Project: FD.io</title>
@@ -1124,9 +1150,6 @@
           <date/>
         </front>
       </reference>
--->
-
-
     </references>
   </back>
 </rfc>
