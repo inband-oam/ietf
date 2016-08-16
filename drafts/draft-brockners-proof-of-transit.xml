@@ -12,6 +12,10 @@
 <!ENTITY RFC2460 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2460.xml">
 <!ENTITY RFC791 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC6564 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY I-D.brockners-inband-oam-data SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-data.xml">
+<!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
+<!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
+<!ENTITY I-D.brockners-proof-of-transit SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-proof-of-transit.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.draft-ietf-anima-autonomic-control-plane SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-anima-autonomic-control-plane-03.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
@@ -59,7 +63,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-brockners-proof-of-transit-01"
+<rfc category="exp" docName="draft-brockners-proof-of-transit-02"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -533,7 +537,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             pre-configured with the non-constant coefficients (for example, 7
             and 10 in this case could be configured through the Controller on
             each node). So precisely only RND value changes per packet and is public 
-			and the rest of the non-constant co-efficients of POLY-2 kept secret.</t>
+                       and the rest of the non-constant co-efficients of POLY-2 kept secret.</t>
           </section>
 
           <section title="Reconstruction">
@@ -622,8 +626,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             the nodes is calculated and added to the POT-profile. Without this
             all the coefficients of the public polynomial had to be added to
             the POT profile and each node had to evaluate them. As stated before,
-			the public portion is only the constant co-efficent RND value, the 
-			pre-evaluated portion for each nodes should be kept secret as well.</t>
+                       the public portion is only the constant co-efficent RND value, the 
+                       pre-evaluated portion for each nodes should be kept secret as well.</t>
 
             <t>To provide flexibility on the size of the cumulative and random
             numbers carried in the POT data a field to indicate this is shared
@@ -932,61 +936,62 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             points are correctly retrieved.</t>
 
             <t>Precisely three values are kept secret by individual nodes.
-			 Share of SECRET (i.e. points on POLY-1), Share of POLY-2, LPC, P.
-		 	 Note that only constant coefficient, RND, of POLY-2 is public.
-			 x values and non-constant coefficient of POLY-2 are secret</t>
+                        Share of SECRET (i.e. points on POLY-1), Share of POLY-2, LPC, P.
+                        Note that only constant coefficient, RND, of POLY-2 is public.
+                        x values and non-constant coefficient of POLY-2 are secret</t>
           </list> An attacker bypassing a few nodes will miss adding a
         respective point on POLY-1 to corresponding point on POLY-2 , thus the
         verifier cannot construct POLY-3 for cross verification.</t>
-		
-		<t>Also it is highly recommended that different polynomials should be used
-		as POLY-1 across different paths, traffic profiles or service chains. </t>
+               
+               <t>Also it is highly recommended that different polynomials should be used
+               as POLY-1 across different paths, traffic profiles or service chains. </t>
       </section>
 
-	  <section title="Cryptanalysis">
-		  <t>A passive attacker could try to harvest the POT data (i.e CML, RND values) in order to 
-			  determine the configured secrets. Subsequently two types of differential analysis 
-			  for guessing the secrets could be done.
-			  <list style="symbols">
-			  <t>Inter-Node: A passive attacker observing CML values across nodes (i.e., as the
-				  packets entering and leaving), cannot perform differential analysis to
-				  construct the points on POLY-1. This is because at each point there are four
-				  unknowns (i.e. Share(POLY-1), Share(Poly-2) LPC and prime number P) and 
-				  three known values (i.e. RND, CML-before, CML-after). </t>
-			  <t>Inter-Packets: A passive attacker could observe CML values across packets (i.e.,
-				  values of PKT-1 and  subsequent PKT-2), in order to predict the secrets. 
-				  Differential analysis across packets could be mitigated using a good PRNG for generating 
-				  RND. Note that if constant coefficient is a sequence number than CML values become quite
-				  predictable and the scheme would be broken</t>
-		  	</list>
-			</t>
-	  </section>
+         <section title="Cryptanalysis">
+                 <t>A passive attacker could try to harvest the POT data (i.e CML, RND values) in order to 
+                         determine the configured secrets. Subsequently two types of differential analysis 
+                         for guessing the secrets could be done.
+                         <list style="symbols">
+                         <t>Inter-Node: A passive attacker observing CML values across nodes (i.e., as the
+                                 packets entering and leaving), cannot perform differential analysis to
+                                 construct the points on POLY-1. This is because at each point there are four
+                                 unknowns (i.e. Share(POLY-1), Share(Poly-2) LPC and prime number P) and 
+                                 three known values (i.e. RND, CML-before, CML-after). </t>
+                         <t>Inter-Packets: A passive attacker could observe CML values across packets (i.e.,
+                                 values of PKT-1 and  subsequent PKT-2), in order to predict the secrets. 
+                                 Differential analysis across packets could be mitigated using a good PRNG for generating 
+                                 RND. Note that if constant coefficient is a sequence number than CML values become quite
+                                 predictable and the scheme would be broken</t>
+                       </list>
+                       </t>
+         </section>
       <section title="Anti Replay">
         <t>A passive attacker could reuse a set of older RND
         and the intermediate CML values to bypass certain nodes in later
         packets. Such attacks could be avoided by carefully choosing POLY-2 as
         a (SEQ_NO + RND). For example if 64 bits are being used for POLY-2 then 
-		first 16 bits could be a sequence number SEQ_NO and next 48 bits could be a random number.
-		</t>
-		<t>Subsequently, the verifier could use the SEQ_NO bits to run classic anti-replay techniques like 
-			sliding window used in IPSEC. The verifier could buffer upto 2^16 packets as a sliding window. 
-			Packets arriving with a higher SEQ_NO than current buffer could be flagged legitimate. Packets 
-			arriving with a lower SEQ_NO than current buffer could be flagged as suspicious. </t>
-			
-			<t>For all practical purposes in the rest of the document by RND we mean SEQ_NO + RND to keep it 
-				simple </t>
+               first 16 bits could be a sequence number SEQ_NO and next 48 bits could be a random number.
+               </t>
+               <t>Subsequently, the verifier could use the SEQ_NO bits to run classic anti-replay techniques like 
+                       sliding window used in IPSEC. The verifier could buffer upto 2^16 packets as a sliding window. 
+                       Packets arriving with a higher SEQ_NO than current buffer could be flagged legitimate. Packets 
+                       arriving with a lower SEQ_NO than current buffer could be flagged as suspicious. </t>
+                       
+                       <t>For all practical purposes in the rest of the document by RND we mean SEQ_NO + RND to keep it 
+                               simple </t>
       </section>
-	  
+         
       <section title="Anti Preplay">
         <t>An active attacker could try to perform a man-in-the-middle (MITM) attack by extracting the POT of 
-			PKT-1 and using it in PKT-2. Subsequently attacker drops the PKT-1 in order to avoid duplicate POT
-			values reaching the verifier. Although such attacks are highly difficult to launch, below 
-			recommendations are provided </t>
-	  <list style="symbols">
-	  <t>Any such MITM attack would add delay in the packets arrival at verifier. Carefully chosing the SEQ_NO 
-		  could thwart such attacks, as such crafted packets would be out of sliding window due to delay. </t>
-	  <t>Also integrity checks performed at higher level protocols using POT schemes could identify that the packets were tampered</t>
-  	</list>
+                       PKT-1 and using it in PKT-2. Subsequently attacker drops the PKT-1 in order to avoid duplicate POT
+                       values reaching the verifier. Although such attacks are highly difficult to launch, below 
+                       recommendations are provided </t>
+         <list style="symbols">
+         <t>Any such MITM attack would add delay in the packets arrival at verifier. Carefully chosing the SEQ_NO 
+                 could thwart such attacks, as such crafted packets would be out of sliding window due to delay. </t>
+         <t>Also integrity checks performed at higher level protocols using POT schemes could identify that the packets were tampered</t>
+       </list>
+
       </section>
 
       <section title="Anti Tampering">
@@ -1100,94 +1105,12 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         </front>
       </reference>
 
-      <reference anchor="draft-kitamura-ipv6-record-route">
-        <front>
-          <title>Record Route for IPv6 (PR6),Hop-by-Hop Option
-          Extension</title>
-
-          <author fullname="H. Kitamura" initials="H" surname="Kitamura"/>
-
-          <date month="November" year="2000"/>
-        </front>
-      </reference>
     </references>
 
     <references title="Informative References">
-      <reference anchor="draft-brockners-inband-oam-requirements">
-        <front>
-          <title>Requirements for in-band OAM</title>
-
-          <author fullname="Frank Brockners" initials="F." surname="Brockners">
-            <organization/>
-          </author>
-
-          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-            <organization/>
-          </author>
-
-          <author fullname="Sashank Dara" initials="S." surname="Dara">
-            <organization/>
-          </author>
-
-          <date day="8" month="July" year="2016"/>
-        </front>
-      </reference>
-
-      <reference anchor="draft-brockners-inband-oam-data">
-        <front>
-          <title>Data Formats for in-band OAM</title>
-
-          <author fullname="Frank Brockners" initials="F." surname="Brockners">
-            <organization/>
-          </author>
-
-          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-            <organization/>
-          </author>
-
-          <date day="8" month="July" year="2016"/>
-        </front>
-      </reference>
-
-      <reference anchor="draft-brockners-inband-oam-transport">
-        <front>
-          <title>Encapsulations for in-band OAM</title>
-
-          <author fullname="Frank Brockners" initials="F." surname="Brockners">
-            <organization/>
-          </author>
-
-          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-            <organization/>
-          </author>
-
-          <date day="8" month="July" year="2016"/>
-        </front>
-      </reference>
-
-      &I-D.SPUD;
 
       &I-D.draft-ietf-anima-autonomic-control-plane;
 
-      <reference anchor="P4">
-        <front>
-          <title>P4: In-band Network Telemetry (INT)</title>
-
-          <author fullname="Changhoon Kim" surname="Kim"/>
-
-          <date month="September" year="2015"/>
-        </front>
-      </reference>
-
-      <reference anchor="FD.io" target="https://fd.io/">
-        <front>
-          <title>Fast Data Project: FD.io</title>
-
-          <author/>
-
-          <date/>
-        </front>
-      </reference>
     </references>
   </back>
 </rfc>

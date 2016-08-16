@@ -14,6 +14,10 @@
 <!ENTITY RFC7112 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7112.xml">
 <!ENTITY RFC791 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC6564 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY I-D.brockners-inband-oam-data SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-data.xml">
+<!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
+<!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
+<!ENTITY I-D.brockners-proof-of-transit SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.brockners-proof-of-transit.xml">
 <!ENTITY I-D.penno-sfc-trace SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.penno-sfc-trace.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml.resource.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
@@ -30,7 +34,7 @@
 ]>
 <!-- Comments received
 Jen Linkova
-
+ 
 0) "n=max number of nodes to be allocated"
 Shall it be "maximum number of nodes updating OAM data"?
 BTW I can not see 'n' used in the formulas later...
@@ -84,7 +88,7 @@ It's good you have configuration on ingress and egress nodes to add/strip the EH
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-brockners-inband-oam-transport-01"
+<rfc category="info" docName="draft-brockners-inband-oam-transport-02"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -248,12 +252,12 @@ It's good you have configuration on ingress and egress nodes to add/strip the EH
       the OAM data is added to the data packets rather than is being sent
       within packets specifically dedicated to OAM. A discussion of the
       motivation and requirements for in-band OAM can be found in <xref
-      target="draft-brockners-inband-oam-requirements"/>. Data types and data
+      target="I-D.brockners-inband-oam-requirements"/>. Data types and data
       formats for in-band OAM are defined in <xref
-      target="draft-brockners-inband-oam-data"/>.</t>
+      target="I-D.brockners-inband-oam-data"/>.</t>
 
       <t>This document outlines transport encapsulations for the in-band OAM
-      data defined in <xref target="draft-brockners-inband-oam-data"/>. This
+      data defined in <xref target="I-D.brockners-inband-oam-data"/>. This
       document is to serve informational purposes only. As part of an in-band
       OAM implementation study different protocol encapsulations for in-band
       OAM data are being explored. Once data formats and encapsulation
@@ -261,7 +265,7 @@ It's good you have configuration on ingress and egress nodes to add/strip the EH
       data transport will address the standardization aspect.</t>
 
       <t>The data for in-band OAM defined in <xref
-      target="draft-brockners-inband-oam-data"/> can be carried in a variety
+      target="I-D.brockners-inband-oam-data"/> can be carried in a variety
       of protocols based on the deployment needs. This document discusses
       transport of in-band OAM data for the following protocols:</t>
 
@@ -328,7 +332,7 @@ It's good you have configuration on ingress and egress nodes to add/strip the EH
       the network or a network domain where it is enabled and used.</t>
 
       <t>A historical note: The idea of IPv6 route recording was originally
-      introduced by <xref target="draft-kitamura-ipv6-record-route"/> back in
+      introduced by <xref target="I-D.kitamura-ipv6-record-route"/> back in
       year 2000. With IPv6 now being generally deployed and new concepts such
       as Segment Routing <xref target="I-D.ietf-spring-segment-routing"/>
       being introduced, it is imperative to further mature the operations,
@@ -400,7 +404,7 @@ With 2 highest order bits of Option Type indicating the following:
 
           <t><list style="numbers">
               <t>Tracing Option: The in-band OAM Tracing option defined in
-              <xref target="draft-brockners-inband-oam-data"/> is represented
+              <xref target="I-D.brockners-inband-oam-data"/> is represented
               as a IPv6 option in hop by hop extension header by allocating
               following type: <list style="hanging">
                   <t hangText="Option Type:">001xxxxxx 8-bit identifier of the
@@ -408,7 +412,7 @@ With 2 highest order bits of Option Type indicating the following:
                 </list></t>
 
               <t>Proof of Transit Option: The in-band OAM POT option defined
-              in <xref target="draft-brockners-inband-oam-data"/> is
+              in <xref target="I-D.brockners-inband-oam-data"/> is
               represented as a IPv6 option in hop by hop extension header by
               allocating following type: <list style="hanging">
                   <t hangText="Option Type:">001xxxxxx 8-bit identifier of the
@@ -416,7 +420,7 @@ With 2 highest order bits of Option Type indicating the following:
                 </list></t>
 
               <t>Edge to Edge Option: The in-band OAM E2E option defined in
-              <xref target="draft-brockners-inband-oam-data"/> is represented
+              <xref target="I-D.brockners-inband-oam-data"/> is represented
               as a IPv6 option in hop by hop extension header by allocating
               following type: <list style="hanging">
                   <t hangText="Option Type:">000xxxxxx 8-bit identifier of the
@@ -566,7 +570,7 @@ In-band OAM header in VXLAN GPE header:
    Option Data          Variable-length field.  Option-Type-specific
                         data.]]></artwork>
         </figure>The in-band OAM options defined in <xref
-      target="draft-brockners-inband-oam-data"/> are encoded with an option
+      target="I-D.brockners-inband-oam-data"/> are encoded with an option
       type allocated in the new in-band OAM IANA registry - in-band
       OAM_PROTOCOL_OPTION_REGISTRY_IANA_TBD. In addition the following padding
       options are defined to be used when necessary to align subsequent
@@ -606,8 +610,8 @@ PadN option  (alignment requirement: none)
       includes path tracing capabilities <xref target="I-D.penno-sfc-trace"/>,
       but currently does not offer a solution to securely prove that packets
       really traversed the service chain. The "Proof of Transit" capabilities
-      (see <xref target="draft-brockners-inband-oam-requirements"/> and <xref
-      target="draft-brockners-proof-of-transit"/>) of in-band OAM can be
+      (see <xref target="I-D.brockners-inband-oam-requirements"/> and <xref
+      target="I-D.brockners-proof-of-transit"/>) of in-band OAM can be
       leveraged within NSH. Proof of transit in-band OAM data is added as NSH
       Type 2 metadata:</t>
 
@@ -728,7 +732,7 @@ PadN option  (alignment requirement: none)
       <t>Security considerations will be addressed &iacute;n a later version
       of this document. For a discussion of security requirements of in-band
       OAM, please refer to <xref
-      target="draft-brockners-inband-oam-requirements"/>.</t>
+      target="I-D.brockners-inband-oam-requirements"/>.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -737,7 +741,7 @@ PadN option  (alignment requirement: none)
       Nadahalli, Stefano Previdi and Andrew Yourtchenko for the comments and
       advice. For the IPv6 encapsulation, this document leverages and builds
       on top of several concepts described in <xref
-      target="draft-kitamura-ipv6-record-route"/>. The authors would like to
+      target="I-D.kitamura-ipv6-record-route"/>. The authors would like to
       acknowledge the work done by the author Hiroshi Kitamura and people
       involved in writing it.</t>
     </section>
@@ -760,25 +764,9 @@ PadN option  (alignment requirement: none)
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
-      <reference anchor="draft-brockners-inband-oam-requirements">
-        <front>
-          <title>Requirements for in-band OAM</title>
 
-          <author fullname="Frank Brockners" initials="F." surname="Brockners">
-            <organization/>
-          </author>
+      &I-D.brockners-inband-oam-requirements;
 
-          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-            <organization/>
-          </author>
-
-          <author fullname="Sashank Dara" initials="S." surname="Dara">
-            <organization/>
-          </author>
-
-          <date day="8" month="July" year="2016"/>
-        </front>
-      </reference>
     </references>
 
     <references title="Informative References">
@@ -794,75 +782,21 @@ PadN option  (alignment requirement: none)
 
       &I-D.ietf-nvo3-vxlan-gpe;
 
-      <reference anchor="draft-kitamura-ipv6-record-route">
+      <reference anchor="I-D.kitamura-ipv6-record-route">
         <front>
-          <title>Record Route for IPv6 (PR6),Hop-by-Hop Option
+          <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
           Extension</title>
-
-          <author fullname="H. Kitamura" initials="H" surname="Kitamura"/>
-
+          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
           <date month="November" year="2000"/>
         </front>
+<seriesInfo name="Internet-Draft" value="draft-kitamura-ipv6-record-route-00"/>
+<format type="TXT" target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"/>
       </reference>
 
-      <reference anchor="draft-brockners-inband-oam-data">
-        <front>
-          <title>Data Formats for in-band OAM</title>
-
-          <author fullname="Frank Brockners" initials="F." surname="Brockners">
-            <organization/>
-          </author>
-
-          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-            <organization/>
-          </author>
-
-          <author fullname="Carlos Pignataro" initials="C."
-                  surname="Pignataro">
-            <organization/>
-          </author>
-
-          <author fullname="Hannes Gredler" initials="H." surname="Gredler">
-            <organization/>
-          </author>
-
-          <date day="8" month="July" year="2016"/>
-        </front>
-      </reference>
-
-      <reference anchor="draft-brockners-proof-of-transit">
-        <front>
-          <title>Proof of transit</title>
-
-          <author fullname="Frank Brockners" initials="F." surname="Brockners">
-            <organization/>
-          </author>
-
-          <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-            <organization/>
-          </author>
-
-          <author fullname="Sashank Dara" initials="S." surname="Dara">
-            <organization/>
-          </author>
-
-          <date day="8" month="July" year="2016"/>
-        </front>
-      </reference>
+      &I-D.brockners-inband-oam-data;
+      &I-D.brockners-proof-of-transit;
 
       &I-D.ietf-ippm-6man-pdm-option;
-
-      &I-D.SPUD;
-
-      <reference anchor="P4">
-        <front>
-          <title>P4: In-band Network Telemetry (INT)</title>
-
-          <author fullname="Changhoon Kim" surname="Kim"/>
-
-          <date month="September" year="2015"/>
-        </front>
-      </reference>
 
       <reference anchor="FD.io" target="https://fd.io/">
         <front>
