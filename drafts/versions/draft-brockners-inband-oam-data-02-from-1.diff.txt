@@ -1,0 +1,185 @@
+--- 1/draft-brockners-inband-oam-data-01.txt	2016-08-16 14:21:36.000000000 -0400
++++ 2/draft-brockners-inband-oam-data-02.txt	2016-08-16 14:21:36.000000000 -0400
+@@ -5,21 +5,21 @@
+ Expires: January 19, 2017                                          Cisco
+                                                               H. Gredler
+                                                             RtBrick Inc.
+                                                                 J. Leddy
+                                                                  Comcast
+                                                                S. Youell
+                                                                     JMPC
+                                                            July 18, 2016
+ 
+                       Data Formats for In-band OAM
+-                   draft-brockners-inband-oam-data-01
++                   draft-brockners-inband-oam-data-02
+ 
+ Abstract
+ 
+    In-band operation, administration and maintenance (OAM) records
+    operational and telemetry information in the packet while the packet
+    traverses a path between two points in the network.  This document
+    discusses the data types and data formats for in-band OAM data
+    records.  In-band OAM data records can be embedded into a variety of
+    transports such as NSH, Segment Routing, VXLAN-GPE, native IPv6 (via
+    extension header), or IPv4.  In-band OAM is to complement current
+@@ -79,21 +79,21 @@
+ 
+ 1.  Introduction
+ 
+    This document defines data record types for "in-band" operation,
+    administration, and maintenance (OAM).  In-band OAM records OAM
+    information within the packet while the packet traverses a particular
+    network domain.  The term "in-band" refers to the fact that the OAM
+    data is added to the data packets rather than is being sent within
+    packets specifically dedicated to OAM.  A discussion of the
+    motivation and requirements for in-band OAM can be found in
+-   [draft-brockners-inband-oam-requirements].  In-band OAM is to
++   [I-D.brockners-inband-oam-requirements].  In-band OAM is to
+    complement "out-of-band" or "active" mechanisms such as ping or
+    traceroute, or more recent active probing mechanisms as described in
+    [I-D.lapukhov-dataplane-probe].  In-band OAM mechanisms can be
+    leveraged where current out-of-band mechanisms do not apply or do not
+    offer the desired results, such as proving that a certain set of
+    traffic takes a pre-defined path, SLA verification for the live data
+    traffic, detailed statistics on traffic distribution paths in
+    networks that distribute traffic across multiple paths, or scenarios
+    where probe traffic is potentially handled differently from regular
+    data traffic by the network devices.
+@@ -125,28 +125,28 @@
+    VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
+               Extension
+ 
+ 3.  In-band OAM Data Types and Data Format
+ 
+    This section defines in-band OAM data types and data formats of the
+    data records required for in-band OAM.  The different uses of in-band
+    OAM require the definition of different types of data.  The in-band
+    OAM data format for the data being carried corresponds to the three
+    main categories of in-band OAM data defined in
+-   [draft-brockners-inband-oam-requirements], which are edge-to-edge,
+-   per node, and for selected nodes only.
++   [I-D.brockners-inband-oam-requirements], which are edge-to-edge, per
++   node, and for selected nodes only.
+ 
+    Transport options for in-band OAM data are found in
+-   [draft-brockners-inband-oam-transport].  In-band OAM data is defined
+-   as options in Type-Length-Value (TLV) format.  The TLV format for
+-   each of the three different types of in-band OAM data is defined in
+-   this document.
++   [I-D.brockners-inband-oam-transport].  In-band OAM data is defined as
++   options in Type-Length-Value (TLV) format.  The TLV format for each
++   of the three different types of in-band OAM data is defined in this
++   document.
+ 
+    In-band OAM is expected to be deployed in a specific domain rather
+    than on the overall Internet.  The part of the network which employs
+    in-band OAM is referred to as "in-band OAM-domain".  In-band OAM data
+    is added to a packet on entering the in-band OAM-domain and is
+    removed from the packet when exiting the domain.  Within the in-band
+    OAM-domain, the in-band OAM data may be updated by network nodes that
+    the packet traverses.  The device which adds in-band OAM data to the
+    packet is called the "in-band OAM encapsulating node", whereas the
+    device which removed the in-band OAM data is referred to as the "in-
+@@ -506,83 +506,79 @@
+ 
+ 6.  Manageability Considerations
+ 
+    Manageability considerations will be addressed in a later version of
+    this document..
+ 
+ 7.  Security Considerations
+ 
+    Security considerations will be addressed in a later version of this
+    document.  For a discussion of security requirements of in-band OAM,
+-   please refer to [draft-brockners-inband-oam-requirements].
++   please refer to [I-D.brockners-inband-oam-requirements].
+ 
+ 8.  Acknowledgements
+ 
+    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+    Nadahalli, and Andrew Yourtchenko for the comments and advice.  This
+    document leverages and builds on top of several concepts described in
+-   [draft-kitamura-ipv6-record-route].  The authors would like to
++   [I-D.kitamura-ipv6-record-route].  The authors would like to
+    acknowledge the work done by the author Hiroshi Kitamura and people
+    involved in writing it.
+ 
+ 9.  References
+ 
+ 9.1.  Normative References
+ 
+-   [draft-brockners-inband-oam-requirements]
+-              Brockners, F., Bhandari, S., and S. Dara, "Requirements
+-              for in-band OAM", July 2016.
++   [I-D.brockners-inband-oam-requirements]
++              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
++              Gredler, H., Leddy, J., and S. Youell, "Requirements for
++              In-band OAM", draft-brockners-inband-oam-requirements-01
++              (work in progress), July 2016.
+ 
+ 9.2.  Informative References
+ 
+-   [draft-brockners-inband-oam-transport]
+-              Brockners, F., Bhandari, S., Pignataro, C., and H.
+-              Gredler, "Encapsulations for in-band OAM", July 2016.
+-
+-   [draft-brockners-proof-of-transit]
+-              Brockners, F., Bhandari, S., and S. Dara, "Proof of
+-              transit", July 2016.
+-
+-   [draft-kitamura-ipv6-record-route]
+-              Kitamura, H., "Record Route for IPv6 (PR6),Hop-by-Hop
+-              Option Extension", November 2000.
+-
+-   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
++   [I-D.brockners-inband-oam-transport]
++              Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
++              Leddy, J., and S. Youell, "Encapsulations for In-band OAM
++              Data", draft-brockners-inband-oam-transport-01 (work in
++              progress), July 2016.
+ 
+    [I-D.hildebrand-spud-prototype]
+               Hildebrand, J. and B. Trammell, "Substrate Protocol for
+               User Datagrams (SPUD) Prototype", draft-hildebrand-spud-
+               prototype-03 (work in progress), March 2015.
+ 
++   [I-D.kitamura-ipv6-record-route]
++              Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
++              Option Extension", draft-kitamura-ipv6-record-route-00
++              (work in progress), November 2000.
++
+    [I-D.lapukhov-dataplane-probe]
+               Lapukhov, P. and r. remy@barefootnetworks.com, "Data-plane
+               probe for in-band telemetry collection", draft-lapukhov-
+               dataplane-probe-01 (work in progress), June 2016.
+ 
+-   [P4]       Kim, , "P4: In-band Network Telemetry (INT)", September
+-              2015.
+-
+    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+               Chaining (SFC) Architecture", RFC 7665,
+               DOI 10.17487/RFC7665, October 2015,
+               <http://www.rfc-editor.org/info/rfc7665>.
+ 
+ Authors' Addresses
++
+    Frank Brockners
+    Cisco Systems, Inc.
+    Hansaallee 249, 3rd Floor
+    DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+    Germany
+ 
+    Email: fbrockne@cisco.com
+-
+    Shwetha Bhandari
+    Cisco Systems, Inc.
+    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+    Bangalore, KARNATAKA 560 087
+    India
+ 
+    Email: shwethab@cisco.com
+ 
+    Carlos Pignataro
+    Cisco Systems, Inc.

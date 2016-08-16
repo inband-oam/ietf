@@ -1,0 +1,273 @@
+--- 1/draft-brockners-proof-of-transit-00.txt	2016-08-16 14:20:18.000000000 -0400
++++ 2/draft-brockners-proof-of-transit-01.txt	2016-08-16 14:20:18.000000000 -0400
+@@ -1,20 +1,24 @@
+ 
+ Network Working Group                                       F. Brockners
+ Internet-Draft                                               S. Bhandari
+ Intended status: Experimental                                    S. Dara
+-Expires: January 9, 2017                                    C. Pignataro
++Expires: January 19, 2017                                   C. Pignataro
+                                                                    Cisco
+-                                                            July 8, 2016
++                                                                J. Leddy
++                                                                 Comcast
++                                                               S. Youell
++                                                                    JMPC
++                                                           July 18, 2016
+ 
+                             Proof of Transit
+-                  draft-brockners-proof-of-transit-00
++                  draft-brockners-proof-of-transit-01
+ 
+ Abstract
+ 
+    Several technologies such as traffic engineering, service function
+    chaining, or policy based routing, are used to steer traffic through
+    a specific, user-defined path.  This document defines mechanisms to
+    securely prove that traffic transited the defined path.  The
+    mechanisms allow to securely verify whether all packets traversed all
+    those nodes of a given path that they are supposed to visit.
+ 
+@@ -26,21 +30,21 @@
+    Internet-Drafts are working documents of the Internet Engineering
+    Task Force (IETF).  Note that other groups may also distribute
+    working documents as Internet-Drafts.  The list of current Internet-
+    Drafts is at http://datatracker.ietf.org/drafts/current/.
+ 
+    Internet-Drafts are draft documents valid for a maximum of six months
+    and may be updated, replaced, or obsoleted by other documents at any
+    time.  It is inappropriate to use Internet-Drafts as reference
+    material or to cite them other than as "work in progress."
+ 
+-   This Internet-Draft will expire on January 9, 2017.
++   This Internet-Draft will expire on January 19, 2017.
+ 
+ Copyright Notice
+ 
+    Copyright (c) 2016 IETF Trust and the persons identified as the
+    document authors.  All rights reserved.
+ 
+    This document is subject to BCP 78 and the IETF Trust's Legal
+    Provisions Relating to IETF Documents
+    (http://trustee.ietf.org/license-info) in effect on the date of
+    publication of this document.  Please review these documents
+@@ -48,56 +52,58 @@
+    to this document.  Code Components extracted from this document must
+    include Simplified BSD License text as described in Section 4.e of
+    the Trust Legal Provisions and are provided without warranty as
+    described in the Simplified BSD License.
+ 
+ Table of Contents
+ 
+    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
+    3.  Proof of Transit  . . . . . . . . . . . . . . . . . . . . . .   4
+-     3.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . . . .   4
++     3.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . . . .   5
+      3.2.  Solution Approach . . . . . . . . . . . . . . . . . . . .   5
+        3.2.1.  Setup . . . . . . . . . . . . . . . . . . . . . . . .   6
+        3.2.2.  In Transit  . . . . . . . . . . . . . . . . . . . . .   6
+        3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   6
+-     3.3.  Example for Illustration  . . . . . . . . . . . . . . . .   6
+-       3.3.1.  Basic Version . . . . . . . . . . . . . . . . . . . .   6
++     3.3.  Example for Illustration  . . . . . . . . . . . . . . . .   7
++       3.3.1.  Basic Version . . . . . . . . . . . . . . . . . . . .   7
+          3.3.1.1.  Secret Shares . . . . . . . . . . . . . . . . . .   7
+          3.3.1.2.  Lagrange Polynomials  . . . . . . . . . . . . . .   7
+-         3.3.1.3.  LPC Computation . . . . . . . . . . . . . . . . .   7
++         3.3.1.3.  LPC Computation . . . . . . . . . . . . . . . . .   8
+          3.3.1.4.  Reconstruction  . . . . . . . . . . . . . . . . .   8
+          3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   8
+-       3.3.2.  Enhanced Version  . . . . . . . . . . . . . . . . . .   8
+-         3.3.2.1.  Random Polynomial . . . . . . . . . . . . . . . .   8
++       3.3.2.  Enhanced Version  . . . . . . . . . . . . . . . . . .   9
++         3.3.2.1.  Random Polynomial . . . . . . . . . . . . . . . .   9
+          3.3.2.2.  Reconstruction  . . . . . . . . . . . . . . . . .   9
+-         3.3.2.3.  Verification  . . . . . . . . . . . . . . . . . .   9
++         3.3.2.3.  Verification  . . . . . . . . . . . . . . . . . .  10
+      3.4.  Operational Aspects . . . . . . . . . . . . . . . . . . .  10
+-   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  10
+-   5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  11
+-     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  11
++   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  11
++   5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  12
++     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  12
+      5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  12
+    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+    7.  Manageability Considerations  . . . . . . . . . . . . . . . .  15
+-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
+-     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  15
++   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
++     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  16
+      8.2.  Anti Replay . . . . . . . . . . . . . . . . . . . . . . .  16
+      8.3.  Anti Tampering  . . . . . . . . . . . . . . . . . . . . .  16
+-     8.4.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  16
+-     8.5.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  16
++     8.4.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  17
++     8.5.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  17
+      8.6.  Controller Operation  . . . . . . . . . . . . . . . . . .  17
+      8.7.  Verification Scope  . . . . . . . . . . . . . . . . . . .  17
+-       8.7.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  17
+-       8.7.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  17
++       8.7.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  18
++       8.7.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  18
+    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  18
+-   10. Normative References  . . . . . . . . . . . . . . . . . . . .  18
+-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
++   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  18
++     10.1.  Normative References . . . . . . . . . . . . . . . . . .  18
++     10.2.  Informative References . . . . . . . . . . . . . . . . .  18
++   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
+ 
+ 1.  Introduction
+ 
+    Several deployments use traffic engineering, policy routing, segment
+    routing or Service Function Chaining (SFC) [RFC7665] to steer packets
+    through a specific set of nodes.  In certain cases regulatory
+    obligations or a compliance policy require operators to prove that
+    all packets that are supposed to follow a specific path are indeed
+    being forwarded across and exact set of pre-determined nodes.
+ 
+@@ -430,21 +436,26 @@
+ 
+ 3.4.  Operational Aspects
+ 
+    To operationalize this scheme, a central controller is used to
+    generate the necessary polynomials, the secret share per node, the
+    prime number, etc. and distributing the data to the nodes
+    participating in proof of transit.  The identified node that performs
+    the verification is provided with the verification key.  The
+    information provided from the Controller to each of the nodes
+    participating in proof of transit is referred to as a proof of
+-   transit profile (POT-profile).
++   transit profile (POT-profile).  Also note that the set of nodes for
++   which the transit has to be proven are typically associated to a
++   different trust domain than the verifier.  Note that building the
++   trust relationship between the Controller and the nodes is outside
++   the scope of this document.  Techniques such as those described in
++   [I-D.ietf-anima-autonomic-control-plane] might be applied.
+ 
+    To optimize the overall data amount of exchanged and the processing
+    at the nodes the following optimizations are performed:
+ 
+    1.  The points (x,y) for each of the nodes on the public and private
+        polynomials are picked such that the x component of the points
+        match.  This lends to the LPC values which are used to calculate
+        the cumulative value CML to be constant.  Note that the LPC are
+        only depending on the x components.  The can be computed at the
+        controller and communicated to the nodes.  Otherwise, one would
+@@ -803,35 +814,69 @@
+ 
+    The POT approach discussed in this document is to prove that a data
+    packet traversed a specific set of "nodes".  This set could be all
+    nodes within a path, but could also be a subset of nodes in a path.
+    Consequently, the POT approach isn't suited to detect whether
+    "stealth" nodes which do not participate in proof-of-transit have
+    been inserted into a path.
+ 
+ 9.  Acknowledgements
+ 
+-   The authors would like to thank Steve Youell, Eric Vyncke, Nalini
+-   Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu Harichandra
+-   Babu, Akshaya Nadahalli, and Andrew Yourtchenko for the comments and
+-   advice.
++   The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
++   Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
++   Nadahalli, and Andrew Yourtchenko for the comments and advice.
+ 
+-10.  Normative References
++10.  References
++
++10.1.  Normative References
++
++   [draft-kitamura-ipv6-record-route]
++              Kitamura, H., "Record Route for IPv6 (PR6),Hop-by-Hop
++              Option Extension", November 2000.
+ 
+    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+               Chaining (SFC) Architecture", RFC 7665,
+               DOI 10.17487/RFC7665, October 2015,
+               <http://www.rfc-editor.org/info/rfc7665>.
+ 
+    [SSS]      "Shamir's Secret Sharing", <https://en.wikipedia.org/wiki/
+               Shamir%27s_Secret_Sharing>.
+ 
++10.2.  Informative References
++
++   [draft-brockners-inband-oam-data]
++              Brockners, F. and S. Bhandari, "Data Formats for in-band
++              OAM", July 2016.
++
++   [draft-brockners-inband-oam-requirements]
++              Brockners, F., Bhandari, S., and S. Dara, "Requirements
++              for in-band OAM", July 2016.
++
++   [draft-brockners-inband-oam-transport]
++              Brockners, F. and S. Bhandari, "Encapsulations for in-band
++              OAM", July 2016.
++
++   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
++
++   [I-D.hildebrand-spud-prototype]
++              Hildebrand, J. and B. Trammell, "Substrate Protocol for
++              User Datagrams (SPUD) Prototype", draft-hildebrand-spud-
++              prototype-03 (work in progress), March 2015.
++
++   [I-D.ietf-anima-autonomic-control-plane]
++              Behringer, M., Eckert, T., and S. Bjarnason, "An Autonomic
++              Control Plane", draft-ietf-anima-autonomic-control-
++              plane-03 (work in progress), July 2016.
++
++   [P4]       Kim, , "P4: In-band Network Telemetry (INT)", September
++              2015.
++
+ Authors' Addresses
+ 
+    Frank Brockners
+    Cisco Systems, Inc.
+    Hansaallee 249, 3rd Floor
+    DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+    Germany
+ 
+    Email: fbrockne@cisco.com
+ 
+@@ -835,25 +880,38 @@
+ 
+    Email: fbrockne@cisco.com
+ 
+    Shwetha Bhandari
+    Cisco Systems, Inc.
+    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+    Bangalore, KARNATAKA 560 087
+    India
+ 
+    Email: shwethab@cisco.com
+-
+    Sashank Dara
+    Cisco Systems, Inc.
+    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+    BANGALORE, Bangalore, KARNATAKA 560 087
+    INDIA
+ 
+    Email: sadara@cisco.com
++
+    Carlos Pignataro
+    Cisco Systems, Inc.
+    7200-11 Kit Creek Road
+    Research Triangle Park, NC  27709
+    United States
+ 
+    Email: cpignata@cisco.com
++
++   John Leddy
++   Comcast
++
++   Email: John_Leddy@cable.comcast.com
++
++   Stephen Youell
++   JP Morgan Chase
++   25 Bank Street
++   London  E14 5JP
++   United Kingdom
++
++   Email: stephen.youell@jpmorgan.com

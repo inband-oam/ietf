@@ -1,0 +1,386 @@
+
+INTRODUCTION, paragraph 1:
+EXPLANATION: 
+
+OLD:
+
+ Network Working Group                                       F. Brockners
+ Internet-Draft                                               S. Bhandari
+ Intended status: Experimental                                    S. Dara
+|Expires: January 9, 2017                                    C. Pignataro
+                                                                    Cisco
+|                                                            July 8, 2016
+
+NEW:
+
+ Network Working Group                                       F. Brockners
+ Internet-Draft                                               S. Bhandari
+ Intended status: Experimental                                    S. Dara
+|Expires: January 19, 2017                                   C. Pignataro
+                                                                    Cisco
+|                                                                J. Leddy
+|                                                                 Comcast
+|                                                               S. Youell
+|                                                                    JMPC
+|                                                           July 18, 2016
+
+
+------------------------------------------------------------------------
+
+
+INTRODUCTION, paragraph 2:
+EXPLANATION: 
+
+OLD:
+
+                             Proof of Transit
+|                  draft-brockners-proof-of-transit-00
+
+NEW:
+
+                             Proof of Transit
+|                  draft-brockners-proof-of-transit-01
+
+
+------------------------------------------------------------------------
+
+
+INTRODUCTION, paragraph 9:
+EXPLANATION: 
+
+OLD:
+
+|   This Internet-Draft will expire on January 9, 2017.
+
+NEW:
+
+|   This Internet-Draft will expire on January 19, 2017.
+
+
+------------------------------------------------------------------------
+
+
+Section 9., paragraph 0:
+EXPLANATION: 
+
+OLD:
+
+    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
+    3.  Proof of Transit  . . . . . . . . . . . . . . . . . . . . . .   4
+|     3.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . . . .   4
+      3.2.  Solution Approach . . . . . . . . . . . . . . . . . . . .   5
+        3.2.1.  Setup . . . . . . . . . . . . . . . . . . . . . . . .   6
+        3.2.2.  In Transit  . . . . . . . . . . . . . . . . . . . . .   6
+        3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   6
+|     3.3.  Example for Illustration  . . . . . . . . . . . . . . . .   6
+|       3.3.1.  Basic Version . . . . . . . . . . . . . . . . . . . .   6
+          3.3.1.1.  Secret Shares . . . . . . . . . . . . . . . . . .   7
+          3.3.1.2.  Lagrange Polynomials  . . . . . . . . . . . . . .   7
+|         3.3.1.3.  LPC Computation . . . . . . . . . . . . . . . . .   7
+          3.3.1.4.  Reconstruction  . . . . . . . . . . . . . . . . .   8
+          3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   8
+|       3.3.2.  Enhanced Version  . . . . . . . . . . . . . . . . . .   8
+|         3.3.2.1.  Random Polynomial . . . . . . . . . . . . . . . .   8
+          3.3.2.2.  Reconstruction  . . . . . . . . . . . . . . . . .   9
+|         3.3.2.3.  Verification  . . . . . . . . . . . . . . . . . .   9
+      3.4.  Operational Aspects . . . . . . . . . . . . . . . . . . .  10
+|   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  10
+|   5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  11
+|     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  11
+      5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  12
+    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+    7.  Manageability Considerations  . . . . . . . . . . . . . . . .  15
+|   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
+|     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  15
+      8.2.  Anti Replay . . . . . . . . . . . . . . . . . . . . . . .  16
+      8.3.  Anti Tampering  . . . . . . . . . . . . . . . . . . . . .  16
+|     8.4.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  16
+|     8.5.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  16
+      8.6.  Controller Operation  . . . . . . . . . . . . . . . . . .  17
+      8.7.  Verification Scope  . . . . . . . . . . . . . . . . . . .  17
+|       8.7.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  17
+|       8.7.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  17
+    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  18
+|   10. Normative References  . . . . . . . . . . . . . . . . . . . .  18
+|   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
+
+NEW:
+
+    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
+    3.  Proof of Transit  . . . . . . . . . . . . . . . . . . . . . .   4
+|     3.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . . . .   5
+      3.2.  Solution Approach . . . . . . . . . . . . . . . . . . . .   5
+        3.2.1.  Setup . . . . . . . . . . . . . . . . . . . . . . . .   6
+        3.2.2.  In Transit  . . . . . . . . . . . . . . . . . . . . .   6
+        3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   6
+|     3.3.  Example for Illustration  . . . . . . . . . . . . . . . .   7
+|       3.3.1.  Basic Version . . . . . . . . . . . . . . . . . . . .   7
+          3.3.1.1.  Secret Shares . . . . . . . . . . . . . . . . . .   7
+          3.3.1.2.  Lagrange Polynomials  . . . . . . . . . . . . . .   7
+|         3.3.1.3.  LPC Computation . . . . . . . . . . . . . . . . .   8
+          3.3.1.4.  Reconstruction  . . . . . . . . . . . . . . . . .   8
+          3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   8
+|       3.3.2.  Enhanced Version  . . . . . . . . . . . . . . . . . .   9
+|         3.3.2.1.  Random Polynomial . . . . . . . . . . . . . . . .   9
+          3.3.2.2.  Reconstruction  . . . . . . . . . . . . . . . . .   9
+|         3.3.2.3.  Verification  . . . . . . . . . . . . . . . . . .  10
+      3.4.  Operational Aspects . . . . . . . . . . . . . . . . . . .  10
+|   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  11
+|   5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  12
+|     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  12
+      5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  12
+    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+    7.  Manageability Considerations  . . . . . . . . . . . . . . . .  15
+|   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
+|     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  16
+      8.2.  Anti Replay . . . . . . . . . . . . . . . . . . . . . . .  16
+      8.3.  Anti Tampering  . . . . . . . . . . . . . . . . . . . . .  16
+|     8.4.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  17
+|     8.5.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  17
+      8.6.  Controller Operation  . . . . . . . . . . . . . . . . . .  17
+      8.7.  Verification Scope  . . . . . . . . . . . . . . . . . . .  17
+|       8.7.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  18
+|       8.7.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  18
+    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  18
+|   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  18
+|     10.1.  Normative References . . . . . . . . . . . . . . . . . .  18
+|     10.2.  Informative References . . . . . . . . . . . . . . . . .  18
+|   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
+
+
+------------------------------------------------------------------------
+
+
+Section 3.3.1.3., paragraph 3:
+EXPLANATION: 
+
+OLD:
+
+       LPC(x1) = (-5) mod 53 = 48
+       LPC(x2) = (8/3) mod 53 = 38
+
+NEW:
+
+       LPC(x1) = (-5) mod 53 = 48
+|
+       LPC(x2) = (8/3) mod 53 = 38
+
+
+------------------------------------------------------------------------
+
+
+Section 3.3.2.2., paragraph 11:
+EXPLANATION: 
+
+OLD:
+
+       CML = 39 + ((47 + 12)*38) mod 53 = 39 + 16 = 55 mod 53 = 2
+|
+    The verification using CML is discussed in next section.
+
+NEW:
+
+       CML = 39 + ((47 + 12)*38) mod 53 = 39 + 16 = 55 mod 53 = 2
+    The verification using CML is discussed in next section.
+
+
+------------------------------------------------------------------------
+
+
+Section 3.4., paragraph 1:
+EXPLANATION: 
+
+OLD:
+
+    To operationalize this scheme, a central controller is used to
+    generate the necessary polynomials, the secret share per node, the
+    prime number, etc. and distributing the data to the nodes
+    participating in proof of transit.  The identified node that performs
+    the verification is provided with the verification key.  The
+    information provided from the Controller to each of the nodes
+    participating in proof of transit is referred to as a proof of
+|   transit profile (POT-profile).
+
+NEW:
+
+    To operationalize this scheme, a central controller is used to
+    generate the necessary polynomials, the secret share per node, the
+    prime number, etc. and distributing the data to the nodes
+    participating in proof of transit.  The identified node that performs
+    the verification is provided with the verification key.  The
+    information provided from the Controller to each of the nodes
+    participating in proof of transit is referred to as a proof of
+|   transit profile (POT-profile).  Also note that the set of nodes for
+|   which the transit has to be proven are typically associated to a
+|   different trust domain than the verifier.  Note that building the
+|   trust relationship between the Controller and the nodes is outside
+|   the scope of this document.  Techniques such as those described in
+|   [I-D.ietf-anima-autonomic-control-plane] might be applied.
+
+
+------------------------------------------------------------------------
+
+
+Section 9., paragraph 1:
+EXPLANATION: 
+
+OLD:
+
+|   The authors would like to thank Steve Youell, Eric Vyncke, Nalini
+|   Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu Harichandra
+|   Babu, Akshaya Nadahalli, and Andrew Yourtchenko for the comments and
+|   advice.
+
+NEW:
+
+|   The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+|   Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+|   Nadahalli, and Andrew Yourtchenko for the comments and advice.
+
+
+------------------------------------------------------------------------
+
+
+Section 9., paragraph 2:
+EXPLANATION: 
+
+OLD:
+
+|10.  Normative References
+
+NEW:
+
+|10.  References
+|
+|10.1.  Normative References
+|
+|   [draft-kitamura-ipv6-record-route]
+|              Kitamura, H., "Record Route for IPv6 (PR6),Hop-by-Hop
+|              Option Extension", November 2000.
+
+
+------------------------------------------------------------------------
+
+
+Section 9., paragraph 5:
+EXPLANATION: 
+
+OLD:
+
+ Authors' Addresses
+
+NEW:
+
+|10.2.  Informative References
+|
+|   [draft-brockners-inband-oam-data]
+|              Brockners, F. and S. Bhandari, "Data Formats for in-band
+|              OAM", July 2016.
+|
+|   [draft-brockners-inband-oam-requirements]
+|              Brockners, F., Bhandari, S., and S. Dara, "Requirements
+|              for in-band OAM", July 2016.
+|
+|   [draft-brockners-inband-oam-transport]
+|              Brockners, F. and S. Bhandari, "Encapsulations for in-band
+|              OAM", July 2016.
+|
+|   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
+|
+|   [I-D.hildebrand-spud-prototype]
+|              Hildebrand, J. and B. Trammell, "Substrate Protocol for
+|              User Datagrams (SPUD) Prototype", draft-hildebrand-spud-
+|              prototype-03 (work in progress), March 2015.
+|
+|   [I-D.ietf-anima-autonomic-control-plane]
+|              Behringer, M., Eckert, T., and S. Bjarnason, "An Autonomic
+|              Control Plane", draft-ietf-anima-autonomic-control-
+|              plane-03 (work in progress), July 2016.
+|
+|   [P4]       Kim, , "P4: In-band Network Telemetry (INT)", September
+|              2015.
+|
+ Authors' Addresses
+
+
+------------------------------------------------------------------------
+
+
+Section 9., paragraph 9:
+EXPLANATION: 
+
+OLD:
+
+    Email: shwethab@cisco.com
+|
+    Sashank Dara
+    Cisco Systems, Inc.
+    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+    BANGALORE, Bangalore, KARNATAKA 560 087
+    INDIA
+
+NEW:
+
+    Email: shwethab@cisco.com
+    Sashank Dara
+    Cisco Systems, Inc.
+    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+    BANGALORE, Bangalore, KARNATAKA 560 087
+    INDIA
+
+
+------------------------------------------------------------------------
+
+
+Section 9., paragraph 10:
+EXPLANATION: 
+
+OLD:
+
+    Email: sadara@cisco.com
+    Carlos Pignataro
+    Cisco Systems, Inc.
+    7200-11 Kit Creek Road
+    Research Triangle Park, NC  27709
+    United States
+
+NEW:
+
+    Email: sadara@cisco.com
+|
+    Carlos Pignataro
+    Cisco Systems, Inc.
+    7200-11 Kit Creek Road
+    Research Triangle Park, NC  27709
+    United States
+
+
+------------------------------------------------------------------------
+
+
+Section 9., paragraph 11:
+EXPLANATION: 
+
+OLD:
+
+    Email: cpignata@cisco.com
+
+NEW:
+
+    Email: cpignata@cisco.com
+|
+|   John Leddy
+|   Comcast
+|
+|   Email: John_Leddy@cable.comcast.com
+|
+|   Stephen Youell
+|   JP Morgan Chase
+|   25 Bank Street
+|   London  E14 5JP
+|   United Kingdom
+|
+|   Email: stephen.youell@jpmorgan.com
+

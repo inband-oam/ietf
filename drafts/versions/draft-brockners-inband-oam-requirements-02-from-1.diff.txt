@@ -1,0 +1,259 @@
+--- 1/draft-brockners-inband-oam-requirements-01.txt	2016-08-16 14:22:14.000000000 -0400
++++ 2/draft-brockners-inband-oam-requirements-02.txt	2016-08-16 14:22:14.000000000 -0400
+@@ -6,21 +6,21 @@
+                                                                    Cisco
+                                                               H. Gredler
+                                                             RtBrick Inc.
+                                                                 J. Leddy
+                                                                  Comcast
+                                                                S. Youell
+                                                                     JMPC
+                                                            July 18, 2016
+ 
+                       Requirements for In-band OAM
+-               draft-brockners-inband-oam-requirements-01
++               draft-brockners-inband-oam-requirements-02
+ 
+ Abstract
+ 
+    This document discusses the motivation and requirements for including
+    specific operational and telemetry information into data packets
+    while the data packet traverses a path between two points in the
+    network.  This method is referred to as "in-band" Operations,
+    Administration, and Maintenance (OAM), given that the OAM information
+    is carried with the data packets as opposed to in "out-of-band"
+    packets dedicated to OAM.  In-band OAM complements other OAM
+@@ -67,26 +67,26 @@
+      3.1.  Path Congruency Issues with Dedicated OAM Packets . . . .   5
+      3.2.  Results Sent to a System Other Than the Sender  . . . . .   5
+      3.3.  Overlay and Underlay Correlation  . . . . . . . . . . . .   5
+      3.4.  SLA Verification  . . . . . . . . . . . . . . . . . . . .   6
+      3.5.  Analytics and Diagnostics . . . . . . . . . . . . . . . .   6
+      3.6.  Frame Replication/Elimination Decision for Bi-casting
+            /Active-active Networks . . . . . . . . . . . . . . . . .   7
+      3.7.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .   7
+      3.8.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   8
+    4.  Considerations for In-band OAM  . . . . . . . . . . . . . . .   9
+-     4.1.  Type of information to be recorded  . . . . . . . . . . .  10
+-     4.2.  MTU and packet size . . . . . . . . . . . . . . . . . . .  10
+-     4.3.  Administrative boundaries . . . . . . . . . . . . . . . .  11
+-     4.4.  Selective enablement  . . . . . . . . . . . . . . . . . .  11
+-     4.5.  Optimization of node and interface identifiers  . . . . .  12
+-     4.6.  Loop communication path (IPv6-specifics)  . . . . . . . .  12
++     4.1.  Type of Information to Be Recorded  . . . . . . . . . . .  10
++     4.2.  MTU and Packet Size . . . . . . . . . . . . . . . . . . .  10
++     4.3.  Administrative Boundaries . . . . . . . . . . . . . . . .  11
++     4.4.  Selective Enablement  . . . . . . . . . . . . . . . . . .  11
++     4.5.  Optimization of Node and Interface Identifiers  . . . . .  12
++     4.6.  Loop Communication Path (IPv6-specifics)  . . . . . . . .  12
+    5.  Requirements for In-band OAM Data Types . . . . . . . . . . .  12
+      5.1.  Generic Requirements  . . . . . . . . . . . . . . . . . .  12
+      5.2.  In-band OAM Data with Per-hop Scope . . . . . . . . . . .  13
+      5.3.  In-band OAM with Selected Hop Scope . . . . . . . . . . .  14
+      5.4.  In-band OAM with End-to-end Scope . . . . . . . . . . . .  14
+    6.  Security Considerations and Requirements  . . . . . . . . . .  15
+      6.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  15
+    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
+    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16
+    9.  Informative References  . . . . . . . . . . . . . . . . . . .  16
+@@ -355,22 +355,22 @@
+    that did not properly traverse the service chain can be blocked.
+ 
+    A solution approach could be based on OAM data which is added to
+    every packet for achieving Proof Of Transit.  The OAM data is updated
+    at every hop and is used to verify whether a packet traversed all
+    required nodes.  When the verifier receives each packet, it can
+    validate whether the packet traversed the service chain correctly.
+    The detailed mechanisms used for path verification along with the
+    procedures applied to the OAM data carried in the packet for path
+    verification are beyond the scope of this document.  Details are
+-   addressed in [draft-brockners-proof-of-transit].  In this document
+-   the term "proof" refers to a discrete set of bits that represents an
++   addressed in [I-D.brockners-proof-of-transit].  In this document the
++   term "proof" refers to a discrete set of bits that represents an
+    integer or string carried as OAM data.  The OAM data is used to
+    verify whether a packet traversed the nodes it is supposed to
+    traverse.
+ 
+ 3.8.  Use Cases
+ 
+    In-band OAM could be leveraged for several use cases, including:
+ 
+    o  Traffic Matrix: Derive the network traffic matrix: Traffic for a
+       given time interval between any two edge nodes of a given domain.
+@@ -417,21 +417,21 @@
+       within the trading-floor department, access to specific
+       applications or servers is granted.
+ 
+ 4.  Considerations for In-band OAM
+ 
+    The implementation of an in-band OAM mechanism needs to take several
+    considerations into account, including administrative boundaries, how
+    information is recorded, Maximum Transfer Unit (MTU), Path MTU
+    discovery and packet size, etc.
+ 
+-4.1.  Type of information to be recorded
++4.1.  Type of Information to Be Recorded
+ 
+    The information gathered for in-band OAM can be categorized into
+    three main categories: Information with a per-hop scope, such as path
+    tracing; information which applies to a specific set of nodes, such
+    as path or service chain verification; information which only applies
+    to the edges of a domain, such as sequence numbers.
+ 
+    o  "edge to edge": Information that needs to be shared between
+       network edges (the "edge" of a network could either be a host or a
+       domain edge device): Edge to edge data e.g., packet and octet
+@@ -450,39 +450,39 @@
+ 
+       *  Hop by Hop information e.g., Nodes visited for path tracing,
+          Timestamps at each hop to find delays along the path
+ 
+       *  Stats collection at each hop to optimize communication in
+          resource constrained networks e.g., Battery, CPU, memory status
+          of each node piggy backed in a data packet is useful in low
+          power lossy networks where network nodes are mostly asleep and
+          communication is expensive
+ 
+-4.2.  MTU and packet size
++4.2.  MTU and Packet Size
+ 
+    The recorded data at every hop may lead to packet size exceeding the
+    Maximum Transmit Unit (MTU).  Based on the transport protocol used
+    MTU is discovered as a configuration parameter or Path MTU (PMTU) is
+    discovered dynamically.  Example: IPv6 recommends PMTU discovery
+    before data packets are sent to prevent packet fragmentation.  It
+    specifies 1280 octets as the default PDU to be carried in a IPv6
+    datagram.  A detailed discussion of the implications of oversized
+    IPv6 header chains if found in [RFC7112].
+ 
+    The Path MTU restricts the amount of data that can be recorded for
+    purpose of OAM within a data packet.  The total size of data to be
+    recorded needs to be preset to avoid packet size exceeding the MTU.
+ 
+    It is recommended to pre-calculate and configures network devices to
+    limit the in-band OAM data that is attached to a packet.
+ 
+-4.3.  Administrative boundaries
++4.3.  Administrative Boundaries
+ 
+    There are several challenges in enabling in-band OAM in the public
+    Internet as well as in corporate/enterprise networks across
+    administrative domains, which include but are not limited to:
+ 
+    o  Deployment dependent, the data fields that in-band OAM requires as
+       part of a specific transport protocol may not be supported across
+       administrative boundaries.
+ 
+    o  Current OAM implementations are often done in the slow path, i.e.,
+@@ -498,45 +498,45 @@
+       packets with extension headers are dropped for several reasons
+       described in [RFC7872].
+ 
+    The following considerations will be discussed in a future version of
+    this document: If the packet is dropped due to the presence of the
+    in-band OAM; If the policy failure is treated as feature disablement
+    and any further recording is stopped but the packet itself is not
+    dropped, it may lead to every node in the path to make this policy
+    decision.
+ 
+-4.4.  Selective enablement
++4.4.  Selective Enablement
+ 
+    Deployment dependent, in-band OAM could either be used for all, or
+    only a subset of the overall traffic.  While it might be desirable to
+    apply in-band OAM to all traffic and then selectively use the data
+    gathered in case needed, it might not always be feasible.  Depending
+    on the forwarding infrastructure used, in-band OAM can have an impact
+    on forwarding performance.  The SPUD prototype for example uses the
+    notion of "pipes" to describe the portion of the traffic that could
+    be subject to in-path inspection.  Mechanisms to decide which traffic
+    would be subject to in-band OAM are outside the scope of this
+    document.
+ 
+-4.5.  Optimization of node and interface identifiers
++4.5.  Optimization of Node and Interface Identifiers
+ 
+    Since packets have a finite maximum size, the data recording or
+    carrying capacity of one packet in which the in-band OAM meta data is
+    present is limited.  In-band OAM should use its own dedicated
+    namespace (confined to the domain in-band OAM operates in) to
+    represent node and interface IDs to save space in the header.
+    Generic representations of node and interface identifiers which are
+    globally unique (such as a UUID) would consume significantly more
+    bits of in-band OAM data.
+ 
+-4.6.  Loop communication path (IPv6-specifics)
++4.6.  Loop Communication Path (IPv6-specifics)
+ 
+    When recorded data is required to be analyzed on a source node that
+    issues a packet and inserts in-band OAM data, the recorded data needs
+    to be carried back to the source node.
+ 
+    One way to carry the in-band OAM data back to the source is to
+    utilize an ICMP Echo Request/Reply (ping) or ICMPv6 Echo Request/
+    Reply (ping6) mechanism.  In order to run the in-band OAM mechanism
+    appropriately on the ping/ping6 mechanism, the following two
+    operations should be implemented by the ping/ping6 target node:
+@@ -721,49 +721,52 @@
+    [RFC Editor: please remove this section prior to publication.]
+ 
+    This document has no IANA actions.
+ 
+ 8.  Acknowledgements
+ 
+    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+    Nadahalli, and Andrew Yourtchenko for the comments and advice.  This
+    document leverages and builds on top of several concepts described in
+-   [draft-kitamura-ipv6-record-route].  The authors would like to
++   [I-D.kitamura-ipv6-record-route].  The authors would like to
+    acknowledge the work done by the author Hiroshi Kitamura and people
+    involved in writing it.
+ 
+ 9.  Informative References
+ 
+-   [draft-brockners-proof-of-transit]
+-              Brockners, F., Bhandari, S., and S. Dara, "Proof of
+-              transit", July 2016.
+-
+-   [draft-kitamura-ipv6-record-route]
+-              Kitamura, H., "Record Route for IPv6 (PR6),Hop-by-Hop
+-              Option Extension", November 2000.
+-
+    [I-D.brockners-lisp-sr]
+               Brockners, F., Bhandari, S., Maino, F., and D. Lewis,
+               "LISP Extensions for Segment Routing", draft-brockners-
+               lisp-sr-01 (work in progress), February 2014.
+ 
++   [I-D.brockners-proof-of-transit]
++              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
++              Leddy, J., and S. Youell, "Proof of Transit", draft-
++              brockners-proof-of-transit-01 (work in progress), July
++              2016.
++
+    [I-D.hildebrand-spud-prototype]
+               Hildebrand, J. and B. Trammell, "Substrate Protocol for
+               User Datagrams (SPUD) Prototype", draft-hildebrand-spud-
+               prototype-03 (work in progress), March 2015.
+ 
+    [I-D.ietf-spring-segment-routing]
+               Filsfils, C., Previdi, S., Decraene, B., Litkowski, S.,
+               and R. Shakir, "Segment Routing Architecture", draft-ietf-
+               spring-segment-routing-09 (work in progress), July 2016.
+ 
++   [I-D.kitamura-ipv6-record-route]
++              Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
++              Option Extension", draft-kitamura-ipv6-record-route-00
++              (work in progress), November 2000.
++
+    [I-D.lapukhov-dataplane-probe]
+               Lapukhov, P. and r. remy@barefootnetworks.com, "Data-plane
+               probe for in-band telemetry collection", draft-lapukhov-
+               dataplane-probe-01 (work in progress), June 2016.
+ 
+    [P4]       Kim, , "P4: In-band Network Telemetry (INT)", September
+               2015.
+ 
+    [RFC0791]  Postel, J., "Internet Protocol", STD 5, RFC 791,
+               DOI 10.17487/RFC0791, September 1981,

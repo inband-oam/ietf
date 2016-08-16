@@ -1,0 +1,288 @@
+--- 1/draft-brockners-inband-oam-transport-01.txt	2016-08-16 14:23:01.000000000 -0400
++++ 2/draft-brockners-inband-oam-transport-02.txt	2016-08-16 14:23:01.000000000 -0400
+@@ -5,21 +5,21 @@
+ Expires: January 19, 2017                                          Cisco
+                                                               H. Gredler
+                                                             RtBrick Inc.
+                                                                 J. Leddy
+                                                                  Comcast
+                                                                S. Youell
+                                                                     JMPC
+                                                            July 18, 2016
+ 
+                   Encapsulations for In-band OAM Data
+-                draft-brockners-inband-oam-transport-01
++                draft-brockners-inband-oam-transport-02
+ 
+ Abstract
+ 
+    In-band operation, administration and maintenance (OAM) records
+    operational and telemetry information in the packet while the packet
+    traverses a path between two points in the network.  In-band OAM is
+    to complement current out-of-band OAM mechanisms based on ICMP or
+    other types of probe packets.  This document outlines how in-band OAM
+    data records can be transported in protocols such as NSH, Segment
+    Routing, VXLAN-GPE, native IPv6 (via extension header), and IPv4.
+@@ -87,33 +87,32 @@
+ 
+ 1.  Introduction
+ 
+    This document discusses transport mechanisms for "in-band" operation,
+    administration, and maintenance (OAM) data records.  In-band OAM
+    records OAM information within the packet while the packet traverses
+    a particular network domain.  The term "in-band" refers to the fact
+    that the OAM data is added to the data packets rather than is being
+    sent within packets specifically dedicated to OAM.  A discussion of
+    the motivation and requirements for in-band OAM can be found in
+-   [draft-brockners-inband-oam-requirements].  Data types and data
+-   formats for in-band OAM are defined in
+-   [draft-brockners-inband-oam-data].
++   [I-D.brockners-inband-oam-requirements].  Data types and data formats
++   for in-band OAM are defined in [I-D.brockners-inband-oam-data].
+ 
+    This document outlines transport encapsulations for the in-band OAM
+-   data defined in [draft-brockners-inband-oam-data].  This document is
+-   to serve informational purposes only.  As part of an in-band OAM
++   data defined in [I-D.brockners-inband-oam-data].  This document is to
++   serve informational purposes only.  As part of an in-band OAM
+    implementation study different protocol encapsulations for in-band
+    OAM data are being explored.  Once data formats and encapsulation
+    approaches are settled, protocol specific specifications for in-band
+    OAM data transport will address the standardization aspect.
+ 
+-   The data for in-band OAM defined in [draft-brockners-inband-oam-data]
++   The data for in-band OAM defined in [I-D.brockners-inband-oam-data]
+    can be carried in a variety of protocols based on the deployment
+    needs.  This document discusses transport of in-band OAM data for the
+    following protocols:
+ 
+    o  IPv6
+ 
+    o  VXLAN-GPE
+ 
+    o  NSH
+ 
+@@ -157,21 +156,21 @@
+ 
+    This mechanisms of in-band OAM in IPv6 complement others proposed to
+    enhance diagnostics of IPv6 networks, such as the IPv6 Performance
+    and Diagnostic Metrics Destination Option described in
+    [I-D.ietf-ippm-6man-pdm-option].  The IP Performance and Diagnostic
+    Metrics Destination Option is destination focused and specific to
+    IPv6, whereas in-band OAM is performed between end-points of the
+    network or a network domain where it is enabled and used.
+ 
+    A historical note: The idea of IPv6 route recording was originally
+-   introduced by [draft-kitamura-ipv6-record-route] back in year 2000.
++   introduced by [I-D.kitamura-ipv6-record-route] back in year 2000.
+    With IPv6 now being generally deployed and new concepts such as
+    Segment Routing [I-D.ietf-spring-segment-routing] being introduced,
+    it is imperative to further mature the operations, administration,
+    and maintenance mechanisms available to IPv6 networks.
+ 
+    The in-band OAM options translate into options for an IPv6 extension
+    header.  The extension header would be inserted by either a host
+    source of the packet, or by a transit/domain-edge node.
+ 
+ 3.1.  In-band OAM in IPv6 Hop by Hop Extension Header
+@@ -217,35 +216,35 @@
+    3rd highest bit:
+ 
+       0 - Option Data does not change en-route
+ 
+       1 - Option Data may change en-route
+ 
+    In-band OAM data records are inserted as options in an IPv6 hop-by-
+    hop extension header:
+ 
+    1.  Tracing Option: The in-band OAM Tracing option defined in
+-       [draft-brockners-inband-oam-data] is represented as a IPv6 option
++       [I-D.brockners-inband-oam-data] is represented as a IPv6 option
+        in hop by hop extension header by allocating following type:
+ 
+        Option Type:  001xxxxxx 8-bit identifier of the type of option.
+           xxxxxx=TBD_IANA_TRACE_OPTION_IPV6.
+ 
+    2.  Proof of Transit Option: The in-band OAM POT option defined in
+-       [draft-brockners-inband-oam-data] is represented as a IPv6 option
++       [I-D.brockners-inband-oam-data] is represented as a IPv6 option
+        in hop by hop extension header by allocating following type:
+ 
+        Option Type:  001xxxxxx 8-bit identifier of the type of option.
+           xxxxxx=TBD_IANA_POT_OPTION_IPV6.
+ 
+    3.  Edge to Edge Option: The in-band OAM E2E option defined in
+-       [draft-brockners-inband-oam-data] is represented as a IPv6 option
++       [I-D.brockners-inband-oam-data] is represented as a IPv6 option
+        in hop by hop extension header by allocating following type:
+ 
+        Option Type:  000xxxxxx 8-bit identifier of the type of option.
+           xxxxxx=TBD_IANA_E2E_OPTION_IPV6.
+ 
+ 3.1.2.  Procedure at the Ingress Edge to Insert the In-band OAM Header
+ 
+    In an administrative domain where in-band OAM is used, insertion of
+    the in-band OAM header is enabled at the required edge nodes by means
+    of configuration.
+@@ -355,21 +354,21 @@
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
+ 
+       Option Type          8-bit identifier of the type of option.
+ 
+       Opt Data Len         8-bit unsigned integer.  Length of the Option
+                            Data field of this option, in octets.
+ 
+       Option Data          Variable-length field.  Option-Type-specific
+                            data.
+ 
+-   The in-band OAM options defined in [draft-brockners-inband-oam-data]
++   The in-band OAM options defined in [I-D.brockners-inband-oam-data]
+    are encoded with an option type allocated in the new in-band OAM IANA
+    registry - in-band OAM_PROTOCOL_OPTION_REGISTRY_IANA_TBD.  In
+    addition the following padding options are defined to be used when
+    necessary to align subsequent options and to pad out the containing
+    header to a multiple of 8 octets in length.
+ 
+    Pad1 option  (alignment requirement: none)
+ 
+        +-+-+-+-+-+-+-+-+
+        |       0       |
+@@ -392,22 +391,22 @@
+        Opt Data Len field contains the value N-2, and the Option Data
+        consists of N-2 zero-valued octets.
+ 
+ 5.  In-band OAM Metadata Transport in NSH
+ 
+    In Service Function Chaining (SFC) [RFC7665], the Network Service
+    Header (NSH) [I-D.ietf-sfc-nsh] already includes path tracing
+    capabilities [I-D.penno-sfc-trace], but currently does not offer a
+    solution to securely prove that packets really traversed the service
+    chain.  The "Proof of Transit" capabilities (see
+-   [draft-brockners-inband-oam-requirements] and
+-   [draft-brockners-proof-of-transit]) of in-band OAM can be leveraged
++   [I-D.brockners-inband-oam-requirements] and
++   [I-D.brockners-proof-of-transit]) of in-band OAM can be leveraged
+    within NSH.  Proof of transit in-band OAM data is added as NSH Type 2
+    metadata:
+ 
+     0                   1                   2                   3
+     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |      TLV Class=Cisco (0x0009) |C|    Type=POT |F|R|R| Len=4   |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+    |                           Random                              |  |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
+@@ -498,61 +497,58 @@
+ 
+ 8.  Manageability Considerations
+ 
+    Manageability considerations will be addressed in a later version of
+    this document..
+ 
+ 9.  Security Considerations
+ 
+    Security considerations will be addressed in a later version of this
+    document.  For a discussion of security requirements of in-band OAM,
+-   please refer to [draft-brockners-inband-oam-requirements].
++   please refer to [I-D.brockners-inband-oam-requirements].
+ 
+ 10.  Acknowledgements
+ 
+    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+    Nadahalli, Stefano Previdi and Andrew Yourtchenko for the comments
+    and advice.  For the IPv6 encapsulation, this document leverages and
+    builds on top of several concepts described in
+-   [draft-kitamura-ipv6-record-route].  The authors would like to
++   [I-D.kitamura-ipv6-record-route].  The authors would like to
+    acknowledge the work done by the author Hiroshi Kitamura and people
+    involved in writing it.
+ 
+ 11.  References
+ 
+ 11.1.  Normative References
+ 
+-   [draft-brockners-inband-oam-requirements]
+-              Brockners, F., Bhandari, S., and S. Dara, "Requirements
+-              for in-band OAM", July 2016.
++   [I-D.brockners-inband-oam-requirements]
++              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
++              Gredler, H., Leddy, J., and S. Youell, "Requirements for
++              In-band OAM", draft-brockners-inband-oam-requirements-01
++              (work in progress), July 2016.
+ 
+ 11.2.  Informative References
+ 
+-   [draft-brockners-inband-oam-data]
+-              Brockners, F., Bhandari, S., Pignataro, C., and H.
+-              Gredler, "Data Formats for in-band OAM", July 2016.
+-
+-   [draft-brockners-proof-of-transit]
+-              Brockners, F., Bhandari, S., and S. Dara, "Proof of
+-              transit", July 2016.
+-
+-   [draft-kitamura-ipv6-record-route]
+-              Kitamura, H., "Record Route for IPv6 (PR6),Hop-by-Hop
+-              Option Extension", November 2000.
+-
+    [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
+ 
+-   [I-D.hildebrand-spud-prototype]
+-              Hildebrand, J. and B. Trammell, "Substrate Protocol for
+-              User Datagrams (SPUD) Prototype", draft-hildebrand-spud-
+-              prototype-03 (work in progress), March 2015.
++   [I-D.brockners-inband-oam-data]
++              Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
++              Leddy, J., and S. Youell, "Data Formats for In-band OAM",
++              draft-brockners-inband-oam-data-01 (work in progress),
++              July 2016.
++
++   [I-D.brockners-proof-of-transit]
++              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
++              Leddy, J., and S. Youell, "Proof of Transit", draft-
++              brockners-proof-of-transit-01 (work in progress), July
++              2016.
+ 
+    [I-D.ietf-6man-segment-routing-header]
+               Previdi, S., Filsfils, C., Field, B., Leung, I., Linkova,
+               J., Aries, E., Kosugi, T., Vyncke, E., and D. Lebrun,
+               "IPv6 Segment Routing Header (SRH)", draft-ietf-6man-
+               segment-routing-header-01 (work in progress), March 2016.
+ 
+    [I-D.ietf-ippm-6man-pdm-option]
+               Elkins, N., Hamilton, R., and m. mackermann@bcbsm.com,
+               "IPv6 Performance and Diagnostic Metrics (PDM) Destination
+@@ -566,28 +562,30 @@
+ 
+    [I-D.ietf-sfc-nsh]
+               Quinn, P. and U. Elzur, "Network Service Header", draft-
+               ietf-sfc-nsh-05 (work in progress), May 2016.
+ 
+    [I-D.ietf-spring-segment-routing]
+               Filsfils, C., Previdi, S., Decraene, B., Litkowski, S.,
+               and R. Shakir, "Segment Routing Architecture", draft-ietf-
+               spring-segment-routing-09 (work in progress), July 2016.
+ 
++   [I-D.kitamura-ipv6-record-route]
++              Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
++              Option Extension", draft-kitamura-ipv6-record-route-00
++              (work in progress), November 2000.
++
+    [I-D.penno-sfc-trace]
+               Penno, R., Quinn, P., Pignataro, C., and D. Zhou,
+               "Services Function Chaining Traceroute", draft-penno-sfc-
+               trace-03 (work in progress), September 2015.
+ 
+-   [P4]       Kim, , "P4: In-band Network Telemetry (INT)", September
+-              2015.
+-
+    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+               Requirement Levels", BCP 14, RFC 2119,
+               DOI 10.17487/RFC2119, March 1997,
+               <http://www.rfc-editor.org/info/rfc2119>.
+ 
+    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+               Chaining (SFC) Architecture", RFC 7665,
+               DOI 10.17487/RFC7665, October 2015,
+               <http://www.rfc-editor.org/info/rfc7665>.
+ 
