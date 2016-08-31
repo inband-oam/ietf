@@ -405,13 +405,13 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         </section>
 
         <section title="In Transit">
-          <t>For each packet, the source node generates a random number (RND).
+          <t>For each packet, the ingress node generates a random number (RND).
           It is considered as the constant coefficient for POLY-2. A
           cumulative value (CML) is initialized to 0. Both RND, CML are
           carried as within the packet POT data. As the packet visits each
           node, the RND is retrieved from the packet and the respective share
           of POLY-2 is calculated. Each node calculates
-          (Share(POLY-1)+Share(POLY-2)) and CML is updated with this sum. This
+          (Share(POLY-1) + Share(POLY-2)) and CML is updated with this sum. This
           step is performed by each node until the packet completes the path.
           The verifier also performs the step with its respective share.</t>
         </section>
@@ -429,8 +429,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         approach described above.</t>
 
         <section title="Basic Version">
-          <t>Assumption: We like to verify that packets pass through 3 nodes.
-          Consequently we need a polynomial of degree 2.</t>
+          <t>Assumption:  It is to be verified whether packets passed through 3 nodes.
+          A polynomial of degree 2 is chosen for verification.</t>
 
           <t>Choices: Prime = 53. POLY-1(x) = (3x^2 + 3x + 10) mod 53. The
           secret to be re-constructed is the constant coefficient of POLY-1,
@@ -439,7 +439,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
           <section title="Secret Shares">
             <t>The shares of the secret are the points on POLY-1 chosen for
-            the 3 nodes. Here we use x0=2, x1=4, x2=5.</t>
+            the 3 nodes. For example, let x0=2, x1=4, x2=5.</t>
 
             <t><list style="empty">
                 <t>POLY-1(2) = 28 =&gt; (x0,y0) = (2,28)</t>
@@ -527,8 +527,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
         <section title="Enhanced Version">
           <t>As observed previously, the vanilla algorithm that involves a
-          single secret polynomial is not secure. We enhance the solution with
-          usage of a random second polynomial chosen per packet.</t>
+          single secret polynomial is not secure. Therefore the solution is further
+		  enhanced with usage of a random second polynomial chosen per packet.</t>
 
           <section title="Random Polynomial">
             <t>Let the second polynomial POLY-2 be (RND + 7x + 10 x^2). RND is
@@ -558,7 +558,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             (5,12).</t>
 
             <t><list style="empty">
-                <t>At source: The fields RND = 45. CML = 0.</t>
+                <t>At ingress: The fields RND = 45. CML = 0.</t>
 
                 <t>At node-1 (x0): Respective share of POLY-2 is generated i.e
                 (2,46) because share index of node-1 is 2.</t>
@@ -972,27 +972,33 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         a (SEQ_NO + RND). For example if 64 bits are being used for POLY-2 then 
                first 16 bits could be a sequence number SEQ_NO and next 48 bits could be a random number.
                </t>
-               <t>Subsequently, the verifier could use the SEQ_NO bits to run classic anti-replay techniques like 
-                       sliding window used in IPSEC. The verifier could buffer upto 2^16 packets as a sliding window. 
-                       Packets arriving with a higher SEQ_NO than current buffer could be flagged legitimate. Packets 
-                       arriving with a lower SEQ_NO than current buffer could be flagged as suspicious. </t>
+               <t>Subsequently, the verifier could use the SEQ_NO bits to run classic anti-replay 
+				   techniques like sliding window used in IPSEC. The verifier could buffer upto 2^16 
+				   packets as a sliding window. Packets arriving with a higher SEQ_NO than current buffer 
+				   could be flagged legitimate. Packets arriving with a lower SEQ_NO than current buffer 
+				   could be flagged as suspicious. </t>
                        
-                       <t>For all practical purposes in the rest of the document by RND we mean SEQ_NO + RND to keep it 
-                               simple </t>
+               <t>For all practical purposes in the rest of the document RND means SEQ_NO + RND to 
+				   keep it simple </t>
       </section>
          
       <section title="Anti Preplay">
-        <t>An active attacker could try to perform a man-in-the-middle (MITM) attack by extracting the POT of 
-                       PKT-1 and using it in PKT-2. Subsequently attacker drops the PKT-1 in order to avoid duplicate POT
-                       values reaching the verifier. Although such attacks are highly difficult to launch, below 
-                       recommendations are provided </t>
-<t>
-         <list style="symbols">
-         <t>Any such MITM attack would add delay in the packets arrival at verifier. Carefully chosing the SEQ_NO 
-                 could thwart such attacks, as such crafted packets would be out of sliding window due to delay. </t>
-         <t>Also integrity checks performed at higher level protocols using POT schemes could identify that the packets were tampered</t>
-       </list>
-</t>
+        <t>An active attacker could try to perform a man-in-the-middle (MITM) attack by extracting the POT 
+			of PKT-1 and using it in PKT-2. Subsequently attacker drops the PKT-1 in order to avoid 
+			duplicate POT values reaching the verifier. If the PKT-1 reaches the verifier then this attack 
+			is same as Replay attacks discussed before. </t>
+		<t>Preplay attacks are possible since the POT metdata is not dependent on the packet fields. 
+			Below steps are recommended for remediation<list style="symbols">
+			<t>Ingress node and Verifier are configured with common pre shared key </t>
+			<t>Ingress node generates a Message Authentication Code (MAC) from packet fields 
+				using standard HMAC algorithm. For example, HMAC-SHA256 generates 256 bits of MAC. </t>
+			<t>The left most bits of the output are truncated to desired length to generate RND. It is 
+				recommended to use a minimum of 32 bits. </t>
+			<t>The verifier regenerates the HMAC from the packet fields and compares with RND. To ensure 
+				the POT data is infact that of the packet.</t>
+			</list>
+		</t>
+		<t>An active attacker since lacks the knowledge of pre-shared key cannot launch preplay attacks</t>
 
       </section>
 

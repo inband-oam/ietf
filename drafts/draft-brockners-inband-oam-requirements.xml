@@ -138,7 +138,7 @@ From practical deployment perspective IOAM will be used together with
 other OAM and instrumentation mechanisms, and having the same set of
 identifiers is definitely a strong requirement.
 
-Security considerations - while it is fashionable to leave it fir future
+Security considerations - while it is fashionable to leave it for future
 versions of the documents ;-) it is in fact has severe importance. There
 must be a mechanism to control the flooding of IOAM-enabled packets
 within the device that is disjoint from the topology control (ie, if
@@ -635,7 +635,7 @@ will see less resistance.
         blocked.</t>
 
         <t>A solution approach could be based on OAM data which is added to
-        every packet for achieving Proof Of Transit. The OAM data is updated
+        every packet for achieving Proof Of Transit(POT).The OAM data is updated
         at every hop and is used to verify whether a packet traversed all
         required nodes. When the verifier receives each packet, it can
         validate whether the packet traversed the service chain correctly. The
@@ -992,13 +992,18 @@ will see less resistance.
             should be accurately determined.</t>
 
             <t>Replay Attacks: A attacker (active/passive) should not be able
-            to reuse the proof of transit bits in the packet by observing the
+            to reuse the POT bits in the packet by observing the
             OAM data in the packet, packet characteristics (like IP addresses,
             octets transferred, timestamps) or even the proof bits themselves.
             The solution approach should consider usage of these parameters
             for deriving any secrets cautiously. Mitigating replay attacks
             beyond a window of longer duration could be intractable to achieve
             with fixed number of bits allocated for proof.</t>
+			
+            <t>Preplay Attacks: A active attacker should not be able
+            to generate or reuse valid POT bits from legitimate
+	    packets, in order to prove to the verifier as valid packets. This
+	    slight variant of replay attacks. The attacker extracts POT bits 	    from legitmate packets and ensure they donot reach the verifier. Sub	    sequently reuse those POT bits in crafted packets. </t>
 
             <t>Recycle Secrets: Any configuration of the secrets (like
             cryptographic keys, initialisation vectors etc.) either in the
