@@ -424,7 +424,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         </section>
       </section>
 
-      <section anchor="toy-example" title="Example for Illustration">
+      <section anchor="toy-example" title="Illustrative Example">
         <t>This section shows a simple example to illustrate step by step the
         approach described above.</t>
 
@@ -633,6 +633,32 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             numbers carried in the POT data a field to indicate this is shared
             and interpreted at the nodes.</t>
           </list></t>
+      </section>
+      <section title="Alternative Approach">
+        <t>In certain scenarios preserving the order of the nodes traversed by the packet may be needed. 
+			An alternative, &ldquo;nested encryption&rdquo; based approach is described here for preserving the order </t>
+			<section title="Basic Idea">
+		        <t><list style="numbers">
+		            <t>The controller provisions all the nodes with their respective secret keys.</t>
+		            <t>The controller privisions verifier with all the secret keys of nodes.</t>
+					<t>For each packet, the ingress node generates a random number RND and encrypts it with its secret key to
+						generate CML value</t>
+					<t>Each subsequent node on the path encrypts CML with their respective secret key and passes it along</t>
+					<t>The verifier is also provisioned with the expected sequence of nodes inorder to verify the order </t>
+					<t>The verifier receives the CML, RND values, re-encrypts the RND with keys in the same order as expected sequence to verify.</t>
+		          </list></t>
+			</section>
+			<section title="Pros">
+				Nested encryption approach retains the order in which the nodes are traversed.
+			</section>
+			<section title="Cons">	
+		        <t><list style="numbers">
+		            <t>Standard AES encryption would need 128 bits of RND, CML. This results in a 256 bits of additional 
+						overhead is added per packet</t>
+		            <t>In hardware platforms that donot support native encryption capabilities like (AES-NI). 
+						This approach would have considerable impact on the computational latency</t>
+		          </list></t>
+			</section>
       </section>
     </section>
 
@@ -954,14 +980,14 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
                          <list style="symbols">
                          <t>Inter-Node: A passive attacker observing CML values across nodes (i.e., as the
                                  packets entering and leaving), cannot perform differential analysis to
-                                 construct the points on POLY-1. This is because at each point there are four
-                                 unknowns (i.e. Share(POLY-1), Share(Poly-2) LPC and prime number P) and 
-                                 three known values (i.e. RND, CML-before, CML-after). </t>
+                                 construct the points on POLY-1. This is because at each point there 
+								 are four unknowns (i.e. Share(POLY-1), Share(Poly-2) LPC and prime number 
+								 P) and three known values (i.e. RND, CML-before, CML-after). </t>
                          <t>Inter-Packets: A passive attacker could observe CML values across packets (i.e.,
                                  values of PKT-1 and  subsequent PKT-2), in order to predict the secrets. 
-                                 Differential analysis across packets could be mitigated using a good PRNG for generating 
-                                 RND. Note that if constant coefficient is a sequence number than CML values become quite
-                                 predictable and the scheme would be broken</t>
+                                 Differential analysis across packets could be mitigated using a good PRNG 
+								 for generating RND. Note that if constant coefficient is a sequence number 
+								 than CML values become quite predictable and the scheme would be broken</t>
                        </list>
                        </t>
          </section>
@@ -1061,7 +1087,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           visited by a data packet. It does not verify the order in which the
           data packet visited the nodes. In case the order in which a data
           packet traversed a particular set of nodes needs to be verified as
-          well, alternate schemes that e.g., rely on nested encryption could
+          well, alternate schemes that e.g., rely on &ldquo;nested encryption&rdquo; could
           to be considered.</t>
         </section>
 
@@ -1075,7 +1101,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         </section>
       </section>
     </section>
-
+	
     <section title="Acknowledgements">
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
       Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
