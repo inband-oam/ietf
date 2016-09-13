@@ -1,13 +1,17 @@
-# INBAND OAM IETF DRAFTS
+# In-band OAM IETF DRAFTS
 
-Few links to know more about the project
+In-band OAM (or "in situ OAM") is an implementation study to record operational
+information in the packet while the packet traverses a path between two points
+in the network. In-band OAM is to complement current out-of-band OAM (sometimes
+also called "active" OAM) mechanisms based on ICMP or other types of probe
+packets.
 
- - http://blogs.cisco.com/getyourbuildon/a-trip-recorder-for-all-your-traffic
- - http://blogs.cisco.com/getyourbuildon/verify-my-service-chain
- - https://fd.io/
+For more information on in-band OAM visit:
+https://github.com/CiscoDevNet/iOAM
 
-# ORIGINAL IETF DRAFTS
- - https://tools.ietf.org/html/draft-brockners-inband-oam-requirements-00
- - https://tools.ietf.org/html/draft-brockners-inband-oam-data-00
- - https://tools.ietf.org/html/draft-brockners-inband-oam-transport-00
- - https://tools.ietf.org/html/draft-brockners-proof-of-transit-00
+# Most recent Internet Drafts
+
+ - https://tools.ietf.org/html/draft-brockners-inband-oam-requirements-01
+ - https://tools.ietf.org/html/draft-brockners-inband-oam-data-01
+ - https://tools.ietf.org/html/draft-brockners-inband-oam-transport-01
+ - https://tools.ietf.org/html/draft-brockners-proof-of-transit-01
