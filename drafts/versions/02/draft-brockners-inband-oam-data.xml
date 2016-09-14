@@ -475,16 +475,16 @@ L2/L3 distributed scenario is currently deployed by operator.
             allocates and pushes its node data immediately following the
             option header. The number of node-data recorded and maximum number
             of node data that can be recorded are written into the option
-            header. This format of trace recording is useful for hardware
-            implementation as this eliminates the need for the transit network
-            elements to read the full array in the option and allows for
-            arbitrarily long packets as the MTU allows. The in-band OAM
-            encapsulating node allocates the option header. The in-band OAM
-            encapsulating node based on operational state and configuration
-            sets the fields in the header to control how large the node data
-            list can grow. In-band OAM transit nodes pushes its node data to
-            the node data list and increments the number of node data records
-            in the header.</t>
+            header. This format of trace recording is useful for some of the
+            hardware implementations as this eliminates the need for the
+            transit network elements to read the full array in the option and
+            allows for arbitrarily long packets as the MTU allows. The in-band
+            OAM encapsulating node allocates the option header. The in-band
+            OAM encapsulating node based on operational state and
+            configuration sets the fields in the header to control how large
+            the node data list can grow. In-band OAM transit nodes pushes its
+            node data to the node data list and increments the number of node
+            data records in the header.</t>
           </list></t>
 
         <t>Every node data entry is to hold information for a particular
@@ -593,13 +593,13 @@ In-band OAM Pre-allocated Trace Option:
                   ingress_if_id and egress_if_id in the Node data.</t>
 
                   <t hangText="Bit 2">When set indicates presence of timestamp
+                  seconds in the Node data</t>
+
+                  <t hangText="Bit 3">When set indicates presence of timestamp
                   nanoseconds in the Node data.</t>
 
-                  <t hangText="Bit 3">When set indicates presence of transit
+                  <t hangText="Bit 4">When set indicates presence of transit
                   delay in the Node data.</t>
-
-                  <t hangText="Bit 4">When set indicates presence of timestamp
-                  seconds in the Node data</t>
 
                   <t hangText="Bit 5">When set indicates presence of app_data
                   in the Node data.</t>
@@ -613,9 +613,7 @@ In-band OAM Pre-allocated Trace Option:
                 </list></t>
 
               <t hangText=" "><xref target="trace-type-node-data"></xref>
-              describes the format of a number of trace types. Specifically,
-              it exemplifies OAM-trace-types 0x00100111, 0x00000011,
-              0x00000101, 0x00100001, and 0x00100101.</t>
+              describes the format of a number of trace types. </t>
 
               <t hangText="Elements-left:">8-bit unsigned integer. A pointer
               that indicates the next data recording point in the data space
@@ -694,13 +692,13 @@ In-band OAM Incremental Trace Option:
                   ingress_if_id and egress_if_id in the Node data.</t>
 
                   <t hangText="Bit 2">When set indicates presence of timestamp
+                  seconds in the Node data</t>
+
+                  <t hangText="Bit 3">When set indicates presence of timestamp
                   nanoseconds in the Node data.</t>
 
-                  <t hangText="Bit 3">When set indicates presence of transit
+                  <t hangText="Bit 4">When set indicates presence of transit
                   delay in the Node data.</t>
-
-                  <t hangText="Bit 4">When set indicates presence of timestamp
-                  seconds in the Node data</t>
 
                   <t hangText="Bit 5">When set indicates presence of app_data
                   in the Node data.</t>
@@ -801,6 +799,22 @@ In-band OAM Incremental Trace Option:
                   packet is forwarded out of.</t>
                 </list></t>
 
+              <t hangText="timestamp seconds:">4 octet unsigned integer.
+              Absoulte timestamp in seconds that specifies the time at which
+              the packet was received by the node. The format of this field is
+              identical to the most significant 32 bits of 64 least
+              significant bits of the <xref target="IEEE1588v2"></xref>. This
+              truncated format consists of a 32-bit seconds field. As defined
+              in <xref target="IEEE1588v2"></xref>, the timestamp specifies
+              the number of seconds elapsed since 1 January 1970 00:00:00
+              according to the International Atomic Time (TAI).<figure>
+                  <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       timestamp seconds                       |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+                </figure></t>
+
               <t hangText="timestamp nanoseconds:">4 octet unsigned integer.
               This timestamp specifies time in nanoseconds relative to wall
               clock time at which the packet was received by the node It is
@@ -820,24 +834,6 @@ In-band OAM Incremental Trace Option:
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                      transit delay                            |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
-                </figure></t>
-
-              <t hangText="timestamp seconds:">8 octet unsigned integer.
-              Absoulte timestamp that specifies the time at which the packet
-              was received by the node. The format of this field is identical
-              to the 64 least significant bits of the <xref
-              target="IEEE1588v2"></xref>. This truncated format consists of a
-              32-bit seconds field followed by a 32-bit nanoseconds field. As
-              defined in <xref target="IEEE1588v2"></xref>, the timestamp
-              specifies the number of seconds elapsed since 1 January 1970
-              00:00:00 according to the International Atomic Time
-              (TAI).<figure>
-                  <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       timestamp seconds                       ~
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~                      timestamp seconds(contd)                 |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
 
@@ -938,7 +934,7 @@ In-band OAM Incremental Trace Option:
           "Node data List" can take.</t>
 
           <t><list style="hanging">
-              <t hangText="0x00100111:">In-band OAM-trace-type is 0x00100111
+              <t hangText="0x00101011:">In-band OAM-trace-type is 0x00101011
               then the format of node data is:<figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -967,7 +963,7 @@ In-band OAM Incremental Trace Option:
 ]]></artwork>
                 </figure></t>
 
-              <t hangText="0x00000101:">In-band OAM-trace-type is 0x00000101
+              <t hangText="0x00001001:">In-band OAM-trace-type is 0x00001001
               then the format is: <figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -991,7 +987,7 @@ In-band OAM Incremental Trace Option:
 ]]></artwork>
                 </figure></t>
 
-              <t hangText="0x00100101:">In-band OAM-trace-type is 0x00100101
+              <t hangText="0x00101001:">In-band OAM-trace-type is 0x00101001
               then the format is:<figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1000,6 +996,31 @@ In-band OAM Incremental Trace Option:
     |                    timestamp nanoseconds                      |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                            app_data                           |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+                </figure></t>
+
+              <t hangText="0x11001101:">In-band OAM-trace-type is 0x11001101
+              then the format is:<figure>
+                  <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   Hop_Lim     |              node_id                          |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                         node_id(contd)                        |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                      timestamp seconds                        |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                    timestamp nanoseconds                      |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |   Length      |                     Schema Id                 |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+    |                                                               |
+    |                                                               |
+    |                        Opaque data                            |
+    ~                                                               ~
+    .                                                               .
+    .                                                               .
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 ]]></artwork>
@@ -1037,7 +1058,7 @@ In-band OAM Proof of Transit option:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Option Type  |  Opt Data Len |  POT type = 0 |F|  reserved   |
+|  Option Type  |  Opt Data Len |  POT type = 0 |P|  reserved   |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -1058,17 +1079,20 @@ In-band OAM Proof of Transit option:
             Option Data field of this option, in octets.</t>
 
             <t hangText="POT Type:">8-bit identifier of a particular POT
-            variant that dictates the POT data that is included.<list
-                style="symbols">
-                <t>16 Octet field as described below</t>
+            variant that dictates the POT data that is included. This document
+            defines POT Type 0:<list style="hanging">
+                <t hangText="0:">POT data is a 16 Octet field as described
+                below.</t>
               </list></t>
 
-            <t hangText="Flag (F):">1-bit. Indicates which POT-profile is
-            active. 0 means the even POT-profile is active, 1 means the odd
-            POT-profile is active.</t>
+            <t hangText="Profile to use (P):">1-bit. Indicates which
+            POT-profile is used to generate the Cumulative. Any node
+            participating in POT will have a maximum of 2 profiles configured
+            that drive the computation of cumulative. The two profiles are
+            numbered 0, 1. This bit conveys whether profile 0 or profile 1 is
+            used to compute the Cumulative. </t>
 
-            <t hangText="Reserved:">7-bit. (Reserved Octet) Reserved octet for
-            future use.</t>
+            <t hangText="Reserved:">7-bit. Reserved for future use.</t>
 
             <t hangText="Random:">64-bit Per packet Random number.</t>
 
@@ -1113,7 +1137,7 @@ In-band OAM Proof of Transit option:
             <t hangText="Opt Data Len:">8-bit unsigned integer. Length of the
             Option Data field of this option, in octets.</t>
 
-            <t hangText="iOAM-E2E-Type:">8-bit identifier of a particular
+            <t hangText="OAM-E2E-Type:">8-bit identifier of a particular
             in-band OAM E2E variant.<list style="empty">
                 <t>0: E2E option data is a 64-bit sequence number added to a
                 specific tube which is used to identify packet loss and

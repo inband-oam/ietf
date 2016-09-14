@@ -86,19 +86,19 @@ Table of Contents
      3.1.  In-band OAM Tracing Options . . . . . . . . . . . . . . .   4
        3.1.1.  Pre-allocated Trace Option  . . . . . . . . . . . . .   6
        3.1.2.  Incremental Trace Option  . . . . . . . . . . . . . .   8
-       3.1.3.  In-band OAM node data element format  . . . . . . . .  10
-       3.1.4.  Examples of In-band OAM node data . . . . . . . . . .  13
-     3.2.  In-band OAM Proof of Transit Option . . . . . . . . . . .  15
-     3.3.  In-band OAM Edge-to-Edge Option . . . . . . . . . . . . .  16
-   4.  In-band OAM Data Export . . . . . . . . . . . . . . . . . . .  17
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
-   6.  Manageability Considerations  . . . . . . . . . . . . . . . .  17
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  17
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  18
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  18
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  18
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
+       3.1.3.  In-band OAM node data element format  . . . . . . . .  11
+       3.1.4.  Examples of In-band OAM node data . . . . . . . . . .  14
+     3.2.  In-band OAM Proof of Transit Option . . . . . . . . . . .  16
+     3.3.  In-band OAM Edge-to-Edge Option . . . . . . . . . . . . .  18
+   4.  In-band OAM Data Export . . . . . . . . . . . . . . . . . . .  18
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  19
+   6.  Manageability Considerations  . . . . . . . . . . . . . . . .  19
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  19
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  19
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  20
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
 
 1.  Introduction
 
@@ -208,16 +208,16 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    is assumed to be known.
 
    To optimize hardware and software implementations tracing is defined
-   as two separate options.  Any deployment can choose to configure and
-   support one of the following options.
+   as two separate options.  Any deployment MAY choose to configure and
+   support one or both of the following options.  An implementation of
+   the transport protocol that carries these in-band OAM data MAY choose
+   to support only one of the options.
 
    Pre-allocated Trace Option:  This trace option is defined as a
       container of node-data elements with pre-allocated space for each
       node to populate its information.  This option is useful for
       software implementations where it is efficient to allocate the
       space once and index into the array to populate the data during
-      transit.  The in-band OAM encapsulating node allocates the option
-      header and sets the fields in the option header.  The in-band OAM
 
 
 
@@ -226,6 +226,8 @@ Brockners, et al.         Expires March 7, 2017                 [Page 4]
 Internet-Draft          In-band OAM Data Formats          September 2016
 
 
+      transit.  The in-band OAM encapsulating node allocates the option
+      header and sets the fields in the option header.  The in-band OAM
       encapsulating node allocates an array which is to store
       operational data retrieved from every node while the packet
       traverses the domain.  In-band OAM transit nodes update the
@@ -238,15 +240,16 @@ Internet-Draft          In-band OAM Data Formats          September 2016
       pushes its node data immediately following the option header.  The
       number of node-data recorded and maximum number of node data that
       can be recorded are written into the option header.  This format
-      of trace recording is useful for hardware implementation as this
-      eliminates the need for the transit network elements to read the
-      full array in the option and allows for arbitrarily long packets
-      as the MTU allows.  The in-band OAM encapsulating node allocates
-      the option header.  The in-band OAM encapsulating node based on
-      operational state and configuration sets the fields in the header
-      to control how large the node data list can grow.  In-band OAM
-      transit nodes pushes its node data to the node data list and
-      increments the number of node data records in the header.
+      of trace recording is useful for some of the hardware
+      implementations as this eliminates the need for the transit
+      network elements to read the full array in the option and allows
+      for arbitrarily long packets as the MTU allows.  The in-band OAM
+      encapsulating node allocates the option header.  The in-band OAM
+      encapsulating node based on operational state and configuration
+      sets the fields in the header to control how large the node data
+      list can grow.  In-band OAM transit nodes pushes its node data to
+      the node data list and increments the number of node data records
+      in the header.
 
    Every node data entry is to hold information for a particular in-band
    OAM transit node that is traversed by a packet.  The in-band OAM
@@ -270,10 +273,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
    o  Identification of the interface that a packet was sent out on.
 
-   o  Time of day when the packet was processed by the node.  Different
-      definitions of processing time are feasible and expected, though
-      it is important that all devices of an in-band OAM domain follow
-      the same definition.
+
 
 
 
@@ -281,6 +281,11 @@ Brockners, et al.         Expires March 7, 2017                 [Page 5]
 
 Internet-Draft          In-band OAM Data Formats          September 2016
 
+
+   o  Time of day when the packet was processed by the node.  Different
+      definitions of processing time are feasible and expected, though
+      it is important that all devices of an in-band OAM domain follow
+      the same definition.
 
    o  Generic data: Format-free information where syntax and semantic of
       the information is defined by the operator in a specific
@@ -301,6 +306,37 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    "Node data List [n-1]" is the second one, etc.
 
 3.1.1.  Pre-allocated Trace Option
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                 [Page 6]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
 
    In-band OAM Pre-allocated Trace Option:
 
@@ -330,14 +366,6 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 
 
-
-
-
-Brockners, et al.         Expires March 7, 2017                 [Page 6]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
    Option Type:  8-bit identifier of the type of option.  Option number
       is defined based on the encapsulation protocol.
 
@@ -359,14 +387,21 @@ Internet-Draft          In-band OAM Data Formats          September 2016
       Bit 1    When set indicates presence of ingress_if_id and
                egress_if_id in the Node data.
 
-      Bit 2    When set indicates presence of timestamp nanoseconds in
+
+
+Brockners, et al.         Expires March 7, 2017                 [Page 7]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
+
+      Bit 2    When set indicates presence of timestamp seconds in the
+               Node data
+
+      Bit 3    When set indicates presence of timestamp nanoseconds in
                the Node data.
 
-      Bit 3    When set indicates presence of transit delay in the Node
+      Bit 4    When set indicates presence of transit delay in the Node
                data.
-
-      Bit 4    When set indicates presence of timestamp seconds in the
-               Node data
 
       Bit 5    When set indicates presence of app_data in the Node data.
 
@@ -378,21 +413,11 @@ Internet-Draft          In-band OAM Data Formats          September 2016
                present.
 
       Section 3.1.4 describes the format of a number of trace types.
-      Specifically, it exemplifies OAM-trace-types 0x00100111,
-      0x00000011, 0x00000101, 0x00100001, and 0x00100101.
 
    Elements-left:  8-bit unsigned integer.  A pointer that indicates the
       next data recording point in the data space of the packet in
       octets.  It is the index into the "Node data List" array shown
       above.
-
-
-
-
-Brockners, et al.         Expires March 7, 2017                 [Page 7]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
 
    Node data List [n]:  Variable-length field.  The format of which is
       determined by the OAM Type representing the n-th Node data in the
@@ -405,6 +430,25 @@ Internet-Draft          In-band OAM Data Formats          September 2016
       data to be populated.
 
 3.1.2.  Incremental Trace Option
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                 [Page 8]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
 
    In-band OAM Incremental Trace Option:
 
@@ -442,14 +486,6 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    Opt Data Len:  8-bit unsigned integer.  Length of the Option Data
       field of this option, in octets.
 
-
-
-
-Brockners, et al.         Expires March 7, 2017                 [Page 8]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
    OAM-trace-type:  8-bit identifier of a particular trace element
       variant.
 
@@ -462,17 +498,25 @@ Internet-Draft          In-band OAM Data Formats          September 2016
       Bit 0    When set indicates presence of Hop_Lim and node_id in the
                Node data.
 
+
+
+
+Brockners, et al.         Expires March 7, 2017                 [Page 9]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
+
       Bit 1    When set indicates presence of ingress_if_id and
                egress_if_id in the Node data.
 
-      Bit 2    When set indicates presence of timestamp nanoseconds in
+      Bit 2    When set indicates presence of timestamp seconds in the
+               Node data
+
+      Bit 3    When set indicates presence of timestamp nanoseconds in
                the Node data.
 
-      Bit 3    When set indicates presence of transit delay in the Node
+      Bit 4    When set indicates presence of transit delay in the Node
                data.
-
-      Bit 4    When set indicates presence of timestamp seconds in the
-               Node data
 
       Bit 5    When set indicates presence of app_data in the Node data.
 
@@ -499,13 +543,6 @@ Internet-Draft          In-band OAM Data Formats          September 2016
          Data Len" to exceed "Max Length", no record is added and the
          overflow "O-bit" must be set to "1" in the header.
 
-
-
-Brockners, et al.         Expires March 7, 2017                 [Page 9]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
    Maximum Length:  2 byte unsigned integer.  This field specifies the
       maximum length of the node data list in bytes.  Given that the
       sender knows the minimum path MTU, the sender can set the maximum
@@ -515,6 +552,15 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
    Reserved:  2 bytes unused field in this document and MUST be set to
       zero.
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 10]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
 
    Node data List [n]:  Variable-length field.  The format of which is
       determined by the OAM Type representing the n-th Node data in the
@@ -553,15 +599,6 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
    ingress_if_id and egress_if_id:  4 octet field defined as follows:
 
-
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 10]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |     ingress_if_id             |         egress_if_id          |
@@ -572,6 +609,28 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
       egress_if_id:  2 octet unsigned integer.  Interface identifier to
          record the egress interface the packet is forwarded out of.
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 11]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
+
+   timestamp seconds:  4 octet unsigned integer.  Absoulte timestamp in
+      seconds that specifies the time at which the packet was received
+      by the node.  The format of this field is identical to the most
+      significant 32 bits of 64 least significant bits of the
+      [IEEE1588v2].  This truncated format consists of a 32-bit seconds
+      field.  As defined in [IEEE1588v2], the timestamp specifies the
+      number of seconds elapsed since 1 January 1970 00:00:00 according
+      to the International Atomic Time (TAI).
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       timestamp seconds                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    timestamp nanoseconds:  4 octet unsigned integer.  This timestamp
       specifies time in nanoseconds relative to wall clock time at which
@@ -594,30 +653,6 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    |                      transit delay                            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   timestamp seconds:  8 octet unsigned integer.  Absoulte timestamp
-      that specifies the time at which the packet was received by the
-      node.  The format of this field is identical to the 64 least
-      significant bits of the [IEEE1588v2].  This truncated format
-      consists of a 32-bit seconds field followed by a 32-bit
-      nanoseconds field.  As defined in [IEEE1588v2], the timestamp
-      specifies the number of seconds elapsed since 1 January 1970
-      00:00:00 according to the International Atomic Time (TAI).
-
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                       timestamp seconds                       ~
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   ~                      timestamp seconds(contd)                 |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 11]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
    app_data:  4 octet placeholder which can be used by the node to add
       application specific data
 
@@ -626,6 +661,18 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    Type is set:
 
    Hop_Lim and node_id:  8 octet field defined as follows:
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 12]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -666,19 +713,22 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    Opaque State Snapshot:  Variable length field.  It allows the network
       element to store arbitrary state in the node data record, without
       a pre-defined schema.  The schema needs to made known to the
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 12]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
       analyzer by some out-of-band means.  The 24-bit "Schema Id" field
       in the record is supposed to let the analyzer know which
       particular schema to use, and it is expected to be configured on
       the network element by the operator.  This ID is expected to be
       configured on the device by the network operator.
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 13]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -712,23 +762,8 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    section defines different formats that an entry in "Node data List"
    can take.
 
-   0x00100111:  In-band OAM-trace-type is 0x00100111 then the format of
+   0x00101011:  In-band OAM-trace-type is 0x00101011 then the format of
       node data is:
-
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 13]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -744,6 +779,13 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
    0x00000011:  In-band OAM-trace-type is 0x00000011 then the format is:
 
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 14]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
+
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |   Hop_Lim     |              node_id                          |
@@ -753,7 +795,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 
 
-   0x00000101:  In-band OAM-trace-type is 0x00000101 then the format is:
+   0x00001001:  In-band OAM-trace-type is 0x00001001 then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -773,18 +815,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x00100101:  In-band OAM-trace-type is 0x00100101 then the format is:
-
-
-
-
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 14]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
+   0x00101001:  In-band OAM-trace-type is 0x00101001 then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -793,6 +824,42 @@ Internet-Draft          In-band OAM Data Formats          September 2016
        |                    timestamp nanoseconds                      |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |                            app_data                           |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   0x11001101:  In-band OAM-trace-type is 0x11001101 then the format is:
+
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 15]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
+
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Hop_Lim     |              node_id                          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                         node_id(contd)                        |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                      timestamp seconds                        |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                    timestamp nanoseconds                      |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Length      |                     Schema Id                 |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                                                               |
+       |                                                               |
+       |                        Opaque data                            |
+       ~                                                               ~
+       .                                                               .
+       .                                                               .
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -816,12 +883,27 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    o  Cumulative: Information which is handed from node to node and
       updated by every node according to a verification algorithm.
 
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 16]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
+
    In-band OAM Proof of Transit option:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Option Type  |  Opt Data Len |  POT type = 0 |F|  reserved   |
+   |  Option Type  |  Opt Data Len |  POT type = 0 |P|  reserved   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
    |                           Random                              |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -834,28 +916,23 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 
 
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 15]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
    Option Type:  8-bit identifier of the type of option.
 
    Opt Data Len:  8-bit unsigned integer.  Length of the Option Data
       field of this option, in octets.
 
    POT Type:  8-bit identifier of a particular POT variant that dictates
-      the POT data that is included.
+      the POT data that is included.  This document defines POT Type 0:
 
-      *  16 Octet field as described below
+      0: POT data is a 16 Octet field as described below.
 
-   Flag (F):  1-bit.  Indicates which POT-profile is active. 0 means the
-      even POT-profile is active, 1 means the odd POT-profile is active.
+   Profile to use (P):  1-bit.  Indicates which POT-profile is used to
+      generate the Cumulative.  Any node participating in POT will have
+      a maximum of 2 profiles configured that drive the computation of
+      cumulative.  The two profiles are numbered 0, 1.  This bit conveys
+      whether profile 0 or profile 1 is used to compute the Cumulative.
 
-   Reserved:  7-bit.  (Reserved Octet) Reserved octet for future use.
+   Reserved:  7-bit.  Reserved for future use.
 
    Random:  64-bit Per packet Random number.
 
@@ -868,6 +945,14 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    of space constraints in the transport protocol used).  Future
    versions of this document will address different sizes of data for
    "proof of transit".
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 17]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
 
 3.3.  In-band OAM Edge-to-Edge Option
 
@@ -891,19 +976,12 @@ Internet-Draft          In-band OAM Data Formats          September 2016
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 16]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
    Option Type:  8-bit identifier of the type of option.
 
    Opt Data Len:  8-bit unsigned integer.  Length of the Option Data
       field of this option, in octets.
 
-   iOAM-E2E-Type:  8-bit identifier of a particular in-band OAM E2E
+   OAM-E2E-Type:  8-bit identifier of a particular in-band OAM E2E
       variant.
 
          0: E2E option data is a 64-bit sequence number added to a
@@ -924,6 +1002,13 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
    The discussion of in-band OAM data processing and export is left for
    a future version of this document.
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 18]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
 
 5.  IANA Considerations
 
@@ -946,14 +1031,6 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
    Nadahalli, and Andrew Yourtchenko for the comments and advice.  This
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 17]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
-
    document leverages and builds on top of several concepts described in
    [I-D.kitamura-ipv6-record-route].  The authors would like to
    acknowledge the work done by the author Hiroshi Kitamura and people
@@ -977,6 +1054,18 @@ Internet-Draft          In-band OAM Data Formats          September 2016
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
 
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 19]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
+
 9.2.  Informative References
 
    [I-D.brockners-inband-oam-transport]
@@ -999,16 +1088,6 @@ Internet-Draft          In-band OAM Data Formats          September 2016
               Lapukhov, P. and r. remy@barefootnetworks.com, "Data-plane
               probe for in-band telemetry collection", draft-lapukhov-
               dataplane-probe-01 (work in progress), June 2016.
-
-
-
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 18]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
-
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
               Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
@@ -1035,6 +1114,14 @@ Authors' Addresses
    Email: shwethab@cisco.com
 
 
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 20]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
+
+
    Carlos Pignataro
    Cisco Systems, Inc.
    7200-11 Kit Creek Road
@@ -1054,16 +1141,6 @@ Authors' Addresses
    Comcast
 
    Email: John_Leddy@cable.comcast.com
-
-
-
-
-
-
-
-Brockners, et al.         Expires March 7, 2017                [Page 19]
-
-Internet-Draft          In-band OAM Data Formats          September 2016
 
 
    Stephen Youell
@@ -1088,6 +1165,17 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    Mellanox Technologies Ltd.
 
    Email: davidm@mellanox.com
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 21]
+
+Internet-Draft          In-band OAM Data Formats          September 2016
 
 
    Petr
@@ -1117,4 +1205,28 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 
 
-Brockners, et al.         Expires March 7, 2017                [Page 20]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires March 7, 2017                [Page 22]
