@@ -543,7 +543,9 @@ In-band OAM Pre-allocated Trace Option:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Option Type  |  Opt Data Len | OAM-trace-type| Elements-left |
+|  Option Type  |  Opt Data Len | Elements-left |    Reserved1  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         OAM-Trace-Type        |         Reserved2             |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
 |                        Node data List [0]                     |  |
@@ -576,7 +578,15 @@ In-band OAM Pre-allocated Trace Option:
 
               <!---->
 
-              <t hangText="OAM-trace-type:">8-bit identifier of a particular
+              <t hangText="Elements-left:">8-bit unsigned integer. A pointer
+              that indicates the next data recording point in the data space
+              of the packet in octets. It is the index into the "Node data
+              List" array shown above.</t>
+
+              <t hangText="Reserved1:">8-bit unused field in this document and
+              MUST be set to zero.</t>
+
+              <t hangText="OAM-trace-type:">16-bit identifier of a particular
               trace element variant.</t>
 
               <t hangText=" ">The trace type value is a bit field. The
@@ -604,21 +614,19 @@ In-band OAM Pre-allocated Trace Option:
                   <t hangText="Bit 5">When set indicates presence of app_data
                   in the Node data.</t>
 
-                  <t hangText="Bit 6">Undefined in this document.</t>
+                  <t hangText="Bit 6 - 14">Undefined in this document.</t>
 
-                  <t hangText="Bit 7">When set indicates wide data format for
+                  <t hangText="Bit 15">When set indicates wide data format for
                   all the node data elements that are present. When unset
                   indicates short data format for all the node data elements
                   that are present.</t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-type-node-data"></xref>
-              describes the format of a number of trace types. </t>
+              describes the format of a number of trace types.</t>
 
-              <t hangText="Elements-left:">8-bit unsigned integer. A pointer
-              that indicates the next data recording point in the data space
-              of the packet in octets. It is the index into the "Node data
-              List" array shown above.</t>
+              <t hangText="Reserved2:">16-bit unused field in this document
+              and MUST be set to zero.</t>
 
               <t hangText="Node data List [n]:">Variable-length field. The
               format of which is determined by the OAM Type representing the
@@ -640,9 +648,9 @@ In-band OAM Incremental Trace Option:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Option Type  |  Opt Data Len | OAM-trace-type|    Flags      |
+|  Option Type  |  Opt Data Len | Maximum Length|    Flags      |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         Maximum Length        |         Reserved              |
+|         OAM Trace Type        |         Reserved              |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 |                        Node data List [0]                     |
@@ -675,7 +683,27 @@ In-band OAM Incremental Trace Option:
 
               <!---->
 
-              <t hangText="OAM-trace-type:">8-bit identifier of a particular
+              <t hangText="Maximum Length:">8-bit unsigned integer. This field
+              specifies the maximum length of the node data list in octets.
+              Given that the sender knows the minimum path MTU, the sender can
+              set the maximum of node data bytes allowed before exceeding the
+              MTU. Thus, a simple comparison between "Opt data Len" and "Max
+              Length" allows to decide whether or not data could be added.</t>
+
+              <t hangText="Flags">8 bit field. Following flags are
+              defined:<list style="hanging">
+                  <t hangText="1">"Overflow" (O-bit) (least significant bit).
+                  This bit is set by the network element if the number of
+                  records on the packet is at the maximum limit as specified
+                  by the packet: i.e. the packet is already "full" of
+                  telemetry information. This is useful for transit nodes to
+                  ignore further processing of the option. If inserting a new
+                  node data record would cause "Opt Data Len" to exceed "Max
+                  Length", no record is added and the overflow "O-bit" must be
+                  set to "1" in the header.</t>
+                </list></t>
+
+              <t hangText="OAM-trace-type:">16-bit identifier of a particular
               trace element variant.</t>
 
               <t hangText=" ">The trace type value is a bit field. The
@@ -706,37 +734,16 @@ In-band OAM Incremental Trace Option:
                   <t hangText="Bit 6">When set indicates presence of variable
                   length Opaque State Snapshot field.</t>
 
-                  <t hangText="Bit 7">When set indicates wide data format for
+                  <t hangText="Bit 7-14">Undefined in this draft.</t>
+
+                  <t hangText="Bit 15">When set indicates wide data format for
                   all the node data elements that are present. When unset
                   indicates short data format for all the node data elements
                   that are present.</t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-type-node-data"></xref>
-              describes the format of a number of trace types. Specifically,
-              it exemplifies OAM-trace-types 0x00100111, 0x00000011,
-              0x00000101, 0x00100001, and 0x00100101.</t>
-
-              <t hangText="Flags">8 bit field. Following flags are
-              defined:<list style="hanging">
-                  <t hangText="1">"Overflow" (O-bit) (least significant bit).
-                  This bit is set by the network element if the number of
-                  records on the packet is at the maximum limit as specified
-                  by the packet: i.e. the packet is already "full" of
-                  telemetry information. This is useful for transit nodes to
-                  ignore further processing of the option. If inserting a new
-                  node data record would cause "Opt Data Len" to exceed "Max
-                  Length", no record is added and the overflow "O-bit" must be
-                  set to "1" in the header.</t>
-                </list></t>
-
-              <t hangText="Maximum Length:">2 byte unsigned integer. This
-              field specifies the maximum length of the node data list in
-              bytes. Given that the sender knows the minimum path MTU, the
-              sender can set the maximum of node data bytes allowed before
-              exceeding the MTU. Thus, a simple comparison between "Opt data
-              Len" and "Max Length" allows to decide whether or not data could
-              be added.</t>
+              describes the format of a number of trace types.</t>
 
               <t hangText="Reserved:">2 bytes unused field in this document
               and MUST be set to zero.</t>
@@ -755,7 +762,7 @@ In-band OAM Incremental Trace Option:
         <section anchor="trace-node-data-element"
                  title="In-band OAM node data element format">
           <t>The In-band OAM node data elements are defined in 2 formats -
-          short and wide that is selected by bit 7 in the OAM-trace-type
+          short and wide that is selected by bit 15 in the OAM-trace-type
           field. All the noda data elements MUST be 4-byte aligned in both the
           formats.</t>
 
@@ -842,7 +849,7 @@ In-band OAM Incremental Trace Option:
             </list></t>
 
           <t>Data type and format for each of the elements in wide format
-          follows when Most Significant Bit (MSB) i.e. bit 7 of ioam node of
+          follows when Most Significant Bit (MSB) i.e. bit 15 of
           OAM-Trace-Type is set:<list style="hanging">
               <t hangText="Hop_Lim and node_id:">8 octet field defined as
               follows: <figure>
@@ -899,7 +906,7 @@ In-band OAM Incremental Trace Option:
                   <artwork><![CDATA[    0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   Length      |                     Schema Id                 |
+   |   Length      |                     Schema ID                 |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                                                               |
    |                                                               |
@@ -914,11 +921,15 @@ In-band OAM Incremental Trace Option:
                   length of the Opaque data field that follows Schema Id. It
                   MUST always be a multiple of 4.</t>
 
-                  <t hangText="Schema:">3 octet unsigned integer identifying
-                  the schema of Opaque data.</t>
+                  <t hangText="Schema ID:">3 octet unsigned integer
+                  identifying the schema of Opaque data.</t>
+
+                  <t hangText="Opaque data:">Variable length field. This field
+                  is intepreted as specified by the schema identified by the
+                  Schema ID.</t>
                 </list></t>
 
-              <t>The fields - timestamp nanoseconds, timestamp seconds and
+              <t>The fields - timestamp seconds, timestamp nanoseconds and
               transit delay have the same format as defined in short
               format.</t>
             </list></t>
@@ -934,8 +945,8 @@ In-band OAM Incremental Trace Option:
           "Node data List" can take.</t>
 
           <t><list style="hanging">
-              <t hangText="0x00101011:">In-band OAM-trace-type is 0x00101011
-              then the format of node data is:<figure>
+              <t hangText="0x002B:">In-band OAM-trace-type is 0x2B then the
+              format of node data is:<figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
@@ -950,8 +961,8 @@ In-band OAM Incremental Trace Option:
 ]]></artwork>
                 </figure></t>
 
-              <t hangText="0x00000011:">In-band OAM-trace-type is 0x00000011
-              then the format is:<figure>
+              <t hangText="0x0003:">In-band OAM-trace-type is 0x0003 then the
+              format is:<figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
@@ -963,8 +974,8 @@ In-band OAM Incremental Trace Option:
 ]]></artwork>
                 </figure></t>
 
-              <t hangText="0x00001001:">In-band OAM-trace-type is 0x00001001
-              then the format is: <figure>
+              <t hangText="0x0009:">In-band OAM-trace-type is 0x0009 then the
+              format is: <figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
@@ -975,8 +986,8 @@ In-band OAM Incremental Trace Option:
 ]]></artwork>
                 </figure></t>
 
-              <t hangText="0x00100001:">In-band OAM-trace-type is 0x00100001
-              then the format is:<figure>
+              <t hangText="0x0021:">In-band OAM-trace-type is 0x0021 then the
+              format is:<figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
@@ -987,8 +998,8 @@ In-band OAM Incremental Trace Option:
 ]]></artwork>
                 </figure></t>
 
-              <t hangText="0x00101001:">In-band OAM-trace-type is 0x00101001
-              then the format is:<figure>
+              <t hangText="0x0029:">In-band OAM-trace-type is 0x0029 then the
+              format is:<figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
@@ -1001,8 +1012,8 @@ In-band OAM Incremental Trace Option:
 ]]></artwork>
                 </figure></t>
 
-              <t hangText="0x11001101:">In-band OAM-trace-type is 0x11001101
-              then the format is:<figure>
+              <t hangText="0x104D:">In-band OAM-trace-type is 0x104D then the
+              format is:<figure>
                   <artwork><![CDATA[     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
@@ -1090,7 +1101,7 @@ In-band OAM Proof of Transit option:
             participating in POT will have a maximum of 2 profiles configured
             that drive the computation of cumulative. The two profiles are
             numbered 0, 1. This bit conveys whether profile 0 or profile 1 is
-            used to compute the Cumulative. </t>
+            used to compute the Cumulative.</t>
 
             <t hangText="Reserved:">7-bit. Reserved for future use.</t>
 
