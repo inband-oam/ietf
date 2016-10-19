@@ -381,12 +381,12 @@
       <t>The in-situ OAM options translate into options for an IPv6 extension
       header. The extension header would be inserted by either a host source
       of the packet, or by a transit/domain-edge node. If the addition of the
-      in-situ OAM HbyH extension header would lead to the packet exceeding the
+      in-situ OAM Hop-by-Hop Option header would lead to the packet exceeding the
       MTU of the domain an error should be reported. The methods and
       procedures of how the error is reported are outside the scope of this
       document. Likewise if an ICMPv6 forwarding error occurs between
       encapsulating and decapsulating nodes, the node generating the ICMPv6
-      error should strip the in-situ OAM HbyH extension header before sending
+      error should strip the in-situ OAM Hop-by-Hop Option header before sending
       the ICMPv6 message to the source.</t>
 
       <section title="In-situ OAM in IPv6 Hop by Hop Extension Header">
@@ -473,7 +473,7 @@ With 2 highest order bits of Option Type indicating the following:
           (i.e. at the encapsulating/decapsulating nodes) by means of
           configuration.</t>
 
-          <t>Such a config SHOULD allow selective enablement of in-situ OAM
+          <t>Such a configuration SHOULD allow selective enablement of in-situ OAM
           header insertion for a subset of traffic (e.g., one or several
           "pipes").</t>
 
@@ -498,9 +498,9 @@ if (packet matches traffic for which in-situ OAM is enabled) {
     Create in-situ OAM hbyh ext-header with k node data records 
     preallocated.
     Increment payload length in IPv6 header:
-                      with size of in-situ OAM hbyh ext header
+                      with size of in-situ OAM hbyh ext-header
     Populate node data at:
-        (size of in-situ OAM hbyh header = 8) + k * node_data_size
+        (size of in-situ OAM hbyh ext-header = 8) + k * node_data_size
     from the beginning of the header
     Set Elements-left to: k - 1
 
@@ -519,7 +519,7 @@ if (packet matches traffic for which in-situ OAM is enabled) {
           <t><figure>
               <artwork><![CDATA[
 k = number of node data that this node can allocate
-if (in-situ OAM ext hbyh header is present) {
+if (in-situ OAM ext hbyh ext-header is present) {
     if (Elements-left > 0)) {
       populate node data at :
          node_data_start[Elements-left]
@@ -535,8 +535,8 @@ if (in-situ OAM ext hbyh header is present) {
 egress_edge = list of interfaces where in-situ OAM hbyh ext 
                header is to be stripped
 Before forwarding packet out of interfaces in egress_edge list:
-if (in-situ OAM hbyh ext header is present) {
-   remove the in-situ OAM hbyh ext header, 
+if (in-situ OAM hbyh ext-header is present) {
+   remove the in-situ OAM hbyh ext-header, 
    possibly store the record along with additional 
    fields for analysis and export
    Decrement Payload Length in IPv6 header
@@ -579,11 +579,11 @@ In-situ OAM header in VXLAN GPE header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       Outer UDP Header                        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-|R|R|Ver|I|P|R|O|          Reserved             | NP = i.b.OAM  |  |
+|R|R|Ver|I|P|R|O|          Reserved             | NP = i.s.OAM  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
 |     Virtual Network Identifier (VNI)          | Reserved      |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-| Type =i.b.OAM | i.b.OAM HDR len |  Reserved     | NP = IP/Eth |  |
+| Type =i.s.OAM | i.s.OAM HDR len |  Reserved     | NP = IP/Eth |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ OAM
 |                     in-situ OAM options                       |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
@@ -681,11 +681,11 @@ PadN option  (alignment requirement: none)
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
-|                        Random(contd)                          |  O
+|                        Random(contd.)                         |  O
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
 |                         Cumulative                            |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                    Cumulative (contd)                         |  |
+|                    Cumulative (contd.)                        |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
         </figure><list style="hanging">
           <t hangText="TLV Class:">Describes the scope of the "Type" field. In
@@ -709,7 +709,7 @@ PadN option  (alignment requirement: none)
           <t hangText="Length:">Length of the variable metadata, in 4-octet
           words. Here the length is 4.</t>
 
-          <t hangText="Random:">64-bit Per packet Random number.</t>
+          <t hangText="Random:">64-bit Per-packet Random number.</t>
 
           <t hangText="Cumulative:">64-bit Cumulative that is updated by the
           Service Functions.</t>
@@ -742,11 +742,11 @@ PadN option  (alignment requirement: none)
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
  |                           Random                              |  |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
- |                        Random(contd)                          |  O
+ |                        Random(contd.)                         |  O
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
  |                         Cumulative                            |  |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
- |                     Cumulative (contd)                        |  |
+ |                     Cumulative (contd.)                       |  |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 ]]></artwork>
         </figure>
@@ -766,7 +766,7 @@ PadN option  (alignment requirement: none)
             <t hangText="Flags:">8 bits. No flags are defined in this
             document.</t>
 
-            <t hangText="Random:">64-bit per packet random number.</t>
+            <t hangText="Random:">64-bit per-packet random number.</t>
 
             <t hangText="Cumulative:">64-bit cumulative value that is updated
             at specific nodes that form the service path to be verified.</t>
