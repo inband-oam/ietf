@@ -23,18 +23,18 @@ Expires: March 7, 2017                                             Cisco
                                                       September 03, 2016
 
 
-                      Data Formats for In-band OAM
+                      Data Formats for In-situ OAM
                    draft-brockners-inband-oam-data-02
 
 Abstract
 
-   In-band operation, administration and maintenance (OAM) records
+   In-situ operation, administration and maintenance (OAM) records
    operational and telemetry information in the packet while the packet
    traverses a path between two points in the network.  This document
-   discusses the data types and data formats for in-band OAM data
-   records.  In-band OAM data records can be embedded into a variety of
+   discusses the data types and data formats for in-situ OAM data
+   records.  In-situ OAM data records can be embedded into a variety of
    transports such as NSH, Segment Routing, VXLAN-GPE, native IPv6 (via
-   extension header), or IPv4.  In-band OAM is to complement current
+   extension header), or IPv4.  In-situ OAM is to complement current
    out-of-band OAM mechanisms based on ICMP or other types of probe
    packets.
 
@@ -55,7 +55,7 @@ Status of This Memo
 
 Brockners, et al.         Expires March 7, 2017                 [Page 1]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    time.  It is inappropriate to use Internet-Drafts as reference
@@ -82,15 +82,15 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  In-band OAM Data Types and Data Format  . . . . . . . . . . .   3
-     3.1.  In-band OAM Tracing Options . . . . . . . . . . . . . . .   4
+   3.  In-situ OAM Data Types and Data Format  . . . . . . . . . . .   3
+     3.1.  In-situ OAM Tracing Options . . . . . . . . . . . . . . .   4
        3.1.1.  Pre-allocated Trace Option  . . . . . . . . . . . . .   6
        3.1.2.  Incremental Trace Option  . . . . . . . . . . . . . .   9
-       3.1.3.  In-band OAM node data element format  . . . . . . . .  11
-       3.1.4.  Examples of In-band OAM node data . . . . . . . . . .  14
-     3.2.  In-band OAM Proof of Transit Option . . . . . . . . . . .  16
-     3.3.  In-band OAM Edge-to-Edge Option . . . . . . . . . . . . .  18
-   4.  In-band OAM Data Export . . . . . . . . . . . . . . . . . . .  18
+       3.1.3.  In-situ OAM node data element format  . . . . . . . .  11
+       3.1.4.  Examples of In-situ OAM node data . . . . . . . . . .  14
+     3.2.  In-situ OAM Proof of Transit Option . . . . . . . . . . .  16
+     3.3.  In-situ OAM Edge-to-Edge Option . . . . . . . . . . . . .  18
+   4.  In-situ OAM Data Export . . . . . . . . . . . . . . . . . . .  18
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  19
    6.  Manageability Considerations  . . . . . . . . . . . . . . . .  19
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  19
@@ -102,25 +102,25 @@ Table of Contents
 
 1.  Introduction
 
-   This document defines data record types for "in-band" operation,
-   administration, and maintenance (OAM).  In-band OAM records OAM
+   This document defines data record types for "in-situ" operation,
+   administration, and maintenance (OAM).  In-situ OAM records OAM
    information within the packet while the packet traverses a particular
-   network domain.  The term "in-band" refers to the fact that the OAM
+   network domain.  The term "in-situ" refers to the fact that the OAM
 
 
 
 Brockners, et al.         Expires March 7, 2017                 [Page 2]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    data is added to the data packets rather than is being sent within
    packets specifically dedicated to OAM.  A discussion of the
-   motivation and requirements for in-band OAM can be found in
-   [I-D.brockners-inband-oam-requirements].  In-band OAM is to
+   motivation and requirements for in-situ OAM can be found in
+   [I-D.brockners-inband-oam-requirements].  In-situ OAM is to
    complement "out-of-band" or "active" mechanisms such as ping or
    traceroute, or more recent active probing mechanisms as described in
-   [I-D.lapukhov-dataplane-probe].  In-band OAM mechanisms can be
+   [I-D.lapukhov-dataplane-probe].  In-situ OAM mechanisms can be
    leveraged where current out-of-band mechanisms do not apply or do not
    offer the desired results, such as proving that a certain set of
    traffic takes a pre-defined path, SLA verification for the live data
@@ -129,8 +129,8 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    where probe traffic is potentially handled differently from regular
    data traffic by the network devices.
 
-   This document defines the data types and data formats for in-band OAM
-   data records.  The in-band OAM data records can be transported by a
+   This document defines the data types and data formats for in-situ OAM
+   data records.  The in-situ OAM data records can be transported by a
    variety of transport protocols, including NSH, Segment Routing,
    VXLAN-GPE, IPv6, IPv4.  Encapsulation details for these different
    transport protocols are outside the scope of this document.
@@ -156,61 +156,61 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
               Extension
 
-3.  In-band OAM Data Types and Data Format
+3.  In-situ OAM Data Types and Data Format
 
-   This section defines in-band OAM data types and data formats of the
-   data records required for in-band OAM.  The different uses of in-band
-   OAM require the definition of different types of data.  The in-band
+   This section defines in-situ OAM data types and data formats of the
+   data records required for in-situ OAM.  The different uses of in-situ
+   OAM require the definition of different types of data.  The in-situ
    OAM data format for the data being carried corresponds to the three
 
 
 
 Brockners, et al.         Expires March 7, 2017                 [Page 3]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
-   main categories of in-band OAM data defined in
+   main categories of in-situ OAM data defined in
    [I-D.brockners-inband-oam-requirements], which are : edge-to-edge,
    per node, and for selected nodes only.
 
-   Transport options for in-band OAM data are found in
-   [I-D.brockners-inband-oam-transport].  In-band OAM data is defined as
+   Transport options for in-situ OAM data are found in
+   [I-D.brockners-inband-oam-transport].  In-situ OAM data is defined as
    options in Type-Length-Value (TLV) format.  The TLV format for each
-   of the three different types of in-band OAM data is defined in this
+   of the three different types of in-situ OAM data is defined in this
    document.
 
-   In-band OAM is expected to be deployed in a specific domain rather
+   In-situ OAM is expected to be deployed in a specific domain rather
    than on the overall Internet.  The part of the network which employs
-   in-band OAM is referred to as "in-band OAM-domain".  In-band OAM data
-   is added to a packet on entering the in-band OAM-domain and is
-   removed from the packet when exiting the domain.  Within the in-band
-   OAM-domain, the in-band OAM data may be updated by network nodes that
-   the packet traverses.  The device which adds in-band OAM data
-   container to the packet to capture in-band OAM data is called the
-   "in-band OAM encapsulating node", whereas the device which removes
-   the in-band OAM data container is referred to as the "in-band OAM
+   in situ OAM is referred to as the "in-situ OAM-domain".  In-situ OAM
+   data is added to a packet upon entering the in-situ OAM-domain and is
+   removed from the packet when exiting the domain.  Within the in-situ
+   OAM-domain, the in-situ OAM data may be updated by network nodes that
+   the packet traverses.  The device which adds in-situ OAM data
+   container to the packet to capture in-situ OAM data is called the
+   "in-situ OAM encapsulating node", whereas the device which removes
+   the in-situ OAM data container is referred to as the "in-situ OAM
    decapsulating node".  Nodes within the domain which are aware of in-
-   band OAM data and read and/or write or process the in-band OAM data
-   are called "in-band OAM transit nodes".  Note that not every node in
-   an in-band OAM domain needs to be an in-band OAM transit node.  For
+   situ OAM data and read and/or write or process the in-situ OAM data
+   are called "in-situ OAM transit nodes".  Note that not every node in
+   an in-situ OAM domain needs to be an in-situ OAM transit node.  For
    example, a Segment Routing deployment might require the segment
    routing path to be verified.  In that case, only the SR nodes would
-   also be in-band OAM transit nodes rather than all nodes.
+   also be in-situ OAM transit nodes rather than all nodes.
 
-3.1.  In-band OAM Tracing Options
+3.1.  In-situ OAM Tracing Options
 
-   "In-band OAM tracing data" is expected to be collected at every node
+   "In-situ OAM tracing data" is expected to be collected at every node
    that a packet traverses, i.e., in a typical deployment all nodes in
-   an in-band OAM-domain would participate in in-band OAM and thus be
-   in-band OAM transit nodes, in-band OAM encapsulating or in-band OAM
-   decapsulating nodes.  The network diameter of the in-band OAM domain
-   is assumed to be known.
+   an in-situ OAM-domain would participate in in-situ OAM and thus be
+   in-situ OAM transit nodes, in-situ OAM encapsulating or in-situ OAM
+   decapsulating nodes.  The maximum network diameter of the in-situ OAM
+   domain is assumed to be known.
 
    To optimize hardware and software implementations tracing is defined
    as two separate options.  Any deployment MAY choose to configure and
    support one or both of the following options.  An implementation of
-   the transport protocol that carries these in-band OAM data MAY choose
+   the transport protocol that carries these in-situ OAM data MAY choose
    to support only one of the options.
 
    Pre-allocated Trace Option:  This trace option is defined as a
@@ -223,17 +223,17 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                 [Page 4]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
-      transit.  The in-band OAM encapsulating node allocates the option
-      header and sets the fields in the option header.  The in-band OAM
+      transit.  The in-situ OAM encapsulating node allocates the option
+      header and sets the fields in the option header.  The in situ OAM
       encapsulating node allocates an array which is to store
       operational data retrieved from every node while the packet
-      traverses the domain.  In-band OAM transit nodes update the
-      content of the array.  A pointer which is part of the in-band OAM
+      traverses the domain.  In-situ OAM transit nodes update the
+      content of the array.  A pointer which is part of the in-situ OAM
       trace data points to the next empty slot in the array, which is
-      where the next in-band OAM transit node fills in its data.
+      where the next in-situ OAM transit node fills in its data.
 
    Incremental Trace Option:  This trace options is defined as a
       container of node-data elements where each node allocates and
@@ -243,18 +243,18 @@ Internet-Draft          In-band OAM Data Formats          September 2016
       of trace recording is useful for some of the hardware
       implementations as this eliminates the need for the transit
       network elements to read the full array in the option and allows
-      for arbitrarily long packets as the MTU allows.  The in-band OAM
-      encapsulating node allocates the option header.  The in-band OAM
+      for arbitrarily long packets as the MTU allows.  The in-situ OAM
+      encapsulating node allocates the option header.  The in-situ OAM
       encapsulating node based on operational state and configuration
       sets the fields in the header to control how large the node data
-      list can grow.  In-band OAM transit nodes pushes its node data to
+      list can grow.  In-situ OAM transit nodes pushes its node data to
       the node data list and increments the number of node data records
       in the header.
 
-   Every node data entry is to hold information for a particular in-band
-   OAM transit node that is traversed by a packet.  The in-band OAM
-   decapsulating node removes the in-band OAM data and process and/or
-   export the metadata.  In-band OAM data uses its own name-space for
+   Every node data entry is to hold information for a particular in situ
+   OAM transit node that is traversed by a packet.  The in-situ OAM
+   decapsulating node removes the in-situ OAM data and process and/or
+   export the metadata.  In-situ OAM data uses its own name-space for
    information such as node identifier or interface identifier.  This
    allows for a domain-specific definition and interpretation.  For
    example: In one case an interface-id could point to a physical
@@ -263,9 +263,9 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    whereas in another case it could refer to a logical interface (e.g.,
    in case of tunnels).
 
-   The following in-band OAM data is defined for in-band OAM tracing:
+   The following in-situ OAM data is defined for in-situ OAM tracing:
 
-   o  Identification of the in-band OAM node.  An in-band OAM node
+   o  Identification of the in-situ OAM node.  An in-situ OAM node
       identifier can match to a device identifier or a particular
       control point or subsystem within a device.
 
@@ -279,25 +279,25 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                 [Page 5]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    o  Time of day when the packet was processed by the node.  Different
       definitions of processing time are feasible and expected, though
-      it is important that all devices of an in-band OAM domain follow
+      it is important that all devices of an in-situ OAM domain follow
       the same definition.
 
    o  Generic data: Format-free information where syntax and semantic of
       the information is defined by the operator in a specific
-      deployment.  For a specific deployment, all in-band OAM nodes
+      deployment.  For a specific deployment, all in-situ OAM nodes
       should interpret the generic data the same way.  Examples for
-      generic in-band OAM data include geo-location information
+      generic in-situ OAM data include geo-location information
       (location of the node at the time the packet was processed),
       buffer queue fill level or cache fill level at the time the packet
       was processed, or even a battery charge level.
 
-   o  A mechanism to detect whether in-band OAM trace data was added at
-      every hop or whether certain hops in the domain weren't in-band
+   o  A mechanism to detect whether in-situ OAM trace data was added at
+      every hop or whether certain hops in the domain weren't in-situ
       OAM transit nodes.
 
    The "Node data List" array in the packet is populated iteratively as
@@ -335,10 +335,10 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                 [Page 6]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
-   In-band OAM Pre-allocated Trace Option:
+   In-situ OAM Pre-allocated Trace Option:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -391,7 +391,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                 [Page 7]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
       The trace type value is a bit field.  The following bit fields are
@@ -447,12 +447,12 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                 [Page 8]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
 3.1.2.  Incremental Trace Option
 
-   In-band OAM Incremental Trace Option:
+   In-situ OAM Incremental Trace Option:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -503,7 +503,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                 [Page 9]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
       1  "Overflow" (O-bit) (least significant bit).  This bit is set by
@@ -559,7 +559,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                [Page 10]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    Reserved:  2 bytes unused field in this document and MUST be set to
@@ -573,9 +573,9 @@ Internet-Draft          In-band OAM Data Formats          September 2016
       the last node data of the Node data List (Node data List[n])
       contains the first Node data of the path traced.
 
-3.1.3.  In-band OAM node data element format
+3.1.3.  In-situ OAM node data element format
 
-   The In-band OAM node data elements are defined in 2 formats - short
+   The In-situ OAM node data elements are defined in 2 formats - short
    and wide that is selected by bit 15 in the OAM-trace-type field.  All
    the noda data elements MUST be 4-byte aligned in both the formats.
 
@@ -589,14 +589,13 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    |   Hop_Lim     |              node_id                          |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-
       Hop_Lim:  1 octet unsigned integer.  It is set to the Hop Limit
          value in the packet at the node that records this data.  Hop
          Limit information is used to identify the location of the node
          in the communication path.
 
       node_id:  3 octet unsigned integer.  Node identifier field to
-         uniquely identify a node within in-band OAM domain.  The
+         uniquely identify a node within in-situ OAM domain.  The
          procedure to allocate, manage and map the node_ids is beyond
          the scope of this document.
 
@@ -613,9 +612,10 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 
 
+
 Brockners, et al.         Expires March 7, 2017                [Page 11]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
       egress_if_id:  2 octet unsigned integer.  Interface identifier to
@@ -671,7 +671,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                [Page 12]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -681,14 +681,13 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    ~                         node_id (contd)                       |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-
       Hop_Lim:  1 octet unsigned integer.  It is set to the Hop Limit
          value in the packet at the node that records this data.  Hop
          Limit information is used to identify the location of the node
          in the communication path.
 
       node_id:  7 octet unsigned integer.  Node identifier field to
-         uniquely identify a node within in-band OAM domain.  The
+         uniquely identify a node within in-situ OAM domain.  The
          procedure to allocate, manage and map the node_ids is beyond
          the scope of this document.
 
@@ -725,9 +724,10 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 
 
+
 Brockners, et al.         Expires March 7, 2017                [Page 13]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
        0                   1                   2                   3
@@ -756,7 +756,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
       The fields - timestamp seconds, timestamp nanoseconds and transit
       delay have the same format as defined in short format.
 
-3.1.4.  Examples of In-band OAM node data
+3.1.4.  Examples of In-situ OAM node data
 
    An entry in the "Node data List" array can have different formats,
    following the needs of the a deployment.  Some deployments might only
@@ -765,7 +765,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    section defines different formats that an entry in "Node data List"
    can take.
 
-   0x002B:  In-band OAM-trace-type is 0x2B then the format of node data
+   0x002B:  In-situ OAM-trace-type is 0x2B then the format of node data
       is:
 
 
@@ -783,7 +783,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                [Page 14]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -798,7 +798,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x0003:  In-band OAM-trace-type is 0x0003 then the format is:
+   0x0003:  In-situ OAM-trace-type is 0x0003 then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -809,7 +809,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 
 
-   0x0009:  In-band OAM-trace-type is 0x0009 then the format is:
+   0x0009:  In-situ OAM-trace-type is 0x0009 then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -819,7 +819,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x0021:  In-band OAM-trace-type is 0x0021 then the format is:
+   0x0021:  In-situ OAM-trace-type is 0x0021 then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -829,7 +829,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x0029:  In-band OAM-trace-type is 0x0029 then the format is:
+   0x0029:  In-situ OAM-trace-type is 0x0029 then the format is:
 
 
 
@@ -839,7 +839,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                [Page 15]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -852,7 +852,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x104D:  In-band OAM-trace-type is 0x104D then the format is:
+   0x104D:  In-situ OAM-trace-type is 0x104D then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -875,19 +875,19 @@ Internet-Draft          In-band OAM Data Formats          September 2016
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-3.2.  In-band OAM Proof of Transit Option
+3.2.  In-situ OAM Proof of Transit Option
 
-   In-band OAM Proof of Transit data is to support the path or service
+   In-situ OAM Proof of Transit data is to support the path or service
    function chain [RFC7665] verification use cases.  Proof-of-transit
-   uses methods like nested hashing or nested encryption of the in-band
+   uses methods like nested hashing or nested encryption of the in-situ
    OAM data or mechanisms such as Shamir's Secret Sharing Schema (SSSS).
-   While details on how the in-band OAM data for the proof of transit
-   option is processed at in-band OAM encapsulating, decapsulating and
+   While details on how the in-situ OAM data for the proof of transit
+   option is processed at in-situ OAM encapsulating, decapsulating and
    transit nodes are outside the scope of the document, all of these
    approaches share the need to uniquely identify a packet as well as
    iteratively operate on a set of information that is handed from node
    to node.  Correspondingly, two pieces of information are added as in-
-   band OAM data to the packet:
+   situ OAM data to the packet:
 
 
 
@@ -895,7 +895,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                [Page 16]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    o  Random: Unique identifier for the packet (e.g., 64-bits allow for
@@ -904,7 +904,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    o  Cumulative: Information which is handed from node to node and
       updated by every node according to a verification algorithm.
 
-   In-band OAM Proof of Transit option:
+   In-situ OAM Proof of Transit option:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -951,7 +951,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                [Page 17]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    Note: Larger or smaller sizes of "Random" and "Cumulative" data are
@@ -960,15 +960,15 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    versions of this document will address different sizes of data for
    "proof of transit".
 
-3.3.  In-band OAM Edge-to-Edge Option
+3.3.  In-situ OAM Edge-to-Edge Option
 
-   The in-band OAM Edge-to-Edge Option is to carry data which is to be
-   interpreted only by the in-band OAM encapsulating and in-band OAM
-   decapsulating node, but not by in-band OAM transit nodes.
+   The in-situ OAM Edge-to-Edge Option is to carry data which is to be
+   interpreted only by the in-situ OAM encapsulating and in-situ OAM
+   decapsulating node, but not by in-situ OAM transit nodes.
 
-   Currently only sequence numbers use the in-band OAM Edge-to-Edge
+   Currently only sequence numbers use the in-situ OAM Edge-to-Edge
    option.  In order to detect packet loss, packet reordering, or packet
-   duplication in an in-band OAM-domain, sequence numbers can be added
+   duplication in an in-situ OAM-domain, sequence numbers can be added
    to packets of a particular tube (see
    [I-D.hildebrand-spud-prototype]).  Each tube leverages a dedicated
    namespace for its sequence numbers.
@@ -987,7 +987,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
    Opt Data Len:  8-bit unsigned integer.  Length of the Option Data
       field of this option, in octets.
 
-   OAM-E2E-Type:  8-bit identifier of a particular in-band OAM E2E
+   OAM-E2E-Type:  8-bit identifier of a particular in situ OAM E2E
       variant.
 
          0: E2E option data is a 64-bit sequence number added to a
@@ -996,25 +996,25 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
    Reserved:  8-bit.  (Reserved Octet) Reserved octet for future use.
 
-4.  In-band OAM Data Export
+4.  In-situ OAM Data Export
 
-   In-band OAM nodes collect information for packets traversing a domain
-   that supports in-band OAM.  The device at the domain edge (which
-   could also be an end-host) which receives a packet with in-band OAM
-   information chooses how to process the in-band OAM data collected
+   In-situ OAM nodes collect information for packets traversing a domain
+   that supports in-situ OAM.  The device at the domain edge (which
+   could also be an end-host) which receives a packet with in-situ OAM
+   information chooses how to process the in-situ OAM data collected
 
 
 
 Brockners, et al.         Expires March 7, 2017                [Page 18]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    within the packet.  This decapsulating node can simply discard the
    information collected, can process the information further, or export
    the information using e.g., IPFIX.
 
-   The discussion of in-band OAM data processing and export is left for
+   The discussion of in-situ OAM data processing and export is left for
    a future version of this document.
 
 5.  IANA Considerations
@@ -1030,18 +1030,18 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 7.  Security Considerations
 
    Security considerations will be addressed in a later version of this
-   document.  For a discussion of security requirements of in-band OAM,
+   document.  For a discussion of security requirements of in-situ OAM,
    please refer to [I-D.brockners-inband-oam-requirements].
 
 8.  Acknowledgements
 
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-   Nadahalli, and Andrew Yourtchenko for the comments and advice.  This
-   document leverages and builds on top of several concepts described in
-   [I-D.kitamura-ipv6-record-route].  The authors would like to
-   acknowledge the work done by the author Hiroshi Kitamura and people
-   involved in writing it.
+   Nadahalli, LJ Wobker, Erik Nordmark, and Andrew Yourtchenko for the
+   comments and advice.  This document leverages and builds on top of
+   several concepts described in [I-D.kitamura-ipv6-record-route].  The
+   authors would like to acknowledge the work done by the author Hiroshi
+   Kitamura and people involved in writing it.
 
 9.  References
 
@@ -1063,14 +1063,14 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                [Page 19]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    [IEEE1588v2]
               Institute of Electrical and Electronics Engineers,
               "1588-2008 - IEEE Standard for a Precision Clock
               Synchronization Protocol for Networked Measurement and
-              Control Systems", IEEE Std 1588-2008, 2008,
+              Control Systems",  IEEE Std 1588-2008, 2008,
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
 
@@ -1098,8 +1098,8 @@ Internet-Draft          In-band OAM Data Formats          September 2016
               dataplane-probe-01 (work in progress), June 2016.
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
-              RFC7665, October 2015,
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015,
               <http://www.rfc-editor.org/info/rfc7665>.
 
 Authors' Addresses
@@ -1119,7 +1119,7 @@ Authors' Addresses
 
 Brockners, et al.         Expires March 7, 2017                [Page 20]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    Shwetha Bhandari
@@ -1175,7 +1175,7 @@ Internet-Draft          In-band OAM Data Formats          September 2016
 
 Brockners, et al.         Expires March 7, 2017                [Page 21]
 
-Internet-Draft          In-band OAM Data Formats          September 2016
+Internet-Draft          In-situ OAM Data Formats          September 2016
 
 
    David
