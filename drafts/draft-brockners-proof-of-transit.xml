@@ -237,7 +237,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
     <section title="Introduction">
       <t>Several deployments use traffic engineering, policy routing, segment
       routing or Service Function Chaining (SFC) <xref target="RFC7665"/> to
-      steer packets through a specific set of nodes. In certain cases
+      steer packets through a specific set of nodes. In certain cases,
       regulatory obligations or a compliance policy require operators to prove
       that all packets that are supposed to follow a specific path are indeed
       being forwarded across and exact set of pre-determined nodes.</t>
@@ -442,11 +442,11 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             the 3 nodes. For example, let x0=2, x1=4, x2=5.</t>
 
             <t><list style="empty">
-                <t>POLY-1(2) = 28 =&gt; (x0,y0) = (2,28)</t>
+                <t>POLY-1(2) = 28 =&gt; (x0, y0) = (2, 28)</t>
 
-                <t>POLY-1(4) = 17 =&gt; (x1,y1) = (4,17)</t>
+                <t>POLY-1(4) = 17 =&gt; (x1, y1) = (4, 17)</t>
 
-                <t>POLY-1(5) = 47 =&gt; (x2,y2) = (5,47)</t>
+                <t>POLY-1(5) = 47 =&gt; (x2, y2) = (5, 47)</t>
               </list></t>
 
             <t>The three points above are the points on the curve which are
@@ -527,7 +527,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
         <section title="Enhanced Version">
           <t>As observed previously, the vanilla algorithm that involves a
-          single secret polynomial is not secure. Therefore the solution is
+          single secret polynomial is not secure. Therefore, the solution is
           further enhanced with usage of a random second polynomial chosen per
           packet.</t>
 
@@ -552,28 +552,28 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             <t>CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod
             Prime.</t>
 
-            <t>Lets observe the packet level transformations in detail. For
+            <t>Let us observe the packet level transformations in detail. For
             the example packet here, let the value RND be 45. Thus POLY-2
             would be (45 + 7x + 10x^2).</t>
 
-            <t>The shares that could be generated are (2,46), (4,21),
-            (5,12).</t>
+            <t>The shares that could be generated are (2, 46), (4, 21),
+            (5, 12).</t>
 
             <t><list style="empty">
                 <t>At ingress: The fields RND = 45. CML = 0.</t>
 
-                <t>At node-1 (x0): Respective share of POLY-2 is generated i.e
-                (2,46) because share index of node-1 is 2.</t>
+                <t>At node-1 (x0): Respective share of POLY-2 is generated i.e.,
+                (2, 46) because share index of node-1 is 2.</t>
 
                 <t>CML = 0 + ((28 + 46)* 21) mod 53 = 17.</t>
 
-                <t>At node-2 (x1): Respective share of POLY-2 is generated i.e
-                (4,21) because share index of node-2 is 4.</t>
+                <t>At node-2 (x1): Respective share of POLY-2 is generated i.e.,
+                (4, 21) because share index of node-2 is 4.</t>
 
                 <t>CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39.</t>
 
                 <t>At node-3 (x2), which is also the verifier: The respective
-                share of POLY-2 is generated i.e (5,12) because the share
+                share of POLY-2 is generated i.e., (5, 12) because the share
                 index of the verifier is 12.</t>
 
                 <t>CML = 39 + ((47 + 12)*38) mod 53 = 39 + 16 = 55 mod 53 =
@@ -616,7 +616,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         <t>To optimize the overall data amount of exchanged and the processing
         at the nodes the following optimizations are performed:<list
             style="numbers">
-            <t>The points (x,y) for each of the nodes on the public and
+            <t>The points (x, y) for each of the nodes on the public and
             private polynomials are picked such that the x component of the
             points match. This lends to the LPC values which are used to
             calculate the cumulative value CML to be constant. Note that the
@@ -628,8 +628,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             the nodes is calculated and added to the POT-profile. Without this
             all the coefficients of the public polynomial had to be added to
             the POT profile and each node had to evaluate them. As stated
-            before, the public portion is only the constant co-efficent RND
-            value, the pre-evaluated portion for each nodes should be kept
+            before, the public portion is only the constant coefficient RND
+            value, the pre-evaluated portion for each node should be kept
             secret as well.</t>
 
             <t>To provide flexibility on the size of the cumulative and random
@@ -649,8 +649,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
               <t>The controller provisions all the nodes with their respective
               secret keys.</t>
 
-              <t>The controller privisions verifier with all the secret keys
-              of nodes.</t>
+              <t>The controller provisions the verifier with all the secret keys
+              of the nodes.</t>
 
               <t>For each packet, the ingress node generates a random number
               RND and encrypts it with its secret key to generate CML
@@ -660,7 +660,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
               respective secret key and passes it along</t>
 
               <t>The verifier is also provisioned with the expected sequence
-              of nodes inorder to verify the order</t>
+              of nodes in order to verify the order</t>
 
               <t>The verifier receives the CML, RND values, re-encrypts the
               RND with keys in the same order as expected sequence to
@@ -679,7 +679,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
               results in a 256 bits of additional overhead is added per
               packet</t>
 
-              <t>In hardware platforms that donot support native encryption
+              <t>In hardware platforms that do not support native encryption
               capabilities like (AES-NI). This approach would have
               considerable impact on the computational latency</t>
             </list></t>
@@ -787,8 +787,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         profiles. The rate at which the POT-profiles are communicated to the
         nodes is configurable and is more frequent than the speed at which a
         POT-profile is "used up" (see table above). Once the POT-profile has
-        been successfully communicated to all nodes (e.g., all Netconf
-        transactions completed, in case Netconf is used as a protocol), the
+        been successfully communicated to all nodes (e.g., all NETCONF
+        transactions completed, in case NETCONF is used as a protocol), the
         controller sends an &ldquo;enable POT-profile&rdquo; request to the
         ingress node.</t>
 
@@ -1000,7 +1000,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </section>
 
       <section title="Cryptanalysis">
-        <t>A passive attacker could try to harvest the POT data (i.e CML, RND
+        <t>A passive attacker could try to harvest the POT data (i.e., CML, RND
         values) in order to determine the configured secrets. Subsequently two
         types of differential analysis for guessing the secrets could be done.
         <list style="symbols">
@@ -1020,17 +1020,17 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           </list></t>
       </section>
 
-      <section title="Anti Replay">
+      <section title="Anti-Replay">
         <t>A passive attacker could reuse a set of older RND and the
         intermediate CML values to bypass certain nodes in later packets. Such
         attacks could be avoided by carefully choosing POLY-2 as a (SEQ_NO +
-        RND). For example if 64 bits are being used for POLY-2 then first 16
+        RND). For example, if 64 bits are being used for POLY-2 then first 16
         bits could be a sequence number SEQ_NO and next 48 bits could be a
         random number.</t>
 
         <t>Subsequently, the verifier could use the SEQ_NO bits to run classic
         anti-replay techniques like sliding window used in IPSEC. The verifier
-        could buffer upto 2^16 packets as a sliding window. Packets arriving
+        could buffer up to 2^16 packets as a sliding window. Packets arriving
         with a higher SEQ_NO than current buffer could be flagged legitimate.
         Packets arriving with a lower SEQ_NO than current buffer could be
         flagged as suspicious.</t>
@@ -1039,14 +1039,14 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         SEQ_NO + RND to keep it simple</t>
       </section>
 
-      <section title="Anti Preplay">
+      <section title="Anti-Preplay">
         <t>An active attacker could try to perform a man-in-the-middle (MITM)
         attack by extracting the POT of PKT-1 and using it in PKT-2.
         Subsequently attacker drops the PKT-1 in order to avoid duplicate POT
-        values reaching the verifier. If the PKT-1 reaches the verifier then
+        values reaching the verifier. If the PKT-1 reaches the verifier, then
         this attack is same as Replay attacks discussed before.</t>
 
-        <t>Preplay attacks are possible since the POT metdata is not dependent
+        <t>Preplay attacks are possible since the POT metadata is not dependent
         on the packet fields. Below steps are recommended for remediation<list
             style="symbols">
             <t>Ingress node and Verifier are configured with common pre shared
@@ -1061,7 +1061,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             bits.</t>
 
             <t>The verifier regenerates the HMAC from the packet fields and
-            compares with RND. To ensure the POT data is infact that of the
+            compares with RND. To ensure the POT data is in fact that of the
             packet.</t>
           </list></t>
 
@@ -1069,7 +1069,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         cannot launch preplay attacks</t>
       </section>
 
-      <section title="Anti Tampering">
+      <section title="Anti-Tampering">
         <t>An active attacker could not insert any arbitrary value for CML.
         This would subsequently fail the reconstruction of the POLY-3. Also an
         attacker could not update the CML with a previously observed value.
@@ -1098,7 +1098,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         <t>The Controller needs to be secured given that it creates and holds
         the secrets, as need to be the nodes. The communication between
         Controller and the nodes also needs to be secured. As secure
-        communication protocol such as for example Netconf over SSH should be
+        communication protocol such as for example NETCONF over SSH should be
         chosen for Controller to node communication.</t>
 
         <t>The Controller only interacts with the nodes during the initial
@@ -1150,8 +1150,6 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       advice.</t>
     </section>
   </middle>
-
-  <!--  *****BACK MATTER ***** -->
 
   <back>
     <!-- References split into informative and normative -->
