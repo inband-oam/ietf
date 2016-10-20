@@ -495,7 +495,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
       simple comparison between "Opt data Len" and "Max Length" allows
       to decide whether or not data could be added.
 
-   Flags  8 bit field.  Following flags are defined:
+   Flags  8-bit field.  Following flags are defined:
 
 
 
@@ -508,7 +508,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
 
       1  "Overflow" (O-bit) (least significant bit).  This bit is set by
          the network element if the number of records on the packet is
-         at the maximum limit as specified by the packet: i.e. the
+         at the maximum limit as specified by the packet: i.e., the
          packet is already "full" of telemetry information.  This is
          useful for transit nodes to ignore further processing of the
          option.  If inserting a new node data record would cause "Opt
@@ -582,31 +582,31 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    Data type and format for each of the data records in short format is
    shown below:
 
-   Hop_Lim and node_id:  4 octet field defined as follows:
+   Hop_Lim and node_id:  4-octet field defined as follows:
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |   Hop_Lim     |              node_id                          |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-      Hop_Lim:  1 octet unsigned integer.  It is set to the Hop Limit
+      Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
          value in the packet at the node that records this data.  Hop
          Limit information is used to identify the location of the node
          in the communication path.
 
-      node_id:  3 octet unsigned integer.  Node identifier field to
+      node_id:  3-octet unsigned integer.  Node identifier field to
          uniquely identify a node within in-situ OAM domain.  The
          procedure to allocate, manage and map the node_ids is beyond
          the scope of this document.
 
-   ingress_if_id and egress_if_id:  4 octet field defined as follows:
+   ingress_if_id and egress_if_id:  4-octet field defined as follows:
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |     ingress_if_id             |         egress_if_id          |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-      ingress_if_id:  2 octet unsigned integer.  Interface identifier to
+      ingress_if_id:  2-octet unsigned integer.  Interface identifier to
          record the ingress interface the packet was received on.
 
 
@@ -618,10 +618,10 @@ Brockners, et al.          Expires May 3, 2017                 [Page 11]
 Internet-Draft          In-situ OAM Data Formats            October 2016
 
 
-      egress_if_id:  2 octet unsigned integer.  Interface identifier to
+      egress_if_id:  2-octet unsigned integer.  Interface identifier to
          record the egress interface the packet is forwarded out of.
 
-   timestamp seconds:  4 octet unsigned integer.  Absoulte timestamp in
+   timestamp seconds:  4-octet unsigned integer.  Absolute timestamp in
       seconds that specifies the time at which the packet was received
       by the node.  The format of this field is identical to the most
       significant 32 bits of 64 least significant bits of the
@@ -635,7 +635,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    |                       timestamp seconds                       |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   timestamp nanoseconds:  4 octet unsigned integer.  This timestamp
+   timestamp nanoseconds:  4-octet unsigned integer.  This timestamp
       specifies time in nanoseconds relative to wall clock time at which
       the packet was received by the node It is nanoseconds that are
       recorded in 32 least significant bits of absolute time as per
@@ -647,7 +647,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    |                       timestamp nanoseconds                   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   transit delay:  4 octet unsigned integer.  It is the time in
+   transit delay:  4-octet unsigned integer.  It is the time in
       nanoseconds packet spent in transiting a node.  This can serve to
       give an indication of queuing delay at the node.
 
@@ -656,14 +656,14 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    |                      transit delay                            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   app_data:  4 octet placeholder which can be used by the node to add
+   app_data:  4-octet placeholder which can be used by the node to add
       application specific data
 
    Data type and format for each of the elements in wide format follows
-   when Most Significant Bit (MSB) i.e. bit 15 of OAM-Trace-Type is set:
+   when Most Significant Bit (MSB) i.e., bit 15 of OAM-Trace-Type is
+   set:
 
-   Hop_Lim and node_id:  8 octet field defined as follows:
-
+   Hop_Lim and node_id:  8-octet field defined as follows:
 
 
 
@@ -681,17 +681,17 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    ~                         node_id (contd)                       |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-      Hop_Lim:  1 octet unsigned integer.  It is set to the Hop Limit
+      Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
          value in the packet at the node that records this data.  Hop
          Limit information is used to identify the location of the node
          in the communication path.
 
-      node_id:  7 octet unsigned integer.  Node identifier field to
+      node_id:  7-octet unsigned integer.  Node identifier field to
          uniquely identify a node within in-situ OAM domain.  The
          procedure to allocate, manage and map the node_ids is beyond
          the scope of this document.
 
-   ingress_if_id and egress_if_id:  8 octet field defined as follows:
+   ingress_if_id and egress_if_id:  8-octet field defined as follows:
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -700,13 +700,13 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    |                       egress_if_id                            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-      ingress_if_id:  4 octet unsigned integer.  Interface identifier to
+      ingress_if_id:  4-octet unsigned integer.  Interface identifier to
          record the ingress interface the packet was received on.
 
-      egress_if_id:  4 octet unsigned integer.  Interface identifier to
+      egress_if_id:  4-octet unsigned integer.  Interface identifier to
          record the egress interface the packet is forwarded out of.
 
-   app_data:  8 octet placeholder which can be used by the node to add
+   app_data:  8-octet placeholder which can be used by the node to add
       application specific data.
 
    Opaque State Snapshot:  Variable length field.  It allows the network
@@ -743,14 +743,14 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
       .                                                               .
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-      Length:  1 octet unsigned integer.  It is the length of the Opaque
+      Length:  1-octet unsigned integer.  It is the length of the Opaque
          data field that follows Schema Id.  It MUST always be a
          multiple of 4.
 
-      Schema ID:  3 octet unsigned integer identifying the schema of
+      Schema ID:  3-octet unsigned integer identifying the schema of
          Opaque data.
 
-      Opaque data:  Variable length field.  This field is intepreted as
+      Opaque data:  Variable length field.  This field is interpreted as
          specified by the schema identified by the Schema ID.
 
       The fields - timestamp seconds, timestamp nanoseconds and transit
@@ -759,7 +759,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
 3.1.4.  Examples of In-situ OAM node data
 
    An entry in the "Node data List" array can have different formats,
-   following the needs of the a deployment.  Some deployments might only
+   following the needs of the deployment.  Some deployments might only
    be interested in recording the node identifiers, whereas others might
    be interested in recording node identifier and timestamp.  The
    section defines different formats that an entry in "Node data List"

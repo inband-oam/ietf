@@ -7,7 +7,7 @@
 Network Working Group                                       F. Brockners
 Internet-Draft                                               S. Bhandari
 Intended status: Informational                                   S. Dara
-Expires: January 19, 2017                                   C. Pignataro
+Expires: <strike><font color='red'>January 19,</font></strike> <strong><font color='green'>May 3,</font></strong> 2017                                        C. Pignataro
                                                                    Cisco
                                                               H. Gredler
                                                             RtBrick Inc.
@@ -15,10 +15,19 @@ Expires: January 19, 2017                                   C. Pignataro
                                                                  Comcast
                                                                S. Youell
                                                                     JMPC
-                                                           July 18, 2016
+                                                           <strike><font color='red'>July 18,</font></strike>
+                                                                <strong><font color='green'>D. Mozes
+                                              Mellanox Technologies Ltd.
+                                                              T. Mizrahi
+                                                                 Marvell
+                                                             P. Lapukhov
+                                                                Facebook
+                                                                R. Chang
+                                                       Barefoot Networks
+                                                        October 30,</font></strong> 2016
 
 
-                      Requirements for In-band OAM
+                      Requirements for <strike><font color='red'>In-band</font></strike> <strong><font color='green'>In-situ</font></strong> OAM
                <strike><font color='red'>draft-brockners-inband-oam-requirements-01</font></strike>
                <strong><font color='green'>draft-brockners-inband-oam-requirements-02</font></strong>
 
@@ -27,10 +36,10 @@ Abstract
    This document discusses the motivation and requirements for including
    specific operational and telemetry information into data packets
    while the data packet traverses a path between two points in the
-   network.  This method is referred to as "in-band" Operations,
+   network.  This method is referred to as <strike><font color='red'>"in-band"</font></strike> <strong><font color='green'>"in-situ"</font></strong> Operations,
    Administration, and Maintenance (OAM), given that the OAM information
    is carried with the data packets as opposed to in "out-of-band"
-   packets dedicated to OAM.  In-band OAM complements other OAM
+   packets dedicated to OAM.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In situ</font></strong> OAM complements other OAM
    mechanisms which use dedicated probe packets to convey OAM
    information.
 
@@ -44,22 +53,30 @@ Status of This Memo
    working documents as Internet-Drafts.  The list of current Internet-
    Drafts is at http://datatracker.ietf.org/drafts/current/.
 
+
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                  [Page 1]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 19, 2017.
+   This Internet-Draft will expire on <strike><font color='red'>January 19,</font></strike> <strong><font color='green'>May 3,</font></strong> 2017.
 
 
 
 
 
 
-Brockners, et al.       Expires January 19, 2017                [Page 1]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017                [Page 1]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
 
 Copyright Notice
 
@@ -80,79 +97,120 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   3.  Motivation for In-band OAM  . . . . . . . . . . . . . . . . .   4
+   3.  Motivation for <strike><font color='red'>In-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM  . . . . . . . . . . . . . . . . .   <strike><font color='red'>4</font></strike>   <strong><font color='green'>5</font></strong>
      3.1.  Path Congruency Issues with Dedicated OAM Packets . . . .   5
-     3.2.  Results Sent to a System Other Than the Sender  . . . . .   5
-     3.3.  Overlay and Underlay Correlation  . . . . . . . . . . . .   5
-     3.4.  SLA Verification  . . . . . . . . . . . . . . . . . . . .   6
-     3.5.  Analytics and Diagnostics . . . . . . . . . . . . . . . .   6
+     3.2.  Results Sent to a System Other Than the Sender  . . . . .   <strike><font color='red'>5</font></strike>   <strong><font color='green'>6</font></strong>
+     3.3.  Overlay and Underlay Correlation  . . . . . . . . . . . .   <strike><font color='red'>5</font></strike>   <strong><font color='green'>6</font></strong>
+     3.4.  SLA Verification  . . . . . . . . . . . . . . . . . . . .   <strike><font color='red'>6</font></strike>   <strong><font color='green'>7</font></strong>
+     3.5.  Analytics and Diagnostics . . . . . . . . . . . . . . . .   <strike><font color='red'>6</font></strike>   <strong><font color='green'>7</font></strong>
      3.6.  Frame Replication/Elimination Decision for Bi-casting
            /Active-active Networks . . . . . . . . . . . . . . . . .   7
-     3.7.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .   7
-     3.8.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   8
-   4.  Considerations for In-band OAM  . . . . . . . . . . . . . . .   9
-     4.1.  Type of <strike><font color='red'>information</font></strike> <strong><font color='green'>Information</font></strong> to <strike><font color='red'>be recorded</font></strike> <strong><font color='green'>Be Recorded</font></strong>  . . . . . . . . . . .  10
-     4.2.  MTU and <strike><font color='red'>packet size</font></strike> <strong><font color='green'>Packet Size</font></strong> . . . . . . . . . . . . . . . . . . .  10
-     4.3.  Administrative <strike><font color='red'>boundaries</font></strike> <strong><font color='green'>Boundaries</font></strong> . . . . . . . . . . . . . . . .  11
-     4.4.  Selective <strike><font color='red'>enablement</font></strike> <strong><font color='green'>Enablement</font></strong>  . . . . . . . . . . . . . . . . . .  11
-     4.5.  Optimization of <strike><font color='red'>node</font></strike> <strong><font color='green'>Node</font></strong> and <strike><font color='red'>interface identifiers</font></strike> <strong><font color='green'>Interface Identifiers</font></strong>  . . . . .  12
-     4.6.  Loop <strike><font color='red'>communication path</font></strike> <strong><font color='green'>Communication Path</font></strong> (IPv6-specifics)  . . . . . . . .  12
-   5.  Requirements for In-band OAM Data Types . . . . . . . . . . .  12
-     5.1.  Generic Requirements  . . . . . . . . . . . . . . . . . .  12
-     5.2.  In-band OAM Data with Per-hop Scope . . . . . . . . . . .  13
-     5.3.  In-band OAM with Selected Hop Scope . . . . . . . . . . .  14
-     5.4.  In-band OAM with End-to-end Scope . . . . . . . . . . . .  14
-   6.  Security Considerations and Requirements  . . . . . . . . . .  15
-     6.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  15
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16
-   9.  Informative References  . . . . . . . . . . . . . . . . . . .  16
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
+     3.7.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .   <strike><font color='red'>7</font></strike>   <strong><font color='green'>8</font></strong>
+     3.8.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   <strike><font color='red'>8</font></strike>   <strong><font color='green'>9</font></strong>
+   4.  Considerations for <strike><font color='red'>In-band</font></strike> <strong><font color='green'>In-situ</font></strong> OAM  . . . . . . . . . . . . . . .   <strike><font color='red'>9</font></strike>  <strong><font color='green'>11</font></strong>
+     4.1.  Type of <strike><font color='red'>information</font></strike> <strong><font color='green'>Information</font></strong> to <strike><font color='red'>be recorded</font></strike> <strong><font color='green'>Be Recorded</font></strong>  . . . . . . . . . . .  <strike><font color='red'>10</font></strike>  <strong><font color='green'>11</font></strong>
+     4.2.  MTU and <strike><font color='red'>packet size</font></strike> <strong><font color='green'>Packet Size</font></strong> . . . . . . . . . . . . . . . . . . .  <strike><font color='red'>10</font></strike>  <strong><font color='green'>11</font></strong>
+     4.3.  Administrative <strike><font color='red'>boundaries</font></strike> <strong><font color='green'>Boundaries</font></strong> . . . . . . . . . . . . . . . .  <strike><font color='red'>11</font></strike>  <strong><font color='green'>12</font></strong>
+     4.4.  Selective <strike><font color='red'>enablement</font></strike> <strong><font color='green'>Enablement</font></strong>  . . . . . . . . . . . . . . . . . .  <strike><font color='red'>11</font></strike>  <strong><font color='green'>13</font></strong>
+     4.5.  Optimization of <strike><font color='red'>node</font></strike> <strong><font color='green'>Node</font></strong> and <strike><font color='red'>interface identifiers</font></strike> <strong><font color='green'>Interface Identifiers</font></strong>  . . . . .  <strike><font color='red'>12</font></strike>  <strong><font color='green'>13</font></strong>
+     4.6.  Loop <strike><font color='red'>communication path</font></strike> <strong><font color='green'>Communication Path</font></strong> (IPv6-specifics)  . . . . . . . .  <strike><font color='red'>12</font></strike>  <strong><font color='green'>13</font></strong>
+   5.  Requirements for <strike><font color='red'>In-band</font></strike> <strong><font color='green'>In-situ</font></strong> OAM Data Types . . . . . . . . . . .  <strike><font color='red'>12</font></strike>  <strong><font color='green'>14</font></strong>
+     5.1.  Generic Requirements  . . . . . . . . . . . . . . . . . .  <strike><font color='red'>12</font></strike>  <strong><font color='green'>14</font></strong>
+     5.2.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM Data with Per-hop Scope . . . . . . . . . . .  <strike><font color='red'>13</font></strike>  <strong><font color='green'>15</font></strong>
+     5.3.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM with Selected Hop Scope . . . . . . . . . . .  <strike><font color='red'>14</font></strike>  <strong><font color='green'>16</font></strong>
+     5.4.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM with End-to-end Scope . . . . . . . . . . . .  <strike><font color='red'>14</font></strike>  <strong><font color='green'>17
+
+
+
+Brockners, et al.          Expires May 3, 2017                  [Page 2]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
+   6.  Security Considerations and Requirements  . . . . . . . . . .  <strike><font color='red'>15</font></strike>  <strong><font color='green'>17</font></strong>
+     6.1.  <strong><font color='green'>General considerations  . . . . . . . . . . . . . . . . .  17
+     6.2.</font></strong>  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  <strike><font color='red'>15</font></strike>  <strong><font color='green'>17</font></strong>
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  <strike><font color='red'>16</font></strike>  <strong><font color='green'>18</font></strong>
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  <strike><font color='red'>16</font></strike>  <strong><font color='green'>19</font></strong>
+   9.  Informative References  . . . . . . . . . . . . . . . . . . .  <strike><font color='red'>16</font></strike>  <strong><font color='green'>19</font></strong>
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  <strike><font color='red'>18
 
 
 
 
 Brockners, et al.       Expires January 19, 2017                [Page 2]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>  <strong><font color='green'>21</font></strong>
 
 1.  Introduction
 
-   This document discusses requirements for "in-band" Operations,
-   Administration, and Maintenance (OAM) mechanisms.  "In-band" OAM
-   means to record OAM and telemetry information within the data packet
-   while the data packet traverses a network or a particular network
-   domain.  The term "in-band" refers to the fact that the OAM and
-   telemetry data is carried within data packets rather than being sent
-   within packets specifically dedicated to OAM.  In-band OAM
-   mechanisms, which are sometimes also referred to as embedded network
-   telemetry are a current topic of discussion.  In-band network
+   This document discusses requirements for <strike><font color='red'>"in-band"</font></strike> <strong><font color='green'>"in-situ"</font></strong> Operations,
+   Administration, and Maintenance (OAM) mechanisms.  <strike><font color='red'>"In-band" OAM
+   means</font></strike>  <strong><font color='green'>In this context,
+   "in-situ OAM" refers</font></strong> to <strike><font color='red'>record OAM and</font></strike> <strong><font color='green'>the concept of directly encoding</font></strong> telemetry
+   information within the data packet
+   <strike><font color='red'>while the data packet</font></strike> <strong><font color='green'>as it</font></strong> traverses <strike><font color='red'>a</font></strike> <strong><font color='green'>the</font></strong> network or <strike><font color='red'>a particular network</font></strike>
+   <strong><font color='green'>telemetry</font></strong> domain.  <strike><font color='red'>The term "in-band" refers</font></strike>  <strong><font color='green'>Mechanisms which add tracing or other types of
+   telemetry information</font></strong> to the <strike><font color='red'>fact that the OAM and
+   telemetry data is carried within</font></strike> <strong><font color='green'>regular</font></strong> data <strike><font color='red'>packets rather than being sent
+   within packets specifically dedicated</font></strike> <strong><font color='green'>traffic, sometimes also
+   referred</font></strong> to <strike><font color='red'>OAM.  In-band</font></strike> <strong><font color='green'>as "in-band"</font></strong> OAM
+   <strike><font color='red'>mechanisms,</font></strike> <strong><font color='green'>can complement active, probe-based
+   mechanisms such as ping or traceroute,</font></strong> which are sometimes <strike><font color='red'>also referred to</font></strike> <strong><font color='green'>considered</font></strong>
+   as <strike><font color='red'>embedded network
+   telemetry</font></strike> <strong><font color='green'>"out-of-band", because the messages</font></strong> are <strike><font color='red'>a current topic</font></strike> <strong><font color='green'>transported independently
+   from regular data traffic.  In terms</font></strong> of <strike><font color='red'>discussion.  In-band network
    telemetry has been defined for P4 [P4].  The SPUD prototype
-   [I-D.hildebrand-spud-prototype] uses a similar logic that allows
-   network devices on the path between endpoints to participate
-   explicitly in the tube outside the end-to-end context.  Even the IPv4
-   route-record option defined in [RFC0791] can be considered an in-band
-   OAM mechanism.  In-band OAM complements "out-of-band" mechanisms such
+   [I-D.hildebrand-spud-prototype] uses a similar</font></strike> <strong><font color='green'>"active" or "passive" OAM,
+   "in-situ" OAM can be considered a hybrid OAM type.  While no extra
+   packets are sent, in-situ OAM adds information to the packets
+   therefore cannot be considered passive.  In terms of the
+   classification given in [RFC7799] in-situ OAM could be portrayed as
+   "hybrid OAM, type 1".  "In-situ" mechanisms do not require extra
+   packets to be sent and hence don't change the packet traffic mix
+   within the network.  Traceroute and ping for example use ICMP
+   messages: New packets are injected to get tracing information.  Those
+   add to the number of messages in a network, which already might be
+   highly loaded or suffering performance issues for a particular path
+   or traffic type.
+
+   A number of in-situ as well as in-band OAM mechanisms have been
+   discussed, such as the INT spec for the P4 programming language [P4]
+   or the SPUD prototype [I-D.hildebrand-spud-prototype].  The SPUD
+   prototype uses a similar</font></strong> logic that allows network devices on the
+   path between endpoints to participate explicitly in the tube outside
+   the end-to-end context.  Even the IPv4 route-record option defined in
+   [RFC0791] can be considered an <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM mechanism.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>Per what was
+   already stated, in-situ</font></strong> OAM complements "out-of-band" mechanisms such
    as ping or traceroute, or more recent active probing mechanisms, as
-   described in [I-D.lapukhov-dataplane-probe].  In-band OAM mechanisms
+   described in [I-D.lapukhov-dataplane-probe].  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM mechanisms
    can be leveraged where current out-of-band mechanisms do not apply or
    do not offer the desired characteristics or requirements, such as
    proving that a certain set of traffic takes a pre-defined path,
-   strict congruency is desired, checking service level agreements for
-   the live data traffic, detailed statistics on traffic distribution
-   paths in networks that distribute traffic across multiple paths, or
-   scenarios where probe traffic is potentially handled differently from
-   regular data traffic by the network devices.  [RFC7276] presents an
-   overview of OAM tools.
+   strict congruency <strong><font color='green'>between overlay and underlay transports</font></strong> is <strike><font color='red'>desired,</font></strike> <strong><font color='green'>in
+   place,</font></strong> checking service level agreements for the live data traffic,
+   detailed statistics <strike><font color='red'>on traffic distribution
+   paths in networks that distribute traffic across multiple paths,</font></strike> <strong><font color='green'>or verification of path selections within a
 
-   Compared to probably the most basic example of "in-band OAM" which is
-   IPv4 route recording [RFC0791], an in-band OAM approach has the
+
+
+Brockners, et al.          Expires May 3, 2017                  [Page 3]
+
+Internet-Draft          In-situ OAM Requirements            October 2016
+
+
+   domain,</font></strong> or scenarios where probe traffic is potentially handled
+   differently from regular data traffic by the network devices.
+   [RFC7276] presents an overview of OAM tools.
+
+   Compared to probably the most basic example of <strike><font color='red'>"in-band</font></strike> <strong><font color='green'>"in-situ</font></strong> OAM" which is
+   IPv4 route recording [RFC0791], an <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM approach has the
    following capabilities:
 
    a.  A flexible data format to allow different types of information to
-       be captured as part of an in-band OAM operation, including not
-       only path tracing information, but additional operational and
+       be captured as part of an <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM operation, including <strong><font color='green'>but</font></strong>
+       not
+       <strike><font color='red'>only</font></strike> <strong><font color='green'>limited to</font></strong> path tracing information, <strike><font color='red'>but additional</font></strike> operational and
        telemetry information such as timestamps, sequence numbers, or
        even generic data such as queue size, geo-location of the node
        that forwarded the packet, etc.
@@ -160,18 +218,17 @@ Internet-Draft          In-band OAM Requirements               July 2016
    b.  A data format to express node as well as link identifiers to
        record the path a packet takes with a fixed amount of added data.
 
-   c.  The ability to detect whether any nodes were skipped while
-       recording in-band OAM information (i.e., in-band OAM is not
+   c.  The ability to <strike><font color='red'>detect</font></strike> <strong><font color='green'>determine</font></strong> whether any nodes were skipped while
+       recording <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM information (i.e., <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM is not
        supported or not enabled on those nodes).
 
 
 
 
 
-Brockners, et al.       Expires January 19, 2017                [Page 3]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017                [Page 3]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
 
    d.  The ability to actively process information in the packet, for
        example to prove in a cryptographically secure way that a packet
@@ -181,8 +238,8 @@ Internet-Draft          In-band OAM Requirements               July 2016
    e.  The ability to include OAM data beyond simple path information,
        such as timestamps or even generic data of a particular use case.
 
-   f.  The ability to include OAM data in various different transport
-       protocols.
+   f.  The ability to <strike><font color='red'>include</font></strike> <strong><font color='green'>carry in-situ</font></strong> OAM data in various different
+       transport protocols.
 
 2.  Conventions
 
@@ -200,38 +257,48 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
    SLA:       Service Level Agreement
 
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                  [Page 4]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
    SFC:       Service Function Chain
 
    SR:        Segment Routing
 
-   This document defines in-band Operations, Administration, and
-   Maintenance (in-band OAM), as the subset in which OAM information is
+   This document defines <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> Operations, Administration, and
+   Maintenance <strike><font color='red'>(in-band</font></strike> <strong><font color='green'>(in-situ</font></strong> OAM), as the subset in which OAM information is
    carried along with data packets.  This is as opposed to "out-of-band
    OAM", where specific packets are dedicated to carrying OAM
    information.
 
-3.  Motivation for In-band OAM
+3.  Motivation for <strike><font color='red'>In-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM
 
-   In several scenarios it is beneficial to make information about which
-   path a packet took through the network available to the operator.
+   In several scenarios it is beneficial to make information about <strike><font color='red'>which</font></strike> <strong><font color='green'>the</font></strong>
+   path a packet took through the network <strong><font color='green'>or through a network device as
+   well as associated telemetry information</font></strong> available to the operator.
    This includes not only tasks like debugging, troubleshooting, as well
    as network planning and network optimization but also policy or
    service level agreement compliance checks.  This section discusses
-   the motivation to introduce new methods for enhanced in-band network
+   the motivation to introduce new methods for enhanced <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> network
    diagnostics.
 
 
 
 
 
-Brockners, et al.       Expires January 19, 2017                [Page 4]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017                [Page 4]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
 
 3.1.  Path Congruency Issues with Dedicated OAM Packets
 
-   Mechanisms which add tracing information to the regular data traffic,
+   <strike><font color='red'>Mechanisms which add tracing</font></strike>
+
+   <strong><font color='green'>Packet scheduling algorithms, especially for balancing traffic across
+   equal cost paths or links, often leverage</font></strong> information <strike><font color='red'>to the regular data traffic,
    sometimes also referred to as "in-band" or "passive OAM" can
    complement active, probe-based mechanisms such as ping or traceroute,
    which are sometimes considered as "out-of-band", because the messages
@@ -245,19 +312,39 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
    Packet scheduling algorithms, especially for balancing traffic across
    equal cost paths or links, often leverage information contained
-   within the packet, such as protocol number, IP-address or MAC-
+   within</font></strike> <strong><font color='green'>contained
+   within</font></strong> the packet, such as protocol number, IP-address or MAC-
    address.  Probe packets would thus either need to be sent from the
    exact same endpoints with the exact same parameters, or probe packets
    would need to be artificially constructed as "fake" packets and
    inserted along the path.  Both approaches are often not feasible from
    an operational perspective, be it that access to the end-system is
    not feasible, or that the diversity of parameters and associated
-   probe packets to be created is simply too large.  An in-band
+   probe packets to be created is simply too large.  An <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong>
    mechanism is an alternative in those cases.
 
-   In-band mechanisms also don't suffer from implementations, where
-   probe traffic is handled differently (and potentially forwarded
-   differently) by a router than regular data traffic.
+   <strike><font color='red'>In-band</font></strike>
+
+   <strong><font color='green'>In-situ</font></strong> mechanisms <strike><font color='red'>also don't suffer from implementations,</font></strike> <strong><font color='green'>are not impacted by differences in the handling of
+   probe traffic compared to other data packets,</font></strong> where probe traffic is
+   handled differently (and potentially forwarded differently) by a
+   router than regular data traffic.  <strong><font color='green'>This obviously assumes that the
+   addition of in-situ information does not change the forwarding
+   behavior of the packet.  Note that in certain implementations, the
+   addition information to a transport protocol changes the forwarding
+   behavior.  IPv6 extension header processing is one example.  Some
+   implementations process IPv6 packets with extension headers in the
+   "slow" path of a router, as opposed to the "fast" path.
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                  [Page 5]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
 
 3.2.  Results Sent to a System Other Than the Sender
 
@@ -267,8 +354,9 @@ Internet-Draft          In-band OAM Requirements               July 2016
    (e.g., ICMP Multi-Part [RFC4884] supporting MPLS information
    [RFC4950], Interface and Next-Hop Identification [RFC5837], etc.), it
    would be advantageous to separate the sending of an OAM probe from
-   the receiving of the telemetry data.  In this context, it is desired
-   to not assume there is a bidirectional working path.
+   the receiving of the telemetry data.  In this context, it is <strike><font color='red'>desired</font></strike> <strong><font color='green'>helpful</font></strong>
+   to <strike><font color='red'>not assume</font></strike> <strong><font color='green'>eliminate the requirement that</font></strong> there <strike><font color='red'>is</font></strike> <strong><font color='green'>be</font></strong> a <strike><font color='red'>bidirectional</font></strike> working <strong><font color='green'>bidirectional</font></strong>
+   path.
 
 3.3.  Overlay and Underlay Correlation
 
@@ -280,11 +368,9 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 
 
-Brockners, et al.       Expires January 19, 2017                [Page 5]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017                [Page 5]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
    tunneled packet takes, nor other operational details such as the per-
    hop delay/jitter in the underlay are visible to the user of the
    overlay network, giving rise to diagnosis and debugging challenges in
@@ -292,11 +378,15 @@ Internet-Draft          In-band OAM Requirements               July 2016
    like ping or traceroute is limited to either the overlay or the
    underlay which means that the user of the overlay has typically no
    access to OAM in the underlay, unless specific operational procedures
-   are put in place.  With in-band OAM the operator of the underlay can
+   are put in place.  With <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM the operator of the underlay can
    offer details of the connectivity in the underlay to the user of the
-   overlay.  The operator of the egress tunnel router could choose to
-   share the recorded information about the path with the user of the
-   overlay.
+   overlay.  <strong><font color='green'>This could include the ability to find out which underlay
+   elements are shared by overlays and ability to know which overlays
+   are mapped to the same underlay elements.  Deployment dependent
+   underlay transit nodes can be configured to update OAM information in
+   the overlay transport encapsulation.</font></strong>  The operator of the egress
+   tunnel router could choose to share the recorded information about
+   the path with the user of the overlay.
 
    Coupled with mechanisms such as Segment Routing (SR)
    [I-D.ietf-spring-segment-routing], overlay network and underlay
@@ -308,22 +398,37 @@ Internet-Draft          In-band OAM Requirements               July 2016
    between two endpoints.  [I-D.brockners-lisp-sr] is an example for how
    these methods can be applied to LISP.
 
-3.4.  SLA Verification
+<strike><font color='red'>3.4.  SLA</font></strike>
 
-   In-band OAM can help users of an overlay-service to verify that
+
+
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                  [Page 6]
+
+Internet-Draft          In-situ OAM Requirements            October 2016
+
+
+3.4.  SLA</font></strong> Verification
+
+   <strike><font color='red'>In-band</font></strike>
+
+   <strong><font color='green'>In-situ</font></strong> OAM can help users of an overlay-service to verify that
    negotiated SLAs for the real traffic are met by the underlay network
    provider.  Different from solutions which rely on active probes to
-   test an SLA, in-band OAM based mechanisms avoid wrong interpretations
+   test an SLA, <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM based mechanisms avoid wrong interpretations
    and "cheating", which can happen if the probe traffic that is used to
    perform SLA-check is prioritized by the network provider of the
-   underlay.
+   underlay.  <strong><font color='green'>In active/standby deployments in-situ OAM would only allow
+   for SLA verification of the active path.</font></strong>
 
 3.5.  Analytics and Diagnostics
 
    Network planners and operators benefit from knowledge of the actual
    traffic distribution in the network.  When deriving an overall
    network connectivity traffic matrix one typically needs to correlate
-   data gathered from each individual devices in the network.  If the
+   data gathered from each individual <strike><font color='red'>devices</font></strike> <strong><font color='green'>device</font></strong> in the network.  If the
    path of a packet is recorded while the packet is forwarded, the
    entire path that a packet took through the network is available to
    the egress system.  This obviates the need to retrieve individual
@@ -336,10 +441,9 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 
 
-Brockners, et al.       Expires January 19, 2017                [Page 6]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017                [Page 6]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
 
    In addition, with individual path tracing, information is available
    at packet level granularity, rather than only at aggregate level - as
@@ -353,23 +457,37 @@ Internet-Draft          In-band OAM Requirements               July 2016
    router in the system.  Transit devices are off-loaded from the task
    of gathering packet statistics.
 
+   <strong><font color='green'>In high-speed networks one can leverage and benefit from packet-
+   accurate measurements with for example hardware-accurate timestamping
+   (i.e., nanosecond-level verification) to support optimized packet
+   scheduling and queuing mechanisms.</font></strong>
+
 3.6.  Frame Replication/Elimination Decision for Bi-casting/Active-
       active Networks
 
    Bandwidth- and power-constrained, time-sensitive, or loss-intolerant
    networks (e.g., networks for industry automation/control, health
    care) require efficient OAM methods to decide when to replicate
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                  [Page 7]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
    packets to a secondary path in order to keep the loss/error-rate for
    the receiver at a tolerable level - and also when to stop replication
-   and eliminate the redundant flow.  Many IoT networks are time
-   sensitive and cannot leverage automatic retransmission requests (ARQ)
-   to cope with transmission errors or lost packets.  Transmitting the
-   data over multiple disparate paths (often called bi-casting or live-
-   live) is a method used to reduce the error rate observed by the
-   receiver.  TSN receive a lot of attention from the manufacturing
-   industry as shown by a various standardization activities and
-   industry forums being formed (see e.g., IETF 6TiSCH, IEEE P802.1CB,
-   AVnu).
+   and eliminate the redundant flow.  Many <strike><font color='red'>IoT</font></strike> <strong><font color='green'>Internet of Things (IoT)</font></strong>
+   networks are time sensitive and cannot leverage automatic
+   retransmission requests (ARQ) to cope with transmission errors or
+   lost packets.  Transmitting the data over multiple disparate paths
+   (often called bi-casting or <strike><font color='red'>live-
+   live)</font></strike> <strong><font color='green'>live-live)</font></strong> is a method used to reduce the
+   error rate observed by the receiver.  <strike><font color='red'>TSN</font></strike>  <strong><font color='green'>Time sensitive networks (TSN)</font></strong>
+   receive a lot of attention from the manufacturing industry as shown
+   by a various standardization activities and industry forums being
+   formed (see e.g., IETF 6TiSCH, IEEE P802.1CB, AVnu).
 
 3.7.  Proof of Transit
 
@@ -392,11 +510,9 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 
 
-Brockners, et al.       Expires January 19, 2017                [Page 7]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017                [Page 7]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
    domains.  Physical hand-off-points are defined between these trust
    domains (i.e., physical interfaces).  Or in other terms, in the
    "network forwarding domain" things are wired up in a way that traffic
@@ -415,17 +531,25 @@ Internet-Draft          In-band OAM Requirements               July 2016
    methods of proving that a service chain is in place for a particular
    application.
 
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                  [Page 8]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
    Deployed service chains without the presence of a "proof of transit"
    mechanism are typically operated as fail-open system: The packets
    that arrive at the end of a service chain are processed.  Adding
-   "proof of transit" capabilites to a service chain allows an operator
+   "proof of transit" <strike><font color='red'>capabilites</font></strike> <strong><font color='green'>capabilities</font></strong> to a service chain allows an operator
    to turn a fail-open system into a fail-close system, i.e.  packets
    that did not properly traverse the service chain can be blocked.
 
    A solution approach could be based on OAM data which is added to
-   every packet for achieving Proof Of Transit.  The OAM data is updated
-   at every hop and is used to verify whether a packet traversed all
-   required nodes.  When the verifier receives each packet, it can
+   every packet for achieving Proof Of <strike><font color='red'>Transit.  The</font></strike> <strong><font color='green'>Transit(POT).The</font></strong> OAM data is
+   updated at every hop and is used to verify whether a packet traversed
+   all required nodes.  When the verifier receives each packet, it can
    validate whether the packet traversed the service chain correctly.
    The detailed mechanisms used for path verification along with the
    procedures applied to the OAM data carried in the packet for path
@@ -438,11 +562,13 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 3.8.  Use Cases
 
-   In-band OAM could be leveraged for several use cases, including:
+   <strike><font color='red'>In-band</font></strike>
+
+   <strong><font color='green'>In-situ</font></strong> OAM could be leveraged for several use cases, including:
 
    o  Traffic Matrix: Derive the network traffic matrix: Traffic for a
       given time interval between any two edge nodes of a given domain.
-      Could be performed for all traffic or per QoS-class.
+      Could be performed for all traffic or <strong><font color='green'>on a</font></strong> per <strike><font color='red'>QoS-class.
 
 
 
@@ -450,8 +576,8 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 Brockners, et al.       Expires January 19, 2017                [Page 8]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike> <strong><font color='green'>Quality of Service
+      (QoS) class.</font></strong>
 
    o  Flow Debugging: Discover which path(s) a particular set of traffic
       (identified by an n-tuple) takes in the network.  Such a procedure
@@ -470,6 +596,15 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
    o  Network Delay Distribution: Show delay distribution across network
       by node or links.  If enabled per application or for a specific
+
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                  [Page 9]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
       flow then display the path taken along with the delay incurred at
       every hop.
 
@@ -494,12 +629,14 @@ Internet-Draft          In-band OAM Requirements               July 2016
       within the trading-floor department, access to specific
       applications or servers is granted.
 
-4.  Considerations for In-band OAM
+<strike><font color='red'>4.  Considerations for In-band OAM
 
    The implementation of an in-band OAM mechanism needs to take several
    considerations into account, including administrative boundaries, how
    information is recorded, Maximum Transfer Unit (MTU), Path MTU
-   discovery and packet size, etc.
+   discovery</font></strike>
+
+   <strong><font color='green'>o  Device-level troubleshooting</font></strong> and <strike><font color='red'>packet size, etc.
 
 
 
@@ -509,13 +646,59 @@ Brockners, et al.       Expires January 19, 2017                [Page 9]
 Internet-Draft          In-band OAM Requirements               July 2016
 
 
-4.1.  Type of <strike><font color='red'>information</font></strike> <strong><font color='green'>Information</font></strong> to <strike><font color='red'>be recorded</font></strike> <strong><font color='green'>Be Recorded</font></strong>
+4.1.  Type of</font></strike> <strong><font color='green'>optimization: In many cases,
+      network operators could benefit from</font></strong> information <strong><font color='green'>specific</font></strong> to <strike><font color='red'>be recorded
 
    The information gathered for in-band OAM can be categorized into
+   three main categories: Information with</font></strike> a <strike><font color='red'>per-hop scope, such as path
+   tracing;</font></strike>
+      <strong><font color='green'>single device.  A non-exhaustive list of useful</font></strong> information <strike><font color='red'>which applies to</font></strike>
+      <strong><font color='green'>includes: queue-depths, buffer utilization (either shared or per-
+      port), packet latency measured from</font></strong> a <strike><font color='red'>specific set</font></strike> <strong><font color='green'>known starting point, packet
+      latency introduced by a single device, and resource utilization
+      (CPU, memory, link bandwidth)</font></strong> of <strike><font color='red'>nodes, such
+   as path</font></strike> <strong><font color='green'>a given device</font></strong> or <strike><font color='red'>service chain</font></strike> <strong><font color='green'>link.  In some
+      cases, this information changes over per-packet timescales (i.e.,
+      nanoseconds) and as such it is extremely challenging to collect
+      and report this info in an accurate and scalable manner.  By
+      encoding the information from the forwarding element directly
+      within a data packet (i.e., within the 'fast-path') this
+      information can be added to some or all data packets and then
+      collected and analyzed by human or machine tools.  This type of
+      information is particularly valuable for troubleshooting low-level
+      device errors as well as providing a knowledge feedback loop for
+      network and device optimization.
+
+   o  Custom network probing: Active network probing and in-situ OAM can
+      be combined for customized and efficient network probing.  This
+      could for example be a customized traceroute.
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 10]
+
+Internet-Draft          In-situ OAM Requirements            October 2016
+
+
+4.  Considerations for In-situ OAM
+
+   The implementation of an in-situ OAM mechanism needs to take several
+   considerations into account, including administrative boundaries, how
+   information is recorded, Maximum Transfer Unit (MTU), Path MTU
+   discovery and packet size, etc.
+
+4.1.  Type of Information to Be Recorded
+
+   The information gathered for in-situ OAM can be categorized into
    three main categories: Information with a per-hop scope, such as path
-   tracing; information which applies to a specific set of nodes, such
-   as path or service chain verification; information which only applies
-   to the edges of a domain, such as sequence numbers.
+   tracing; information which applies to a specific set of hops, such as
+   path or service chain</font></strong> verification; information which only applies to
+   the edges of a domain, such as sequence numbers.  <strong><font color='green'>Note that a single
+   network device could comprise several in-situ OAM hops, for example
+   in case one wants to trace the path of a packet through that device.</font></strong>
 
    o  "edge to edge": Information that needs to be shared between
       network edges (the "edge" of a network could either be a host or a
@@ -544,18 +727,40 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 4.2.  MTU and <strike><font color='red'>packet size</font></strike> <strong><font color='green'>Packet Size</font></strong>
 
-   The recorded data at every hop may lead to packet size exceeding the
-   Maximum Transmit Unit (MTU).  Based on the transport protocol used
+   The recorded data at every hop <strike><font color='red'>may</font></strike> <strong><font color='green'>might</font></strong> lead to packet size exceeding
+   the Maximum Transmit Unit (MTU).  <strike><font color='red'>Based on the transport protocol used
    MTU is discovered as a configuration parameter or Path MTU (PMTU) is
    discovered dynamically.  Example: IPv6 recommends PMTU discovery
    before data packets are sent to prevent packet fragmentation.  It
    specifies 1280 octets as the default PDU to be carried in a IPv6
-   datagram.  A detailed discussion of the implications of oversized
-   IPv6 header chains if found in [RFC7112].
+   datagram.</font></strike>  A detailed discussion of the
+   implications of oversized IPv6 header chains <strike><font color='red'>if</font></strike> <strong><font color='green'>is</font></strong> found in [RFC7112].
+
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                 [Page 11]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
 
    The Path MTU restricts the amount of data that can be recorded for
-   purpose of OAM within a data packet.  The total size of data to be
-   recorded needs to be preset to avoid packet size exceeding the MTU.
+   purpose of OAM within a data packet.  <strike><font color='red'>The</font></strike>
+
+   <strong><font color='green'>If in-situ OAM data is inserted at the edge of the domain (e.g., by
+   intermediate routers) then the MTU on all interfaces with the domain
+   (MTU_INT) MUST be &gt;= the maximum MTU on any "external" facing
+   interfaces (MTU_EXT) and the</font></strong> total size of <strong><font color='green'>in-situ OAM</font></strong> data to be
+   recorded <strike><font color='red'>needs to</font></strike> <strong><font color='green'>MUST</font></strong> be <strike><font color='red'>preset</font></strike> <strong><font color='green'>&lt;= (MTU_INT - MTU_EXT).
+
+   In-situ OAM comprises two approaches</font></strong> to <strike><font color='red'>avoid</font></strike> <strong><font color='green'>insert OAM data-records in
+   the packets:
+
+   o  Pre-allocated: In this case, the encapsulating node inserts empty
+      data records into the packet to cover the entire domain.  The data
+      records will be incrementally updated/filled as the packet
+      progresses through the network.  With pre-allocation the</font></strong> packet
+      size <strike><font color='red'>exceeding</font></strike> <strong><font color='green'>is only changed at</font></strong> the <strike><font color='red'>MTU.
 
 
 
@@ -565,18 +770,46 @@ Brockners, et al.       Expires January 19, 2017               [Page 10]
 Internet-Draft          In-band OAM Requirements               July 2016
 
 
-   It is recommended to pre-calculate and configures network devices to
-   limit the in-band OAM data that is attached to a packet.
+   It</font></strike> <strong><font color='green'>encapsulating node and</font></strong> is <strike><font color='red'>recommended to pre-calculate</font></strike> <strong><font color='green'>kept
+      constant throughout the domain.  The pre-allocated approach is
+      beneficial for software data-plane implementations where
+      allocating the required space only once</font></strong> and <strike><font color='red'>configures network devices</font></strike> <strong><font color='green'>index into the array</font></strong>
+      to
+   <strike><font color='red'>limit</font></strike> <strong><font color='green'>populate</font></strong> the <strike><font color='red'>in-band OAM</font></strike> data <strong><font color='green'>during transit avoids copy operations at
+      every hop.
+
+   o  Incremental: Every node</font></strong> that <strong><font color='green'>desires to include in-situ OAM
+      information extends the packet as needed.  The incremental
+      approach</font></strong> is <strike><font color='red'>attached</font></strike> <strong><font color='green'>beneficial for hardware data-plane implementations as
+      it eliminates the need for the transit nodes</font></strong> to <strong><font color='green'>read the full
+      array and lookup the pointer in the option prior to updating the
+      data record contents.
+
+   The "incremental" or the "pre-allocated" approaches could even be
+   combined in the same deployment - in which case two in-situ OAM
+   headers would be present in the packet: One for the incremental
+   approach and one for the pre-allocated approach.  In such</font></strong> a <strike><font color='red'>packet.</font></strike> <strong><font color='green'>case one
+   would expect that nodes with a hardware data-plane would update the
+   incremental header, whereas nodes with a software data-plane would
+   process the pre-allocated header.</font></strong>
 
 4.3.  Administrative <strike><font color='red'>boundaries</font></strike> <strong><font color='green'>Boundaries</font></strong>
 
-   There are several challenges in enabling in-band OAM in the public
+   There are several challenges in enabling <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM in the public
    Internet as well as in corporate/enterprise networks across
    administrative domains, which include but are not limited to:
 
-   o  Deployment dependent, the data fields that in-band OAM requires as
+   o  Deployment dependent, the data fields that <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM requires as
       part of a specific transport protocol may not be supported across
       administrative boundaries.
+
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                 [Page 12]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
 
    o  Current OAM implementations are often done in the slow path, i.e.,
       OAM packets are punted to router's CPU for processing.  This leads
@@ -593,113 +826,176 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
    The following considerations will be discussed in a future version of
    this document: If the packet is dropped due to the presence of the
-   in-band OAM; If the policy failure is treated as feature disablement
+   <strike><font color='red'>in-band</font></strike>
+   <strong><font color='green'>in-situ</font></strong> OAM; If the policy failure is treated as feature disablement
    and any further recording is stopped but the packet itself is not
-   dropped, it may lead to every node in the path to make this policy
+   dropped, it may lead to every <strike><font color='red'>node in the path to make this policy
    decision.
 
-4.4.  Selective <strike><font color='red'>enablement</font></strike> <strong><font color='green'>Enablement</font></strong>
+4.4.  Selective enablement
 
    Deployment dependent, in-band OAM could either be used for all, or
-   only a subset of the overall traffic.  While it might be desirable to
-   apply in-band OAM to all traffic and then selectively use the data
-   gathered in case needed, it might not always be feasible.  Depending
-   on the forwarding infrastructure used, in-band OAM can have an impact
-   on forwarding performance.  The SPUD prototype for example uses the
-   notion of "pipes" to describe the portion of the traffic that could
-   be subject to in-path inspection.  Mechanisms to decide which traffic
-   would be subject to in-band OAM are outside the scope of this
-   document.
+   only a subset of</font></strike> <strong><font color='green'>node in</font></strong> the <strike><font color='red'>overall traffic.</font></strike> <strong><font color='green'>path to make this policy
+   decision.
+
+4.4.  Selective Enablement
+
+   The ability to selectively enable in-situ OAM is valuable.</font></strong>  While it <strike><font color='red'>might</font></strike>
+   <strong><font color='green'>may</font></strong> be desirable to
+   <strike><font color='red'>apply in-band OAM to</font></strike> <strong><font color='green'>enable data collection on</font></strong> all traffic <strike><font color='red'>and then selectively use the data
+   gathered in case needed, it might</font></strike> <strong><font color='green'>or devices,
+   this may</font></strong> not always be feasible.  <strike><font color='red'>Depending
+   on the forwarding infrastructure used, in-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM <strike><font color='red'>can have an</font></strike> <strong><font color='green'>collection may also
+   come with a performance</font></strong> impact
+   <strike><font color='red'>on</font></strike> <strong><font color='green'>to</font></strong> forwarding <strike><font color='red'>performance.  The</font></strike> <strong><font color='green'>rates or feature
+   capabilities, which may be acceptable in only some locations.  For
+   example, the</font></strong> SPUD prototype <strike><font color='red'>for example</font></strike> uses the notion of "pipes" to describe
+   the portion of the traffic that could be subject to in-path
+   inspection.  Mechanisms to decide which traffic would be subject to <strike><font color='red'>in-band</font></strike>
+   <strong><font color='green'>in-situ</font></strong> OAM are outside the scope of this document.
 
 
 
 
 
 
-Brockners, et al.       Expires January 19, 2017               [Page 11]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017               [Page 11]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
 
 4.5.  Optimization of <strike><font color='red'>node</font></strike> <strong><font color='green'>Node</font></strong> and <strike><font color='red'>interface identifiers</font></strike> <strong><font color='green'>Interface Identifiers</font></strong>
 
    Since packets have a finite maximum size, the data recording or
-   carrying capacity of one packet in which the in-band OAM meta data is
-   present is limited.  In-band OAM should use its own dedicated
-   namespace (confined to the domain in-band OAM operates in) to
+   carrying capacity of one packet in which the <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM <strike><font color='red'>meta data</font></strike> <strong><font color='green'>metadata</font></strong> is
+   present is limited.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM should use its own dedicated
+   namespace (confined to the domain <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM operates in) to
    represent node and interface IDs to save space in the header.
    Generic representations of node and interface identifiers which are
    globally unique (such as a UUID) would consume significantly more
-   bits of in-band OAM data.
+   bits of <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM data.
 
 4.6.  Loop <strike><font color='red'>communication path</font></strike> <strong><font color='green'>Communication Path</font></strong> (IPv6-specifics)
 
    When recorded data is required to be analyzed on a source node that
-   issues a packet and inserts in-band OAM data, the recorded data needs
+   issues a packet and inserts <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM data, the recorded data needs
    to be carried back to the source node.
 
-   One way to carry the in-band OAM data back to the source is to
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                 [Page 13]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
+   One way to carry the <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM data back to the source is to
    utilize an ICMP Echo Request/Reply (ping) or ICMPv6 Echo Request/
-   Reply (ping6) mechanism.  In order to run the in-band OAM mechanism
+   Reply (ping6) mechanism.  In order to run the <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM mechanism
    appropriately on the ping/ping6 mechanism, the following two
    operations should be implemented by the ping/ping6 target node:
 
-   1.  All of the in-band OAM fields would be copied from an Echo
+   1.  All of the <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM fields would be copied from an Echo
        Request message to an Echo Reply message.
 
    2.  The Hop Limit field of the IPv6 header of these messages would be
        copied as a continuous sequence.  Further considerations are
        addressed in a future version of this document.
 
-5.  Requirements for In-band OAM Data Types
+5.  Requirements for <strike><font color='red'>In-band</font></strike> <strong><font color='green'>In-situ</font></strong> OAM Data Types
 
-   The above discussed use cases require different types of in-band OAM
-   data.  This section details requirements for in-band OAM derived from
+   The above discussed use cases require different types of <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM
+   data.  This section details requirements for <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM derived from
    the discussion above.
 
 5.1.  Generic Requirements
 
-   REQ-G1:  Classification: It should be possible to enable in-band OAM
-            on a selected set of traffic.  The selected set of traffic
-            can also be all traffic.
+   REQ-G1:  Classification: It should be possible to enable <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM
+            on a selected set of <strike><font color='red'>traffic.</font></strike> <strong><font color='green'>traffic (e.g., per interface, based on
+            an access control list specifying a specific set of traffic,
+            etc.).</font></strong>  The selected set of traffic can also be all traffic.
 
-   REQ-G2:  Scope: If in-band OAM is used only within a specific domain,
-            provisions need to be put in place to ensure that in-band
+   REQ-G2:  Scope: If <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM is used only within a specific domain,
+            provisions need to be put in place to ensure that <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong>
             OAM data stays within the specific domain only.
 
-   REQ-G3:  Transport independence: Data formats for in-band OAM shall
-            be defined in a transport independent way.  In-band OAM
+   REQ-G3:  Transport independence: Data formats for <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM shall
+            be defined in a transport independent way.  <strike><font color='red'>In-band OAM
 
 
 
 Brockners, et al.       Expires January 19, 2017               [Page 12]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
-
+Internet-Draft          In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM <strike><font color='red'>Requirements               July 2016</font></strike>
             applies to a variety of transport protocols.  Encapsulations
             should be defined how the generic data formats are carried
             by a specific protocol.
 
-   REQ-G4:  Layering: It should be possible to have in-band OAM
+   REQ-G4:  Layering: It should be possible to have <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM
             information for different transport protocol layers be
-            present in several fields within a single packet.  This
+            present in several fields within a single packet.  <strike><font color='red'>This
+            could for example be</font></strike>  <strong><font color='green'>This
             could for example be the case when tunnels are employed and
-            in-band OAM information is to be gathered for both the
-            underlay as well as the overlay network.
+            in-situ OAM information is to be gathered for both the
+            underlay as well as the overlay network.  Layering support
+            should not be limited to just underlay and overlay, but
+            include more than two layers.
 
-   REQ-G5:  MTU size: With in-band OAM information added, packets should
+   REQ-G5:  MTU size: With in-situ OAM information added, packets MUST
             not become larger than the path MTU.
 
-   REQ-G6:  Data Structure Reusability: The data types and data formats
-            defined and used for in-band OAM ought to be reusable for
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 14]
+
+Internet-Draft          In-situ OAM Requirements            October 2016
+
+
+               REQ-G5.1: If due to some reason a packet which contains
+               in situ OAM data record cannot be forwarded due to the
+               presence of in-situ OAM data records, the node SHOULD
+               remove the in situ OAM data records and forward the
+               packet, rather than drop the entire packet.
+
+               REQ-G5.2: If</font></strong> the <strike><font color='red'>case when tunnels are employed and
+            in-band</font></strike> <strong><font color='green'>encapsulating router is unable to insert
+               in-situ</font></strong> OAM <strike><font color='red'>information</font></strike> <strong><font color='green'>data records into a packet, e.g., due to MTU
+               issues, even though it</font></strong> is <strong><font color='green'>configured</font></strong> to <strike><font color='red'>be gathered for both</font></strike> <strong><font color='green'>do so, it should
+               use some operational means to inform</font></strong> the
+            <strike><font color='red'>underlay as well as</font></strike> <strong><font color='green'>operator (e.g.,
+               syslog) about</font></strong> the <strike><font color='red'>overlay network.
+
+   REQ-G5:  MTU size: With in-band</font></strike> <strong><font color='green'>inability to add in-situ</font></strong> OAM <strike><font color='red'>information added, packets</font></strike> <strong><font color='green'>data
+               records.  Even if the in-situ OAM encapsulating node
+               fails to add in-situ OAM data records, it</font></strong> should
+            <strike><font color='red'>not become larger than</font></strike> <strong><font color='green'>forward
+               the packet normally.
+
+               REQ-G5.3: MTU size consideration for in-situ OAM MUST
+               take domain specifics into account, e.g., changes of</font></strong> the
+               <strong><font color='green'>domain topology due to</font></strong> path <strike><font color='red'>MTU.</font></strike> <strong><font color='green'>protection mechanisms might
+               extend the hop count of a path etc.</font></strong>
+
+   REQ-G6:  Data <strike><font color='red'>Structure Reusability:</font></strike> <strong><font color='green'>structure reuse:</font></strong> The data types and data formats
+            defined and used for <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM ought to be reusable for
             out-of-band OAM telemetry as well.
 
-5.2.  In-band OAM Data with Per-hop Scope
+   <strong><font color='green'>REQ-G7:  Data records format: It is desirable that the format of in-
+            situ OAM data-records leverages already defined data formats
+            for OAM as much as feasible.
+
+   REQ-G8:  Combination with active OAM mechanisms: In-situ OAM should
+            be useable for active network probing, like for example a
+            customized version of traceroute.  Decapsulating in-situ OAM
+            nodes may have an ability to send the in-situ OAM
+            information retrieved from the packet back to the source
+            address of the packet or to the encapsulating node.</font></strong>
+
+5.2.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM Data with Per-hop Scope
 
    REQ-H1:  Missing nodes detection: Data shall be present that allows a
-            node to detect whether all nodes that should participate in
-            in-band OAM operations have indeed participated.
+            node to detect whether all nodes that <strike><font color='red'>should</font></strike> <strong><font color='green'>might</font></strong> participate in
+            <strike><font color='red'>in-band</font></strike>
+            <strong><font color='green'>in-situ</font></strong> OAM operations have indeed participated.
 
    REQ-H2:  Node, instance or device identifier: Data shall be present
             that allows to retrieve the identity of the entity reporting
@@ -708,10 +1004,18 @@ Internet-Draft          In-band OAM Requirements               July 2016
             for packet tracing within a device in much the same way as
             between devices.
 
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                 [Page 15]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
    REQ-H3:  Ingress interface identifier: Data shall be present that
             allows the identification of the interface a particular
-            packet was received from.  The interface can be a logical or
-            physical entity.
+            packet was received from.  The interface can be a logical <strike><font color='red'>or</font></strike>
+            <strong><font color='green'>and/or</font></strong> physical entity.
 
    REQ-H4:  Egress interface identifier: Data shall be present that
             allows the identification of the interface a particular
@@ -728,32 +1032,35 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 
 
-Brockners, et al.       Expires January 19, 2017               [Page 13]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017               [Page 13]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
 
             REQ-H5.2:  Jitter: Data shall be present that allows to
                        retrieve the jitter between two or more points of
                        interest within the system.  Those points can be
                        within the same device or on different devices.
+                       <strong><font color='green'>Jitter can be derived from the different
+                       timestamps gathered and does not necessarily need
+                       to be an explicit data record.</font></strong>
 
             REQ-H5.3:  Wall-clock time: Data shall be present that
                        allows to retrieve the wall-clock time visited a
                        particular point of interest in the system.
 
-            REQ-H5.4:  Time precision: The precision of the time related
-                       data should be configurable.  Use-case dependent,
-                       the required precision could e.g., be nano-
-                       seconds, micro-seconds, milli-seconds, or
-                       seconds.
+            REQ-H5.4:  Time precision: <strike><font color='red'>The</font></strike> <strong><font color='green'>Time with different</font></strong> precision <strike><font color='red'>of the time related
+                       data</font></strike>
+                       should be <strike><font color='red'>configurable.</font></strike> <strong><font color='green'>supported.</font></strong>  Use-case dependent, the
+                       required precision could e.g., be <strike><font color='red'>nano-
+                       seconds, micro-seconds, milli-seconds,</font></strike> <strong><font color='green'>nanoseconds,
+                       microseconds, milliseconds,</font></strong> or seconds.
 
    REQ-H6:  Generic data records (like e.g., GPS/Geo-location
             information): It should be possible to add user-defined OAM
             data at select hops to the packet.  The semantics of the
             data are defined by the user.
 
-5.3.  In-band OAM with Selected Hop Scope
+5.3.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM with Selected Hop Scope
 
    REQ-S1:  Proof of transit: Data shall be present which allows to
             securely prove that a packet has visited or ore several
@@ -762,6 +1069,14 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
             REQ-S1.1:  In case "Shamir's secret sharing scheme" is used
                        for proof of transit, two data records, "random"
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                 [Page 16]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
                        and "cumulative" shall be present.  The number of
                        bits used for "random" and "cumulative" data
                        records can vary between deployments and should
@@ -771,13 +1086,13 @@ Internet-Draft          In-band OAM Requirements               July 2016
                        converted into a fail-closed service chaining
                        system.
 
-5.4.  In-band OAM with End-to-end Scope
+5.4.  <strike><font color='red'>In-band</font></strike>  <strong><font color='green'>In-situ</font></strong> OAM with End-to-end Scope
 
    REQ-E1:  Sequence numbering:
 
             REQ-E1.1:  Reordering detection: It should be possible to
                        detect whether packets have been reordered while
-                       traversing an in-band OAM domain.
+                       traversing <strike><font color='red'>an in-band OAM domain.
 
 
 
@@ -786,32 +1101,50 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 Brockners, et al.       Expires January 19, 2017               [Page 14]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band</font></strike> <strong><font color='green'>an in situ</font></strong> OAM <strike><font color='red'>Requirements               July 2016</font></strike> <strong><font color='green'>domain.</font></strong>
 
             REQ-E1.2:  Duplicates detection: It should be possible to
                        detect whether packets have been duplicated while
-                       traversing an in-band OAM domain.
+                       traversing an <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in situ</font></strong> OAM domain.
 
             REQ-E1.3:  Detection of packet drops: It should be possible
                        to detect whether packets have been dropped while
-                       traversing an in-band OAM domain.
+                       traversing an <strike><font color='red'>in-band</font></strike> <strong><font color='green'>in-situ</font></strong> OAM domain.
 
 6.  Security Considerations and Requirements
 
-   General Security considerations will be addressed in a later version
-   of this document.  Security considerations for Proof of Transit alone
+<strong><font color='green'>6.1.  General considerations</font></strong>
+
+   General Security considerations will be <strike><font color='red'>addressed</font></strike> <strong><font color='green'>expanded on</font></strong> in a later
+   version of this document.  <strike><font color='red'>Security considerations for Proof of Transit alone
    are discussed below.
 
-6.1.  Proof of Transit
+6.1.</font></strike>
+
+   <strong><font color='green'>In-situ OAM is considered a "per domain" feature, where one or
+   several operators decide on leveraging and configuring in-situ OAM
+   according to their needs.  Still operators need to properly secure
+   the in-situ OAM domain to avoid malicious configuration and use,
+   which could include injecting malicious in-situ OAM packets into a
+   domain.
+
+6.2.</font></strong>  Proof of Transit
 
    Threat Model: Attacks on the deployments could be due to malicious
-   administrators or accidental misconfigurations resulting in bypassing
+   administrators or accidental <strike><font color='red'>misconfigurations</font></strike> <strong><font color='green'>misconfiguration</font></strong> resulting in bypassing
    of certain nodes.  The solution approach should meet the following
    requirements:
 
    REQ-SEC1:  Sound Proof of Transit: A valid and verifiable proof that
               the packet definitively traversed through all the nodes as
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                 [Page 17]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
               expected.  Probabilistic methods to achieve this should be
               avoided, as the same could be exploited by an attacker.
 
@@ -821,36 +1154,44 @@ Internet-Draft          In-band OAM Requirements               July 2016
               from the expected path should be accurately determined.
 
    REQ-SEC3:  Replay Attacks: A attacker (active/passive) should not be
-              able to reuse the proof of transit bits in the packet by
-              observing the OAM data in the packet, packet
-              characteristics (like IP addresses, octets transferred,
-              timestamps) or even the proof bits themselves.  The
-              solution approach should consider usage of these
-              parameters for deriving any secrets cautiously.
-              Mitigating replay attacks beyond a window of longer
-              duration could be intractable to achieve with fixed number
-              of bits allocated for proof.
+              able to reuse the <strike><font color='red'>proof of transit</font></strike> <strong><font color='green'>POT</font></strong> bits in the packet by observing the
+              OAM data in the packet, packet characteristics (like IP
+              addresses, octets transferred, timestamps) or even the
+              proof bits themselves.  The solution approach should
+              consider usage of these parameters for deriving any
+              secrets cautiously.  Mitigating replay attacks beyond a
+              window of longer duration could be intractable to achieve
+              with fixed number of bits allocated for proof.
 
-   REQ-SEC4:  Recycle Secrets: Any configuration of the secrets (like
-              cryptographic keys, initialisation vectors etc.) either in
+   REQ-SEC4:  <strong><font color='green'>Pre-play Attacks: A active attacker should not be able to
+              generate or reuse valid POT bits from legitimate packets,
+              in order to prove to the verifier as valid packets.  This
+              slight variant of replay attacks.  The attacker extracts
+              POT bits from legitimate packets and ensure they do not
+              reach the verifier.  Subsequently reuse those POT bits in
+              crafted packets.
+
+   REQ-SEC5:</font></strong>  Recycle Secrets: Any configuration of the secrets (like
+              cryptographic keys, <strike><font color='red'>initialisation</font></strike> <strong><font color='green'>initialization</font></strong> vectors etc.) either in
               the controller or service functions should be
-              reconfigurable.  Solution approach should enable controls,
+              <strike><font color='red'>reconfigurable.</font></strike> <strong><font color='green'>re-
+              configurable.</font></strong>  Solution approach should enable controls,
               API calls etc. needed in order to perform such recycling.
               It is desirable to provide recommendations on the duration
 
 
 
-Brockners, et al.       Expires January 19, 2017               [Page 15]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017               [Page 15]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
               of rotation cycles needed for the secure functioning of
               the overall system.
 
-   REQ-SEC5:  Secret storage and distribution: Secrets should be shared
+   <strike><font color='red'>REQ-SEC5:</font></strike>
+
+   <strong><font color='green'>REQ-SEC6:</font></strong>  Secret storage and distribution: Secrets should be shared
               with the devices over secure channels.  Methods should be
-              put in place so that secrets cannot be retrieved by non
+              put in place so that secrets cannot be retrieved by <strike><font color='red'>non</font></strike> <strong><font color='green'>non-</font></strong>
               authorized personnel from the devices.
 
 7.  IANA Considerations
@@ -859,11 +1200,22 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
    This document has no IANA actions.
 
+
+
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                 [Page 18]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
+
 8.  Acknowledgements
 
-   The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
-   Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-   Nadahalli, and Andrew Yourtchenko for the comments and advice.  This
+   The authors would like to thank <strong><font color='green'>Jen Linkova, LJ Wobker,</font></strong> Eric Vyncke,
+   Nalini Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu
+   Harichandra Babu, Akshaya Nadahalli, <strong><font color='green'>Ignas Bagdonas, LJ Wobker, Erik
+   Nordmark,</font></strong> and Andrew Yourtchenko for the comments and advice.  This
    document leverages and builds on top of several concepts described in
    <strike><font color='red'>[draft-kitamura-ipv6-record-route].</font></strike>
    <strong><font color='green'>[I-D.kitamura-ipv6-record-route].</font></strong>  The authors would like to
@@ -903,12 +1255,9 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 
 
-
-
-Brockners, et al.       Expires January 19, 2017               [Page 16]
+<strike><font color='red'>Brockners, et al.       Expires January 19, 2017               [Page 16]
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
+Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
 
    <strong><font color='green'>[I-D.kitamura-ipv6-record-route]
               Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
@@ -922,6 +1271,15 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
    [P4]       Kim, , "P4: In-band Network Telemetry (INT)", September
               2015.
+
+
+
+
+
+<strong><font color='green'>Brockners, et al.          Expires May 3, 2017                 [Page 19]
+
+Internet-Draft          In-situ OAM Requirements            October 2016</font></strong>
+
 
    [RFC0791]  Postel, J., "Internet Protocol", STD 5, RFC 791,
               DOI 10.17487/RFC0791, September 1981,
@@ -958,13 +1316,9 @@ Internet-Draft          In-band OAM Requirements               July 2016
               DOI 10.17487/RFC7665, October 2015,
               &lt;http://www.rfc-editor.org/info/rfc7665&gt;.
 
-
-
-
-<strong><font color='green'>Brockners, et al.       Expires January 19, 2017               [Page 17]
-
-Internet-Draft          In-band OAM Requirements               July 2016</font></strong>
-
+   <strong><font color='green'>[RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
+              Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
+              May 2016, &lt;http://www.rfc-editor.org/info/rfc7799&gt;.</font></strong>
 
    [RFC7872]  Gont, F., Linkova, J., Chown, T., and W. Liu,
               "Observations on the Dropping of Packets with IPv6
@@ -974,9 +1328,14 @@ Internet-Draft          In-band OAM Requirements               July 2016</font><
 
 
 
-<strike><font color='red'>Brockners, et al.       Expires January 19, 2017               [Page 17]
+
+
+
+
+Brockners, et al.          Expires <strike><font color='red'>January 19,</font></strike> <strong><font color='green'>May 3,</font></strong> 2017                 [Page <strike><font color='red'>17]</font></strike> <strong><font color='green'>20]</font></strong>
 
-Internet-Draft          In-band OAM Requirements               July 2016</font></strike>
+Internet-Draft          <strike><font color='red'>In-band</font></strike>          <strong><font color='green'>In-situ</font></strong> OAM Requirements               <strike><font color='red'>July</font></strike>            <strong><font color='green'>October</font></strong> 2016
+
 
 Authors' Addresses
 
@@ -1022,22 +1381,16 @@ Authors' Addresses
    Email: hannes@rtbrick.com
 
 
-   <strike><font color='red'>John Leddy
+   John Leddy
    Comcast
 
-   Email: John_Leddy@cable.comcast.com</font></strike>
+   Email: John_Leddy@cable.comcast.com
 
 
 
-Brockners, et al.       Expires January 19, 2017               [Page 18]
+Brockners, et al.          Expires <strike><font color='red'>January 19,</font></strike> <strong><font color='green'>May 3,</font></strong> 2017                 [Page <strike><font color='red'>18]</font></strike> <strong><font color='green'>21]</font></strong>
 
-Internet-Draft          In-band OAM Requirements               July 2016
-
-
-   <strong><font color='green'>John Leddy
-   Comcast
-
-   Email: John_Leddy@cable.comcast.com</font></strong>
+Internet-Draft          <strike><font color='red'>In-band</font></strike>          <strong><font color='green'>In-situ</font></strong> OAM Requirements               <strike><font color='red'>July</font></strike>            <strong><font color='green'>October</font></strong> 2016
 
 
    Stephen Youell
@@ -1049,6 +1402,34 @@ Internet-Draft          In-band OAM Requirements               July 2016
    Email: stephen.youell@jpmorgan.com
 
 
+   <strong><font color='green'>David Mozes
+   Mellanox Technologies Ltd.
+
+   Email: davidm@mellanox.com
+
+
+   Tal Mizrahi
+   Marvell
+   6 Hamada St.
+   Yokneam  20692
+   Israel
+
+   Email: talmi@marvell.com
+
+
+   Petr Lapukhov
+   Facebook
+   1 Hacker Way
+   Menlo Park, CA  94025
+   USA
+
+   URI:   petr@fb.com
+
+
+   Remy Chang
+   Barefoot Networks
+
+   Email: remy@barefootnetworks.com</font></strong>
 
 
 
@@ -1063,28 +1444,6 @@ Internet-Draft          In-band OAM Requirements               July 2016
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires January 19, 2017               [Page 19]
+Brockners, et al.          Expires <strike><font color='red'>January 19,</font></strike> <strong><font color='green'>May 3,</font></strong> 2017                 [Page <strike><font color='red'>19]</font></strike> <strong><font color='green'>22]</font></strong>
 </pre>
 </body></html>

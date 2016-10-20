@@ -1,14 +1,19 @@
---- 1/draft-brockners-proof-of-transit-01.txt	2016-08-16 14:24:00.000000000 -0400
-+++ 2/draft-brockners-proof-of-transit-02.txt	2016-08-16 14:24:00.000000000 -0400
-@@ -4,21 +4,21 @@
+--- 1/draft-brockners-proof-of-transit-01.txt	2016-10-20 10:54:25.000000000 -0400
++++ 2/draft-brockners-proof-of-transit-02.txt	2016-10-20 10:54:25.000000000 -0400
+@@ -1,24 +1,24 @@
+ 
+ Network Working Group                                       F. Brockners
+ Internet-Draft                                               S. Bhandari
  Intended status: Experimental                                    S. Dara
- Expires: January 19, 2017                                   C. Pignataro
+-Expires: January 19, 2017                                   C. Pignataro
++Expires: May 3, 2017                                        C. Pignataro
                                                                     Cisco
                                                                  J. Leddy
                                                                   Comcast
                                                                 S. Youell
                                                                      JMPC
-                                                            July 18, 2016
+-                                                           July 18, 2016
++                                                        October 30, 2016
  
                              Proof of Transit
 -                  draft-brockners-proof-of-transit-01
@@ -23,17 +28,75 @@
     mechanisms allow to securely verify whether all packets traversed all
     those nodes of a given path that they are supposed to visit.
  
-@@ -77,33 +77,35 @@
+@@ -30,21 +30,21 @@
+    Internet-Drafts are working documents of the Internet Engineering
+    Task Force (IETF).  Note that other groups may also distribute
+    working documents as Internet-Drafts.  The list of current Internet-
+    Drafts is at http://datatracker.ietf.org/drafts/current/.
+ 
+    Internet-Drafts are draft documents valid for a maximum of six months
+    and may be updated, replaced, or obsoleted by other documents at any
+    time.  It is inappropriate to use Internet-Drafts as reference
+    material or to cite them other than as "work in progress."
+ 
+-   This Internet-Draft will expire on January 19, 2017.
++   This Internet-Draft will expire on May 3, 2017.
+ 
+ Copyright Notice
+ 
+    Copyright (c) 2016 IETF Trust and the persons identified as the
+    document authors.  All rights reserved.
+ 
+    This document is subject to BCP 78 and the IETF Trust's Legal
+    Provisions Relating to IETF Documents
+    (http://trustee.ietf.org/license-info) in effect on the date of
+    publication of this document.  Please review these documents
+@@ -53,63 +53,69 @@
+    include Simplified BSD License text as described in Section 4.e of
+    the Trust Legal Provisions and are provided without warranty as
+    described in the Simplified BSD License.
+ 
+ Table of Contents
+ 
+    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
+    3.  Proof of Transit  . . . . . . . . . . . . . . . . . . . . . .   4
+      3.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . . . .   5
+-     3.2.  Solution Approach . . . . . . . . . . . . . . . . . . . .   5
++     3.2.  Solution Approach . . . . . . . . . . . . . . . . . . . .   6
+        3.2.1.  Setup . . . . . . . . . . . . . . . . . . . . . . . .   6
+        3.2.2.  In Transit  . . . . . . . . . . . . . . . . . . . . .   6
+        3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   6
+-     3.3.  Example for Illustration  . . . . . . . . . . . . . . . .   7
++     3.3.  Illustrative Example  . . . . . . . . . . . . . . . . . .   7
+        3.3.1.  Basic Version . . . . . . . . . . . . . . . . . . . .   7
+          3.3.1.1.  Secret Shares . . . . . . . . . . . . . . . . . .   7
+          3.3.1.2.  Lagrange Polynomials  . . . . . . . . . . . . . .   7
+          3.3.1.3.  LPC Computation . . . . . . . . . . . . . . . . .   8
+          3.3.1.4.  Reconstruction  . . . . . . . . . . . . . . . . .   8
+          3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   8
+        3.3.2.  Enhanced Version  . . . . . . . . . . . . . . . . . .   9
+          3.3.2.1.  Random Polynomial . . . . . . . . . . . . . . . .   9
+          3.3.2.2.  Reconstruction  . . . . . . . . . . . . . . . . .   9
           3.3.2.3.  Verification  . . . . . . . . . . . . . . . . . .  10
       3.4.  Operational Aspects . . . . . . . . . . . . . . . . . . .  10
-    4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  11
+-   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  11
++     3.5.  Alternative Approach  . . . . . . . . . . . . . . . . . .  11
++       3.5.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . .  11
++       3.5.2.  Pros  . . . . . . . . . . . . . . . . . . . . . . . .  11
++       3.5.3.  Cons  . . . . . . . . . . . . . . . . . . . . . . . .  11
++   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  12
     5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  12
-      5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  12
-      5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  12
-    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
-    7.  Manageability Considerations  . . . . . . . . . . . . . . . .  15
+-     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  12
+-     5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  12
+-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+-   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  15
++     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  13
++     5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  13
++   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
++   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  16
     8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
-      8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  16
+-     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  16
 -     8.2.  Anti Replay . . . . . . . . . . . . . . . . . . . . . . .  16
 -     8.3.  Anti Tampering  . . . . . . . . . . . . . . . . . . . . .  16
 -     8.4.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  17
@@ -47,35 +110,195 @@
 -     10.1.  Normative References . . . . . . . . . . . . . . . . . .  18
 -     10.2.  Informative References . . . . . . . . . . . . . . . . .  18
 -   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
-+     8.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  16
-+     8.3.  Anti Replay . . . . . . . . . . . . . . . . . . . . . . .  17
-+     8.4.  Anti Preplay  . . . . . . . . . . . . . . . . . . . . . .  17
-+     8.5.  Anti Tampering  . . . . . . . . . . . . . . . . . . . . .  17
-+     8.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  18
-+     8.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  18
-+     8.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  18
-+     8.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  18
-+       8.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  19
-+       8.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  19
-+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
-+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
-+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  19
-+     10.2.  Informative References . . . . . . . . . . . . . . . . .  19
-+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
++     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  17
++     8.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  17
++     8.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  18
++     8.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  18
++     8.5.  Anti-Tampering  . . . . . . . . . . . . . . . . . . . . .  19
++     8.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  19
++     8.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  19
++     8.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  19
++     8.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  20
++       8.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  20
++       8.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  20
++   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  20
++   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
++     10.1.  Normative References . . . . . . . . . . . . . . . . . .  20
++     10.2.  Informative References . . . . . . . . . . . . . . . . .  21
++   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
  
  1.  Introduction
  
     Several deployments use traffic engineering, policy routing, segment
     routing or Service Function Chaining (SFC) [RFC7665] to steer packets
-    through a specific set of nodes.  In certain cases regulatory
+-   through a specific set of nodes.  In certain cases regulatory
++   through a specific set of nodes.  In certain cases, regulatory
     obligations or a compliance policy require operators to prove that
     all packets that are supposed to follow a specific path are indeed
     being forwarded across and exact set of pre-determined nodes.
  
-@@ -378,21 +380,23 @@
+    If a packet flow is supposed to go through a series of service
+    functions or network nodes, it has to be proven that indeed all
+    packets of the flow followed the path or service chain or collection
+    of nodes specified by the policy.  In case some packets of a flow
+    weren't appropriately processed, a verification device should
+    determine the policy violation and take corresponding actions
+@@ -129,21 +135,21 @@
+    domains, because the hand-off-points are no longer clearly defined
+    physical interfaces, but are virtual interfaces.  As a consequence,
+    different trust layers should not to be mixed in the same device.
+    For an NFV scenario a different type of proof is required.  Offering
+    a proof that a packet indeed traversed a specific set of service
+    functions or nodes allows operators to evolve from the above
+    described indirect methods of proving that packets visit a
+    predetermined set of nodes.
+ 
+    The solution approach presented in this document is based on a small
+-   portion of operational data added to every packet.  This "in-band"
++   portion of operational data added to every packet.  This "in-situ"
+    operational data is also referred to as "proof of transit data", or
+    POT data.  The POT data is updated at every required node and is used
+    to verify whether a packet traversed all required nodes.  A
+    particular set of nodes "to be verified" is either described by a set
+    of secret keys, or a set of shares of a single secret.  Nodes on the
+    path retrieve their individual keys or shares of a key (using for
+    e.g., Shamir's Secret Sharing scheme) from a central controller.  The
+    complete key set is only known to the controller and a verifier node,
+    which is typically the ultimate node on a path that performs
+    verification.  Each node in the path uses its secret or share of the
+@@ -193,22 +199,22 @@
+    The method relies on adding POT data to all packets that traverse a
+    path.  The added POT data allows a verifying node (egress node) to
+    check whether a packet traversed the identified set of nodes on a
+    path correctly or not.  Security mechanisms are natively built into
+    the generation of the POT data to protect against misuse (i.e.
+    configuration mistakes, malicious administrators playing tricks with
+    routing, capturing, spoofing and replaying packets).  The mechanism
+    for POT leverages "Shamir's secret sharing scheme" [SSS].
+ 
+    Shamir's secret sharing base idea: A polynomial (represented by its
+-   co-efficients) is chosen as a secret by the controller.  A polynomial
+-   represents a curve.  A set of well defined points on the curve are
++   coefficients) is chosen as a secret by the controller.  A polynomial
++   represents a curve.  A set of well-defined points on the curve are
+    needed to construct the polynomial.  Each point of the polynomial is
+    called "share" of the secret.  A single secret is associated with a
+    particular set of nodes, which typically represent the path, to be
+    verified.  Shares of the single secret (i.e., points on the curve)
+    are securely distributed from a Controller to the network nodes.
+    Nodes use their respective share to update a cumulative value in the
+    POT data of each packet.  Only a verifying node has access to the
+    complete secret.  The verifying node validates the correctness of the
+    received POT data by reconstructing the curve.
+ 
+@@ -256,56 +262,56 @@
+    generate the Lagrange Polynomial Constants (LPC).  Each of the k
+    nodes (including verifier) are assigned a point on the polynomial
+    i.e., shares of the SECRET.  The verifier is configured with the
+    SECRET.  The Controller also generates coefficients (except the
+    constant coefficient, called "RND", which is changed on a per packet
+    basis) of a second polynomial POLY-2 of the same degree.  Each node
+    is configured with the LPC of POLY-2.  Note that POLY-2 is public.
+ 
+ 3.2.2.  In Transit
+ 
+-   For each packet, the source node generates a random number (RND).  It
+-   is considered as the constant coefficient for POLY-2.  A cumulative
+-   value (CML) is initialized to 0.  Both RND, CML are carried as within
+-   the packet POT data.  As the packet visits each node, the RND is
+-   retrieved from the packet and the respective share of POLY-2 is
+-   calculated.  Each node calculates (Share(POLY-1)+Share(POLY-2)) and
+-   CML is updated with this sum.  This step is performed by each node
+-   until the packet completes the path.  The verifier also performs the
+-   step with its respective share.
++   For each packet, the ingress node generates a random number (RND).
++   It is considered as the constant coefficient for POLY-2.  A
++   cumulative value (CML) is initialized to 0.  Both RND, CML are
++   carried as within the packet POT data.  As the packet visits each
++   node, the RND is retrieved from the packet and the respective share
++   of POLY-2 is calculated.  Each node calculates (Share(POLY-1) +
++   Share(POLY-2)) and CML is updated with this sum.  This step is
++   performed by each node until the packet completes the path.  The
++   verifier also performs the step with its respective share.
+ 
+ 3.2.3.  Verification
+ 
+    The verifier cross checks whether CML = SECRET + RND.  If this
+    matches then the packet traversed the specified set of nodes in the
+    path.  This is due to the additive homomorphic property of Shamir's
+    Secret Sharing scheme.
+ 
+-3.3.  Example for Illustration
++3.3.  Illustrative Example
+ 
+    This section shows a simple example to illustrate step by step the
+    approach described above.
+ 
+ 3.3.1.  Basic Version
+ 
+-   Assumption: We like to verify that packets pass through 3 nodes.
+-   Consequently we need a polynomial of degree 2.
++   Assumption: It is to be verified whether packets passed through 3
++   nodes.  A polynomial of degree 2 is chosen for verification.
+ 
+    Choices: Prime = 53.  POLY-1(x) = (3x^2 + 3x + 10) mod 53.  The
+    secret to be re-constructed is the constant coefficient of POLY-1,
+    i.e., SECRET=10.  It is important to note that all operations are
+    done over a finite field (i.e., modulo prime).
+ 
+ 3.3.1.1.  Secret Shares
+ 
+    The shares of the secret are the points on POLY-1 chosen for the 3
+-   nodes.  Here we use x0=2, x1=4, x2=5.
++   nodes.  For example, let x0=2, x1=4, x2=5.
+ 
+       POLY-1(2) = 28 => (x0,y0) = (2,28)
+ 
+       POLY-1(4) = 17 => (x1,y1) = (4,17)
+ 
+       POLY-1(5) = 47 => (x2,y2) = (5,47)
+ 
+    The three points above are the points on the curve which are
+    considered the shares of the secret.  They are assigned to three
+    nodes respectively and are kept secret.
+@@ -338,21 +344,21 @@
+ 
+       LPC(x1) = (-5) mod 53 = 48
+ 
+       LPC(x2) = (8/3) mod 53 = 38
+ 
+    For a general way to compute the modular multiplicative inverse, see
+    e.g., the Euclidean algorithm.
+ 
+ 3.3.1.4.  Reconstruction
+ 
+-   Reconstruction of the polynomial is well defined as
++   Reconstruction of the polynomial is well-defined as
+ 
+    POLY1(x) = l0(x)*y0 + l1(x)*y1 + l2(x)*y2.
+ 
+    Subsequently, the SECRET, which is the constant coefficient of
+    POLY1(x) can be computed as below
+ 
+    SECRET = (y0*LPC(l0)+y1*LPC(l1)+y2*LPC(l2)) mod 53.
+ 
+    The secret can be easily reconstructed using the y-values and the
+    LPC:
+@@ -369,64 +375,67 @@
+ 
+    Upon completion of the path, the resulting CML is retrieved by the
+    verifier from the packet POT data.  Recall that verifier is
+    preconfigured with the original SECRET.  It is cross checked with the
+    CML by the verifier.  Subsequent actions based on the verification
+    failing or succeeding could be taken as per the configured policies.
+ 
+ 3.3.2.  Enhanced Version
+ 
     As observed previously, the vanilla algorithm that involves a single
-    secret polynomial is not secure.  We enhance the solution with usage
-    of a random second polynomial chosen per packet.
+-   secret polynomial is not secure.  We enhance the solution with usage
+-   of a random second polynomial chosen per packet.
++   secret polynomial is not secure.  Therefore, the solution is further
++   enhanced with usage of a random second polynomial chosen per packet.
  
  3.3.2.1.  Random Polynomial
  
@@ -86,7 +309,7 @@
 -   case could be configured through the Controller on each node).
 +   case could be configured through the Controller on each node).  So
 +   precisely only RND value changes per packet and is public and the
-+   rest of the non-constant co-efficients of POLY-2 kept secret.
++   rest of the non-constant coefficients of POLY-2 kept secret.
  
  3.3.2.2.  Reconstruction
  
@@ -97,7 +320,50 @@
     as
  
     CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod Prime.
-@@ -450,28 +455,31 @@
+ 
+-   Lets observe the packet level transformations in detail.  For the
++   Let us observe the packet level transformations in detail.  For the
+    example packet here, let the value RND be 45.  Thus POLY-2 would be
+    (45 + 7x + 10x^2).
+ 
+    The shares that could be generated are (2,46), (4,21), (5,12).
+ 
+-      At source: The fields RND = 45.  CML = 0.
++      At ingress: The fields RND = 45.  CML = 0.
+ 
+-      At node-1 (x0): Respective share of POLY-2 is generated i.e (2,46)
+-      because share index of node-1 is 2.
++      At node-1 (x0): Respective share of POLY-2 is generated i.e., (2,
++      46) because share index of node-1 is 2.
+ 
+       CML = 0 + ((28 + 46)* 21) mod 53 = 17.
+ 
+-      At node-2 (x1): Respective share of POLY-2 is generated i.e (4,21)
+-      because share index of node-2 is 4.
++      At node-2 (x1): Respective share of POLY-2 is generated i.e., (4,
++      21) because share index of node-2 is 4.
+ 
+       CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39.
+ 
+       At node-3 (x2), which is also the verifier: The respective share
+-      of POLY-2 is generated i.e (5,12) because the share index of the
+-      verifier is 12.
++      of POLY-2 is generated i.e., (5, 12) because the share index of
++      the verifier is 12.
+ 
+       CML = 39 + ((47 + 12)*38) mod 53 = 39 + 16 = 55 mod 53 = 2
++
+    The verification using CML is discussed in next section.
+ 
+ 3.3.2.3.  Verification
+ 
+    As shown in the above example, for final verification, the verifier
+    compares:
+ 
+    VERIFY = (SECRET + RND) mod Prime, with Prime = 53 here.
+ 
+    VERIFY = (RND-1 + RND-2) mod Prime = ( 10 + 45 ) mod 53 = 2.
+@@ -450,33 +459,76 @@
     the scope of this document.  Techniques such as those described in
     [I-D.ietf-anima-autonomic-control-plane] might be applied.
  
@@ -118,20 +384,88 @@
         all the coefficients of the public polynomial had to be added to
 -       the POT profile and each node had to evaluate them.
 +       the POT profile and each node had to evaluate them.  As stated
-+       before, the public portion is only the constant co-efficent RND
-+       value, the pre-evaluated portion for each nodes should be kept
++       before, the public portion is only the constant coefficient RND
++       value, the pre-evaluated portion for each node should be kept
 +       secret as well.
  
     3.  To provide flexibility on the size of the cumulative and random
         numbers carried in the POT data a field to indicate this is
         shared and interpreted at the nodes.
  
++3.5.  Alternative Approach
++
++   In certain scenarios preserving the order of the nodes traversed by
++   the packet may be needed.  An alternative, "nested encryption" based
++   approach is described here for preserving the order
++
++3.5.1.  Basic Idea
++
++   1.  The controller provisions all the nodes with their respective
++       secret keys.
++
++   2.  The controller provisions the verifier with all the secret keys
++       of the nodes.
++
++   3.  For each packet, the ingress node generates a random number RND
++       and encrypts it with its secret key to generate CML value
++
++   4.  Each subsequent node on the path encrypts CML with their
++       respective secret key and passes it along
++
++   5.  The verifier is also provisioned with the expected sequence of
++       nodes in order to verify the order
++
++   6.  The verifier receives the CML, RND values, re-encrypts the RND
++       with keys in the same order as expected sequence to verify.
++
++3.5.2.  Pros
++
++   Nested encryption approach retains the order in which the nodes are
++   traversed.
++
++3.5.3.  Cons
++
++   1.  Standard AES encryption would need 128 bits of RND, CML.  This
++       results in a 256 bits of additional overhead is added per packet
++
++   2.  In hardware platforms that do not support native encryption
++       capabilities like (AES-NI).  This approach would have
++       considerable impact on the computational latency
++
  4.  Sizing the Data for Proof of Transit
  
     Proof of transit requires transport of two data records in every
     packet that should be verified:
  
-@@ -716,167 +724,187 @@
+    1.  RND: Random number (the constant coefficient of public
+        polynomial)
+ 
+    2.  CML: Cumulative
+ 
+@@ -525,21 +577,21 @@
+ 
+ 5.1.  Procedure
+ 
+    The Controller creates new POT-profiles at a constant rate and
+    communicates the POT-profile to the nodes.  The controller labels a
+    POT-profile "even" or "odd" and the Controller cycles between "even"
+    and "odd" labeled profiles.  The rate at which the POT-profiles are
+    communicated to the nodes is configurable and is more frequent than
+    the speed at which a POT-profile is "used up" (see table above).
+    Once the POT-profile has been successfully communicated to all nodes
+-   (e.g., all Netconf transactions completed, in case Netconf is used as
++   (e.g., all NETCONF transactions completed, in case NETCONF is used as
+    a protocol), the controller sends an "enable POT-profile" request to
+    the ingress node.
+ 
+    All nodes maintain two POT-profiles (an even and an odd POT-profile):
+    One POT-profile is currently active and in use; one profile is
+    standby and about to get used.  A flag in the packet is indicating
+    whether the odd or even POT-profile is to be used by a node.  This is
+    to ensure that during profile change the service is not disrupted.
+    If the "odd" profile is active, the Controller can communicate the
+    "even" profile to all nodes.  Only if all the nodes have received the
+@@ -716,167 +767,200 @@
     an attacker even with unlimited computing power.  As long as the
     below conditions are met it is impossible for an attacker to bypass
     one or multiple nodes without getting caught.
@@ -146,8 +480,8 @@
 -      by individual nodes.
 +   o  Precisely three values are kept secret by individual nodes.  Share
 +      of SECRET (i.e. points on POLY-1), Share of POLY-2, LPC, P.  Note
-+      that only constant coefficient, RND, of POLY-2 is public.  x
-+      values and non-constant coefficient of POLY-2 are secret
++      that only constant coefficient, RND, of POLY-2 is public. x values
++      and non-constant coefficient of POLY-2 are secret
  
     An attacker bypassing a few nodes will miss adding a respective point
     on POLY-1 to corresponding point on POLY-2 , thus the verifier cannot
@@ -172,7 +506,7 @@
 -   packets.  Such attacks could be avoided by carefully choosing POLY-2
 -   as a timestamp concatenated with a random string.  The verifier could
 -   use the timestamp to mitigate reuse within a time window.
-+   A passive attacker could try to harvest the POT data (i.e CML, RND
++   A passive attacker could try to harvest the POT data (i.e., CML, RND
 +   values) in order to determine the configured secrets.  Subsequently
 +   two types of differential analysis for guessing the secrets could be
 +   done.
@@ -192,42 +526,54 @@
 +      constant coefficient is a sequence number than CML values become
 +      quite predictable and the scheme would be broken
 +
-+8.3.  Anti Replay
++8.3.  Anti-Replay
 +
 +   A passive attacker could reuse a set of older RND and the
 +   intermediate CML values to bypass certain nodes in later packets.
 +   Such attacks could be avoided by carefully choosing POLY-2 as a
-+   (SEQ_NO + RND).  For example if 64 bits are being used for POLY-2
++   (SEQ_NO + RND).  For example, if 64 bits are being used for POLY-2
 +   then first 16 bits could be a sequence number SEQ_NO and next 48 bits
 +   could be a random number.
 +
 +   Subsequently, the verifier could use the SEQ_NO bits to run classic
 +   anti-replay techniques like sliding window used in IPSEC.  The
-+   verifier could buffer upto 2^16 packets as a sliding window.  Packets
-+   arriving with a higher SEQ_NO than current buffer could be flagged
-+   legitimate.  Packets arriving with a lower SEQ_NO than current buffer
-+   could be flagged as suspicious.
++   verifier could buffer up to 2^16 packets as a sliding window.
++   Packets arriving with a higher SEQ_NO than current buffer could be
++   flagged legitimate.  Packets arriving with a lower SEQ_NO than
++   current buffer could be flagged as suspicious.
 +
-+   For all practical purposes in the rest of the document by RND we mean
++   For all practical purposes in the rest of the document RND means
 +   SEQ_NO + RND to keep it simple
 +
-+8.4.  Anti Preplay
++8.4.  Anti-Preplay
 +
 +   An active attacker could try to perform a man-in-the-middle (MITM)
 +   attack by extracting the POT of PKT-1 and using it in PKT-2.
 +   Subsequently attacker drops the PKT-1 in order to avoid duplicate POT
-+   values reaching the verifier.  Although such attacks are highly
-+   difficult to launch, below recommendations are provided
++   values reaching the verifier.  If the PKT-1 reaches the verifier,
++   then this attack is same as Replay attacks discussed before.
 +
-+   o  Any such MITM attack would add delay in the packets arrival at
-+      verifier.  Carefully chosing the SEQ_NO could thwart such attacks,
-+      as such crafted packets would be out of sliding window due to
-+      delay.
++   Preplay attacks are possible since the POT metadata is not dependent
++   on the packet fields.  Below steps are recommended for remediation
 +
-+   o  Also integrity checks performed at higher level protocols using
-+      POT schemes could identify that the packets were tampered
++   o  Ingress node and Verifier are configured with common pre shared
++      key
 +
-+8.5.  Anti Tampering
++   o  Ingress node generates a Message Authentication Code (MAC) from
++      packet fields using standard HMAC algorithm.  For example, HMAC-
++      SHA256 generates 256 bits of MAC.
++
++   o  The left most bits of the output are truncated to desired length
++      to generate RND.  It is recommended to use a minimum of 32 bits.
++
++   o  The verifier regenerates the HMAC from the packet fields and
++      compares with RND.  To ensure the POT data is in fact that of the
++      packet.
++
++   An active attacker since lacks the knowledge of pre-shared key cannot
++   launch preplay attacks
++
++8.5.  Anti-Tampering
  
     An active attacker could not insert any arbitrary value for CML.
     This would subsequently fail the reconstruction of the POLY-3.  Also
@@ -260,7 +606,8 @@
     The Controller needs to be secured given that it creates and holds
     the secrets, as need to be the nodes.  The communication between
     Controller and the nodes also needs to be secured.  As secure
-    communication protocol such as for example Netconf over SSH should be
+-   communication protocol such as for example Netconf over SSH should be
++   communication protocol such as for example NETCONF over SSH should be
     chosen for Controller to node communication.
  
     The Controller only interacts with the nodes during the initial
@@ -293,8 +640,10 @@
     visited by a data packet.  It does not verify the order in which the
     data packet visited the nodes.  In case the order in which a data
     packet traversed a particular set of nodes needs to be verified as
-    well, alternate schemes that e.g., rely on nested encryption could to
-    be considered.
+-   well, alternate schemes that e.g., rely on nested encryption could to
+-   be considered.
++   well, alternate schemes that e.g., rely on "nested encryption" could
++   to be considered.
  
 -8.7.2.  Stealth Nodes
 +8.9.2.  Stealth Nodes
@@ -310,7 +659,9 @@
  
     The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
     Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-    Nadahalli, and Andrew Yourtchenko for the comments and advice.
+-   Nadahalli, and Andrew Yourtchenko for the comments and advice.
++   Nadahalli, Erik Nordmark, and Andrew Yourtchenko for the comments and
++   advice.
  
  10.  References
  

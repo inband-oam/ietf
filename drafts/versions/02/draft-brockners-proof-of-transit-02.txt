@@ -101,9 +101,9 @@ Table of Contents
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
      8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  17
      8.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  17
-     8.3.  Anti Replay . . . . . . . . . . . . . . . . . . . . . . .  18
-     8.4.  Anti Preplay  . . . . . . . . . . . . . . . . . . . . . .  18
-     8.5.  Anti Tampering  . . . . . . . . . . . . . . . . . . . . .  19
+     8.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  18
+     8.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  18
+     8.5.  Anti-Tampering  . . . . . . . . . . . . . . . . . . . . .  19
      8.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  19
      8.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  19
 
@@ -128,7 +128,7 @@ Internet-Draft              Proof of Transit                October 2016
 
    Several deployments use traffic engineering, policy routing, segment
    routing or Service Function Chaining (SFC) [RFC7665] to steer packets
-   through a specific set of nodes.  In certain cases regulatory
+   through a specific set of nodes.  In certain cases, regulatory
    obligations or a compliance policy require operators to prove that
    all packets that are supposed to follow a specific path are indeed
    being forwarded across and exact set of pre-determined nodes.
@@ -358,11 +358,11 @@ Internet-Draft              Proof of Transit                October 2016
    The shares of the secret are the points on POLY-1 chosen for the 3
    nodes.  For example, let x0=2, x1=4, x2=5.
 
-      POLY-1(2) = 28 => (x0,y0) = (2,28)
+      POLY-1(2) = 28 => (x0, y0) = (2, 28)
 
-      POLY-1(4) = 17 => (x1,y1) = (4,17)
+      POLY-1(4) = 17 => (x1, y1) = (4, 17)
 
-      POLY-1(5) = 47 => (x2,y2) = (5,47)
+      POLY-1(5) = 47 => (x2, y2) = (5, 47)
 
    The three points above are the points on the curve which are
    considered the shares of the secret.  They are assigned to three
@@ -453,7 +453,7 @@ Internet-Draft              Proof of Transit                October 2016
 3.3.2.  Enhanced Version
 
    As observed previously, the vanilla algorithm that involves a single
-   secret polynomial is not secure.  Therefore the solution is further
+   secret polynomial is not secure.  Therefore, the solution is further
    enhanced with usage of a random second polynomial chosen per packet.
 
 3.3.2.1.  Random Polynomial
@@ -476,27 +476,27 @@ Internet-Draft              Proof of Transit                October 2016
 
    CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod Prime.
 
-   Lets observe the packet level transformations in detail.  For the
+   Let us observe the packet level transformations in detail.  For the
    example packet here, let the value RND be 45.  Thus POLY-2 would be
    (45 + 7x + 10x^2).
 
-   The shares that could be generated are (2,46), (4,21), (5,12).
+   The shares that could be generated are (2, 46), (4, 21), (5, 12).
 
       At ingress: The fields RND = 45.  CML = 0.
 
-      At node-1 (x0): Respective share of POLY-2 is generated i.e (2,46)
-      because share index of node-1 is 2.
+      At node-1 (x0): Respective share of POLY-2 is generated i.e., (2,
+      46) because share index of node-1 is 2.
 
       CML = 0 + ((28 + 46)* 21) mod 53 = 17.
 
-      At node-2 (x1): Respective share of POLY-2 is generated i.e (4,21)
-      because share index of node-2 is 4.
+      At node-2 (x1): Respective share of POLY-2 is generated i.e., (4,
+      21) because share index of node-2 is 4.
 
       CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39.
 
       At node-3 (x2), which is also the verifier: The respective share
-      of POLY-2 is generated i.e (5,12) because the share index of the
-      verifier is 12.
+      of POLY-2 is generated i.e., (5, 12) because the share index of
+      the verifier is 12.
 
 
 
@@ -541,7 +541,7 @@ Internet-Draft              Proof of Transit                October 2016
    To optimize the overall data amount of exchanged and the processing
    at the nodes the following optimizations are performed:
 
-   1.  The points (x,y) for each of the nodes on the public and private
+   1.  The points (x, y) for each of the nodes on the public and private
        polynomials are picked such that the x component of the points
        match.  This lends to the LPC values which are used to calculate
        the cumulative value CML to be constant.  Note that the LPC are
@@ -553,7 +553,7 @@ Internet-Draft              Proof of Transit                October 2016
        nodes is calculated and added to the POT-profile.  Without this
        all the coefficients of the public polynomial had to be added to
        the POT profile and each node had to evaluate them.  As stated
-       before, the public portion is only the constant co-efficent RND
+       before, the public portion is only the constant coefficient RND
 
 
 
@@ -562,7 +562,7 @@ Brockners, et al.          Expires May 3, 2017                 [Page 10]
 Internet-Draft              Proof of Transit                October 2016
 
 
-       value, the pre-evaluated portion for each nodes should be kept
+       value, the pre-evaluated portion for each node should be kept
        secret as well.
 
    3.  To provide flexibility on the size of the cumulative and random
@@ -580,8 +580,8 @@ Internet-Draft              Proof of Transit                October 2016
    1.  The controller provisions all the nodes with their respective
        secret keys.
 
-   2.  The controller privisions verifier with all the secret keys of
-       nodes.
+   2.  The controller provisions the verifier with all the secret keys
+       of the nodes.
 
    3.  For each packet, the ingress node generates a random number RND
        and encrypts it with its secret key to generate CML value
@@ -590,7 +590,7 @@ Internet-Draft              Proof of Transit                October 2016
        respective secret key and passes it along
 
    5.  The verifier is also provisioned with the expected sequence of
-       nodes inorder to verify the order
+       nodes in order to verify the order
 
    6.  The verifier receives the CML, RND values, re-encrypts the RND
        with keys in the same order as expected sequence to verify.
@@ -605,7 +605,7 @@ Internet-Draft              Proof of Transit                October 2016
    1.  Standard AES encryption would need 128 bits of RND, CML.  This
        results in a 256 bits of additional overhead is added per packet
 
-   2.  In hardware platforms that donot support native encryption
+   2.  In hardware platforms that do not support native encryption
        capabilities like (AES-NI).  This approach would have
        considerable impact on the computational latency
 
@@ -688,7 +688,7 @@ Internet-Draft              Proof of Transit                October 2016
    communicated to the nodes is configurable and is more frequent than
    the speed at which a POT-profile is "used up" (see table above).
    Once the POT-profile has been successfully communicated to all nodes
-   (e.g., all Netconf transactions completed, in case Netconf is used as
+   (e.g., all NETCONF transactions completed, in case NETCONF is used as
    a protocol), the controller sends an "enable POT-profile" request to
    the ingress node.
 
@@ -928,7 +928,7 @@ Internet-Draft              Proof of Transit                October 2016
 
 8.2.  Cryptanalysis
 
-   A passive attacker could try to harvest the POT data (i.e CML, RND
+   A passive attacker could try to harvest the POT data (i.e., CML, RND
    values) in order to determine the configured secrets.  Subsequently
    two types of differential analysis for guessing the secrets could be
    done.
@@ -954,34 +954,34 @@ Brockners, et al.          Expires May 3, 2017                 [Page 17]
 Internet-Draft              Proof of Transit                October 2016
 
 
-8.3.  Anti Replay
+8.3.  Anti-Replay
 
    A passive attacker could reuse a set of older RND and the
    intermediate CML values to bypass certain nodes in later packets.
    Such attacks could be avoided by carefully choosing POLY-2 as a
-   (SEQ_NO + RND).  For example if 64 bits are being used for POLY-2
+   (SEQ_NO + RND).  For example, if 64 bits are being used for POLY-2
    then first 16 bits could be a sequence number SEQ_NO and next 48 bits
    could be a random number.
 
    Subsequently, the verifier could use the SEQ_NO bits to run classic
    anti-replay techniques like sliding window used in IPSEC.  The
-   verifier could buffer upto 2^16 packets as a sliding window.  Packets
-   arriving with a higher SEQ_NO than current buffer could be flagged
-   legitimate.  Packets arriving with a lower SEQ_NO than current buffer
-   could be flagged as suspicious.
+   verifier could buffer up to 2^16 packets as a sliding window.
+   Packets arriving with a higher SEQ_NO than current buffer could be
+   flagged legitimate.  Packets arriving with a lower SEQ_NO than
+   current buffer could be flagged as suspicious.
 
    For all practical purposes in the rest of the document RND means
    SEQ_NO + RND to keep it simple
 
-8.4.  Anti Preplay
+8.4.  Anti-Preplay
 
    An active attacker could try to perform a man-in-the-middle (MITM)
    attack by extracting the POT of PKT-1 and using it in PKT-2.
    Subsequently attacker drops the PKT-1 in order to avoid duplicate POT
-   values reaching the verifier.  If the PKT-1 reaches the verifier then
-   this attack is same as Replay attacks discussed before.
+   values reaching the verifier.  If the PKT-1 reaches the verifier,
+   then this attack is same as Replay attacks discussed before.
 
-   Preplay attacks are possible since the POT metdata is not dependent
+   Preplay attacks are possible since the POT metadata is not dependent
    on the packet fields.  Below steps are recommended for remediation
 
    o  Ingress node and Verifier are configured with common pre shared
@@ -995,7 +995,7 @@ Internet-Draft              Proof of Transit                October 2016
       to generate RND.  It is recommended to use a minimum of 32 bits.
 
    o  The verifier regenerates the HMAC from the packet fields and
-      compares with RND.  To ensure the POT data is infact that of the
+      compares with RND.  To ensure the POT data is in fact that of the
       packet.
 
    An active attacker since lacks the knowledge of pre-shared key cannot
@@ -1010,7 +1010,7 @@ Brockners, et al.          Expires May 3, 2017                 [Page 18]
 Internet-Draft              Proof of Transit                October 2016
 
 
-8.5.  Anti Tampering
+8.5.  Anti-Tampering
 
    An active attacker could not insert any arbitrary value for CML.
    This would subsequently fail the reconstruction of the POLY-3.  Also
@@ -1040,7 +1040,7 @@ Internet-Draft              Proof of Transit                October 2016
    The Controller needs to be secured given that it creates and holds
    the secrets, as need to be the nodes.  The communication between
    Controller and the nodes also needs to be secured.  As secure
-   communication protocol such as for example Netconf over SSH should be
+   communication protocol such as for example NETCONF over SSH should be
    chosen for Controller to node communication.
 
    The Controller only interacts with the nodes during the initial

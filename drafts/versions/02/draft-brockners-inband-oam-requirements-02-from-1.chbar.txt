@@ -2,7 +2,7 @@
  Network Working Group                                       F. Brockners
  Internet-Draft                                               S. Bhandari
  Intended status: Informational                                   S. Dara
- Expires: January 19, 2017                                   C. Pignataro
+|Expires: May 3, 2017                                        C. Pignataro
                                                                     Cisco
                                                                H. Gredler
                                                              RtBrick Inc.
@@ -10,9 +10,17 @@
                                                                   Comcast
                                                                 S. Youell
                                                                      JMPC
-                                                            July 18, 2016
+|                                                                D. Mozes
+|                                              Mellanox Technologies Ltd.
+|                                                              T. Mizrahi
+|                                                                 Marvell
+|                                                             P. Lapukhov
+|                                                                Facebook
+|                                                                R. Chang
+|                                                       Barefoot Networks
+|                                                        October 30, 2016
  
-                       Requirements for In-band OAM
+|                      Requirements for In-situ OAM
 |               draft-brockners-inband-oam-requirements-02
  
  Abstract
@@ -20,10 +28,10 @@
     This document discusses the motivation and requirements for including
     specific operational and telemetry information into data packets
     while the data packet traverses a path between two points in the
-    network.  This method is referred to as "in-band" Operations,
+|   network.  This method is referred to as "in-situ" Operations,
     Administration, and Maintenance (OAM), given that the OAM information
     is carried with the data packets as opposed to in "out-of-band"
-    packets dedicated to OAM.  In-band OAM complements other OAM
+|   packets dedicated to OAM.  In situ OAM complements other OAM
     mechanisms which use dedicated probe packets to convey OAM
     information.
  
@@ -42,7 +50,7 @@
     time.  It is inappropriate to use Internet-Drafts as reference
     material or to cite them other than as "work in progress."
  
-    This Internet-Draft will expire on January 19, 2017.
+|   This Internet-Draft will expire on May 3, 2017.
  
  Copyright Notice
  
@@ -63,71 +71,87 @@
  
     1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
     2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
-    3.  Motivation for In-band OAM  . . . . . . . . . . . . . . . . .   4
+|   3.  Motivation for in-situ OAM  . . . . . . . . . . . . . . . . .   5
       3.1.  Path Congruency Issues with Dedicated OAM Packets . . . .   5
-      3.2.  Results Sent to a System Other Than the Sender  . . . . .   5
-      3.3.  Overlay and Underlay Correlation  . . . . . . . . . . . .   5
-      3.4.  SLA Verification  . . . . . . . . . . . . . . . . . . . .   6
-      3.5.  Analytics and Diagnostics . . . . . . . . . . . . . . . .   6
+|     3.2.  Results Sent to a System Other Than the Sender  . . . . .   6
+|     3.3.  Overlay and Underlay Correlation  . . . . . . . . . . . .   6
+|     3.4.  SLA Verification  . . . . . . . . . . . . . . . . . . . .   7
+|     3.5.  Analytics and Diagnostics . . . . . . . . . . . . . . . .   7
       3.6.  Frame Replication/Elimination Decision for Bi-casting
             /Active-active Networks . . . . . . . . . . . . . . . . .   7
-      3.7.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .   7
-      3.8.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   8
-    4.  Considerations for In-band OAM  . . . . . . . . . . . . . . .   9
-|     4.1.  Type of Information to Be Recorded  . . . . . . . . . . .  10
-|     4.2.  MTU and Packet Size . . . . . . . . . . . . . . . . . . .  10
-|     4.3.  Administrative Boundaries . . . . . . . . . . . . . . . .  11
-|     4.4.  Selective Enablement  . . . . . . . . . . . . . . . . . .  11
-|     4.5.  Optimization of Node and Interface Identifiers  . . . . .  12
-|     4.6.  Loop Communication Path (IPv6-specifics)  . . . . . . . .  12
-    5.  Requirements for In-band OAM Data Types . . . . . . . . . . .  12
-      5.1.  Generic Requirements  . . . . . . . . . . . . . . . . . .  12
-      5.2.  In-band OAM Data with Per-hop Scope . . . . . . . . . . .  13
-      5.3.  In-band OAM with Selected Hop Scope . . . . . . . . . . .  14
-      5.4.  In-band OAM with End-to-end Scope . . . . . . . . . . . .  14
-    6.  Security Considerations and Requirements  . . . . . . . . . .  15
-      6.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  15
-    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
-    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16
-    9.  Informative References  . . . . . . . . . . . . . . . . . . .  16
-    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
+|     3.7.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .   8
+|     3.8.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   9
+|   4.  Considerations for In-situ OAM  . . . . . . . . . . . . . . .  11
+|     4.1.  Type of Information to Be Recorded  . . . . . . . . . . .  11
+|     4.2.  MTU and Packet Size . . . . . . . . . . . . . . . . . . .  11
+|     4.3.  Administrative Boundaries . . . . . . . . . . . . . . . .  12
+|     4.4.  Selective Enablement  . . . . . . . . . . . . . . . . . .  13
+|     4.5.  Optimization of Node and Interface Identifiers  . . . . .  13
+|     4.6.  Loop Communication Path (IPv6-specifics)  . . . . . . . .  13
+|   5.  Requirements for In-situ OAM Data Types . . . . . . . . . . .  14
+|     5.1.  Generic Requirements  . . . . . . . . . . . . . . . . . .  14
+|     5.2.  In-situ OAM Data with Per-hop Scope . . . . . . . . . . .  15
+|     5.3.  In-situ OAM with Selected Hop Scope . . . . . . . . . . .  16
+|     5.4.  In-situ OAM with End-to-end Scope . . . . . . . . . . . .  17
+|   6.  Security Considerations and Requirements  . . . . . . . . . .  17
+|     6.1.  General considerations  . . . . . . . . . . . . . . . . .  17
+|     6.2.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  17
+|   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
+|   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
+|   9.  Informative References  . . . . . . . . . . . . . . . . . . .  19
+|   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
  
  1.  Introduction
  
-    This document discusses requirements for "in-band" Operations,
-    Administration, and Maintenance (OAM) mechanisms.  "In-band" OAM
-    means to record OAM and telemetry information within the data packet
-    while the data packet traverses a network or a particular network
-    domain.  The term "in-band" refers to the fact that the OAM and
-    telemetry data is carried within data packets rather than being sent
-    within packets specifically dedicated to OAM.  In-band OAM
-    mechanisms, which are sometimes also referred to as embedded network
-    telemetry are a current topic of discussion.  In-band network
-    telemetry has been defined for P4 [P4].  The SPUD prototype
-    [I-D.hildebrand-spud-prototype] uses a similar logic that allows
-    network devices on the path between endpoints to participate
-    explicitly in the tube outside the end-to-end context.  Even the IPv4
-    route-record option defined in [RFC0791] can be considered an in-band
-    OAM mechanism.  In-band OAM complements "out-of-band" mechanisms such
+|   This document discusses requirements for "in-situ" Operations,
+|   Administration, and Maintenance (OAM) mechanisms.  In this context,
+|   "in-situ OAM" refers to the concept of directly encoding telemetry
+|   information within the data packet as it traverses the network or
+|   telemetry domain.  Mechanisms which add tracing or other types of
+|   telemetry information to the regular data traffic, sometimes also
+|   referred to as "in-band" OAM can complement active, probe-based
+|   mechanisms such as ping or traceroute, which are sometimes considered
+|   as "out-of-band", because the messages are transported independently
+|   from regular data traffic.  In terms of "active" or "passive" OAM,
+|   "in-situ" OAM can be considered a hybrid OAM type.  While no extra
+|   packets are sent, in-situ OAM adds information to the packets
+|   therefore cannot be considered passive.  In terms of the
+|   classification given in [RFC7799] in-situ OAM could be portrayed as
+|   "hybrid OAM, type 1".  "In-situ" mechanisms do not require extra
+|   packets to be sent and hence don't change the packet traffic mix
+|   within the network.  Traceroute and ping for example use ICMP
+|   messages: New packets are injected to get tracing information.  Those
+|   add to the number of messages in a network, which already might be
+|   highly loaded or suffering performance issues for a particular path
+|   or traffic type.
+|
+|   A number of in-situ as well as in-band OAM mechanisms have been
+|   discussed, such as the INT spec for the P4 programming language [P4]
+|   or the SPUD prototype [I-D.hildebrand-spud-prototype].  The SPUD
+|   prototype uses a similar logic that allows network devices on the
+|   path between endpoints to participate explicitly in the tube outside
+|   the end-to-end context.  Even the IPv4 route-record option defined in
+|   [RFC0791] can be considered an in-situ OAM mechanism.  Per what was
+|   already stated, in-situ OAM complements "out-of-band" mechanisms such
     as ping or traceroute, or more recent active probing mechanisms, as
-    described in [I-D.lapukhov-dataplane-probe].  In-band OAM mechanisms
+|   described in [I-D.lapukhov-dataplane-probe].  In-situ OAM mechanisms
     can be leveraged where current out-of-band mechanisms do not apply or
     do not offer the desired characteristics or requirements, such as
     proving that a certain set of traffic takes a pre-defined path,
-    strict congruency is desired, checking service level agreements for
-    the live data traffic, detailed statistics on traffic distribution
-    paths in networks that distribute traffic across multiple paths, or
-    scenarios where probe traffic is potentially handled differently from
-    regular data traffic by the network devices.  [RFC7276] presents an
-    overview of OAM tools.
+|   strict congruency between overlay and underlay transports is in
+|   place, checking service level agreements for the live data traffic,
+|   detailed statistics or verification of path selections within a
+|   domain, or scenarios where probe traffic is potentially handled
+|   differently from regular data traffic by the network devices.
+|   [RFC7276] presents an overview of OAM tools.
  
-    Compared to probably the most basic example of "in-band OAM" which is
-    IPv4 route recording [RFC0791], an in-band OAM approach has the
+|   Compared to probably the most basic example of "in-situ OAM" which is
+|   IPv4 route recording [RFC0791], an in-situ OAM approach has the
     following capabilities:
  
     a.  A flexible data format to allow different types of information to
-        be captured as part of an in-band OAM operation, including not
-        only path tracing information, but additional operational and
+|       be captured as part of an in-situ OAM operation, including but
+|       not limited to path tracing information, operational and
         telemetry information such as timestamps, sequence numbers, or
         even generic data such as queue size, geo-location of the node
         that forwarded the packet, etc.
@@ -135,8 +159,8 @@
     b.  A data format to express node as well as link identifiers to
         record the path a packet takes with a fixed amount of added data.
  
-    c.  The ability to detect whether any nodes were skipped while
-        recording in-band OAM information (i.e., in-band OAM is not
+|   c.  The ability to determine whether any nodes were skipped while
+|       recording in-situ OAM information (i.e., in-situ OAM is not
         supported or not enabled on those nodes).
  
     d.  The ability to actively process information in the packet, for
@@ -147,8 +171,8 @@
     e.  The ability to include OAM data beyond simple path information,
         such as timestamps or even generic data of a particular use case.
  
-    f.  The ability to include OAM data in various different transport
-        protocols.
+|   f.  The ability to carry in-situ OAM data in various different
+|       transport protocols.
  
  2.  Conventions
  
@@ -165,40 +189,28 @@
     PMTU:      Path MTU
  
     SLA:       Service Level Agreement
- 
     SFC:       Service Function Chain
  
     SR:        Segment Routing
  
-    This document defines in-band Operations, Administration, and
-    Maintenance (in-band OAM), as the subset in which OAM information is
+|   This document defines in-situ Operations, Administration, and
+|   Maintenance (in-situ OAM), as the subset in which OAM information is
     carried along with data packets.  This is as opposed to "out-of-band
     OAM", where specific packets are dedicated to carrying OAM
     information.
  
- 3.  Motivation for In-band OAM
+|3.  Motivation for in-situ OAM
  
-    In several scenarios it is beneficial to make information about which
-    path a packet took through the network available to the operator.
+|   In several scenarios it is beneficial to make information about the
+|   path a packet took through the network or through a network device as
+|   well as associated telemetry information available to the operator.
     This includes not only tasks like debugging, troubleshooting, as well
     as network planning and network optimization but also policy or
     service level agreement compliance checks.  This section discusses
-    the motivation to introduce new methods for enhanced in-band network
+|   the motivation to introduce new methods for enhanced in-situ network
     diagnostics.
  
  3.1.  Path Congruency Issues with Dedicated OAM Packets
- 
-    Mechanisms which add tracing information to the regular data traffic,
-    sometimes also referred to as "in-band" or "passive OAM" can
-    complement active, probe-based mechanisms such as ping or traceroute,
-    which are sometimes considered as "out-of-band", because the messages
-    are transported independently from regular data traffic.  "In-band"
-    mechanisms do not require extra packets to be sent and hence don't
-    change the packet traffic mix within the network.  Traceroute and
-    ping for example use ICMP messages: New packets are injected to get
-    tracing information.  Those add to the number of messages in a
-    network, which already might be highly loaded or suffering
-    performance issues for a particular path or traffic type.
  
     Packet scheduling algorithms, especially for balancing traffic across
     equal cost paths or links, often leverage information contained
@@ -209,12 +221,19 @@
     inserted along the path.  Both approaches are often not feasible from
     an operational perspective, be it that access to the end-system is
     not feasible, or that the diversity of parameters and associated
-    probe packets to be created is simply too large.  An in-band
+|   probe packets to be created is simply too large.  An in-situ
     mechanism is an alternative in those cases.
  
-    In-band mechanisms also don't suffer from implementations, where
-    probe traffic is handled differently (and potentially forwarded
-    differently) by a router than regular data traffic.
+|   In-situ mechanisms are not impacted by differences in the handling of
+|   probe traffic compared to other data packets, where probe traffic is
+|   handled differently (and potentially forwarded differently) by a
+|   router than regular data traffic.  This obviously assumes that the
+|   addition of in-situ information does not change the forwarding
+|   behavior of the packet.  Note that in certain implementations, the
+|   addition information to a transport protocol changes the forwarding
+|   behavior.  IPv6 extension header processing is one example.  Some
+|   implementations process IPv6 packets with extension headers in the
+|   "slow" path of a router, as opposed to the "fast" path.
  
  3.2.  Results Sent to a System Other Than the Sender
  
@@ -224,8 +243,9 @@
     (e.g., ICMP Multi-Part [RFC4884] supporting MPLS information
     [RFC4950], Interface and Next-Hop Identification [RFC5837], etc.), it
     would be advantageous to separate the sending of an OAM probe from
-    the receiving of the telemetry data.  In this context, it is desired
-    to not assume there is a bidirectional working path.
+|   the receiving of the telemetry data.  In this context, it is helpful
+|   to eliminate the requirement that there be a working bidirectional
+|   path.
  
  3.3.  Overlay and Underlay Correlation
  
@@ -241,11 +261,15 @@
     like ping or traceroute is limited to either the overlay or the
     underlay which means that the user of the overlay has typically no
     access to OAM in the underlay, unless specific operational procedures
-    are put in place.  With in-band OAM the operator of the underlay can
+|   are put in place.  With in-situ OAM the operator of the underlay can
     offer details of the connectivity in the underlay to the user of the
-    overlay.  The operator of the egress tunnel router could choose to
-    share the recorded information about the path with the user of the
-    overlay.
+|   overlay.  This could include the ability to find out which underlay
+|   elements are shared by overlays and ability to know which overlays
+|   are mapped to the same underlay elements.  Deployment dependent
+|   underlay transit nodes can be configured to update OAM information in
+|   the overlay transport encapsulation.  The operator of the egress
+|   tunnel router could choose to share the recorded information about
+|   the path with the user of the overlay.
  
     Coupled with mechanisms such as Segment Routing (SR)
     [I-D.ietf-spring-segment-routing], overlay network and underlay
@@ -259,20 +283,21 @@
  
  3.4.  SLA Verification
  
-    In-band OAM can help users of an overlay-service to verify that
+|   In-situ OAM can help users of an overlay-service to verify that
     negotiated SLAs for the real traffic are met by the underlay network
     provider.  Different from solutions which rely on active probes to
-    test an SLA, in-band OAM based mechanisms avoid wrong interpretations
+|   test an SLA, in-situ OAM based mechanisms avoid wrong interpretations
     and "cheating", which can happen if the probe traffic that is used to
     perform SLA-check is prioritized by the network provider of the
-    underlay.
+|   underlay.  In active/standby deployments in-situ OAM would only allow
+|   for SLA verification of the active path.
  
  3.5.  Analytics and Diagnostics
  
     Network planners and operators benefit from knowledge of the actual
     traffic distribution in the network.  When deriving an overall
     network connectivity traffic matrix one typically needs to correlate
-    data gathered from each individual devices in the network.  If the
+|   data gathered from each individual device in the network.  If the
     path of a packet is recorded while the packet is forwarded, the
     entire path that a packet took through the network is available to
     the egress system.  This obviates the need to retrieve individual
@@ -293,6 +318,11 @@
     router in the system.  Transit devices are off-loaded from the task
     of gathering packet statistics.
  
+|   In high-speed networks one can leverage and benefit from packet-
+|   accurate measurements with for example hardware-accurate timestamping
+|   (i.e., nanosecond-level verification) to support optimized packet
+|   scheduling and queuing mechanisms.
+|
  3.6.  Frame Replication/Elimination Decision for Bi-casting/Active-
        active Networks
  
@@ -301,15 +331,15 @@
     care) require efficient OAM methods to decide when to replicate
     packets to a secondary path in order to keep the loss/error-rate for
     the receiver at a tolerable level - and also when to stop replication
-    and eliminate the redundant flow.  Many IoT networks are time
-    sensitive and cannot leverage automatic retransmission requests (ARQ)
-    to cope with transmission errors or lost packets.  Transmitting the
-    data over multiple disparate paths (often called bi-casting or live-
-    live) is a method used to reduce the error rate observed by the
-    receiver.  TSN receive a lot of attention from the manufacturing
-    industry as shown by a various standardization activities and
-    industry forums being formed (see e.g., IETF 6TiSCH, IEEE P802.1CB,
-    AVnu).
+|   and eliminate the redundant flow.  Many Internet of Things (IoT)
+|   networks are time sensitive and cannot leverage automatic
+|   retransmission requests (ARQ) to cope with transmission errors or
+|   lost packets.  Transmitting the data over multiple disparate paths
+|   (often called bi-casting or live-live) is a method used to reduce the
+|   error rate observed by the receiver.  Time sensitive networks (TSN)
+|   receive a lot of attention from the manufacturing industry as shown
+|   by a various standardization activities and industry forums being
+|   formed (see e.g., IETF 6TiSCH, IEEE P802.1CB, AVnu).
  
  3.7.  Proof of Transit
  
@@ -350,14 +380,14 @@
     Deployed service chains without the presence of a "proof of transit"
     mechanism are typically operated as fail-open system: The packets
     that arrive at the end of a service chain are processed.  Adding
-    "proof of transit" capabilites to a service chain allows an operator
+|   "proof of transit" capabilities to a service chain allows an operator
     to turn a fail-open system into a fail-close system, i.e.  packets
     that did not properly traverse the service chain can be blocked.
  
     A solution approach could be based on OAM data which is added to
-    every packet for achieving Proof Of Transit.  The OAM data is updated
-    at every hop and is used to verify whether a packet traversed all
-    required nodes.  When the verifier receives each packet, it can
+|   every packet for achieving Proof Of Transit(POT).The OAM data is
+|   updated at every hop and is used to verify whether a packet traversed
+|   all required nodes.  When the verifier receives each packet, it can
     validate whether the packet traversed the service chain correctly.
     The detailed mechanisms used for path verification along with the
     procedures applied to the OAM data carried in the packet for path
@@ -370,11 +400,12 @@
  
  3.8.  Use Cases
  
-    In-band OAM could be leveraged for several use cases, including:
+|   In-situ OAM could be leveraged for several use cases, including:
  
     o  Traffic Matrix: Derive the network traffic matrix: Traffic for a
        given time interval between any two edge nodes of a given domain.
-       Could be performed for all traffic or per QoS-class.
+|      Could be performed for all traffic or on a per Quality of Service
+|      (QoS) class.
  
     o  Flow Debugging: Discover which path(s) a particular set of traffic
        (identified by an n-tuple) takes in the network.  Such a procedure
@@ -417,20 +448,44 @@
        within the trading-floor department, access to specific
        applications or servers is granted.
  
- 4.  Considerations for In-band OAM
+|   o  Device-level troubleshooting and optimization: In many cases,
+|      network operators could benefit from information specific to a
+|      single device.  A non-exhaustive list of useful information
+|      includes: queue-depths, buffer utilization (either shared or per-
+|      port), packet latency measured from a known starting point, packet
+|      latency introduced by a single device, and resource utilization
+|      (CPU, memory, link bandwidth) of a given device or link.  In some
+|      cases, this information changes over per-packet timescales (i.e.,
+|      nanoseconds) and as such it is extremely challenging to collect
+|      and report this info in an accurate and scalable manner.  By
+|      encoding the information from the forwarding element directly
+|      within a data packet (i.e., within the 'fast-path') this
+|      information can be added to some or all data packets and then
+|      collected and analyzed by human or machine tools.  This type of
+|      information is particularly valuable for troubleshooting low-level
+|      device errors as well as providing a knowledge feedback loop for
+|      network and device optimization.
  
-    The implementation of an in-band OAM mechanism needs to take several
+|   o  Custom network probing: Active network probing and in-situ OAM can
+|      be combined for customized and efficient network probing.  This
+|      could for example be a customized traceroute.
+|
+|4.  Considerations for In-situ OAM
+|
+|   The implementation of an in-situ OAM mechanism needs to take several
     considerations into account, including administrative boundaries, how
     information is recorded, Maximum Transfer Unit (MTU), Path MTU
     discovery and packet size, etc.
  
 |4.1.  Type of Information to Be Recorded
  
-    The information gathered for in-band OAM can be categorized into
+|   The information gathered for in-situ OAM can be categorized into
     three main categories: Information with a per-hop scope, such as path
-    tracing; information which applies to a specific set of nodes, such
-    as path or service chain verification; information which only applies
-    to the edges of a domain, such as sequence numbers.
+|   tracing; information which applies to a specific set of hops, such as
+|   path or service chain verification; information which only applies to
+|   the edges of a domain, such as sequence numbers.  Note that a single
+|   network device could comprise several in-situ OAM hops, for example
+|   in case one wants to trace the path of a packet through that device.
  
     o  "edge to edge": Information that needs to be shared between
        network edges (the "edge" of a network could either be a host or a
@@ -459,29 +514,55 @@
  
 |4.2.  MTU and Packet Size
  
-    The recorded data at every hop may lead to packet size exceeding the
-    Maximum Transmit Unit (MTU).  Based on the transport protocol used
-    MTU is discovered as a configuration parameter or Path MTU (PMTU) is
-    discovered dynamically.  Example: IPv6 recommends PMTU discovery
-    before data packets are sent to prevent packet fragmentation.  It
-    specifies 1280 octets as the default PDU to be carried in a IPv6
-    datagram.  A detailed discussion of the implications of oversized
-    IPv6 header chains if found in [RFC7112].
+|   The recorded data at every hop might lead to packet size exceeding
+|   the Maximum Transmit Unit (MTU).  A detailed discussion of the
+|   implications of oversized IPv6 header chains is found in [RFC7112].
  
     The Path MTU restricts the amount of data that can be recorded for
-    purpose of OAM within a data packet.  The total size of data to be
-    recorded needs to be preset to avoid packet size exceeding the MTU.
+|   purpose of OAM within a data packet.
  
-    It is recommended to pre-calculate and configures network devices to
-    limit the in-band OAM data that is attached to a packet.
+|   If in-situ OAM data is inserted at the edge of the domain (e.g., by
+|   intermediate routers) then the MTU on all interfaces with the domain
+|   (MTU_INT) MUST be >= the maximum MTU on any "external" facing
+|   interfaces (MTU_EXT) and the total size of in-situ OAM data to be
+|   recorded MUST be <= (MTU_INT - MTU_EXT).
  
+|   In-situ OAM comprises two approaches to insert OAM data-records in
+|   the packets:
+ 
+|   o  Pre-allocated: In this case, the encapsulating node inserts empty
+|      data records into the packet to cover the entire domain.  The data
+|      records will be incrementally updated/filled as the packet
+|      progresses through the network.  With pre-allocation the packet
+|      size is only changed at the encapsulating node and is kept
+|      constant throughout the domain.  The pre-allocated approach is
+|      beneficial for software data-plane implementations where
+|      allocating the required space only once and index into the array
+|      to populate the data during transit avoids copy operations at
+|      every hop.
+|
+|   o  Incremental: Every node that desires to include in-situ OAM
+|      information extends the packet as needed.  The incremental
+|      approach is beneficial for hardware data-plane implementations as
+|      it eliminates the need for the transit nodes to read the full
+|      array and lookup the pointer in the option prior to updating the
+|      data record contents.
+|
+|   The "incremental" or the "pre-allocated" approaches could even be
+|   combined in the same deployment - in which case two in-situ OAM
+|   headers would be present in the packet: One for the incremental
+|   approach and one for the pre-allocated approach.  In such a case one
+|   would expect that nodes with a hardware data-plane would update the
+|   incremental header, whereas nodes with a software data-plane would
+|   process the pre-allocated header.
+|
 |4.3.  Administrative Boundaries
- 
-    There are several challenges in enabling in-band OAM in the public
+|
+|   There are several challenges in enabling in-situ OAM in the public
     Internet as well as in corporate/enterprise networks across
     administrative domains, which include but are not limited to:
  
-    o  Deployment dependent, the data fields that in-band OAM requires as
+|   o  Deployment dependent, the data fields that in-situ OAM requires as
        part of a specific transport protocol may not be supported across
        administrative boundaries.
  
@@ -500,95 +581,128 @@
  
     The following considerations will be discussed in a future version of
     this document: If the packet is dropped due to the presence of the
-    in-band OAM; If the policy failure is treated as feature disablement
+|   in-situ OAM; If the policy failure is treated as feature disablement
     and any further recording is stopped but the packet itself is not
     dropped, it may lead to every node in the path to make this policy
     decision.
  
 |4.4.  Selective Enablement
  
-    Deployment dependent, in-band OAM could either be used for all, or
-    only a subset of the overall traffic.  While it might be desirable to
-    apply in-band OAM to all traffic and then selectively use the data
-    gathered in case needed, it might not always be feasible.  Depending
-    on the forwarding infrastructure used, in-band OAM can have an impact
-    on forwarding performance.  The SPUD prototype for example uses the
-    notion of "pipes" to describe the portion of the traffic that could
-    be subject to in-path inspection.  Mechanisms to decide which traffic
-    would be subject to in-band OAM are outside the scope of this
-    document.
+|   The ability to selectively enable in-situ OAM is valuable.  While it
+|   may be desirable to enable data collection on all traffic or devices,
+|   this may not always be feasible.  In-situ OAM collection may also
+|   come with a performance impact to forwarding rates or feature
+|   capabilities, which may be acceptable in only some locations.  For
+|   example, the SPUD prototype uses the notion of "pipes" to describe
+|   the portion of the traffic that could be subject to in-path
+|   inspection.  Mechanisms to decide which traffic would be subject to
+|   in-situ OAM are outside the scope of this document.
  
 |4.5.  Optimization of Node and Interface Identifiers
  
     Since packets have a finite maximum size, the data recording or
-    carrying capacity of one packet in which the in-band OAM meta data is
-    present is limited.  In-band OAM should use its own dedicated
-    namespace (confined to the domain in-band OAM operates in) to
+|   carrying capacity of one packet in which the in-situ OAM metadata is
+|   present is limited.  In-situ OAM should use its own dedicated
+|   namespace (confined to the domain in-situ OAM operates in) to
     represent node and interface IDs to save space in the header.
     Generic representations of node and interface identifiers which are
     globally unique (such as a UUID) would consume significantly more
-    bits of in-band OAM data.
+|   bits of in-situ OAM data.
  
 |4.6.  Loop Communication Path (IPv6-specifics)
  
     When recorded data is required to be analyzed on a source node that
-    issues a packet and inserts in-band OAM data, the recorded data needs
+|   issues a packet and inserts in-situ OAM data, the recorded data needs
     to be carried back to the source node.
  
-    One way to carry the in-band OAM data back to the source is to
+|   One way to carry the in-situ OAM data back to the source is to
     utilize an ICMP Echo Request/Reply (ping) or ICMPv6 Echo Request/
-    Reply (ping6) mechanism.  In order to run the in-band OAM mechanism
+|   Reply (ping6) mechanism.  In order to run the in-situ OAM mechanism
     appropriately on the ping/ping6 mechanism, the following two
     operations should be implemented by the ping/ping6 target node:
  
-    1.  All of the in-band OAM fields would be copied from an Echo
+|   1.  All of the in-situ OAM fields would be copied from an Echo
         Request message to an Echo Reply message.
  
     2.  The Hop Limit field of the IPv6 header of these messages would be
         copied as a continuous sequence.  Further considerations are
         addressed in a future version of this document.
  
- 5.  Requirements for In-band OAM Data Types
+|5.  Requirements for In-situ OAM Data Types
  
-    The above discussed use cases require different types of in-band OAM
-    data.  This section details requirements for in-band OAM derived from
+|   The above discussed use cases require different types of in-situ OAM
+|   data.  This section details requirements for in-situ OAM derived from
     the discussion above.
  
  5.1.  Generic Requirements
  
-    REQ-G1:  Classification: It should be possible to enable in-band OAM
-             on a selected set of traffic.  The selected set of traffic
-             can also be all traffic.
+|   REQ-G1:  Classification: It should be possible to enable in-situ OAM
+|            on a selected set of traffic (e.g., per interface, based on
+|            an access control list specifying a specific set of traffic,
+|            etc.).  The selected set of traffic can also be all traffic.
  
-    REQ-G2:  Scope: If in-band OAM is used only within a specific domain,
-             provisions need to be put in place to ensure that in-band
+|   REQ-G2:  Scope: If in-situ OAM is used only within a specific domain,
+|            provisions need to be put in place to ensure that in-situ
              OAM data stays within the specific domain only.
  
-    REQ-G3:  Transport independence: Data formats for in-band OAM shall
-             be defined in a transport independent way.  In-band OAM
+|   REQ-G3:  Transport independence: Data formats for in-situ OAM shall
+|            be defined in a transport independent way.  In-situ OAM
              applies to a variety of transport protocols.  Encapsulations
              should be defined how the generic data formats are carried
              by a specific protocol.
  
-    REQ-G4:  Layering: It should be possible to have in-band OAM
+|   REQ-G4:  Layering: It should be possible to have in-situ OAM
              information for different transport protocol layers be
              present in several fields within a single packet.  This
              could for example be the case when tunnels are employed and
-             in-band OAM information is to be gathered for both the
-             underlay as well as the overlay network.
+|            in-situ OAM information is to be gathered for both the
+|            underlay as well as the overlay network.  Layering support
+|            should not be limited to just underlay and overlay, but
+|            include more than two layers.
  
-    REQ-G5:  MTU size: With in-band OAM information added, packets should
+|   REQ-G5:  MTU size: With in-situ OAM information added, packets MUST
              not become larger than the path MTU.
  
-    REQ-G6:  Data Structure Reusability: The data types and data formats
-             defined and used for in-band OAM ought to be reusable for
+|               REQ-G5.1: If due to some reason a packet which contains
+|               in situ OAM data record cannot be forwarded due to the
+|               presence of in-situ OAM data records, the node SHOULD
+|               remove the in situ OAM data records and forward the
+|               packet, rather than drop the entire packet.
+|
+|               REQ-G5.2: If the encapsulating router is unable to insert
+|               in-situ OAM data records into a packet, e.g., due to MTU
+|               issues, even though it is configured to do so, it should
+|               use some operational means to inform the operator (e.g.,
+|               syslog) about the inability to add in-situ OAM data
+|               records.  Even if the in-situ OAM encapsulating node
+|               fails to add in-situ OAM data records, it should forward
+|               the packet normally.
+|
+|               REQ-G5.3: MTU size consideration for in-situ OAM MUST
+|               take domain specifics into account, e.g., changes of the
+|               domain topology due to path protection mechanisms might
+|               extend the hop count of a path etc.
+|
+|   REQ-G6:  Data structure reuse: The data types and data formats
+|            defined and used for in-situ OAM ought to be reusable for
              out-of-band OAM telemetry as well.
  
- 5.2.  In-band OAM Data with Per-hop Scope
+|   REQ-G7:  Data records format: It is desirable that the format of in-
+|            situ OAM data-records leverages already defined data formats
+|            for OAM as much as feasible.
+|
+|   REQ-G8:  Combination with active OAM mechanisms: In-situ OAM should
+|            be useable for active network probing, like for example a
+|            customized version of traceroute.  Decapsulating in-situ OAM
+|            nodes may have an ability to send the in-situ OAM
+|            information retrieved from the packet back to the source
+|            address of the packet or to the encapsulating node.
+|
+|5.2.  In-situ OAM Data with Per-hop Scope
  
     REQ-H1:  Missing nodes detection: Data shall be present that allows a
-             node to detect whether all nodes that should participate in
-             in-band OAM operations have indeed participated.
+|            node to detect whether all nodes that might participate in
+|            in-situ OAM operations have indeed participated.
  
     REQ-H2:  Node, instance or device identifier: Data shall be present
              that allows to retrieve the identity of the entity reporting
@@ -599,8 +713,8 @@
  
     REQ-H3:  Ingress interface identifier: Data shall be present that
              allows the identification of the interface a particular
-             packet was received from.  The interface can be a logical or
-             physical entity.
+|            packet was received from.  The interface can be a logical
+|            and/or physical entity.
  
     REQ-H4:  Egress interface identifier: Data shall be present that
              allows the identification of the interface a particular
@@ -618,23 +732,25 @@
                         retrieve the jitter between two or more points of
                         interest within the system.  Those points can be
                         within the same device or on different devices.
+|                       Jitter can be derived from the different
+|                       timestamps gathered and does not necessarily need
+|                       to be an explicit data record.
  
              REQ-H5.3:  Wall-clock time: Data shall be present that
                         allows to retrieve the wall-clock time visited a
                         particular point of interest in the system.
  
-             REQ-H5.4:  Time precision: The precision of the time related
-                        data should be configurable.  Use-case dependent,
-                        the required precision could e.g., be nano-
-                        seconds, micro-seconds, milli-seconds, or
-                        seconds.
+|            REQ-H5.4:  Time precision: Time with different precision
+|                       should be supported.  Use-case dependent, the
+|                       required precision could e.g., be nanoseconds,
+|                       microseconds, milliseconds, or seconds.
  
     REQ-H6:  Generic data records (like e.g., GPS/Geo-location
              information): It should be possible to add user-defined OAM
              data at select hops to the packet.  The semantics of the
              data are defined by the user.
  
- 5.3.  In-band OAM with Selected Hop Scope
+|5.3.  In-situ OAM with Selected Hop Scope
  
     REQ-S1:  Proof of transit: Data shall be present which allows to
              securely prove that a packet has visited or ore several
@@ -652,32 +768,40 @@
                         converted into a fail-closed service chaining
                         system.
  
- 5.4.  In-band OAM with End-to-end Scope
+|5.4.  In-situ OAM with End-to-end Scope
  
     REQ-E1:  Sequence numbering:
  
              REQ-E1.1:  Reordering detection: It should be possible to
                         detect whether packets have been reordered while
-                        traversing an in-band OAM domain.
+|                       traversing an in situ OAM domain.
  
              REQ-E1.2:  Duplicates detection: It should be possible to
                         detect whether packets have been duplicated while
-                        traversing an in-band OAM domain.
+|                       traversing an in situ OAM domain.
  
              REQ-E1.3:  Detection of packet drops: It should be possible
                         to detect whether packets have been dropped while
-                        traversing an in-band OAM domain.
+|                       traversing an in-situ OAM domain.
  
  6.  Security Considerations and Requirements
  
-    General Security considerations will be addressed in a later version
-    of this document.  Security considerations for Proof of Transit alone
-    are discussed below.
+|6.1.  General considerations
  
- 6.1.  Proof of Transit
+|   General Security considerations will be expanded on in a later
+|   version of this document.
+|
+|   In-situ OAM is considered a "per domain" feature, where one or
+|   several operators decide on leveraging and configuring in-situ OAM
+|   according to their needs.  Still operators need to properly secure
+|   the in-situ OAM domain to avoid malicious configuration and use,
+|   which could include injecting malicious in-situ OAM packets into a
+|   domain.
+|
+|6.2.  Proof of Transit
  
     Threat Model: Attacks on the deployments could be due to malicious
-    administrators or accidental misconfigurations resulting in bypassing
+|   administrators or accidental misconfiguration resulting in bypassing
     of certain nodes.  The solution approach should meet the following
     requirements:
  
@@ -692,28 +816,35 @@
                from the expected path should be accurately determined.
  
     REQ-SEC3:  Replay Attacks: A attacker (active/passive) should not be
-               able to reuse the proof of transit bits in the packet by
-               observing the OAM data in the packet, packet
-               characteristics (like IP addresses, octets transferred,
-               timestamps) or even the proof bits themselves.  The
-               solution approach should consider usage of these
-               parameters for deriving any secrets cautiously.
-               Mitigating replay attacks beyond a window of longer
-               duration could be intractable to achieve with fixed number
-               of bits allocated for proof.
+|              able to reuse the POT bits in the packet by observing the
+|              OAM data in the packet, packet characteristics (like IP
+|              addresses, octets transferred, timestamps) or even the
+|              proof bits themselves.  The solution approach should
+|              consider usage of these parameters for deriving any
+|              secrets cautiously.  Mitigating replay attacks beyond a
+|              window of longer duration could be intractable to achieve
+|              with fixed number of bits allocated for proof.
  
-    REQ-SEC4:  Recycle Secrets: Any configuration of the secrets (like
-               cryptographic keys, initialisation vectors etc.) either in
-               the controller or service functions should be
-               reconfigurable.  Solution approach should enable controls,
+|   REQ-SEC4:  Pre-play Attacks: A active attacker should not be able to
+|              generate or reuse valid POT bits from legitimate packets,
+|              in order to prove to the verifier as valid packets.  This
+|              slight variant of replay attacks.  The attacker extracts
+|              POT bits from legitimate packets and ensure they do not
+|              reach the verifier.  Subsequently reuse those POT bits in
+|              crafted packets.
+|
+|   REQ-SEC5:  Recycle Secrets: Any configuration of the secrets (like
+|              cryptographic keys, initialization vectors etc.) either in
+|              the controller or service functions should be re-
+|              configurable.  Solution approach should enable controls,
                API calls etc. needed in order to perform such recycling.
                It is desirable to provide recommendations on the duration
                of rotation cycles needed for the secure functioning of
                the overall system.
  
-    REQ-SEC5:  Secret storage and distribution: Secrets should be shared
+|   REQ-SEC6:  Secret storage and distribution: Secrets should be shared
                with the devices over secure channels.  Methods should be
-               put in place so that secrets cannot be retrieved by non
+|              put in place so that secrets cannot be retrieved by non-
                authorized personnel from the devices.
  
  7.  IANA Considerations
@@ -724,9 +855,10 @@
  
  8.  Acknowledgements
  
-    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
-    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-    Nadahalli, and Andrew Yourtchenko for the comments and advice.  This
+|   The authors would like to thank Jen Linkova, LJ Wobker, Eric Vyncke,
+|   Nalini Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu
+|   Harichandra Babu, Akshaya Nadahalli, Ignas Bagdonas, LJ Wobker, Erik
+|   Nordmark, and Andrew Yourtchenko for the comments and advice.  This
     document leverages and builds on top of several concepts described in
 |   [I-D.kitamura-ipv6-record-route].  The authors would like to
     acknowledge the work done by the author Hiroshi Kitamura and people
@@ -803,6 +935,10 @@
                DOI 10.17487/RFC7665, October 2015,
                <http://www.rfc-editor.org/info/rfc7665>.
  
+|   [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
+|              Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
+|              May 2016, <http://www.rfc-editor.org/info/rfc7799>.
+|
     [RFC7872]  Gont, F., Linkova, J., Chown, T., and W. Liu,
                "Observations on the Dropping of Packets with IPv6
                Extension Headers in the Real World", RFC 7872,
@@ -847,11 +983,11 @@
     RtBrick Inc.
  
     Email: hannes@rtbrick.com
+ 
     John Leddy
     Comcast
  
     Email: John_Leddy@cable.comcast.com
-|
     Stephen Youell
     JP Morgan Chase
     25 Bank Street
@@ -859,3 +995,29 @@
     United Kingdom
  
     Email: stephen.youell@jpmorgan.com
+|
+|   David Mozes
+|   Mellanox Technologies Ltd.
+|
+|   Email: davidm@mellanox.com
+|
+|   Tal Mizrahi
+|   Marvell
+|   6 Hamada St.
+|   Yokneam  20692
+|   Israel
+|
+|   Email: talmi@marvell.com
+|
+|   Petr Lapukhov
+|   Facebook
+|   1 Hacker Way
+|   Menlo Park, CA  94025
+|   USA
+|
+|   URI:   petr@fb.com
+|
+|   Remy Chang
+|   Barefoot Networks
+|
+|   Email: remy@barefootnetworks.com
