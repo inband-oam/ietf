@@ -49,7 +49,7 @@ as at least for some cases there is no encapsulation. Maybe smth like
 
 3) (sorry for nitpicking)
 
-"Hop_Lim:  1 octet Hop limit that is set to the TTL value in the
+"Hop_Lim:  1-octet Hop limit that is set to the TTL value in the
 packet at the node that records this data."
 s/TTL/TTL or Hop Limit/ - that field is called Hop Limit in IPv6, not TTL.
 
@@ -76,7 +76,7 @@ L2/L3 distributed scenario is currently deployed by operator.
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                       Outer UDP Header                        |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-   |R|R|Ver|I|P|R|O|          Reserved             | NP = i.b.OAM  |  |
+   |R|R|Ver|I|P|R|O|          Reserved             | NP = i.s.OAM  |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
    |     Virtual Network Identifier (VNI)          | Reserved      |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
@@ -85,7 +85,7 @@ L2/L3 distributed scenario is currently deployed by operator.
 
 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-   | Type =i.b.OAM | i.b.OAM HDR len |  Reserved     | NP = IP/Eth |  |
+   | Type =i.s.OAM | i.s.OAM HDR len |  Reserved     | NP = IP/Eth |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+iOAM
    |                     in-situ OAM options                       |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
@@ -688,12 +688,12 @@ In-situ OAM Incremental Trace Option:
               MTU. Thus, a simple comparison between "Opt data Len" and "Max
               Length" allows to decide whether or not data could be added.</t>
 
-              <t hangText="Flags">8 bit field. Following flags are
+              <t hangText="Flags">8-bit field. Following flags are
               defined:<list style="hanging">
                   <t hangText="1">"Overflow" (O-bit) (least significant bit).
                   This bit is set by the network element if the number of
                   records on the packet is at the maximum limit as specified
-                  by the packet: i.e. the packet is already "full" of
+                  by the packet: i.e., the packet is already "full" of
                   telemetry information. This is useful for transit nodes to
                   ignore further processing of the option. If inserting a new
                   node data record would cause "Opt Data Len" to exceed "Max
@@ -768,42 +768,42 @@ In-situ OAM Incremental Trace Option:
           is shown below:</t>
 
           <t><list style="hanging">
-              <t hangText="Hop_Lim and node_id:">4 octet field defined as
+              <t hangText="Hop_Lim and node_id:">4-octet field defined as
               follows: <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |   Hop_Lim     |              node_id                          |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure><list style="hanging">
-                  <t hangText="Hop_Lim:">1 octet unsigned integer. It is set
+                  <t hangText="Hop_Lim:">1-octet unsigned integer. It is set
                   to the Hop Limit value in the packet at the node that
                   records this data. Hop Limit information is used to identify
                   the location of the node in the communication path.</t>
 
-                  <t hangText="node_id:">3 octet unsigned integer. Node
+                  <t hangText="node_id:">3-octet unsigned integer. Node
                   identifier field to uniquely identify a node within in-situ
                   OAM domain. The procedure to allocate, manage and map the
                   node_ids is beyond the scope of this document.</t>
                 </list></t>
 
-              <t hangText="ingress_if_id and egress_if_id:">4 octet field
+              <t hangText="ingress_if_id and egress_if_id:">4-octet field
               defined as follows: <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |     ingress_if_id             |         egress_if_id          |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure><list style="hanging">
-                  <t hangText="ingress_if_id:">2 octet unsigned integer.
+                  <t hangText="ingress_if_id:">2-octet unsigned integer.
                   Interface identifier to record the ingress interface the
                   packet was received on.</t>
 
-                  <t hangText="egress_if_id:">2 octet unsigned integer.
+                  <t hangText="egress_if_id:">2-octet unsigned integer.
                   Interface identifier to record the egress interface the
                   packet is forwarded out of.</t>
                 </list></t>
 
-              <t hangText="timestamp seconds:">4 octet unsigned integer.
-              Absoulte timestamp in seconds that specifies the time at which
+              <t hangText="timestamp seconds:">4-octet unsigned integer.
+              Absolute timestamp in seconds that specifies the time at which
               the packet was received by the node. The format of this field is
               identical to the most significant 32 bits of 64 least
               significant bits of the <xref target="IEEE1588v2"/>. This
@@ -817,7 +817,7 @@ In-situ OAM Incremental Trace Option:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
 
-              <t hangText="timestamp nanoseconds:">4 octet unsigned integer.
+              <t hangText="timestamp nanoseconds:">4-octet unsigned integer.
               This timestamp specifies time in nanoseconds relative to wall
               clock time at which the packet was received by the node It is
               nanoseconds that are recorded in 32 least significant bits of
@@ -830,7 +830,7 @@ In-situ OAM Incremental Trace Option:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
 
-              <t hangText="transit delay:">4 octet unsigned integer. It is the
+              <t hangText="transit delay:">4-octet unsigned integer. It is the
               time in nanoseconds packet spent in transiting a node. This can
               serve to give an indication of queuing delay at the node.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -839,14 +839,14 @@ In-situ OAM Incremental Trace Option:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
 
-              <t hangText="app_data:">4 octet placeholder which can be used by
+              <t hangText="app_data:">4-octet placeholder which can be used by
               the node to add application specific data</t>
             </list></t>
 
           <t>Data type and format for each of the elements in wide format
-          follows when Most Significant Bit (MSB) i.e. bit 15 of
+          follows when Most Significant Bit (MSB) i.e., bit 15 of
           OAM-Trace-Type is set:<list style="hanging">
-              <t hangText="Hop_Lim and node_id:">8 octet field defined as
+              <t hangText="Hop_Lim and node_id:">8-octet field defined as
               follows: <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -855,18 +855,18 @@ In-situ OAM Incremental Trace Option:
 ~                         node_id (contd)                       |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure><list style="hanging">
-                  <t hangText="Hop_Lim:">1 octet unsigned integer. It is set
+                  <t hangText="Hop_Lim:">1-octet unsigned integer. It is set
                   to the Hop Limit value in the packet at the node that
                   records this data. Hop Limit information is used to identify
                   the location of the node in the communication path.</t>
 
-                  <t hangText="node_id:">7 octet unsigned integer. Node
+                  <t hangText="node_id:">7-octet unsigned integer. Node
                   identifier field to uniquely identify a node within in-situ
                   OAM domain. The procedure to allocate, manage and map the
                   node_ids is beyond the scope of this document.</t>
                 </list></t>
 
-              <t hangText="ingress_if_id and egress_if_id:">8 octet field
+              <t hangText="ingress_if_id and egress_if_id:">8-octet field
               defined as follows: <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -875,16 +875,16 @@ In-situ OAM Incremental Trace Option:
 |                       egress_if_id                            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure><list style="hanging">
-                  <t hangText="ingress_if_id:">4 octet unsigned integer.
+                  <t hangText="ingress_if_id:">4-octet unsigned integer.
                   Interface identifier to record the ingress interface the
                   packet was received on.</t>
 
-                  <t hangText="egress_if_id:">4 octet unsigned integer.
+                  <t hangText="egress_if_id:">4-octet unsigned integer.
                   Interface identifier to record the egress interface the
                   packet is forwarded out of.</t>
                 </list></t>
 
-              <t hangText="app_data:">8 octet placeholder which can be used by
+              <t hangText="app_data:">8-octet placeholder which can be used by
               the node to add application specific data.</t>
 
               <t hangText="Opaque State Snapshot:">Variable length field. It
@@ -909,15 +909,15 @@ In-situ OAM Incremental Trace Option:
    .                                                               .
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure><list style="hanging">
-                  <t hangText="Length:">1 octet unsigned integer. It is the
+                  <t hangText="Length:">1-octet unsigned integer. It is the
                   length of the Opaque data field that follows Schema Id. It
                   MUST always be a multiple of 4.</t>
 
-                  <t hangText="Schema ID:">3 octet unsigned integer
+                  <t hangText="Schema ID:">3-octet unsigned integer
                   identifying the schema of Opaque data.</t>
 
                   <t hangText="Opaque data:">Variable length field. This field
-                  is intepreted as specified by the schema identified by the
+                  is interpreted as specified by the schema identified by the
                   Schema ID.</t>
                 </list></t>
 
@@ -930,7 +930,7 @@ In-situ OAM Incremental Trace Option:
         <section anchor="trace-type-node-data"
                  title=" Examples of In-situ OAM node data">
           <t>An entry in the "Node data List" array can have different
-          formats, following the needs of the a deployment. Some deployments
+          formats, following the needs of the deployment. Some deployments
           might only be interested in recording the node identifiers, whereas
           others might be interested in recording node identifier and
           timestamp. The section defines different formats that an entry in
