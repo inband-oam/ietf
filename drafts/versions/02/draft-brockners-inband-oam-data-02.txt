@@ -28,7 +28,7 @@ Expires: May 3, 2017                                               Cisco
 
 Abstract
 
-   In-situ operation, administration and maintenance (OAM) records
+   In-situ Operations, Administration, and Maintenance (OAM) records
    operational and telemetry information in the packet while the packet
    traverses a path between two points in the network.  This document
    discusses the data types and data formats for in-situ OAM data
@@ -82,7 +82,7 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  In-situ OAM Data Types and Data Format  . . . . . . . . . . .   3
+   3.  In-situ OAM Data Types and Data Format  . . . . . . . . . . .   4
      3.1.  In-situ OAM Tracing Options . . . . . . . . . . . . . . .   4
        3.1.1.  Pre-allocated Trace Option  . . . . . . . . . . . . .   6
        3.1.2.  Incremental Trace Option  . . . . . . . . . . . . . .   9
@@ -102,8 +102,8 @@ Table of Contents
 
 1.  Introduction
 
-   This document defines data record types for "in-situ" operation,
-   administration, and maintenance (OAM).  In-situ OAM records OAM
+   This document defines data record types for "in-situ" Operations,
+   Administration, and Maintenance (OAM).  In-situ OAM records OAM
    information within the packet while the packet traverses a particular
    network domain.  The term "in-situ" refers to the fact that the OAM
 
@@ -137,31 +137,31 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
 
 2.  Conventions
 
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
    Abbreviations used in this document:
 
    MTU:       Maximum Transmit Unit
 
+   NSH:       Network Service Header
+
    OAM:       Operations, Administration, and Maintenance
 
-   SR:        Segment Routing
+   SFC:       Service Function Chain
 
    SID:       Segment Identifier
 
-   NSH:       Network Service Header
-
-   SFC:       Service Function Chain
+   SR:        Segment Routing
 
    TLV:       Type-Length-Value
 
    VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
               Extension
 
-3.  In-situ OAM Data Types and Data Format
 
-   This section defines in-situ OAM data types and data formats of the
-   data records required for in-situ OAM.  The different uses of in-situ
-   OAM require the definition of different types of data.  The in-situ
-   OAM data format for the data being carried corresponds to the three
+
 
 
 
@@ -170,6 +170,12 @@ Brockners, et al.          Expires May 3, 2017                  [Page 3]
 Internet-Draft          In-situ OAM Data Formats            October 2016
 
 
+3.  In-situ OAM Data Types and Data Format
+
+   This section defines in-situ OAM data types and data formats of the
+   data records required for in-situ OAM.  The different uses of in-situ
+   OAM require the definition of different types of data.  The in-situ
+   OAM data format for the data being carried corresponds to the three
    main categories of in-situ OAM data defined in
    [I-D.brockners-inband-oam-requirements], which are : edge-to-edge,
    per node, and for selected nodes only.
@@ -213,12 +219,6 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    the transport protocol that carries these in-situ OAM data MAY choose
    to support only one of the options.
 
-   Pre-allocated Trace Option:  This trace option is defined as a
-      container of node-data elements with pre-allocated space for each
-      node to populate its information.  This option is useful for
-      software implementations where it is efficient to allocate the
-      space once and index into the array to populate the data during
-
 
 
 Brockners, et al.          Expires May 3, 2017                  [Page 4]
@@ -226,6 +226,11 @@ Brockners, et al.          Expires May 3, 2017                  [Page 4]
 Internet-Draft          In-situ OAM Data Formats            October 2016
 
 
+   Pre-allocated Trace Option:  This trace option is defined as a
+      container of node-data elements with pre-allocated space for each
+      node to populate its information.  This option is useful for
+      software implementations where it is efficient to allocate the
+      space once and index into the array to populate the data during
       transit.  The in-situ OAM encapsulating node allocates the option
       header and sets the fields in the option header.  The in situ OAM
       encapsulating node allocates an array which is to store
@@ -269,11 +274,6 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
       identifier can match to a device identifier or a particular
       control point or subsystem within a device.
 
-   o  Identification of the interface that a packet was received on.
-
-   o  Identification of the interface that a packet was sent out on.
-
-
 
 
 
@@ -281,6 +281,10 @@ Brockners, et al.          Expires May 3, 2017                  [Page 5]
 
 Internet-Draft          In-situ OAM Data Formats            October 2016
 
+
+   o  Identification of the interface that a packet was received on.
+
+   o  Identification of the interface that a packet was sent out on.
 
    o  Time of day when the packet was processed by the node.  Different
       definitions of processing time are feasible and expected, though
@@ -329,10 +333,6 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
 
 
 
-
-
-
-
 Brockners, et al.          Expires May 3, 2017                  [Page 6]
 
 Internet-Draft          In-situ OAM Data Formats            October 2016
@@ -355,7 +355,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    |                        Node data List [1]                     |  t
    |                                                               |  a
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   .                              .                                .  S
+   ~                             ...                               ~  S
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
    |                                                               |  a
    |                        Node data List [n-1]                   |  c
@@ -469,7 +469,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    |                        Node data List [1]                     |
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   .                              .                                .
+   ~                             ...                               ~
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                                                               |
    |                        Node data List [n-1]                   |
@@ -1074,6 +1074,11 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
 
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
+
 9.2.  Informative References
 
    [I-D.brockners-inband-oam-transport]
@@ -1104,13 +1109,8 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
 
 Authors' Addresses
 
-   Frank Brockners
-   Cisco Systems, Inc.
-   Hansaallee 249, 3rd Floor
-   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
-   Germany
 
-   Email: fbrockne@cisco.com
+
 
 
 
@@ -1120,6 +1120,15 @@ Authors' Addresses
 Brockners, et al.          Expires May 3, 2017                 [Page 20]
 
 Internet-Draft          In-situ OAM Data Formats            October 2016
+
+
+   Frank Brockners
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
 
 
    Shwetha Bhandari
@@ -1161,6 +1170,14 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    Email: stephen.youell@jpmorgan.com
 
 
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 21]
+
+Internet-Draft          In-situ OAM Data Formats            October 2016
+
+
    Tal
    Marvell
    6 Hamada St.
@@ -1168,14 +1185,6 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    Israel
 
    Email: talmi@marvell.com
-
-
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 21]
-
-Internet-Draft          In-situ OAM Data Formats            October 2016
 
 
    David
@@ -1198,15 +1207,6 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    2185 Park Boulevard
    Palo Alto, CA  94306
    US
-
-
-
-
-
-
-
-
-
 
 
 
