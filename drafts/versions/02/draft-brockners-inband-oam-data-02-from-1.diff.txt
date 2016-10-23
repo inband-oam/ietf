@@ -1,6 +1,6 @@
---- 1/draft-brockners-inband-oam-data-01.txt	2016-10-20 10:53:56.000000000 -0400
-+++ 2/draft-brockners-inband-oam-data-02.txt	2016-10-20 10:53:56.000000000 -0400
-@@ -1,112 +1,123 @@
+--- 1/draft-brockners-inband-oam-data-01.txt	2016-10-22 21:32:56.000000000 -0400
++++ 2/draft-brockners-inband-oam-data-02.txt	2016-10-22 21:32:56.000000000 -0400
+@@ -1,574 +1,892 @@
  
  Network Working Group                                       F. Brockners
  Internet-Draft                                               S. Bhandari
@@ -32,7 +32,7 @@
  Abstract
  
 -   In-band operation, administration and maintenance (OAM) records
-+   In-situ operation, administration and maintenance (OAM) records
++   In-situ Operations, Administration, and Maintenance (OAM) records
     operational and telemetry information in the packet while the packet
     traverses a path between two points in the network.  This document
 -   discusses the data types and data formats for in-band OAM data
@@ -96,7 +96,7 @@
 -     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  13
 -     9.2.  Informative References  . . . . . . . . . . . . . . . . .  13
 -   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
-+   3.  In-situ OAM Data Types and Data Format  . . . . . . . . . . .   3
++   3.  In-situ OAM Data Types and Data Format  . . . . . . . . . . .   4
 +     3.1.  In-situ OAM Tracing Options . . . . . . . . . . . . . . .   4
 +       3.1.1.  Pre-allocated Trace Option  . . . . . . . . . . . . .   6
 +       3.1.2.  Incremental Trace Option  . . . . . . . . . . . . . .   9
@@ -118,8 +118,8 @@
  
 -   This document defines data record types for "in-band" operation,
 -   administration, and maintenance (OAM).  In-band OAM records OAM
-+   This document defines data record types for "in-situ" operation,
-+   administration, and maintenance (OAM).  In-situ OAM records OAM
++   This document defines data record types for "in-situ" Operations,
++   Administration, and Maintenance (OAM).  In-situ OAM records OAM
     information within the packet while the packet traverses a particular
 -   network domain.  The term "in-band" refers to the fact that the OAM
 +   network domain.  The term "in-situ" refers to the fact that the OAM
@@ -151,15 +151,27 @@
  
  2.  Conventions
  
++   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
++   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
++   document are to be interpreted as described in [RFC2119].
++
     Abbreviations used in this document:
  
     MTU:       Maximum Transmit Unit
  
-@@ -118,118 +129,153 @@
++   NSH:       Network Service Header
++
+    OAM:       Operations, Administration, and Maintenance
  
-    NSH:       Network Service Header
+-   SR:        Segment Routing
++   SFC:       Service Function Chain
  
-    SFC:       Service Function Chain
+    SID:       Segment Identifier
+ 
+-   NSH:       Network Service Header
+-
+-   SFC:       Service Function Chain
++   SR:        Segment Routing
  
     TLV:       Type-Length-Value
  
@@ -366,8 +378,14 @@
     |                        Node data List [1]                     |  t
     |                                                               |  a
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    .                              .                                .  S
-@@ -242,347 +288,610 @@
+-   .                              .                                .  S
++   ~                             ...                               ~  S
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+    |                                                               |  a
+    |                        Node data List [n-1]                   |  c
+    |                                                               |  e
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+    |                                                               |  |
     |                        Node data List [n]                     |  |
     |                                                               |  |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
@@ -484,7 +502,7 @@
 +   |                        Node data List [1]                     |
 +   |                                                               |
 +   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-+   .                              .                                .
++   ~                             ...                               ~
 +   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 +   |                                                               |
 +   |                        Node data List [n-1]                   |
@@ -1021,19 +1039,15 @@
 -              for in-band OAM", July 2016.
 -
 -9.2.  Informative References
--
--   [draft-brockners-inband-oam-transport]
--              Brockners, F., Bhandari, S., Pignataro, C., and H.
--              Gredler, "Encapsulations for in-band OAM", July 2016.
 +   [I-D.brockners-inband-oam-requirements]
 +              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
 +              Gredler, H., Leddy, J., and S. Youell, "Requirements for
 +              In-band OAM", draft-brockners-inband-oam-requirements-01
 +              (work in progress), July 2016.
  
--   [draft-brockners-proof-of-transit]
--              Brockners, F., Bhandari, S., and S. Dara, "Proof of
--              transit", July 2016.
+-   [draft-brockners-inband-oam-transport]
+-              Brockners, F., Bhandari, S., Pignataro, C., and H.
+-              Gredler, "Encapsulations for in-band OAM", July 2016.
 +   [IEEE1588v2]
 +              Institute of Electrical and Electronics Engineers,
 +              "1588-2008 - IEEE Standard for a Precision Clock
@@ -1041,6 +1055,14 @@
 +              Control Systems",  IEEE Std 1588-2008, 2008,
 +              <http://standards.ieee.org/findstds/
 +              standard/1588-2008.html>.
+ 
+-   [draft-brockners-proof-of-transit]
+-              Brockners, F., Bhandari, S., and S. Dara, "Proof of
+-              transit", July 2016.
++   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
++              Requirement Levels", BCP 14, RFC 2119,
++              DOI 10.17487/RFC2119, March 1997,
++              <http://www.rfc-editor.org/info/rfc2119>.
  
 -   [draft-kitamura-ipv6-record-route]
 -              Kitamura, H., "Record Route for IPv6 (PR6),Hop-by-Hop
@@ -1078,26 +1100,11 @@
                <http://www.rfc-editor.org/info/rfc7665>.
  
  Authors' Addresses
-+
     Frank Brockners
     Cisco Systems, Inc.
     Hansaallee 249, 3rd Floor
     DUESSELDORF, NORDRHEIN-WESTFALEN  40549
-    Germany
- 
-    Email: fbrockne@cisco.com
--
-    Shwetha Bhandari
-    Cisco Systems, Inc.
-    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
-    Bangalore, KARNATAKA 560 087
-    India
- 
-    Email: shwethab@cisco.com
- 
-    Carlos Pignataro
-    Cisco Systems, Inc.
-@@ -602,10 +911,36 @@
+@@ -602,10 +920,36 @@
  
     Email: John_Leddy@cable.comcast.com
  
@@ -1108,7 +1115,6 @@
     United Kingdom
  
     Email: stephen.youell@jpmorgan.com
-+
 +   Tal
 +   Marvell
 +   6 Hamada St.
@@ -1116,6 +1122,7 @@
 +   Israel
 +
 +   Email: talmi@marvell.com
++
 +   David
 +   Mellanox Technologies Ltd.
 +

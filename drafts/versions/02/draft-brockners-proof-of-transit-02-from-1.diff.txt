@@ -1,6 +1,6 @@
---- 1/draft-brockners-proof-of-transit-01.txt	2016-10-20 10:54:25.000000000 -0400
-+++ 2/draft-brockners-proof-of-transit-02.txt	2016-10-20 10:54:25.000000000 -0400
-@@ -1,24 +1,24 @@
+--- 1/draft-brockners-proof-of-transit-01.txt	2016-10-22 21:32:53.000000000 -0400
++++ 2/draft-brockners-proof-of-transit-02.txt	2016-10-22 21:32:53.000000000 -0400
+@@ -1,50 +1,51 @@
  
  Network Working Group                                       F. Brockners
  Internet-Draft                                               S. Bhandari
@@ -21,14 +21,25 @@
  
  Abstract
  
-    Several technologies such as traffic engineering, service function
-    chaining, or policy based routing, are used to steer traffic through
-    a specific, user-defined path.  This document defines mechanisms to
-    securely prove that traffic transited the defined path.  The
-    mechanisms allow to securely verify whether all packets traversed all
-    those nodes of a given path that they are supposed to visit.
+-   Several technologies such as traffic engineering, service function
+-   chaining, or policy based routing, are used to steer traffic through
+-   a specific, user-defined path.  This document defines mechanisms to
+-   securely prove that traffic transited the defined path.  The
+-   mechanisms allow to securely verify whether all packets traversed all
+-   those nodes of a given path that they are supposed to visit.
++   Several technologies such as Traffic Engineering (TE), Service
++   Function Chaining (SFC), and policy based routing are used to steer
++   traffic through a specific, user-defined path.  This document defines
++   mechanisms to securely prove that traffic transited said defined
++   path.  These mechanisms allow to securely verify whether, within a
++   given path, all packets traversed all the nodes that they are
++   supposed to visit.
  
-@@ -30,21 +30,21 @@
+ Status of This Memo
+ 
+    This Internet-Draft is submitted in full conformance with the
+    provisions of BCP 78 and BCP 79.
+ 
     Internet-Drafts are working documents of the Internet Engineering
     Task Force (IETF).  Note that other groups may also distribute
     working documents as Internet-Drafts.  The list of current Internet-
@@ -51,7 +62,7 @@
     Provisions Relating to IETF Documents
     (http://trustee.ietf.org/license-info) in effect on the date of
     publication of this document.  Please review these documents
-@@ -53,63 +53,69 @@
+@@ -53,162 +54,175 @@
     include Simplified BSD License text as described in Section 4.e of
     the Trust Legal Provisions and are provided without warranty as
     described in the Simplified BSD License.
@@ -66,36 +77,29 @@
 +     3.2.  Solution Approach . . . . . . . . . . . . . . . . . . . .   6
         3.2.1.  Setup . . . . . . . . . . . . . . . . . . . . . . . .   6
         3.2.2.  In Transit  . . . . . . . . . . . . . . . . . . . . .   6
-        3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   6
+-       3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   6
 -     3.3.  Example for Illustration  . . . . . . . . . . . . . . . .   7
++       3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   7
 +     3.3.  Illustrative Example  . . . . . . . . . . . . . . . . . .   7
         3.3.1.  Basic Version . . . . . . . . . . . . . . . . . . . .   7
           3.3.1.1.  Secret Shares . . . . . . . . . . . . . . . . . .   7
           3.3.1.2.  Lagrange Polynomials  . . . . . . . . . . . . . .   7
           3.3.1.3.  LPC Computation . . . . . . . . . . . . . . . . .   8
           3.3.1.4.  Reconstruction  . . . . . . . . . . . . . . . . .   8
-          3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   8
+-         3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   8
++         3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   9
         3.3.2.  Enhanced Version  . . . . . . . . . . . . . . . . . .   9
           3.3.2.1.  Random Polynomial . . . . . . . . . . . . . . . .   9
           3.3.2.2.  Reconstruction  . . . . . . . . . . . . . . . . .   9
           3.3.2.3.  Verification  . . . . . . . . . . . . . . . . . .  10
       3.4.  Operational Aspects . . . . . . . . . . . . . . . . . . .  10
 -   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  11
-+     3.5.  Alternative Approach  . . . . . . . . . . . . . . . . . .  11
-+       3.5.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . .  11
-+       3.5.2.  Pros  . . . . . . . . . . . . . . . . . . . . . . . .  11
-+       3.5.3.  Cons  . . . . . . . . . . . . . . . . . . . . . . . .  11
-+   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  12
-    5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  12
+-   5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  12
 -     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  12
 -     5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  12
 -   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
 -   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  15
-+     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  13
-+     5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  13
-+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
-+   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  16
-    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
+-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
 -     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  16
 -     8.2.  Anti Replay . . . . . . . . . . . . . . . . . . . . . . .  16
 -     8.3.  Anti Tampering  . . . . . . . . . . . . . . . . . . . . .  16
@@ -110,32 +114,49 @@
 -     10.1.  Normative References . . . . . . . . . . . . . . . . . .  18
 -     10.2.  Informative References . . . . . . . . . . . . . . . . .  18
 -   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
++     3.5.  Alternative Approach  . . . . . . . . . . . . . . . . . .  11
++       3.5.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . .  11
++       3.5.2.  Pros  . . . . . . . . . . . . . . . . . . . . . . . .  11
++       3.5.3.  Cons  . . . . . . . . . . . . . . . . . . . . . . . .  12
++   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  12
++   5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  13
++     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  13
++     5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  14
++   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
++   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  17
++   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
 +     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  17
-+     8.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  17
++     8.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  18
 +     8.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  18
-+     8.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  18
++     8.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  19
 +     8.5.  Anti-Tampering  . . . . . . . . . . . . . . . . . . . . .  19
 +     8.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  19
 +     8.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  19
-+     8.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  19
++     8.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  20
 +     8.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  20
 +       8.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  20
-+       8.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  20
-+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  20
-+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
-+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  20
++       8.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  21
++   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  21
++   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
++     10.1.  Normative References . . . . . . . . . . . . . . . . . .  21
 +     10.2.  Informative References . . . . . . . . . . . . . . . . .  21
 +   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
  
  1.  Introduction
  
-    Several deployments use traffic engineering, policy routing, segment
-    routing or Service Function Chaining (SFC) [RFC7665] to steer packets
+-   Several deployments use traffic engineering, policy routing, segment
+-   routing or Service Function Chaining (SFC) [RFC7665] to steer packets
 -   through a specific set of nodes.  In certain cases regulatory
-+   through a specific set of nodes.  In certain cases, regulatory
-    obligations or a compliance policy require operators to prove that
-    all packets that are supposed to follow a specific path are indeed
-    being forwarded across and exact set of pre-determined nodes.
+-   obligations or a compliance policy require operators to prove that
+-   all packets that are supposed to follow a specific path are indeed
+-   being forwarded across and exact set of pre-determined nodes.
++   Several deployments use Traffic Engineering, policy routing, Segment
++   Routing (SR), and Service Function Chaining (SFC) [RFC7665] to steer
++   packets through a specific set of nodes.  In certain cases,
++   regulatory obligations or a compliance policy require operators to
++   prove that all packets that are supposed to follow a specific path
++   are indeed being forwarded across and exact set of pre-determined
++   nodes.
  
     If a packet flow is supposed to go through a series of service
     functions or network nodes, it has to be proven that indeed all
@@ -143,15 +164,38 @@
     of nodes specified by the policy.  In case some packets of a flow
     weren't appropriately processed, a verification device should
     determine the policy violation and take corresponding actions
-@@ -129,21 +135,21 @@
-    domains, because the hand-off-points are no longer clearly defined
-    physical interfaces, but are virtual interfaces.  As a consequence,
-    different trust layers should not to be mixed in the same device.
-    For an NFV scenario a different type of proof is required.  Offering
-    a proof that a packet indeed traversed a specific set of service
-    functions or nodes allows operators to evolve from the above
-    described indirect methods of proving that packets visit a
-    predetermined set of nodes.
+    corresponding to the policy (e.g., drop or redirect the packet, send
+-   an alert etc.).  In today's deployments, the proof that a packet
++   an alert etc.)  In today's deployments, the proof that a packet
+    traversed a particular path or service chain is typically delivered
+    in an indirect way: Service appliances and network forwarding are in
+    different trust domains.  Physical hand-off-points are defined
+    between these trust domains (i.e.  physical interfaces).  Or in other
+    terms, in the "network forwarding domain" things are wired up in a
+    way that traffic is delivered to the ingress interface of a service
+    appliance and received back from an egress interface of a service
+    appliance.  This "wiring" is verified and then trusted upon.  The
+    evolution to Network Function Virtualization (NFV) and modern service
+-   chaining concepts (using technologies such as LISP, NSH, Segment
+-   Routing (SR), etc.) blurs the line between the different trust
+-   domains, because the hand-off-points are no longer clearly defined
+-   physical interfaces, but are virtual interfaces.  As a consequence,
+-   different trust layers should not to be mixed in the same device.
+-   For an NFV scenario a different type of proof is required.  Offering
+-   a proof that a packet indeed traversed a specific set of service
+-   functions or nodes allows operators to evolve from the above
+-   described indirect methods of proving that packets visit a
+-   predetermined set of nodes.
++   chaining concepts (using technologies such as Locator/ID Separation
++   Protocol (LISP), Network Service Header (NSH), Segment Routing (SR),
++   etc.) blurs the line between the different trust domains, because the
++   hand-off-points are no longer clearly defined physical interfaces,
++   but are virtual interfaces.  As a consequence, different trust layers
++   should not to be mixed in the same device.  For an NFV scenario a
++   different type of proof is required.  Offering a proof that a packet
++   indeed traversed a specific set of service functions or nodes allows
++   operators to evolve from the above described indirect methods of
++   proving that packets visit a predetermined set of nodes.
  
     The solution approach presented in this document is based on a small
 -   portion of operational data added to every packet.  This "in-band"
@@ -166,7 +210,60 @@
     complete key set is only known to the controller and a verifier node,
     which is typically the ultimate node on a path that performs
     verification.  Each node in the path uses its secret or share of the
-@@ -193,22 +199,22 @@
+    secret to update the POT data of the packets as the packets pass
+    through the node.  When the verifier receives a packet, it uses its
+    key(s) along with data found in the packet to validate whether the
+    packet traversed the path correctly.
+ 
+ 2.  Conventions
+ 
+    Abbreviations used in this document:
+ 
++   LISP:      Locator/ID Separation Protocol
++
++   LPC:       Lagrange Polynomial Constants
++
+    MTU:       Maximum Transmit Unit
+ 
+-   SR:        Segment Routing
++   NFV:       Network Function Virtualization
+ 
+    NSH:       Network Service Header
+ 
+-   SFC:       Service Function Chain
+-
+    POT:       Proof of Transit
+ 
+    POT-profile:  Proof of Transit Profile that has the necessary data
+               for nodes to participate in proof of transit
+ 
++   SFC:       Service Function Chain
++
++   SR:        Segment Routing
++
+ 3.  Proof of Transit
+ 
+    This section discusses methods and algorithms to provide for a "proof
+    of transit" for packets traversing a specific path.  A path which is
+    to be verified consists of a set of nodes.  Transit of the data
+    packets through those nodes is to be proven.  Besides the nodes, the
+    setup also includes a Controller that creates secrets and secrets
+    shares and configures the nodes for POT operations.
+ 
+    The methods how traffic is identified and associated to a specific
+    path is outside the scope of this document.  Identification could be
+-   done using a filter (e.g., 5-tupel classifier), or an identifier
++   done using a filter (e.g., 5-tuple classifier), or an identifier
+    which is already present in the packet (e.g., path or service
+-   identifier, flow-label, etc.).
++   identifier, NSH Service Path Identifier (SPI), flow-label, etc.)
+ 
+    The solution approach is detailed in two steps.  Initially the
+    concept of the approach is explained.  This concept is then further
+    refined to make it operationally feasible.
+ 
+ 3.1.  Basic Idea
+ 
     The method relies on adding POT data to all packets that traverse a
     path.  The added POT data allows a verifying node (egress node) to
     check whether a packet traversed the identified set of nodes on a
@@ -174,7 +271,8 @@
     the generation of the POT data to protect against misuse (i.e.
     configuration mistakes, malicious administrators playing tricks with
     routing, capturing, spoofing and replaying packets).  The mechanism
-    for POT leverages "Shamir's secret sharing scheme" [SSS].
+-   for POT leverages "Shamir's secret sharing scheme" [SSS].
++   for POT leverages "Shamir's Secret Sharing" scheme [SSS].
  
     Shamir's secret sharing base idea: A polynomial (represented by its
 -   co-efficients) is chosen as a secret by the controller.  A polynomial
@@ -191,7 +289,7 @@
     complete secret.  The verifying node validates the correctness of the
     received POT data by reconstructing the curve.
  
-@@ -256,56 +262,56 @@
+@@ -256,56 +270,56 @@
     generate the Lagrange Polynomial Constants (LPC).  Each of the k
     nodes (including verifier) are assigned a point on the polynomial
     i.e., shares of the SECRET.  The verifier is configured with the
@@ -261,7 +359,23 @@
     The three points above are the points on the curve which are
     considered the shares of the secret.  They are assigned to three
     nodes respectively and are kept secret.
-@@ -338,21 +344,21 @@
+@@ -324,119 +338,121 @@
+       l1(x) = (((x-x0)/(x1-x0))*((x-x2)/x1-x2))) mod 53 =
+       (-5 + 7x/2 - (1/2)x^2) mod 53
+ 
+       l2(x) = (((x-x0)/(x2-x0))*((x-x1)/x2-x1))) mod 53 =
+       (8/3 - 2 + (1/3)x^2) mod 53
+ 
+ 3.3.1.3.  LPC Computation
+ 
+    Since x0=2, x1=4, x2=5 are chosen points.  Given that computations
+    are done over a finite arithmetic field ("modulo a prime number"),
+-   the Lagrange basis polynomial constants (LPC) are computed modulo 53.
+-   The Lagrange polynomial constant (LPC) would be 10/3 , -5 , 8/3.
++   the Lagrange basis polynomial constants are computed modulo 53.  The
++   Lagrange Polynomial Constant (LPC) would be 10/3 , -5 , 8/3.
+ 
+       LPC(x0) = (10/3) mod 53 = 21
  
        LPC(x1) = (-5) mod 53 = 48
  
@@ -275,16 +389,28 @@
 -   Reconstruction of the polynomial is well defined as
 +   Reconstruction of the polynomial is well-defined as
  
-    POLY1(x) = l0(x)*y0 + l1(x)*y1 + l2(x)*y2.
+-   POLY1(x) = l0(x)*y0 + l1(x)*y1 + l2(x)*y2.
++   POLY1(x) = l0(x) * y0 + l1(x) * y1 + l2(x) * y2
  
     Subsequently, the SECRET, which is the constant coefficient of
     POLY1(x) can be computed as below
  
-    SECRET = (y0*LPC(l0)+y1*LPC(l1)+y2*LPC(l2)) mod 53.
+-   SECRET = (y0*LPC(l0)+y1*LPC(l1)+y2*LPC(l2)) mod 53.
++   SECRET = (y0*LPC(l0)+y1*LPC(l1)+y2*LPC(l2)) mod 53
  
     The secret can be easily reconstructed using the y-values and the
     LPC:
-@@ -369,64 +375,67 @@
+ 
+    SECRET = (y0*LPC(l0) + y1*LPC(l1) + y2*LPC(l2)) mod 53 = mod (28 * 21
+-   + 17 * 48 + 47 * 38) mod 53 = 3190 mod 53 = 10.
++   + 17 * 48 + 47 * 38) mod 53 = 3190 mod 53 = 10
+ 
+    One observes that the secret reconstruction can easily be performed
+    cumulatively hop by hop.  CML represents the cumulative value.  It is
+    the POT data in the packet that is updated at each hop with the
+    node's respective (yi*LPC(i)), where i is their respective value.
+ 
+ 3.3.1.5.  Verification
  
     Upon completion of the path, the resulting CML is retrieved by the
     verifier from the packet POT data.  Recall that verifier is
@@ -319,7 +445,8 @@
     reconstruction is enhanced as below.  At every node, CML is updated
     as
  
-    CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod Prime.
+-   CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod Prime.
++   CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod Prime
  
 -   Lets observe the packet level transformations in detail.  For the
 +   Let us observe the packet level transformations in detail.  For the
@@ -329,21 +456,23 @@
     The shares that could be generated are (2,46), (4,21), (5,12).
  
 -      At source: The fields RND = 45.  CML = 0.
-+      At ingress: The fields RND = 45.  CML = 0.
- 
+-
 -      At node-1 (x0): Respective share of POLY-2 is generated i.e (2,46)
 -      because share index of node-1 is 2.
++      At ingress: The fields RND = 45.  CML = 0.
+ 
+-      CML = 0 + ((28 + 46)* 21) mod 53 = 17.
 +      At node-1 (x0): Respective share of POLY-2 is generated i.e., (2,
 +      46) because share index of node-1 is 2.
  
-       CML = 0 + ((28 + 46)* 21) mod 53 = 17.
- 
 -      At node-2 (x1): Respective share of POLY-2 is generated i.e (4,21)
 -      because share index of node-2 is 4.
++      CML = 0 + ((28 + 46)* 21) mod 53 = 17
 +      At node-2 (x1): Respective share of POLY-2 is generated i.e., (4,
 +      21) because share index of node-2 is 4.
  
-       CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39.
+-      CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39.
++      CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39
  
        At node-3 (x2), which is also the verifier: The respective share
 -      of POLY-2 is generated i.e (5,12) because the share index of the
@@ -360,10 +489,22 @@
     As shown in the above example, for final verification, the verifier
     compares:
  
-    VERIFY = (SECRET + RND) mod Prime, with Prime = 53 here.
+-   VERIFY = (SECRET + RND) mod Prime, with Prime = 53 here.
++   VERIFY = (SECRET + RND) mod Prime, with Prime = 53 here
  
-    VERIFY = (RND-1 + RND-2) mod Prime = ( 10 + 45 ) mod 53 = 2.
-@@ -450,33 +459,76 @@
+-   VERIFY = (RND-1 + RND-2) mod Prime = ( 10 + 45 ) mod 53 = 2.
++   VERIFY = (RND-1 + RND-2) mod Prime = ( 10 + 45 ) mod 53 = 2
+ 
+    Since VERIFY = CML the packet is proven to have gone through nodes 1,
+    2, and 3.
+ 
+ 3.4.  Operational Aspects
+ 
+    To operationalize this scheme, a central controller is used to
+    generate the necessary polynomials, the secret share per node, the
+    prime number, etc. and distributing the data to the nodes
+    participating in proof of transit.  The identified node that performs
+@@ -450,33 +466,76 @@
     the scope of this document.  Techniques such as those described in
     [I-D.ietf-anima-autonomic-control-plane] might be applied.
  
@@ -442,7 +583,7 @@
  
     2.  CML: Cumulative
  
-@@ -525,21 +577,21 @@
+@@ -525,21 +584,21 @@
  
  5.1.  Procedure
  
@@ -465,7 +606,7 @@
     to ensure that during profile change the service is not disrupted.
     If the "odd" profile is active, the Controller can communicate the
     "even" profile to all nodes.  Only if all the nodes have received the
-@@ -716,167 +767,200 @@
+@@ -716,184 +774,216 @@
     an attacker even with unlimited computing power.  As long as the
     below conditions are met it is impossible for an attacker to bypass
     one or multiple nodes without getting caught.
@@ -478,11 +619,11 @@
  
 -   o  The Shares of the SECRET (i.e., points on POLY-1 ) are kept secret
 -      by individual nodes.
+-
 +   o  Precisely three values are kept secret by individual nodes.  Share
 +      of SECRET (i.e. points on POLY-1), Share of POLY-2, LPC, P.  Note
 +      that only constant coefficient, RND, of POLY-2 is public. x values
 +      and non-constant coefficient of POLY-2 are secret
- 
     An attacker bypassing a few nodes will miss adding a respective point
     on POLY-1 to corresponding point on POLY-2 , thus the verifier cannot
     construct POLY-3 for cross verification.
@@ -524,7 +665,7 @@
 +      predict the secrets.  Differential analysis across packets could
 +      be mitigated using a good PRNG for generating RND.  Note that if
 +      constant coefficient is a sequence number than CML values become
-+      quite predictable and the scheme would be broken
++      quite predictable and the scheme would be broken.
 +
 +8.3.  Anti-Replay
 +
@@ -543,7 +684,7 @@
 +   current buffer could be flagged as suspicious.
 +
 +   For all practical purposes in the rest of the document RND means
-+   SEQ_NO + RND to keep it simple
++   SEQ_NO + RND to keep it simple.
 +
 +8.4.  Anti-Preplay
 +
@@ -554,7 +695,7 @@
 +   then this attack is same as Replay attacks discussed before.
 +
 +   Preplay attacks are possible since the POT metadata is not dependent
-+   on the packet fields.  Below steps are recommended for remediation
++   on the packet fields.  Below steps are recommended for remediation:
 +
 +   o  Ingress node and Verifier are configured with common pre shared
 +      key
@@ -571,7 +712,7 @@
 +      packet.
 +
 +   An active attacker since lacks the knowledge of pre-shared key cannot
-+   launch preplay attacks
++   launch preplay attacks.
 +
 +8.5.  Anti-Tampering
  
@@ -717,4 +858,22 @@
     Germany
  
     Email: fbrockne@cisco.com
+-
+    Shwetha Bhandari
+    Cisco Systems, Inc.
+    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+    Bangalore, KARNATAKA 560 087
+    India
  
+    Email: shwethab@cisco.com
++
+    Sashank Dara
+    Cisco Systems, Inc.
+    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+    BANGALORE, Bangalore, KARNATAKA 560 087
+    INDIA
+ 
+    Email: sadara@cisco.com
+ 
+    Carlos Pignataro
+    Cisco Systems, Inc.

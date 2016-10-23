@@ -70,20 +70,20 @@ OLD:
     to complement current out-of-band OAM mechanisms based on ICMP or
 |   other types of probe packets.  This document outlines how in-band OAM
     data records can be transported in protocols such as NSH, Segment
-    Routing, VXLAN-GPE, native IPv6 (via extension header), and IPv4.
+|   Routing, VXLAN-GPE, native IPv6 (via extension header), and IPv4.
     Transport options are currently investigated as part of an
     implementation study.  This document is intended to only serve
     informational purposes.
 
 NEW:
 
-|   In-situ operation, administration and maintenance (OAM) records
+|   In-situ Operations, Administration, and Maintenance (OAM) records
     operational and telemetry information in the packet while the packet
 |   traverses a path between two points in the network.  In-situ OAM is
     to complement current out-of-band OAM mechanisms based on ICMP or
 |   other types of probe packets.  This document outlines how in-situ OAM
     data records can be transported in protocols such as NSH, Segment
-    Routing, VXLAN-GPE, native IPv6 (via extension header), and IPv4.
+|   Routing, VXLAN-GPE, native IPv6 (via extension headers), and IPv4.
     Transport options are currently investigated as part of an
     implementation study.  This document is intended to only serve
     informational purposes.
@@ -174,10 +174,10 @@ OLD:
 
 |   This document discusses transport mechanisms for "in-band" operation,
 |   administration, and maintenance (OAM) data records.  In-band OAM
-    records OAM information within the packet while the packet traverses
+|   records OAM information within the packet while the packet traverses
 |   a particular network domain.  The term "in-band" refers to the fact
-    that the OAM data is added to the data packets rather than is being
-    sent within packets specifically dedicated to OAM.  A discussion of
+|   that the OAM data is added to the data packets rather than is being
+|   sent within packets specifically dedicated to OAM.  A discussion of
 |   the motivation and requirements for in-band OAM can be found in
 |   [draft-brockners-inband-oam-requirements].  Data types and data
 |   formats for in-band OAM are defined in
@@ -185,15 +185,16 @@ OLD:
 
 NEW:
 
-|   This document discusses transport mechanisms for "in-situ" operation,
-|   administration, and maintenance (OAM) data records.  In-situ OAM
-    records OAM information within the packet while the packet traverses
-|   a particular network domain.  The term "in-situ" refers to the fact
-    that the OAM data is added to the data packets rather than is being
-    sent within packets specifically dedicated to OAM.  A discussion of
-|   the motivation and requirements for in-situ OAM can be found in
-|   [I-D.brockners-inband-oam-requirements].  Data types and data formats
-|   for in-situ OAM are defined in [I-D.brockners-inband-oam-data].
+|   This document discusses transport mechanisms for "in-situ"
+|   Operations, Administration, and Maintenance (OAM) data records.  In-
+|   situ OAM records OAM information within the packet while the packet
+|   traverses a particular network domain.  The term "in-situ" refers to
+|   the fact that the OAM data is added to the data packets rather than
+|   is being sent within packets specifically dedicated to OAM.  A
+|   discussion of the motivation and requirements for in-situ OAM can be
+|   found in [I-D.brockners-inband-oam-requirements].  Data types and
+|   data formats for in-situ OAM are defined in
+|   [I-D.brockners-inband-oam-data].
 
 
 ------------------------------------------------------------------------
@@ -311,14 +312,54 @@ EXPLANATION:
 
 OLD:
 
-    OAM:       Operations, Administration, and Maintenance
-    SR:        Segment Routing
+|   OAM:       Operations, Administration, and Maintenance
+|   SR:        Segment Routing
+|
+|   SID:       Segment Identifier
+|
+    NSH:       Network Service Header
 
 NEW:
 
-    OAM:       Operations, Administration, and Maintenance
+    NSH:       Network Service Header
+
+
+------------------------------------------------------------------------
+
+
+Section 2., paragraph 5:
+EXPLANATION: 
+
+OLD:
+
+    POT:       Proof of Transit
+
+NEW:
+
+|   OAM:       Operations, Administration, and Maintenance
 |
-    SR:        Segment Routing
+    POT:       Proof of Transit
+
+
+------------------------------------------------------------------------
+
+
+Section 2., paragraph 7:
+EXPLANATION: 
+
+OLD:
+
+    VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
+               Extension
+
+NEW:
+
+|   SID:       Segment Identifier
+|
+|   SR:        Segment Routing
+|
+    VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
+               Extension
 
 
 ------------------------------------------------------------------------
@@ -360,8 +401,8 @@ OLD:
 |   introduced by [draft-kitamura-ipv6-record-route] back in year 2000.
     With IPv6 now being generally deployed and new concepts such as
     Segment Routing [I-D.ietf-spring-segment-routing] being introduced,
-    it is imperative to further mature the operations, administration,
-    and maintenance mechanisms available to IPv6 networks.
+|   it is imperative to further mature the operations, administration,
+|   and maintenance mechanisms available to IPv6 networks.
 
 NEW:
 
@@ -369,8 +410,8 @@ NEW:
 |   introduced by [I-D.kitamura-ipv6-record-route] back in year 2000.
     With IPv6 now being generally deployed and new concepts such as
     Segment Routing [I-D.ietf-spring-segment-routing] being introduced,
-    it is imperative to further mature the operations, administration,
-    and maintenance mechanisms available to IPv6 networks.
+|   it is imperative to further mature the Operations, Administration,
+|   and Maintenance mechanisms available to IPv6 networks.
 
 
 ------------------------------------------------------------------------
@@ -749,6 +790,7 @@ OLD:
 NEW:
 
     k = number of node data that this node can allocate
+|
 |   if (in-situ OAM ext hbyh ext-header is present) {
 |       if (Elements-left > 0)) {
           populate node data at :
@@ -784,7 +826,9 @@ NEW:
 |3.1.4.  Procedure at the Egress Edge to Remove the In-situ OAM Header
 |   egress_edge = list of interfaces where in-situ OAM hbyh ext
                    header is to be stripped
+|
     Before forwarding packet out of interfaces in egress_edge list:
+|
 |   if (in-situ OAM hbyh ext-header is present) {
 |      remove the in-situ OAM hbyh ext-header,
        possibly store the record along with additional
@@ -881,7 +925,7 @@ OLD:
     |     Virtual Network Identifier (VNI)          | Reserved      |  |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
 |   | Type =i.b.OAM | i.b.OAM HDR len |  Reserved     | NP = IP/Eth |  |
-|   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+iOAM
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+iOAM
 |   |                     in-band OAM options                       |  |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
     |                                                               |
@@ -908,7 +952,7 @@ NEW:
     |     Virtual Network Identifier (VNI)          | Reserved      |  |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
 |   | Type =i.s.OAM | i.s.OAM HDR len |  Reserved     | NP = IP/Eth |  |
-|   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ OAM
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+iOAM
 |   |                     in-situ OAM options                       |  |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
     |                                                               |
@@ -1171,10 +1215,10 @@ NEW:
 |   for IPv6 can be verified using the in-situ OAM "Proof of Transit"
     approach.  The Segment Routing Header (SRH) for IPv6 offers the
     ability to transport TLV structured data, similar to what NSH does
-|   (see [I-D.ietf-6man-segment-routing-header]).  In an administrative
-|   domain where in-situ OAM is used, insertion of the in-situ OAM data
-|   is enabled at the required edge nodes (i.e. at the in-situ OAM
-|   encapsulating/decapsulating nodes) by means of configuration.
+|   (see [I-D.ietf-6man-segment-routing-header]).  In an domain where in-
+|   situ OAM is used, insertion of the in-situ OAM data is enabled at the
+|   required edge nodes (i.e. at the in-situ OAM encapsulating/
+|   decapsulating nodes) by means of configuration.
 |
 |   A new "POT TLV" is defined for the SRH which is to carry proof of
 |   transit in situ OAM data.

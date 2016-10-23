@@ -121,7 +121,7 @@ OLD:
 |     3.4.  SLA Verification  . . . . . . . . . . . . . . . . . . . .   6
 |     3.5.  Analytics and Diagnostics . . . . . . . . . . . . . . . .   6
       3.6.  Frame Replication/Elimination Decision for Bi-casting
-            /Active-active Networks . . . . . . . . . . . . . . . . .   7
+|           /Active-active Networks . . . . . . . . . . . . . . . . .   7
 |     3.7.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .   7
 |     3.8.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   8
 |   4.  Considerations for In-band OAM  . . . . . . . . . . . . . . .   9
@@ -154,27 +154,29 @@ NEW:
 |     3.4.  SLA Verification  . . . . . . . . . . . . . . . . . . . .   7
 |     3.5.  Analytics and Diagnostics . . . . . . . . . . . . . . . .   7
       3.6.  Frame Replication/Elimination Decision for Bi-casting
-            /Active-active Networks . . . . . . . . . . . . . . . . .   7
+|           /Active-active Networks . . . . . . . . . . . . . . . . .   8
 |     3.7.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .   8
 |     3.8.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   9
 |   4.  Considerations for In-situ OAM  . . . . . . . . . . . . . . .  11
 |     4.1.  Type of Information to Be Recorded  . . . . . . . . . . .  11
-|     4.2.  MTU and Packet Size . . . . . . . . . . . . . . . . . . .  11
+|     4.2.  MTU and Packet Size . . . . . . . . . . . . . . . . . . .  12
 |     4.3.  Administrative Boundaries . . . . . . . . . . . . . . . .  12
 |     4.4.  Selective Enablement  . . . . . . . . . . . . . . . . . .  13
 |     4.5.  Optimization of Node and Interface Identifiers  . . . . .  13
-|     4.6.  Loop Communication Path (IPv6-specifics)  . . . . . . . .  13
+|     4.6.  Loop Communication Path (IPv6-specifics)  . . . . . . . .  14
 |   5.  Requirements for In-situ OAM Data Types . . . . . . . . . . .  14
 |     5.1.  Generic Requirements  . . . . . . . . . . . . . . . . . .  14
-|     5.2.  In-situ OAM Data with Per-hop Scope . . . . . . . . . . .  15
-|     5.3.  In-situ OAM with Selected Hop Scope . . . . . . . . . . .  16
+|     5.2.  In-situ OAM Data with Per-hop Scope . . . . . . . . . . .  16
+|     5.3.  In-situ OAM with Selected Hop Scope . . . . . . . . . . .  17
 |     5.4.  In-situ OAM with End-to-end Scope . . . . . . . . . . . .  17
 |   6.  Security Considerations and Requirements  . . . . . . . . . .  17
 |     6.1.  General considerations  . . . . . . . . . . . . . . . . .  17
-|     6.2.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  17
-|   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
+|     6.2.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  18
+|   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  19
 |   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
-|   9.  Informative References  . . . . . . . . . . . . . . . . . . .  19
+|   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
+|     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  19
+|     9.2.  Informative References  . . . . . . . . . . . . . . . . .  19
 |   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
 
 
@@ -341,19 +343,72 @@ NEW:
 ------------------------------------------------------------------------
 
 
+Section 2., paragraph 1:
+EXPLANATION: 
+
+OLD:
+
+    Abbreviations used in this document:
+
+NEW:
+
+|   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+|   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+|   document are to be interpreted as described in [RFC2119].
+|
+    Abbreviations used in this document:
+
+
+------------------------------------------------------------------------
+
+
+Section 2., paragraph 3:
+EXPLANATION: 
+
+OLD:
+
+    MTU:       Maximum Transmit Unit
+
+NEW:
+
+|   LISP:      Locator/ID Separation Protocol
+|
+    MTU:       Maximum Transmit Unit
+|   NSH:       Network Service Header
+
+
+------------------------------------------------------------------------
+
+
 Section 2., paragraph 7:
 EXPLANATION: 
 
 OLD:
 
-    SLA:       Service Level Agreement
+|   SLA:       Service Level Agreement
 |
     SFC:       Service Function Chain
 
 NEW:
 
-    SLA:       Service Level Agreement
     SFC:       Service Function Chain
+
+
+------------------------------------------------------------------------
+
+
+Section 2., paragraph 8:
+EXPLANATION: 
+
+OLD:
+
+    SR:        Segment Routing
+
+NEW:
+
+|   SLA:       Service Level Agreement
+|
+    SR:        Segment Routing
 
 
 ------------------------------------------------------------------------
@@ -705,6 +760,86 @@ NEW:
 ------------------------------------------------------------------------
 
 
+Section 3.7., paragraph 1:
+EXPLANATION: 
+
+OLD:
+
+    Several deployments use traffic engineering, policy routing, segment
+    routing or Service Function Chaining (SFC) [RFC7665] to steer packets
+    through a specific set of nodes.  In certain cases regulatory
+    obligations or a compliance policy require to prove that all packets
+    that are supposed to follow a specific path are indeed being
+    forwarded across the exact set of nodes specified.  If a packet flow
+    is supposed to go through a series of service functions or network
+    nodes, it has to be proven that all packets of the flow actually went
+    through the service chain or collection of nodes specified by the
+    policy.  In case the packets of a flow weren't appropriately
+    processed, a verification device would be required to identify the
+    policy violation and take corresponding actions (e.g., drop or
+    redirect the packet, send an alert etc.) corresponding to the policy.
+    In today's deployments, the proof that a packet traversed a
+    particular service chain is typically delivered in an indirect way:
+    Service appliances and network forwarding are in different trust
+    domains.  Physical hand-off-points are defined between these trust
+    domains (i.e., physical interfaces).  Or in other terms, in the
+    "network forwarding domain" things are wired up in a way that traffic
+    is delivered to the ingress interface of a service appliance and
+    received back from an egress interface of a service appliance.  This
+    "wiring" is verified and trusted.  The evolution to Network Function
+    Virtualization (NFV) and modern service chaining concepts (using
+|   technologies such as LISP, NSH, Segment Routing, etc.) blurs the line
+    between the different trust domains, because the hand-off-points are
+    no longer clearly defined physical interfaces, but are virtual
+    interfaces.  Because of that very reason, networks operators require
+    that different trust layers not to be mixed in the same device.  For
+    an NFV scenario a different proof is required.  Offering a proof that
+    a packet traversed a specific set of service functions would allow
+    network operators to move away from the above described indirect
+    methods of proving that a service chain is in place for a particular
+    application.
+
+NEW:
+
+    Several deployments use traffic engineering, policy routing, segment
+    routing or Service Function Chaining (SFC) [RFC7665] to steer packets
+    through a specific set of nodes.  In certain cases regulatory
+    obligations or a compliance policy require to prove that all packets
+    that are supposed to follow a specific path are indeed being
+    forwarded across the exact set of nodes specified.  If a packet flow
+    is supposed to go through a series of service functions or network
+    nodes, it has to be proven that all packets of the flow actually went
+    through the service chain or collection of nodes specified by the
+    policy.  In case the packets of a flow weren't appropriately
+    processed, a verification device would be required to identify the
+    policy violation and take corresponding actions (e.g., drop or
+    redirect the packet, send an alert etc.) corresponding to the policy.
+    In today's deployments, the proof that a packet traversed a
+    particular service chain is typically delivered in an indirect way:
+    Service appliances and network forwarding are in different trust
+    domains.  Physical hand-off-points are defined between these trust
+    domains (i.e., physical interfaces).  Or in other terms, in the
+    "network forwarding domain" things are wired up in a way that traffic
+    is delivered to the ingress interface of a service appliance and
+    received back from an egress interface of a service appliance.  This
+    "wiring" is verified and trusted.  The evolution to Network Function
+    Virtualization (NFV) and modern service chaining concepts (using
+|   technologies such as Locator/ID Separation Protocol (LISP), Network
+|   Service Header (NSH), Segment Routing (SR), etc.) blurs the line
+    between the different trust domains, because the hand-off-points are
+    no longer clearly defined physical interfaces, but are virtual
+    interfaces.  Because of that very reason, networks operators require
+    that different trust layers not to be mixed in the same device.  For
+    an NFV scenario a different proof is required.  Offering a proof that
+    a packet traversed a specific set of service functions would allow
+    network operators to move away from the above described indirect
+    methods of proving that a service chain is in place for a particular
+    application.
+
+
+------------------------------------------------------------------------
+
+
 Section 3.7., paragraph 2:
 EXPLANATION: 
 
@@ -752,7 +887,7 @@ OLD:
 NEW:
 
     A solution approach could be based on OAM data which is added to
-|   every packet for achieving Proof Of Transit(POT).The OAM data is
+|   every packet for achieving Proof Of Transit (POT).The OAM data is
 |   updated at every hop and is used to verify whether a packet traversed
 |   all required nodes.  When the verifier receives each packet, it can
     validate whether the packet traversed the service chain correctly.
@@ -804,6 +939,25 @@ NEW:
 ------------------------------------------------------------------------
 
 
+Section 3.8., paragraph 6:
+EXPLANATION: 
+
+OLD:
+
+    o  Trend Analysis on Traffic Patterns: Analyze if (and if so how) the
+       forwarding path for a specific set of traffic changes over time
+|      (can give hints to routing issues, unstable links etc.).
+
+NEW:
+
+    o  Trend Analysis on Traffic Patterns: Analyze if (and if so how) the
+       forwarding path for a specific set of traffic changes over time
+|      (can give hints to routing issues, unstable links etc.)
+
+
+------------------------------------------------------------------------
+
+
 Section 3.8., paragraph 12:
 EXPLANATION: 
 
@@ -813,7 +967,7 @@ OLD:
 
 NEW:
 
-|   o  Device-level troubleshooting and optimization: In many cases,
+|   o  Device-level Troubleshooting and Optimization: In many cases,
 |      network operators could benefit from information specific to a
 |      single device.  A non-exhaustive list of useful information
 |      includes: queue-depths, buffer utilization (either shared or per-
@@ -843,11 +997,11 @@ OLD:
 |   The implementation of an in-band OAM mechanism needs to take several
     considerations into account, including administrative boundaries, how
     information is recorded, Maximum Transfer Unit (MTU), Path MTU
-    discovery and packet size, etc.
+|   discovery and packet size, etc.
 
 NEW:
 
-|   o  Custom network probing: Active network probing and in-situ OAM can
+|   o  Custom Network Probing: Active network probing and in-situ OAM can
 |      be combined for customized and efficient network probing.  This
 |      could for example be a customized traceroute.
 |
@@ -856,7 +1010,7 @@ NEW:
 |   The implementation of an in-situ OAM mechanism needs to take several
     considerations into account, including administrative boundaries, how
     information is recorded, Maximum Transfer Unit (MTU), Path MTU
-    discovery and packet size, etc.
+|   Discovery (PMTUD) and packet size, etc.
 
 
 ------------------------------------------------------------------------
@@ -902,12 +1056,44 @@ NEW:
 ------------------------------------------------------------------------
 
 
+Section 3.8., paragraph 20:
+EXPLANATION: 
+
+OLD:
+
+       *  Stats collection at each hop to optimize communication in
+|         resource constrained networks e.g., Battery, CPU, memory status
+          of each node piggy backed in a data packet is useful in low
+          power lossy networks where network nodes are mostly asleep and
+          communication is expensive
+
+NEW:
+
+       *  Stats collection at each hop to optimize communication in
+|         resource constrained networks e.g., battery, CPU, memory status
+          of each node piggy backed in a data packet is useful in low
+          power lossy networks where network nodes are mostly asleep and
+          communication is expensive
+
+
+------------------------------------------------------------------------
+
+
 Section 3.8., paragraph 21:
 EXPLANATION: 
 
 OLD:
 
 |4.2.  MTU and packet size
+|
+|   The recorded data at every hop may lead to packet size exceeding the
+|   Maximum Transmit Unit (MTU).  Based on the transport protocol used
+|   MTU is discovered as a configuration parameter or Path MTU (PMTU) is
+|   discovered dynamically.  Example: IPv6 recommends PMTU discovery
+|   before data packets are sent to prevent packet fragmentation.  It
+|   specifies 1280 octets as the default PDU to be carried in a IPv6
+|   datagram.  A detailed discussion of the implications of oversized
+|   IPv6 header chains if found in [RFC7112].
 
 NEW:
 
@@ -922,36 +1108,15 @@ EXPLANATION:
 
 OLD:
 
-|   The recorded data at every hop may lead to packet size exceeding the
-|   Maximum Transmit Unit (MTU).  Based on the transport protocol used
-|   MTU is discovered as a configuration parameter or Path MTU (PMTU) is
-|   discovered dynamically.  Example: IPv6 recommends PMTU discovery
-|   before data packets are sent to prevent packet fragmentation.  It
-|   specifies 1280 octets as the default PDU to be carried in a IPv6
-|   datagram.  A detailed discussion of the implications of oversized
-|   IPv6 header chains if found in [RFC7112].
-
-NEW:
-
-|   The recorded data at every hop might lead to packet size exceeding
-|   the Maximum Transmit Unit (MTU).  A detailed discussion of the
-|   implications of oversized IPv6 header chains is found in [RFC7112].
-
-
-------------------------------------------------------------------------
-
-
-Section 3.8., paragraph 23:
-EXPLANATION: 
-
-OLD:
-
     The Path MTU restricts the amount of data that can be recorded for
 |   purpose of OAM within a data packet.  The total size of data to be
 |   recorded needs to be preset to avoid packet size exceeding the MTU.
 
 NEW:
 
+|   The recorded data at every hop might lead to packet size exceeding
+|   the Maximum Transmit Unit (MTU).  A detailed discussion of the
+|   implications of oversized IPv6 header chains is found in [RFC7112].
     The Path MTU restricts the amount of data that can be recorded for
 |   purpose of OAM within a data packet.
 
@@ -959,7 +1124,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 24:
+Section 3.8., paragraph 23:
 EXPLANATION: 
 
 OLD:
@@ -979,7 +1144,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 25:
+Section 3.8., paragraph 24:
 EXPLANATION: 
 
 OLD:
@@ -995,7 +1160,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 26:
+Section 3.8., paragraph 25:
 EXPLANATION: 
 
 OLD:
@@ -1042,7 +1207,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 27:
+Section 3.8., paragraph 26:
 EXPLANATION: 
 
 OLD:
@@ -1061,7 +1226,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 31:
+Section 3.8., paragraph 30:
 EXPLANATION: 
 
 OLD:
@@ -1086,7 +1251,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 32:
+Section 3.8., paragraph 31:
 EXPLANATION: 
 
 OLD:
@@ -1101,7 +1266,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 33:
+Section 3.8., paragraph 32:
 EXPLANATION: 
 
 OLD:
@@ -1133,7 +1298,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 34:
+Section 3.8., paragraph 33:
 EXPLANATION: 
 
 OLD:
@@ -1148,7 +1313,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 35:
+Section 3.8., paragraph 34:
 EXPLANATION: 
 
 OLD:
@@ -1177,7 +1342,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 36:
+Section 3.8., paragraph 35:
 EXPLANATION: 
 
 OLD:
@@ -1192,7 +1357,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 37:
+Section 3.8., paragraph 36:
 EXPLANATION: 
 
 OLD:
@@ -1211,7 +1376,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 38:
+Section 3.8., paragraph 37:
 EXPLANATION: 
 
 OLD:
@@ -1234,7 +1399,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 3.8., paragraph 39:
+Section 3.8., paragraph 38:
 EXPLANATION: 
 
 OLD:
@@ -1299,7 +1464,7 @@ NEW:
 |   REQ-G1:  Classification: It should be possible to enable in-situ OAM
 |            on a selected set of traffic (e.g., per interface, based on
 |            an access control list specifying a specific set of traffic,
-|            etc.).  The selected set of traffic can also be all traffic.
+|            etc.)  The selected set of traffic can also be all traffic.
 
 
 ------------------------------------------------------------------------
@@ -1380,12 +1545,12 @@ EXPLANATION:
 OLD:
 
 |   REQ-G5:  MTU size: With in-band OAM information added, packets should
-             not become larger than the path MTU.
+|            not become larger than the path MTU.
 
 NEW:
 
 |   REQ-G5:  MTU size: With in-situ OAM information added, packets MUST
-             not become larger than the path MTU.
+|            NOT become larger than the path MTU.
 
 
 ------------------------------------------------------------------------
@@ -1402,25 +1567,28 @@ OLD:
 
 NEW:
 
-|               REQ-G5.1: If due to some reason a packet which contains
-|               in situ OAM data record cannot be forwarded due to the
-|               presence of in-situ OAM data records, the node SHOULD
-|               remove the in situ OAM data records and forward the
-|               packet, rather than drop the entire packet.
+|            REQ-G5.1:  If due to some reason a packet which contains in
+|                       situ OAM data record cannot be forwarded due to
+|                       the presence of in-situ OAM data records, the
+|                       node SHOULD remove the in situ OAM data records
+|                       and forward the packet, rather than drop the
+|                       entire packet.
 |
-|               REQ-G5.2: If the encapsulating router is unable to insert
-|               in-situ OAM data records into a packet, e.g., due to MTU
-|               issues, even though it is configured to do so, it should
-|               use some operational means to inform the operator (e.g.,
-|               syslog) about the inability to add in-situ OAM data
-|               records.  Even if the in-situ OAM encapsulating node
-|               fails to add in-situ OAM data records, it should forward
-|               the packet normally.
+|            REQ-G5.2:  If the encapsulating router is unable to insert
+|                       in-situ OAM data records into a packet, e.g., due
+|                       to MTU issues, even though it is configured to do
+|                       so, it should use some operational means to
+|                       inform the operator (e.g., syslog) about the
+|                       inability to add in-situ OAM data records.  Even
+|                       if the in-situ OAM encapsulating node fails to
+|                       add in-situ OAM data records, it should forward
+|                       the packet normally.
 |
-|               REQ-G5.3: MTU size consideration for in-situ OAM MUST
-|               take domain specifics into account, e.g., changes of the
-|               domain topology due to path protection mechanisms might
-|               extend the hop count of a path etc.
+|            REQ-G5.3:  MTU size consideration for in-situ OAM MUST take
+|                       domain specifics into account, e.g., changes of
+|                       the domain topology due to path protection
+|                       mechanisms might extend the hop count of a path
+|                       etc.
 |
 |   REQ-G6:  Data structure reuse: The data types and data formats
 |            defined and used for in-situ OAM ought to be reusable for
@@ -1810,7 +1978,22 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 9., paragraph 1:
+Section 8., paragraph 2:
+EXPLANATION: 
+
+OLD:
+
+|9.  Informative References
+
+NEW:
+
+|9.  References
+
+
+------------------------------------------------------------------------
+
+
+Section 8., paragraph 3:
 EXPLANATION: 
 
 OLD:
@@ -1818,28 +2001,38 @@ OLD:
 |   [draft-brockners-proof-of-transit]
 |              Brockners, F., Bhandari, S., and S. Dara, "Proof of
 |              transit", July 2016.
-|
-|   [draft-kitamura-ipv6-record-route]
-|              Kitamura, H., "Record Route for IPv6 (PR6),Hop-by-Hop
-|              Option Extension", November 2000.
-|
-    [I-D.brockners-lisp-sr]
-               Brockners, F., Bhandari, S., Maino, F., and D. Lewis,
-               "LISP Extensions for Segment Routing", draft-brockners-
-               lisp-sr-01 (work in progress), February 2014.
 
 NEW:
 
-    [I-D.brockners-lisp-sr]
-               Brockners, F., Bhandari, S., Maino, F., and D. Lewis,
-               "LISP Extensions for Segment Routing", draft-brockners-
-               lisp-sr-01 (work in progress), February 2014.
+|9.1.  Normative References
 
 
 ------------------------------------------------------------------------
 
 
-Section 9., paragraph 2:
+Section 8., paragraph 4:
+EXPLANATION: 
+
+OLD:
+
+|   [draft-kitamura-ipv6-record-route]
+|              Kitamura, H., "Record Route for IPv6 (PR6),Hop-by-Hop
+|              Option Extension", November 2000.
+
+NEW:
+
+|   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+|              Requirement Levels", BCP 14, RFC 2119,
+|              DOI 10.17487/RFC2119, March 1997,
+|              <http://www.rfc-editor.org/info/rfc2119>.
+|
+|9.2.  Informative References
+
+
+------------------------------------------------------------------------
+
+
+Section 8., paragraph 6:
 EXPLANATION: 
 
 OLD:
@@ -1866,7 +2059,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 9., paragraph 4:
+Section 8., paragraph 8:
 EXPLANATION: 
 
 OLD:
@@ -1892,7 +2085,7 @@ NEW:
 ------------------------------------------------------------------------
 
 
-Section 9., paragraph 13:
+Section 8., paragraph 17:
 EXPLANATION: 
 
 OLD:
@@ -1914,6 +2107,58 @@ NEW:
                Extension Headers in the Real World", RFC 7872,
                DOI 10.17487/RFC7872, June 2016,
                <http://www.rfc-editor.org/info/rfc7872>.
+
+
+------------------------------------------------------------------------
+
+
+Section 8., paragraph 24:
+EXPLANATION: 
+
+OLD:
+
+    Email: sadara@cisco.com
+|
+    Carlos Pignataro
+    Cisco Systems, Inc.
+    7200-11 Kit Creek Road
+    Research Triangle Park, NC  27709
+    United States
+
+NEW:
+
+    Email: sadara@cisco.com
+    Carlos Pignataro
+    Cisco Systems, Inc.
+    7200-11 Kit Creek Road
+    Research Triangle Park, NC  27709
+    United States
+
+
+------------------------------------------------------------------------
+
+
+Section 25, paragraph 0:
+EXPLANATION: 
+
+OLD:
+
+    Email: John_Leddy@cable.comcast.com
+    Stephen Youell
+    JP Morgan Chase
+    25 Bank Street
+    London  E14 5JP
+    United Kingdom
+
+NEW:
+
+    Email: John_Leddy@cable.comcast.com
+|
+    Stephen Youell
+    JP Morgan Chase
+    25 Bank Street
+    London  E14 5JP
+    United Kingdom
 
 
 ------------------------------------------------------------------------
@@ -1942,7 +2187,6 @@ NEW:
 |   Israel
 |
 |   Email: talmi@marvell.com
-|
 |   Petr Lapukhov
 |   Facebook
 |   1 Hacker Way
