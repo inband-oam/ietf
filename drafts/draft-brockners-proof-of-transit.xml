@@ -224,19 +224,19 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>Several technologies such as traffic engineering, service function
-      chaining, or policy based routing, are used to steer traffic through a
+      <t>Several technologies such as Traffic Engineering (TE), Service Function
+      Chaining (SFC), and policy based routing are used to steer traffic through a
       specific, user-defined path. This document defines mechanisms to
-      securely prove that traffic transited the defined path. The mechanisms
-      allow to securely verify whether all packets traversed all those nodes
-      of a given path that they are supposed to visit.</t>
+      securely prove that traffic transited said defined path. These mechanisms
+      allow to securely verify whether, within a given path, all packets traversed all the nodes
+      that they are supposed to visit.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
-      <t>Several deployments use traffic engineering, policy routing, segment
-      routing or Service Function Chaining (SFC) <xref target="RFC7665"/> to
+      <t>Several deployments use Traffic Engineering, policy routing, Segment
+      Routing (SR), and Service Function Chaining (SFC) <xref target="RFC7665"/> to
       steer packets through a specific set of nodes. In certain cases,
       regulatory obligations or a compliance policy require operators to prove
       that all packets that are supposed to follow a specific path are indeed
@@ -248,7 +248,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       specified by the policy. In case some packets of a flow weren't
       appropriately processed, a verification device should determine the
       policy violation and take corresponding actions corresponding to the
-      policy (e.g., drop or redirect the packet, send an alert etc.). In
+      policy (e.g., drop or redirect the packet, send an alert etc.) In
       today's deployments, the proof that a packet traversed a particular path
       or service chain is typically delivered in an indirect way: Service
       appliances and network forwarding are in different trust domains.
@@ -259,7 +259,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       egress interface of a service appliance. This "wiring" is verified and
       then trusted upon. The evolution to Network Function Virtualization
       (NFV) and modern service chaining concepts (using technologies such as
-      LISP, NSH, Segment Routing (SR), etc.) blurs the line between the
+      Locator/ID Separation Protocol (LISP), Network Service Header (NSH),
+      Segment Routing (SR), etc.) blurs the line between the
       different trust domains, because the hand-off-points are no longer
       clearly defined physical interfaces, but are virtual interfaces. As a
       consequence, different trust layers should not to be mixed in the same
@@ -297,18 +298,26 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       <t>Abbreviations used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
+
+      <t hangText="LISP:">Locator/ID Separation Protocol</t>
+
+          <t hangText="LPC:">Lagrange Polynomial Constants</t>
+
           <t hangText="MTU:">Maximum Transmit Unit</t>
 
-          <t hangText="SR:">Segment Routing</t>
+          <t hangText="NFV:">Network Function Virtualization</t>
 
           <t hangText="NSH:">Network Service Header</t>
-
-          <t hangText="SFC:">Service Function Chain</t>
 
           <t hangText="POT:">Proof of Transit</t>
 
           <t hangText="POT-profile:">Proof of Transit Profile that has the
           necessary data for nodes to participate in proof of transit</t>
+
+          <t hangText="SFC:">Service Function Chain</t>
+
+          <t hangText="SR:">Segment Routing</t>
+
         </list></t>
     </section>
 
@@ -322,9 +331,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
       <t>The methods how traffic is identified and associated to a specific
       path is outside the scope of this document. Identification could be done
-      using a filter (e.g., 5-tupel classifier), or an identifier which is
+      using a filter (e.g., 5-tuple classifier), or an identifier which is
       already present in the packet (e.g., path or service identifier,
-      flow-label, etc.).</t>
+      NSH Service Path Identifier (SPI),
+      flow-label, etc.)</t>
 
       <t>The solution approach is detailed in two steps. Initially the concept
       of the approach is explained. This concept is then further refined to
@@ -338,7 +348,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         generation of the POT data to protect against misuse (i.e.
         configuration mistakes, malicious administrators playing tricks with
         routing, capturing, spoofing and replaying packets). The mechanism for
-        POT leverages "Shamir's secret sharing scheme" <xref
+        POT leverages "Shamir's Secret Sharing" scheme <xref
         target="SSS"/>.</t>
 
         <t>Shamir's secret sharing base idea: A polynomial (represented by its
@@ -462,14 +472,14 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             secret.</t>
 
             <t><list style="empty">
-                <t>l0(x) = (((x-x1)/(x0-x1))*((x-x2)/x0-x2))) mod 53 = <vspace
-                blankLines="0"/>(((x-4)/(2-4))*((x-5)/2-5))) mod 53 = <vspace
+                <t>l0(x) = (((x-x1) / (x0-x1)) * ((x-x2)/x0-x2))) mod 53 = <vspace
+                blankLines="0"/>(((x-4) / (2-4)) * ((x-5)/2-5))) mod 53 = <vspace
                 blankLines="0"/>(10/3 - 3x/2 + (1/6)x^2) mod 53</t>
 
-                <t>l1(x) = (((x-x0)/(x1-x0))*((x-x2)/x1-x2))) mod 53 = <vspace
+                <t>l1(x) = (((x-x0) / (x1-x0)) * ((x-x2)/x1-x2))) mod 53 = <vspace
                 blankLines="0"/>(-5 + 7x/2 - (1/2)x^2) mod 53</t>
 
-                <t>l2(x) = (((x-x0)/(x2-x0))*((x-x1)/x2-x1))) mod 53 = <vspace
+                <t>l2(x) = (((x-x0) / (x2-x0)) * ((x-x1)/x2-x1))) mod 53 = <vspace
                 blankLines="0"/>(8/3 - 2 + (1/3)x^2) mod 53</t>
               </list></t>
           </section>
@@ -477,8 +487,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           <section title="LPC Computation">
             <t>Since x0=2, x1=4, x2=5 are chosen points. Given that
             computations are done over a finite arithmetic field ("modulo a
-            prime number"), the Lagrange basis polynomial constants (LPC) are
-            computed modulo 53. The Lagrange polynomial constant (LPC) would
+            prime number"), the Lagrange basis polynomial constants are
+            computed modulo 53. The Lagrange Polynomial Constant (LPC) would
             be 10/3 , -5 , 8/3.</t>
 
             <t><list style="empty">
@@ -495,18 +505,18 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             <t>Reconstruction of the polynomial is well-defined as</t>
 
             <t><!-- To ensure equations are on separate line for
-				 readability --> POLY1(x) = l0(x)*y0 + l1(x)*y1 + l2(x)*y2.</t>
+				 readability --> POLY1(x) = l0(x) * y0 + l1(x) * y1 + l2(x) * y2</t>
 
             <t>Subsequently, the SECRET, which is the constant coefficient of
             POLY1(x) can be computed as below</t>
 
-            <t>SECRET = (y0*LPC(l0)+y1*LPC(l1)+y2*LPC(l2)) mod 53.</t>
+            <t>SECRET = (y0*LPC(l0)+y1*LPC(l1)+y2*LPC(l2)) mod 53</t>
 
             <t>The secret can be easily reconstructed using the y-values and
             the LPC:</t>
 
             <t>SECRET = (y0*LPC(l0) + y1*LPC(l1) + y2*LPC(l2)) mod 53 = mod
-            (28 * 21 + 17 * 48 + 47 * 38) mod 53 = 3190 mod 53 = 10.</t>
+            (28 * 21 + 17 * 48 + 47 * 38) mod 53 = 3190 mod 53 = 10</t>
 
             <t>One observes that the secret reconstruction can easily be
             performed cumulatively hop by hop. CML represents the cumulative
@@ -550,7 +560,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             as</t>
 
             <t>CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod
-            Prime.</t>
+            Prime</t>
 
             <t>Let us observe the packet level transformations in detail. For
             the example packet here, let the value RND be 45. Thus POLY-2
@@ -565,12 +575,12 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
                 <t>At node-1 (x0): Respective share of POLY-2 is generated i.e.,
                 (2, 46) because share index of node-1 is 2.</t>
 
-                <t>CML = 0 + ((28 + 46)* 21) mod 53 = 17.</t>
+                <t>CML = 0 + ((28 + 46)* 21) mod 53 = 17</t>
 
                 <t>At node-2 (x1): Respective share of POLY-2 is generated i.e.,
                 (4, 21) because share index of node-2 is 4.</t>
 
-                <t>CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39.</t>
+                <t>CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39</t>
 
                 <t>At node-3 (x2), which is also the verifier: The respective
                 share of POLY-2 is generated i.e., (5, 12) because the share
@@ -586,10 +596,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             <t>As shown in the above example, for final verification, the
             verifier compares:</t>
 
-            <t>VERIFY = (SECRET + RND) mod Prime, with Prime = 53 here.</t>
+            <t>VERIFY = (SECRET + RND) mod Prime, with Prime = 53 here</t>
 
             <t>VERIFY = (RND-1 + RND-2) mod Prime = ( 10 + 45 ) mod 53 =
-            2.</t>
+            2</t>
 
             <t>Since VERIFY = CML the packet is proven to have gone through
             nodes 1, 2, and 3.</t>
@@ -1016,7 +1026,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             order to predict the secrets. Differential analysis across packets
             could be mitigated using a good PRNG for generating RND. Note that
             if constant coefficient is a sequence number than CML values
-            become quite predictable and the scheme would be broken</t>
+            become quite predictable and the scheme would be broken.</t>
           </list></t>
       </section>
 
@@ -1036,7 +1046,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         flagged as suspicious.</t>
 
         <t>For all practical purposes in the rest of the document RND means
-        SEQ_NO + RND to keep it simple</t>
+        SEQ_NO + RND to keep it simple.</t>
       </section>
 
       <section title="Anti-Preplay">
@@ -1047,7 +1057,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         this attack is same as Replay attacks discussed before.</t>
 
         <t>Preplay attacks are possible since the POT metadata is not dependent
-        on the packet fields. Below steps are recommended for remediation<list
+        on the packet fields. Below steps are recommended for remediation:<list
             style="symbols">
             <t>Ingress node and Verifier are configured with common pre shared
             key</t>
@@ -1066,7 +1076,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           </list></t>
 
         <t>An active attacker since lacks the knowledge of pre-shared key
-        cannot launch preplay attacks</t>
+        cannot launch preplay attacks.</t>
       </section>
 
       <section title="Anti-Tampering">

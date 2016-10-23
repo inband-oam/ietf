@@ -412,19 +412,21 @@
     </section>
 
     <section anchor="Conventions" title="Conventions">
-      <!--
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
       document are to be interpreted as described in <xref
       target="RFC2119"/>.</t>
--->
 
       <t>Abbreviations used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
           <t hangText="ECMP:">Equal Cost Multi-Path</t>
 
+      <t hangText="LISP:">Locator/ID Separation Protocol</t>
+
           <t hangText="MTU:">Maximum Transmit Unit</t>
+
+          <t hangText="NSH:">Network Service Header</t>
 
           <t hangText="NFV:">Network Function Virtualization</t>
 
@@ -432,9 +434,9 @@
 
           <t hangText="PMTU:">Path MTU</t>
 
-          <t hangText="SLA:">Service Level Agreement</t>
-
           <t hangText="SFC:">Service Function Chain</t>
+
+          <t hangText="SLA:">Service Level Agreement</t>
 
           <t hangText="SR:">Segment Routing</t>
 
@@ -442,7 +444,6 @@
 
           <t hangText="SID:">Segment Identifier</t>
 
-          <t hangText="NSH:">Network Service Header</t>
 
           <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
              Generic Protocol Extension</t>
@@ -620,7 +621,9 @@
         received back from an egress interface of a service appliance. This
         "wiring" is verified and trusted. The evolution to Network Function
         Virtualization (NFV) and modern service chaining concepts (using
-        technologies such as LISP, NSH, Segment Routing, etc.) blurs the line
+        technologies such as 
+      Locator/ID Separation Protocol (LISP), Network Service Header (NSH),
+Segment Routing (SR), etc.) blurs the line
         between the different trust domains, because the hand-off-points are
         no longer clearly defined physical interfaces, but are virtual
         interfaces. Because of that very reason, networks operators require
@@ -640,7 +643,7 @@
         blocked.</t>
 
         <t>A solution approach could be based on OAM data which is added to
-        every packet for achieving Proof Of Transit(POT).The OAM data is
+        every packet for achieving Proof Of Transit (POT).The OAM data is
         updated at every hop and is used to verify whether a packet traversed
         all required nodes. When the verifier receives each packet, it can
         validate whether the packet traversed the service chain correctly. The
@@ -675,7 +678,7 @@
 
             <t>Trend Analysis on Traffic Patterns: Analyze if (and if so how)
             the forwarding path for a specific set of traffic changes over
-            time (can give hints to routing issues, unstable links etc.).</t>
+            time (can give hints to routing issues, unstable links etc.)</t>
 
             <t>Network Delay Distribution: Show delay distribution across
             network by node or links. If enabled per application or for a
@@ -703,7 +706,7 @@
             within the trading-floor department, access to specific
             applications or servers is granted.</t>
 
-            <t>Device-level troubleshooting and optimization: In many cases,
+            <t>Device-level Troubleshooting and Optimization: In many cases,
             network operators could benefit from information specific to a
             single device. A non-exhaustive list of useful information
             includes: queue-depths, buffer utilization (either shared or
@@ -721,7 +724,7 @@
             for troubleshooting low-level device errors as well as providing a
             knowledge feedback loop for network and device optimization.</t>
 
-            <t>Custom network probing: Active network probing and in-situ OAM
+            <t>Custom Network Probing: Active network probing and in-situ OAM
             can be combined for customized and efficient network probing. This
             could for example be a customized traceroute.</t>
           </list></t>
@@ -731,7 +734,8 @@
     <section title="Considerations for In-situ OAM">
       <t>The implementation of an in-situ OAM mechanism needs to take several
       considerations into account, including administrative boundaries, how
-      information is recorded, Maximum Transfer Unit (MTU), Path MTU discovery
+      information is recorded, Maximum Transfer Unit (MTU), Path MTU Discovery
+(PMTUD)
       and packet size, etc.</t>
 
       <section anchor="type_of_iOAM_data"
@@ -766,7 +770,7 @@
                 path</t>
 
                 <t>Stats collection at each hop to optimize communication in
-                resource constrained networks e.g., Battery, CPU, memory
+                resource constrained networks e.g., battery, CPU, memory
                 status of each node piggy backed in a data packet is useful in
                 low power lossy networks where network nodes are mostly asleep
                 and communication is expensive</t>
@@ -902,7 +906,7 @@
         <t><list style="format REQ-G%d:">
             <t>Classification: It should be possible to enable in-situ OAM on
             a selected set of traffic (e.g., per interface, based on an access
-            control list specifying a specific set of traffic, etc.). The
+            control list specifying a specific set of traffic, etc.) The
             selected set of traffic can also be all traffic.</t>
 
             <t>Scope: If in-situ OAM is used only within a specific domain,
@@ -923,15 +927,18 @@
             Layering support should not be limited to just underlay and
             overlay, but include more than two layers.</t>
 
-            <t>MTU size: With in-situ OAM information added, packets MUST not
-            become larger than the path MTU.<list style="empty">
-                <t>REQ-G5.1: If due to some reason a packet which contains in
+            <t>MTU size: With in-situ OAM information added, packets MUST NOT
+            become larger than the path MTU.
+
+<list style="format REQ-G5.%d:">
+
+                <t>If due to some reason a packet which contains in
                 situ OAM data record cannot be forwarded due to the presence
                 of in-situ OAM data records, the node SHOULD remove the in
                 situ OAM data records and forward the packet, rather than drop
                 the entire packet.</t>
 
-                <t>REQ-G5.2: If the encapsulating router is unable to insert
+                <t>If the encapsulating router is unable to insert
                 in-situ OAM data records into a packet, e.g., due to MTU
                 issues, even though it is configured to do so, it should use
                 some operational means to inform the operator (e.g., syslog)
@@ -939,7 +946,7 @@
                 the in-situ OAM encapsulating node fails to add in-situ OAM
                 data records, it should forward the packet normally.</t>
 
-                <t>REQ-G5.3: MTU size consideration for in-situ OAM MUST take
+                <t>MTU size consideration for in-situ OAM MUST take
                 domain specifics into account, e.g., changes of the domain
                 topology due to path protection mechanisms might extend the
                 hop count of a path etc.</t>
@@ -1156,13 +1163,11 @@
      with a value containing a set of directories to search.  These can be either in the local
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
-    <!--
     <references title="Normative References">
 
       &RFC2119;
 
     </references>
--->
 
     <references title="Informative References">
       &RFC791;
