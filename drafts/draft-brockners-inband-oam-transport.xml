@@ -197,13 +197,13 @@
 
       <address>
         <postal>
-          <street/>
+          <street></street>
 
-          <city/>
+          <city></city>
 
-          <code/>
+          <code></code>
 
-          <country/>
+          <country></country>
         </postal>
 
         <email>davidm@mellanox.com</email>
@@ -242,11 +242,11 @@
           <country>US</country>
         </postal>
 
-        <email/>
+        <email></email>
       </address>
     </author>
 
-    <date day="30" month="October" year="2016"/>
+    <date day="30" month="October" year="2016" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -286,29 +286,29 @@
 
   <middle>
     <section title="Introduction" toc="default">
-      <t>This document discusses transport mechanisms for "in-situ" Operations, Administration, and Maintenance
-      (OAM) data records. In-situ OAM records
-      OAM information within the packet while the packet traverses a
-      particular network domain. The term "in-situ" refers to the fact that
+      <t>This document discusses transport mechanisms for "in-situ"
+      Operations, Administration, and Maintenance (OAM) data records. In-situ
+      OAM records OAM information within the packet while the packet traverses
+      a particular network domain. The term "in-situ" refers to the fact that
       the OAM data is added to the data packets rather than is being sent
       within packets specifically dedicated to OAM. A discussion of the
       motivation and requirements for in-situ OAM can be found in <xref
-      target="I-D.brockners-inband-oam-requirements"/>. Data types and data
-      formats for in-situ OAM are defined in <xref
-      target="I-D.brockners-inband-oam-data"/>.</t>
+      target="I-D.brockners-inband-oam-requirements"></xref>. Data types and
+      data formats for in-situ OAM are defined in <xref
+      target="I-D.brockners-inband-oam-data"></xref>.</t>
 
       <t>This document outlines transport encapsulations for the in-situ OAM
-      data defined in <xref target="I-D.brockners-inband-oam-data"/>. This
-      document is to serve informational purposes only. As part of an in-situ
-      OAM implementation study different protocol encapsulations for in-situ
-      OAM data are being explored. Once data formats and encapsulation
+      data defined in <xref target="I-D.brockners-inband-oam-data"></xref>.
+      This document is to serve informational purposes only. As part of an
+      in-situ OAM implementation study different protocol encapsulations for
+      in-situ OAM data are being explored. Once data formats and encapsulation
       approaches are settled, protocol specific specifications for in-situ OAM
       data transport will address the standardization aspect.</t>
 
       <t>The data for in-situ OAM defined in <xref
-      target="I-D.brockners-inband-oam-data"/> can be carried in a variety of
-      protocols based on the deployment needs. This document discusses
-      transport of in-situ OAM data for the following protocols:</t>
+      target="I-D.brockners-inband-oam-data"></xref> can be carried in a
+      variety of protocols based on the deployment needs. This document
+      discusses transport of in-situ OAM data for the following protocols:</t>
 
       <t><list style="symbols">
           <t>IPv6</t>
@@ -326,18 +326,18 @@
       OAM data in several other protocols and transports.</t>
 
       <t>A feasibility study of in-situ OAM is currently underway as part of
-      the FD.io project <xref target="FD.io"/>. The in-situ OAM implementation
-      study should be considered as a "tool box" to showcase how "in-situ" OAM
-      can complement probe-packet based OAM mechanisms for different
-      deployments and packet transport formats. For details, see the open
-      source code in the FD.io <xref target="FD.io"/>.</t>
+      the FD.io project <xref target="FD.io"></xref>. The in-situ OAM
+      implementation study should be considered as a "tool box" to showcase
+      how "in-situ" OAM can complement probe-packet based OAM mechanisms for
+      different deployments and packet transport formats. For details, see the
+      open source code in the FD.io <xref target="FD.io"></xref>.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
       document are to be interpreted as described in <xref
-      target="RFC2119"/>.</t>
+      target="RFC2119"></xref>.</t>
 
       <t>Abbreviations used in this document:</t>
 
@@ -361,33 +361,33 @@
         </list></t>
     </section>
 
-    <section title="In-Band OAM Metadata Transport in IPv6">
+    <section title="In-Situ OAM Metadata Transport in IPv6">
       <t>This mechanisms of in-situ OAM in IPv6 complement others proposed to
       enhance diagnostics of IPv6 networks, such as the IPv6 Performance and
       Diagnostic Metrics Destination Option described in <xref
-      target="I-D.ietf-ippm-6man-pdm-option"/>. The IP Performance and
+      target="I-D.ietf-ippm-6man-pdm-option"></xref>. The IP Performance and
       Diagnostic Metrics Destination Option is destination focused and
       specific to IPv6, whereas in-situ OAM is performed between end-points of
       the network or a network domain where it is enabled and used.</t>
 
       <t>A historical note: The idea of IPv6 route recording was originally
-      introduced by <xref target="I-D.kitamura-ipv6-record-route"/> back in
-      year 2000. With IPv6 now being generally deployed and new concepts such
-      as Segment Routing <xref target="I-D.ietf-spring-segment-routing"/>
-      being introduced, it is imperative to further mature the Operations, Administration, and Maintenance
-      mechanisms available to IPv6
-      networks.</t>
+      introduced by <xref target="I-D.kitamura-ipv6-record-route"></xref> back
+      in year 2000. With IPv6 now being generally deployed and new concepts
+      such as Segment Routing <xref
+      target="I-D.ietf-spring-segment-routing"></xref> being introduced, it is
+      imperative to further mature the Operations, Administration, and
+      Maintenance mechanisms available to IPv6 networks.</t>
 
       <t>The in-situ OAM options translate into options for an IPv6 extension
       header. The extension header would be inserted by either a host source
       of the packet, or by a transit/domain-edge node. If the addition of the
-      in-situ OAM Hop-by-Hop Option header would lead to the packet exceeding the
-      MTU of the domain an error should be reported. The methods and
+      in-situ OAM Hop-by-Hop Option header would lead to the packet exceeding
+      the MTU of the domain an error should be reported. The methods and
       procedures of how the error is reported are outside the scope of this
       document. Likewise if an ICMPv6 forwarding error occurs between
       encapsulating and decapsulating nodes, the node generating the ICMPv6
-      error should strip the in-situ OAM Hop-by-Hop Option header before sending
-      the ICMPv6 message to the source.</t>
+      error should strip the in-situ OAM Hop-by-Hop Option header before
+      sending the ICMPv6 message to the source.</t>
 
       <section title="In-situ OAM in IPv6 Hop by Hop Extension Header">
         <t>This section defines in-situ OAM for IPv6 transport. In-situ OAM
@@ -442,25 +442,25 @@ With 2 highest order bits of Option Type indicating the following:
 
           <t><list style="numbers">
               <t>Tracing Option: The in-situ OAM Tracing option defined in
-              <xref target="I-D.brockners-inband-oam-data"/> is represented as
-              a IPv6 option in hop by hop extension header by allocating
-              following type: <list style="hanging">
+              <xref target="I-D.brockners-inband-oam-data"></xref> is
+              represented as a IPv6 option in hop by hop extension header by
+              allocating following type: <list style="hanging">
                   <t hangText="Option Type:">001xxxxxx 8-bit identifier of the
                   type of option. xxxxxx=TBD_IANA_TRACE_OPTION_IPV6.</t>
                 </list></t>
 
               <t>Proof of Transit Option: The in-situ OAM POT option defined
-              in <xref target="I-D.brockners-inband-oam-data"/> is represented
-              as a IPv6 option in hop by hop extension header by allocating
-              following type: <list style="hanging">
+              in <xref target="I-D.brockners-inband-oam-data"></xref> is
+              represented as a IPv6 option in hop by hop extension header by
+              allocating following type: <list style="hanging">
                   <t hangText="Option Type:">001xxxxxx 8-bit identifier of the
                   type of option. xxxxxx=TBD_IANA_POT_OPTION_IPV6.</t>
                 </list></t>
 
               <t>Edge to Edge Option: The in-situ OAM E2E option defined in
-              <xref target="I-D.brockners-inband-oam-data"/> is represented as
-              a IPv6 option in hop by hop extension header by allocating
-              following type: <list style="hanging">
+              <xref target="I-D.brockners-inband-oam-data"></xref> is
+              represented as a IPv6 option in hop by hop extension header by
+              allocating following type: <list style="hanging">
                   <t hangText="Option Type:">000xxxxxx 8-bit identifier of the
                   type of option. xxxxxx=TBD_IANA_E2E_OPTION_IPV6.</t>
                 </list></t>
@@ -473,8 +473,8 @@ With 2 highest order bits of Option Type indicating the following:
           (i.e. at the encapsulating/decapsulating nodes) by means of
           configuration.</t>
 
-          <t>Such a configuration SHOULD allow selective enablement of in-situ OAM
-          header insertion for a subset of traffic (e.g., one or several
+          <t>Such a configuration SHOULD allow selective enablement of in-situ
+          OAM header insertion for a subset of traffic (e.g., one or several
           "pipes").</t>
 
           <t>Further the ingress edge node should be aware of maximum size of
@@ -560,14 +560,15 @@ if (in-situ OAM hbyh ext-header is present) {
     </section>
 
     <section title="In-situ OAM Metadata Transport in VXLAN-GPE">
-      <t>VXLAN-GPE <xref target="I-D.ietf-nvo3-vxlan-gpe"/> encapsulation is
-      somewhat similar to IPv6 extension headers in that a series of headers
-      can be contained in the header as a linked list. The different in-situ
-      OAM types are added as options within a new in-situ OAM protocol header
-      in VXLAN GPE. In an administrative domain where in-situ OAM is used,
-      insertion of the in-situ OAM protocol header in VXLAN GPE is enabled at
-      the VXLAN GPE tunnel endpoint which also serve as in-situ OAM
-      encapsulating/decapsulating nodes by means of configuration.</t>
+      <t>VXLAN-GPE <xref target="I-D.ietf-nvo3-vxlan-gpe"></xref>
+      encapsulation is somewhat similar to IPv6 extension headers in that a
+      series of headers can be contained in the header as a linked list. The
+      different in-situ OAM types are added as options within a new in-situ
+      OAM protocol header in VXLAN GPE. In an administrative domain where
+      in-situ OAM is used, insertion of the in-situ OAM protocol header in
+      VXLAN GPE is enabled at the VXLAN GPE tunnel endpoint which also serve
+      as in-situ OAM encapsulating/decapsulating nodes by means of
+      configuration.</t>
 
       <t><figure>
           <artwork><![CDATA[
@@ -599,8 +600,8 @@ In-situ OAM header in VXLAN GPE header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
         </figure>The VXLAN-GPE header and fields are defined in <xref
-      target="I-D.ietf-nvo3-vxlan-gpe"/>. in-situ OAM specific fields and
-      header are defined here:<list style="hanging">
+      target="I-D.ietf-nvo3-vxlan-gpe"></xref>. in-situ OAM specific fields
+      and header are defined here:<list style="hanging">
           <t hangText="Type:">8-bit unsigned integer defining in-situ OAM
           header type</t>
 
@@ -625,8 +626,8 @@ In-situ OAM header in VXLAN GPE header:
    Option Data          Variable-length field.  Option-Type-specific
                         data.]]></artwork>
         </figure>The in-situ OAM options defined in <xref
-      target="I-D.brockners-inband-oam-data"/> are encoded with an option type
-      allocated in the new in-situ OAM IANA registry - in-situ
+      target="I-D.brockners-inband-oam-data"></xref> are encoded with an
+      option type allocated in the new in-situ OAM IANA registry - in-situ
       OAM_PROTOCOL_OPTION_REGISTRY_IANA_TBD. In addition the following padding
       options are defined to be used when necessary to align subsequent
       options and to pad out the containing header to a multiple of 8 octets
@@ -660,13 +661,14 @@ PadN option  (alignment requirement: none)
     </section>
 
     <section title="In-situ OAM Metadata Transport in NSH">
-      <t>In Service Function Chaining (SFC) <xref target="RFC7665"/>, the
-      Network Service Header (NSH) <xref target="I-D.ietf-sfc-nsh"/> already
-      includes path tracing capabilities <xref target="I-D.penno-sfc-trace"/>,
-      but currently does not offer a solution to securely prove that packets
-      really traversed the service chain. The "Proof of Transit" capabilities
-      (see <xref target="I-D.brockners-inband-oam-requirements"/> and <xref
-      target="I-D.brockners-proof-of-transit"/>) of in-situ OAM can be
+      <t>In Service Function Chaining (SFC) <xref target="RFC7665"></xref>,
+      the Network Service Header (NSH) <xref target="I-D.ietf-sfc-nsh"></xref>
+      already includes path tracing capabilities <xref
+      target="I-D.penno-sfc-trace"></xref>, but currently does not offer a
+      solution to securely prove that packets really traversed the service
+      chain. The "Proof of Transit" capabilities (see <xref
+      target="I-D.brockners-inband-oam-requirements"></xref> and <xref
+      target="I-D.brockners-proof-of-transit"></xref>) of in-situ OAM can be
       leveraged within NSH. In an administrative domain where in-situ OAM is
       used, insertion of the in-situ OAM data into the NSH header is enabled
       at the required nodes (i.e. at the in-situ OAM
@@ -680,7 +682,7 @@ PadN option  (alignment requirement: none)
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      TLV Class=Cisco (0x0009) |C|    Type=POT |F|R|R| Len=4   |
+|      TLV Class=Cisco (0x0009) |C|    Type=POT |R|    Len=4    |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -720,18 +722,17 @@ PadN option  (alignment requirement: none)
     </section>
 
     <section title="In-situ OAM Metadata Transport in Segment Routing">
-      <t/>
+      <t></t>
 
       <section title="In-situ OAM in SR with IPv6 Transport">
         <t>Similar to NSH, a service chain or path defined using Segment
         Routing for IPv6 can be verified using the in-situ OAM "Proof of
         Transit" approach. The Segment Routing Header (SRH) for IPv6 offers
         the ability to transport TLV structured data, similar to what NSH does
-        (see <xref target="I-D.ietf-6man-segment-routing-header"/>). In an
-        domain where in-situ OAM is used, insertion of the
-        in-situ OAM data is enabled at the required edge nodes (i.e. at the
-        in-situ OAM encapsulating/decapsulating nodes) by means of
-        configuration.</t>
+        (see <xref target="I-D.ietf-6man-segment-routing-header"></xref>). In
+        an domain where in-situ OAM is used, insertion of the in-situ OAM data
+        is enabled at the required edge nodes (i.e. at the in-situ OAM
+        encapsulating/decapsulating nodes) by means of configuration.</t>
 
         <t>A new "POT TLV" is defined for the SRH which is to carry proof of
         transit in situ OAM data.</t>
@@ -797,7 +798,7 @@ PadN option  (alignment requirement: none)
       <t>Security considerations will be addressed &iacute;n a later version
       of this document. For a discussion of security requirements of in-situ
       OAM, please refer to <xref
-      target="I-D.brockners-inband-oam-requirements"/>.</t>
+      target="I-D.brockners-inband-oam-requirements"></xref>.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -806,9 +807,10 @@ PadN option  (alignment requirement: none)
       Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker, and
       Andrew Yourtchenko for the comments and advice. For the IPv6
       encapsulation, this document leverages and builds on top of several
-      concepts described in <xref target="I-D.kitamura-ipv6-record-route"/>.
-      The authors would like to acknowledge the work done by the author
-      Hiroshi Kitamura and people involved in writing it.</t>
+      concepts described in <xref
+      target="I-D.kitamura-ipv6-record-route"></xref>. The authors would like
+      to acknowledge the work done by the author Hiroshi Kitamura and people
+      involved in writing it.</t>
     </section>
   </middle>
 
@@ -850,16 +852,16 @@ PadN option  (alignment requirement: none)
           <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
           Extension</title>
 
-          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
+          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"></author>
 
-          <date month="November" year="2000"/>
+          <date month="November" year="2000" />
         </front>
 
         <seriesInfo name="Internet-Draft"
-                    value="draft-kitamura-ipv6-record-route-00"/>
+                    value="draft-kitamura-ipv6-record-route-00" />
 
         <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
-                type="TXT"/>
+                type="TXT" />
       </reference>
 
       &I-D.brockners-inband-oam-data;
@@ -872,9 +874,9 @@ PadN option  (alignment requirement: none)
         <front>
           <title>Fast Data Project: FD.io</title>
 
-          <author/>
+          <author></author>
 
-          <date/>
+          <date />
         </front>
       </reference>
 
