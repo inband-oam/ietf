@@ -217,7 +217,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    as two separate options.  Any deployment MAY choose to configure and
    support one or both of the following options.  An implementation of
    the transport protocol that carries these in-situ OAM data MAY choose
-   to support only one of the options.
+   to support only one of the options.  In the event that both options
 
 
 
@@ -225,6 +225,9 @@ Brockners, et al.          Expires May 3, 2017                  [Page 4]
 
 Internet-Draft          In-situ OAM Data Formats            October 2016
 
+
+   are utilized at the same time, the Incremental Trace Option MUST be
+   placed before the Pre-allocated Trace Option.
 
    Pre-allocated Trace Option:  This trace option is defined as a
       container of node-data elements with pre-allocated space for each
@@ -270,9 +273,6 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
 
    The following in-situ OAM data is defined for in-situ OAM tracing:
 
-   o  Identification of the in-situ OAM node.  An in-situ OAM node
-      identifier can match to a device identifier or a particular
-      control point or subsystem within a device.
 
 
 
@@ -281,6 +281,10 @@ Brockners, et al.          Expires May 3, 2017                  [Page 5]
 
 Internet-Draft          In-situ OAM Data Formats            October 2016
 
+
+   o  Identification of the in-situ OAM node.  An in-situ OAM node
+      identifier can match to a device identifier or a particular
+      control point or subsystem within a device.
 
    o  Identification of the interface that a packet was received on.
 
@@ -310,10 +314,6 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    "Node data List [n-1]" is the second one, etc.
 
 3.1.1.  Pre-allocated Trace Option
-
-
-
-
 
 
 
@@ -651,10 +651,10 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    |                       timestamp nanoseconds                   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   transit delay:  4-octet unsigned integer in the range 0 to 10^9-1.
+   transit delay:  4-octet unsigned integer in the range 0 to 2^30-1.
       It is the time in nanoseconds packet spent in transiting a node.
       This can serve to give an indication of queuing delay at the node.
-      If the transit delay exceeds 10^9-1 nanoseconds then the top bit
+      If the transit delay exceeds 2^30-1 nanoseconds then the top bit
       'O' is set to indicate overflow.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1178,7 +1178,7 @@ Brockners, et al.          Expires May 3, 2017                 [Page 21]
 Internet-Draft          In-situ OAM Data Formats            October 2016
 
 
-   Tal
+   Tal Mizrahi
    Marvell
    6 Hamada St.
    Yokneam  20692
@@ -1187,13 +1187,13 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    Email: talmi@marvell.com
 
 
-   David
+   David Mozes
    Mellanox Technologies Ltd.
 
    Email: davidm@mellanox.com
 
 
-   Petr
+   Petr Lapukhov
    Facebook
    1 Hacker Way
    Menlo Park, CA  94025
@@ -1202,7 +1202,7 @@ Internet-Draft          In-situ OAM Data Formats            October 2016
    Email: petr@fb.com
 
 
-   Remy
+   Remy Chang
    Barefoot Networks
    2185 Park Boulevard
    Palo Alto, CA  94306
