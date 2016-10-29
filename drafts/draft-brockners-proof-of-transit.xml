@@ -298,8 +298,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       <t>Abbreviations used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
-
-      <t hangText="LISP:">Locator/ID Separation Protocol</t>
+		  <t hangText="HMAC:">Hash based Message Authentication Code. For example,
+            HMAC-SHA256 generates 256 bits of MAC</t>
+			
+     	  <t hangText="LISP:">Locator/ID Separation Protocol</t>
 
           <t hangText="LPC:">Lagrange Polynomial Constants</t>
 
@@ -313,7 +315,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
           <t hangText="POT-profile:">Proof of Transit Profile that has the
           necessary data for nodes to participate in proof of transit</t>
+		  
+		  <t hangText="RND:">Random Bits generated per packet. Packet fields that donot change during the traversal are given as input to HMAC-256 algorithm. A minimum of 32 bits (left most) need to be used from the output if RND is used to verify the packet integrity. This is a standard recommendation by NIST.  </t>
 
+		  <t hangText="SEQ_NO:">Sequence number initialized to a predefined constant. This is used in concatenation with RND bits to mitigate different attacks discussed later. </t>
           <t hangText="SFC:">Service Function Chain</t>
 
           <t hangText="SR:">Segment Routing</t>
@@ -605,6 +610,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             nodes 1, 2, and 3.</t>
           </section>
         </section>
+		<section title="Final Version">
+			<t> The enhanced version of the protocol is still prone to replay and preplay attacks. 
+				An attacker	could reuse the POT metadata for bypassing the verification. So additional measures using packet integrity checks (HMAC) and sequence numbers (SEQ_NO) are discussed later "Security Considerations" section.  </t>
+		</section>
       </section>
 
       <section title="Operational Aspects">
@@ -1065,8 +1074,7 @@ module ietf-pot-profile {
             key</t>
 
             <t>Ingress node generates a Message Authentication Code (MAC) from
-            packet fields using standard HMAC algorithm. For example,
-            HMAC-SHA256 generates 256 bits of MAC.</t>
+            packet fields using standard HMAC algorithm.</t>
 
             <t>The left most bits of the output are truncated to desired
             length to generate RND. It is recommended to use a minimum of 32
