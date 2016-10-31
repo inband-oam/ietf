@@ -11,6 +11,10 @@ Expires: May 3, 2017                                        C. Pignataro
                                                                  Comcast
                                                                S. Youell
                                                                     JMPC
+                                                                D. Mozes
+                                              Mellanox Technologies Ltd.
+                                                              T. Mizrahi
+                                                                 Marvell
                                                         October 30, 2016
 
 
@@ -44,10 +48,6 @@ Status of This Memo
 
    This Internet-Draft will expire on May 3, 2017.
 
-Copyright Notice
-
-   Copyright (c) 2016 IETF Trust and the persons identified as the
-   document authors.  All rights reserved.
 
 
 
@@ -57,6 +57,11 @@ Brockners, et al.          Expires May 3, 2017                  [Page 1]
 
 Internet-Draft              Proof of Transit                October 2016
 
+
+Copyright Notice
+
+   Copyright (c) 2016 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
@@ -75,37 +80,32 @@ Table of Contents
    3.  Proof of Transit  . . . . . . . . . . . . . . . . . . . . . .   5
      3.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . . . .   5
      3.2.  Solution Approach . . . . . . . . . . . . . . . . . . . .   6
-       3.2.1.  Setup . . . . . . . . . . . . . . . . . . . . . . . .   6
+       3.2.1.  Setup . . . . . . . . . . . . . . . . . . . . . . . .   7
        3.2.2.  In Transit  . . . . . . . . . . . . . . . . . . . . .   7
        3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   7
      3.3.  Illustrative Example  . . . . . . . . . . . . . . . . . .   7
        3.3.1.  Basic Version . . . . . . . . . . . . . . . . . . . .   7
-         3.3.1.1.  Secret Shares . . . . . . . . . . . . . . . . . .   7
+         3.3.1.1.  Secret Shares . . . . . . . . . . . . . . . . . .   8
          3.3.1.2.  Lagrange Polynomials  . . . . . . . . . . . . . .   8
          3.3.1.3.  LPC Computation . . . . . . . . . . . . . . . . .   8
-         3.3.1.4.  Reconstruction  . . . . . . . . . . . . . . . . .   8
+         3.3.1.4.  Reconstruction  . . . . . . . . . . . . . . . . .   9
          3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   9
        3.3.2.  Enhanced Version  . . . . . . . . . . . . . . . . . .   9
          3.3.2.1.  Random Polynomial . . . . . . . . . . . . . . . .   9
-         3.3.2.2.  Reconstruction  . . . . . . . . . . . . . . . . .   9
+         3.3.2.2.  Reconstruction  . . . . . . . . . . . . . . . . .  10
          3.3.2.3.  Verification  . . . . . . . . . . . . . . . . . .  10
-       3.3.3.  Final Version . . . . . . . . . . . . . . . . . . . .  10
-     3.4.  Operational Aspects . . . . . . . . . . . . . . . . . . .  10
-     3.5.  Alternative Approach  . . . . . . . . . . . . . . . . . .  11
-       3.5.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . .  11
+       3.3.3.  Final Version . . . . . . . . . . . . . . . . . . . .  11
+     3.4.  Operational Aspects . . . . . . . . . . . . . . . . . . .  11
+     3.5.  Alternative Approach  . . . . . . . . . . . . . . . . . .  12
+       3.5.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . .  12
        3.5.2.  Pros  . . . . . . . . . . . . . . . . . . . . . . . .  12
        3.5.3.  Cons  . . . . . . . . . . . . . . . . . . . . . . . .  12
    4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  12
    5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  13
-     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  13
+     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  14
      5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  14
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
    7.  Manageability Considerations  . . . . . . . . . . . . . . . .  17
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
-     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  17
-     8.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  18
-     8.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  18
-     8.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  19
 
 
 
@@ -114,18 +114,23 @@ Brockners, et al.          Expires May 3, 2017                  [Page 2]
 Internet-Draft              Proof of Transit                October 2016
 
 
-     8.5.  Anti-Tampering  . . . . . . . . . . . . . . . . . . . . .  19
-     8.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  19
-     8.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  19
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
+     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  18
+     8.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  18
+     8.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  19
+     8.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  19
+     8.5.  Anti-Tampering  . . . . . . . . . . . . . . . . . . . . .  20
+     8.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  20
+     8.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  20
      8.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  20
-     8.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  20
-       8.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  20
-       8.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  20
+     8.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  21
+       8.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  21
+       8.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  21
    9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  21
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  21
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  21
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  22
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 1.  Introduction
 
@@ -157,11 +162,6 @@ Internet-Draft              Proof of Transit                October 2016
    chaining concepts (using technologies such as Locator/ID Separation
    Protocol (LISP), Network Service Header (NSH), Segment Routing (SR),
    etc.) blurs the line between the different trust domains, because the
-   hand-off-points are no longer clearly defined physical interfaces,
-   but are virtual interfaces.  As a consequence, different trust layers
-   should not to be mixed in the same device.  For an NFV scenario a
-   different type of proof is required.  Offering a proof that a packet
-   indeed traversed a specific set of service functions or nodes allows
 
 
 
@@ -170,6 +170,11 @@ Brockners, et al.          Expires May 3, 2017                  [Page 3]
 Internet-Draft              Proof of Transit                October 2016
 
 
+   hand-off-points are no longer clearly defined physical interfaces,
+   but are virtual interfaces.  As a consequence, different trust layers
+   should not to be mixed in the same device.  For an NFV scenario a
+   different type of proof is required.  Offering a proof that a packet
+   indeed traversed a specific set of service functions or nodes allows
    operators to evolve from the above described indirect methods of
    proving that packets visit a predetermined set of nodes.
 
@@ -212,12 +217,7 @@ Internet-Draft              Proof of Transit                October 2016
    POT-profile:  Proof of Transit Profile that has the necessary data
               for nodes to participate in proof of transit
 
-   RND:       Random Bits generated per packet.  Packet fields that
-              donot change during the traversal are given as input to
-              HMAC-256 algorithm.  A minimum of 32 bits (left most) need
-              to be used from the output if RND is used to verify the
-              packet integrity.  This is a standard recommendation by
-              NIST.
+
 
 
 
@@ -225,6 +225,13 @@ Brockners, et al.          Expires May 3, 2017                  [Page 4]
 
 Internet-Draft              Proof of Transit                October 2016
 
+
+   RND:       Random Bits generated per packet.  Packet fields that
+              donot change during the traversal are given as input to
+              HMAC-256 algorithm.  A minimum of 32 bits (left most) need
+              to be used from the output if RND is used to verify the
+              packet integrity.  This is a standard recommendation by
+              NIST.
 
    SEQ_NO:    Sequence number initialized to a predefined constant.
               This is used in concatenation with RND bits to mitigate
@@ -267,13 +274,6 @@ Internet-Draft              Proof of Transit                October 2016
    Shamir's secret sharing base idea: A polynomial (represented by its
    coefficients) is chosen as a secret by the controller.  A polynomial
    represents a curve.  A set of well-defined points on the curve are
-   needed to construct the polynomial.  Each point of the polynomial is
-   called "share" of the secret.  A single secret is associated with a
-   particular set of nodes, which typically represent the path, to be
-   verified.  Shares of the single secret (i.e., points on the curve)
-   are securely distributed from a Controller to the network nodes.
-   Nodes use their respective share to update a cumulative value in the
-   POT data of each packet.  Only a verifying node has access to the
 
 
 
@@ -282,6 +282,13 @@ Brockners, et al.          Expires May 3, 2017                  [Page 5]
 Internet-Draft              Proof of Transit                October 2016
 
 
+   needed to construct the polynomial.  Each point of the polynomial is
+   called "share" of the secret.  A single secret is associated with a
+   particular set of nodes, which typically represent the path, to be
+   verified.  Shares of the single secret (i.e., points on the curve)
+   are securely distributed from a Controller to the network nodes.
+   Nodes use their respective share to update a cumulative value in the
+   POT data of each packet.  Only a verifying node has access to the
    complete secret.  The verifying node validates the correctness of the
    received POT data by reconstructing the curve.
 
@@ -321,6 +328,16 @@ Internet-Draft              Proof of Transit                October 2016
    Detailed algorithms are discussed next.  A simple example is
    discussed in Section 3.3.
 
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                  [Page 6]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 3.2.1.  Setup
 
    A controller generates a first polynomial (POLY-1) of degree k and
@@ -330,14 +347,6 @@ Internet-Draft              Proof of Transit                October 2016
    nodes (including verifier) are assigned a point on the polynomial
    i.e., shares of the SECRET.  The verifier is configured with the
    SECRET.  The Controller also generates coefficients (except the
-
-
-
-Brockners, et al.          Expires May 3, 2017                  [Page 6]
-
-Internet-Draft              Proof of Transit                October 2016
-
-
    constant coefficient, called "RND", which is changed on a per packet
    basis) of a second polynomial POLY-2 of the same degree.  Each node
    is configured with the LPC of POLY-2.  Note that POLY-2 is public.
@@ -376,6 +385,15 @@ Internet-Draft              Proof of Transit                October 2016
    i.e., SECRET=10.  It is important to note that all operations are
    done over a finite field (i.e., modulo prime).
 
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                  [Page 7]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 3.3.1.1.  Secret Shares
 
    The shares of the secret are the points on POLY-1 chosen for the 3
@@ -386,13 +404,6 @@ Internet-Draft              Proof of Transit                October 2016
       POLY-1(4) = 17 => (x1, y1) = (4, 17)
 
       POLY-1(5) = 47 => (x2, y2) = (5, 47)
-
-
-
-Brockners, et al.          Expires May 3, 2017                  [Page 7]
-
-Internet-Draft              Proof of Transit                October 2016
-
 
    The three points above are the points on the curve which are
    considered the shares of the secret.  They are assigned to three
@@ -431,6 +442,14 @@ Internet-Draft              Proof of Transit                October 2016
    For a general way to compute the modular multiplicative inverse, see
    e.g., the Euclidean algorithm.
 
+
+
+
+Brockners, et al.          Expires May 3, 2017                  [Page 8]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 3.3.1.4.  Reconstruction
 
    Reconstruction of the polynomial is well-defined as
@@ -441,14 +460,6 @@ Internet-Draft              Proof of Transit                October 2016
    POLY1(x) can be computed as below
 
    SECRET = (y0*LPC(l0)+y1*LPC(l1)+y2*LPC(l2)) mod 53
-
-
-
-
-Brockners, et al.          Expires May 3, 2017                  [Page 8]
-
-Internet-Draft              Proof of Transit                October 2016
-
 
    The secret can be easily reconstructed using the y-values and the
    LPC:
@@ -485,6 +496,16 @@ Internet-Draft              Proof of Transit                October 2016
    precisely only RND value changes per packet and is public and the
    rest of the non-constant coefficients of POLY-2 kept secret.
 
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                  [Page 9]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 3.3.2.2.  Reconstruction
 
    Recall that each node is preconfigured with their respective
@@ -498,13 +519,6 @@ Internet-Draft              Proof of Transit                October 2016
    Let us observe the packet level transformations in detail.  For the
    example packet here, let the value RND be 45.  Thus POLY-2 would be
    (45 + 7x + 10x^2).
-
-
-
-Brockners, et al.          Expires May 3, 2017                  [Page 9]
-
-Internet-Draft              Proof of Transit                October 2016
-
 
    The shares that could be generated are (2, 46), (4, 21), (5, 12).
 
@@ -540,6 +554,14 @@ Internet-Draft              Proof of Transit                October 2016
    Since VERIFY = CML the packet is proven to have gone through nodes 1,
    2, and 3.
 
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 10]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 3.3.3.  Final Version
 
    The enhanced version of the protocol is still prone to replay and
@@ -554,14 +576,6 @@ Internet-Draft              Proof of Transit                October 2016
    generate the necessary polynomials, the secret share per node, the
    prime number, etc. and distributing the data to the nodes
    participating in proof of transit.  The identified node that performs
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 10]
-
-Internet-Draft              Proof of Transit                October 2016
-
-
    the verification is provided with the verification key.  The
    information provided from the Controller to each of the nodes
    participating in proof of transit is referred to as a proof of
@@ -595,6 +609,15 @@ Internet-Draft              Proof of Transit                October 2016
        numbers carried in the POT data a field to indicate this is
        shared and interpreted at the nodes.
 
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 11]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 3.5.  Alternative Approach
 
    In certain scenarios preserving the order of the nodes traversed by
@@ -608,15 +631,6 @@ Internet-Draft              Proof of Transit                October 2016
 
    2.  The controller provisions the verifier with all the secret keys
        of the nodes.
-
-
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 11]
-
-Internet-Draft              Proof of Transit                October 2016
-
 
    3.  For each packet, the ingress node generates a random number RND
        and encrypts it with its secret key to generate CML value
@@ -652,6 +666,14 @@ Internet-Draft              Proof of Transit                October 2016
    1.  RND: Random number (the constant coefficient of public
        polynomial)
 
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 12]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
    2.  CML: Cumulative
 
    The size of the data records determines how often a new set of
@@ -663,16 +685,6 @@ Internet-Draft              Proof of Transit                October 2016
    choosing 64 bits for RND and CML data records, the time between a
    renewal of secrets could be as long as 3,100 years, even when running
    at 100 Gbps.
-
-
-
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 12]
-
-Internet-Draft              Proof of Transit                October 2016
-
 
    +-------------+--------------+------------------+-------------------+
    |   Transfer  |  Secret/RND  | Max # of packets |   Time RND lasts  |
@@ -707,6 +719,17 @@ Internet-Draft              Proof of Transit                October 2016
    Controller and nodes.  It only defines the procedures and the
    associated YANG data model.
 
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 13]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 5.1.  Procedure
 
    The Controller creates new POT-profiles at a constant rate and
@@ -722,14 +745,6 @@ Internet-Draft              Proof of Transit                October 2016
 
    All nodes maintain two POT-profiles (an even and an odd POT-profile):
    One POT-profile is currently active and in use; one profile is
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 13]
-
-Internet-Draft              Proof of Transit                October 2016
-
-
    standby and about to get used.  A flag in the packet is indicating
    whether the odd or even POT-profile is to be used by a node.  This is
    to ensure that during profile change the service is not disrupted.
@@ -763,6 +778,14 @@ Internet-Draft              Proof of Transit                October 2016
 
      organization "IETF xxx Working Group";
 
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 14]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
      contact "";
 
      description "This module contains a collection of YANG
@@ -778,13 +801,6 @@ Internet-Draft              Proof of Transit                October 2016
        reference
          "";
      }
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 14]
-
-Internet-Draft              Proof of Transit                October 2016
-
 
      typedef profile-index-range {
        type int32 {
@@ -818,6 +834,14 @@ Internet-Draft              Proof of Transit                October 2016
          }
 
          leaf secret-share {
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 15]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
            type uint64;
            mandatory true;
            description
@@ -834,14 +858,6 @@ Internet-Draft              Proof of Transit                October 2016
          leaf lpc {
            type uint64;
            mandatory true;
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 15]
-
-Internet-Draft              Proof of Transit                October 2016
-
-
            description
              "Lagrange Polynomial Coefficient";
          }
@@ -874,6 +890,14 @@ Internet-Draft              Proof of Transit                October 2016
 
        list pot-profile-set {
          key "pot-profile-name";
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 16]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
          ordered-by user;
          description
            "Set of proof of transit profiles that group parameters
@@ -890,14 +914,6 @@ Internet-Draft              Proof of Transit                October 2016
          leaf active-profile-index {
            type profile-index-range;
            description
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 16]
-
-Internet-Draft              Proof of Transit                October 2016
-
-
              "Proof of transit profile index that is currently active.
               Will be set in the first hop of the path or chain.
               Other nodes will not use this field.";
@@ -926,6 +942,18 @@ Internet-Draft              Proof of Transit                October 2016
    Different security requirements achieved by the solution approach are
    discussed here.
 
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 17]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 8.1.  Proof of Transit
 
    Proof of correctness and security of the solution approach is per
@@ -945,14 +973,6 @@ Internet-Draft              Proof of Transit                October 2016
       of SECRET (i.e. points on POLY-1), Share of POLY-2, LPC, P.  Note
       that only constant coefficient, RND, of POLY-2 is public. x values
       and non-constant coefficient of POLY-2 are secret
-
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 17]
-
-Internet-Draft              Proof of Transit                October 2016
-
 
    An attacker bypassing a few nodes will miss adding a respective point
    on POLY-1 to corresponding point on POLY-2 , thus the verifier cannot
@@ -983,6 +1003,13 @@ Internet-Draft              Proof of Transit                October 2016
       constant coefficient is a sequence number than CML values become
       quite predictable and the scheme would be broken.
 
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 18]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 8.3.  Anti-Replay
 
    A passive attacker could reuse a set of older RND and the
@@ -1001,14 +1028,6 @@ Internet-Draft              Proof of Transit                October 2016
 
    For all practical purposes in the rest of the document RND means
    SEQ_NO + RND to keep it simple.
-
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 18]
-
-Internet-Draft              Proof of Transit                October 2016
-
 
 8.4.  Anti-Preplay
 
@@ -1037,6 +1056,16 @@ Internet-Draft              Proof of Transit                October 2016
    An active attacker since lacks the knowledge of pre-shared key cannot
    launch preplay attacks.
 
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 19]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
 8.5.  Anti-Tampering
 
    An active attacker could not insert any arbitrary value for CML.
@@ -1058,14 +1087,6 @@ Internet-Draft              Proof of Transit                October 2016
    multiple physical entities.  In case of multiple physical entities
    (e.g., for load-balancing, or business continuity situations -
    consider for example a set of firewalls), all physical entities which
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 19]
-
-Internet-Draft              Proof of Transit                October 2016
-
-
    are implementing the same POT node are given that same share of the
    secret.  This makes multiple physical entities represent the same POT
    node from an algorithm perspective.
@@ -1088,6 +1109,18 @@ Internet-Draft              Proof of Transit                October 2016
    without a Controller can be considered feasible.  In such a case, the
    Controller would only be used for the initial configuration of the
    POT-profiles.
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 20]
+
+Internet-Draft              Proof of Transit                October 2016
+
 
 8.9.  Verification Scope
 
@@ -1114,14 +1147,6 @@ Internet-Draft              Proof of Transit                October 2016
    The POT approach discussed in this document is to prove that a data
    packet traversed a specific set of "nodes".  This set could be all
    nodes within a path, but could also be a subset of nodes in a path.
-
-
-
-Brockners, et al.          Expires May 3, 2017                 [Page 20]
-
-Internet-Draft              Proof of Transit                October 2016
-
-
    Consequently, the POT approach isn't suited to detect whether
    "stealth" nodes which do not participate in proof-of-transit have
    been inserted into a path.
@@ -1144,6 +1169,14 @@ Internet-Draft              Proof of Transit                October 2016
 
    [SSS]      "Shamir's Secret Sharing", <https://en.wikipedia.org/wiki/
               Shamir%27s_Secret_Sharing>.
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 21]
+
+Internet-Draft              Proof of Transit                October 2016
+
 
 10.2.  Informative References
 
@@ -1172,12 +1205,6 @@ Authors' Addresses
    Email: shwethab@cisco.com
 
 
-
-Brockners, et al.          Expires May 3, 2017                 [Page 21]
-
-Internet-Draft              Proof of Transit                October 2016
-
-
    Sashank Dara
    Cisco Systems, Inc.
    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
@@ -1196,6 +1223,17 @@ Internet-Draft              Proof of Transit                October 2016
    Email: cpignata@cisco.com
 
 
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 22]
+
+Internet-Draft              Proof of Transit                October 2016
+
+
    John Leddy
    Comcast
 
@@ -1211,6 +1249,19 @@ Internet-Draft              Proof of Transit                October 2016
    Email: stephen.youell@jpmorgan.com
 
 
+   David Mozes
+   Mellanox Technologies Ltd.
+
+   Email: davidm@mellanox.com
+
+
+   Tal Mizrahi
+   Marvell
+   6 Hamada St.
+   Yokneam  20692
+   Israel
+
+   Email: talmi@marvell.com
 
 
 
@@ -1229,4 +1280,9 @@ Internet-Draft              Proof of Transit                October 2016
 
 
 
-Brockners, et al.          Expires May 3, 2017                 [Page 22]
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2017                 [Page 23]
