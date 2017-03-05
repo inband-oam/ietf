@@ -11,7 +11,7 @@ https://github.com/CiscoDevNet/iOAM
 
 # Most recent Internet Drafts
 
- - https://tools.ietf.org/html/draft-brockners-inband-oam-requirements-01
- - https://tools.ietf.org/html/draft-brockners-inband-oam-data-01
- - https://tools.ietf.org/html/draft-brockners-inband-oam-transport-01
- - https://tools.ietf.org/html/draft-brockners-proof-of-transit-01
+ - https://tools.ietf.org/html/draft-brockners-inband-oam-requirements-02
+ - https://tools.ietf.org/html/draft-brockners-inband-oam-data-02
+ - https://tools.ietf.org/html/draft-brockners-inband-oam-transport-02
+ - https://tools.ietf.org/html/draft-brockners-proof-of-transit-02
