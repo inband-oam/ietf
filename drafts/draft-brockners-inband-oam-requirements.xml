@@ -298,7 +298,7 @@
       </address>
     </author>
 
-    <date day="30" month="October" year="2016"/>
+    <date day="13" month="March" year="2017"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -422,7 +422,7 @@
       <t><list hangIndent="11" style="hanging">
           <t hangText="ECMP:">Equal Cost Multi-Path</t>
 
-      <t hangText="LISP:">Locator/ID Separation Protocol</t>
+          <t hangText="LISP:">Locator/ID Separation Protocol</t>
 
           <t hangText="MTU:">Maximum Transmit Unit</t>
 
@@ -576,8 +576,8 @@
 
         <t>In high-speed networks one can leverage and benefit from
         packet-accurate measurements with for example hardware-accurate
-        timestamping (i.e., nanosecond-level verification) to support optimized
-        packet scheduling and queuing mechanisms.</t>
+        timestamping (i.e., nanosecond-level verification) to support
+        optimized packet scheduling and queuing mechanisms.</t>
       </section>
 
       <section title="Frame Replication/Elimination Decision for Bi-casting/Active-active Networks">
@@ -586,15 +586,16 @@
         automation/control, health care) require efficient OAM methods to
         decide when to replicate packets to a secondary path in order to keep
         the loss/error-rate for the receiver at a tolerable level - and also
-        when to stop replication and eliminate the redundant flow. Many Internet of Things (IoT)
-        networks are time sensitive and cannot leverage automatic
-        retransmission requests (ARQ) to cope with transmission errors or lost
-        packets. Transmitting the data over multiple disparate paths (often
-        called bi-casting or live-live) is a method used to reduce the error
-        rate observed by the receiver. Time sensitive networks (TSN) receive a
-        lot of attention from the manufacturing industry as shown by a various
-        standardization activities and industry forums being formed (see e.g.,
-        IETF 6TiSCH, IEEE P802.1CB, AVnu).</t>
+        when to stop replication and eliminate the redundant flow. Many
+        Internet of Things (IoT) networks are time sensitive and cannot
+        leverage automatic retransmission requests (ARQ) to cope with
+        transmission errors or lost packets. Transmitting the data over
+        multiple disparate paths (often called bi-casting or live-live) is a
+        method used to reduce the error rate observed by the receiver. Time
+        sensitive networks (TSN) receive a lot of attention from the
+        manufacturing industry as shown by a various standardization
+        activities and industry forums being formed (see e.g., IETF 6TiSCH,
+        IEEE P802.1CB, AVnu).</t>
       </section>
 
       <section anchor="usecase_proof_of_transit" title="Proof of Transit">
@@ -621,9 +622,8 @@
         received back from an egress interface of a service appliance. This
         "wiring" is verified and trusted. The evolution to Network Function
         Virtualization (NFV) and modern service chaining concepts (using
-        technologies such as 
-      Locator/ID Separation Protocol (LISP), Network Service Header (NSH),
-Segment Routing (SR), etc.) blurs the line
+        technologies such as Locator/ID Separation Protocol (LISP), Network
+        Service Header (NSH), Segment Routing (SR), etc.) blurs the line
         between the different trust domains, because the hand-off-points are
         no longer clearly defined physical interfaces, but are virtual
         interfaces. Because of that very reason, networks operators require
@@ -662,7 +662,8 @@ Segment Routing (SR), etc.) blurs the line
         including:<list style="symbols">
             <t>Traffic Matrix: Derive the network traffic matrix: Traffic for
             a given time interval between any two edge nodes of a given
-            domain. Could be performed for all traffic or on a per Quality of Service (QoS) class.</t>
+            domain. Could be performed for all traffic or on a per Quality of
+            Service (QoS) class.</t>
 
             <t>Flow Debugging: Discover which path(s) a particular set of
             traffic (identified by an n-tuple) takes in the network. Such a
@@ -735,11 +736,10 @@ Segment Routing (SR), etc.) blurs the line
       <t>The implementation of an in-situ OAM mechanism needs to take several
       considerations into account, including administrative boundaries, how
       information is recorded, Maximum Transfer Unit (MTU), Path MTU Discovery
-(PMTUD)
-      and packet size, etc.</t>
+      (PMTUD) and packet size, etc.</t>
 
       <section anchor="type_of_iOAM_data"
-               title="Type of Information to Be Recorded">
+               title="Type of Information to be Recorded">
         <t>The information gathered for in-situ OAM can be categorized into
         three main categories: Information with a per-hop scope, such as path
         tracing; information which applies to a specific set of hops, such as
@@ -865,6 +865,23 @@ Segment Routing (SR), etc.) blurs the line
         scope of this document.</t>
       </section>
 
+      <section title="Forwarding Behavior">
+        <t>In-situ OAM adds additional data records to live user traffic and
+        as such changes the packet which is also why in-situ OAM is
+        characterized as "hybrid, type 1" OAM. The effectiveness of in-situ
+        OAM as a tool for operations depends on forwarding nodes not altering
+        their forwarding behavior in case of in-situ OAM data records being
+        present in the packet. As a consequence, an implementation of in-situ
+        OAM should not change the forwarding behavior of the packet, i.e.
+        packets with or without in-situ OAM data records should be handled the
+        same way by a forwarding node (see also the associated requirement
+        further below). Note that there are implementations where the addition
+        of meta-data to live user traffic might cause the forwarding behavior
+        of the packet to change, e.g. certain implementation handle IPv6
+        packets with or without extension headers differently (see <xref
+        target="RFC7872"/>).</t>
+      </section>
+
       <section title="Optimization of Node and Interface Identifiers">
         <t>Since packets have a finite maximum size, the data recording or
         carrying capacity of one packet in which the in-situ OAM metadata is
@@ -928,28 +945,25 @@ Segment Routing (SR), etc.) blurs the line
             overlay, but include more than two layers.</t>
 
             <t>MTU size: With in-situ OAM information added, packets MUST NOT
-            become larger than the path MTU.
+            become larger than the path MTU. <list style="format REQ-G5.%d:">
+                <t>If due to some reason a packet which contains in situ OAM
+                data record cannot be forwarded due to the presence of in-situ
+                OAM data records, the node SHOULD remove the in situ OAM data
+                records and forward the packet, rather than drop the entire
+                packet.</t>
 
-<list style="format REQ-G5.%d:">
+                <t>If the encapsulating router is unable to insert in-situ OAM
+                data records into a packet, e.g., due to MTU issues, even
+                though it is configured to do so, it should use some
+                operational means to inform the operator (e.g., syslog) about
+                the inability to add in-situ OAM data records. Even if the
+                in-situ OAM encapsulating node fails to add in-situ OAM data
+                records, it should forward the packet normally.</t>
 
-                <t>If due to some reason a packet which contains in
-                situ OAM data record cannot be forwarded due to the presence
-                of in-situ OAM data records, the node SHOULD remove the in
-                situ OAM data records and forward the packet, rather than drop
-                the entire packet.</t>
-
-                <t>If the encapsulating router is unable to insert
-                in-situ OAM data records into a packet, e.g., due to MTU
-                issues, even though it is configured to do so, it should use
-                some operational means to inform the operator (e.g., syslog)
-                about the inability to add in-situ OAM data records. Even if
-                the in-situ OAM encapsulating node fails to add in-situ OAM
-                data records, it should forward the packet normally.</t>
-
-                <t>MTU size consideration for in-situ OAM MUST take
-                domain specifics into account, e.g., changes of the domain
-                topology due to path protection mechanisms might extend the
-                hop count of a path etc.</t>
+                <t>MTU size consideration for in-situ OAM MUST take domain
+                specifics into account, e.g., changes of the domain topology
+                due to path protection mechanisms might extend the hop count
+                of a path etc.</t>
               </list></t>
 
             <t>Data structure reuse: The data types and data formats defined
@@ -966,6 +980,10 @@ Segment Routing (SR), etc.) blurs the line
             ability to send the in-situ OAM information retrieved from the
             packet back to the source address of the packet or to the
             encapsulating node.</t>
+
+            <t>Unaltered forwarding behavior of in-situ OAM nodes: The
+            addition of in-situ OAM data-records should not change the way
+            packets are forwarded within the in-situ OAM domain.</t>
           </list></t>
       </section>
 
@@ -1164,9 +1182,7 @@ Segment Routing (SR), etc.) blurs the line
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
-
       &RFC2119;
-
     </references>
 
     <references title="Informative References">
