@@ -60,7 +60,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-brockners-inband-oam-requirements-02"
+<rfc category="info" docName="draft-brockners-inband-oam-requirements-03"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -440,15 +440,10 @@
 
           <t hangText="SR:">Segment Routing</t>
 
-          <!--
-
           <t hangText="SID:">Segment Identifier</t>
 
-
           <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
-             Generic Protocol Extension</t>
-
--->
+          Generic Protocol Extension</t>
         </list></t>
 
       <t>This document defines in-situ Operations, Administration, and
@@ -851,6 +846,41 @@
         and any further recording is stopped but the packet itself is not
         dropped, it may lead to every node in the path to make this policy
         decision.</t>
+
+        <section title="Layered In-Situ OAM Domains">
+          <t>Like any OAM domain, in-situ OAM domains could also be
+          layered/nested. Layering/nesting of in-situ OAM follows the general
+          approach of OAM layering: An in-situ OAM domain consists of
+          maintenance end-points (MEP) and maintenance intermediate points
+          (MIP). MEP add to or remove the entire set of in-situ OAM data
+          records from the traffic, while only MIP update or add in-situ OAM
+          data records. When in-situ OAM layering is employed, a MEP of one
+          layer becomes a MIP in the layer above, while MIP of the lower layer
+          are not visible to the layer above - unless specifically configured
+          otherwise. </t>
+
+          <t>Consider the following examples: </t>
+
+          <t><list style="symbols">
+              <t>NSH over IPv6: In-situ OAM data records could be present in
+              both transport protocols: NSH and IPv6, with NSH forming the
+              overlay network and IPv6 forming the underlay network. The
+              network which deploys NSH would form an in-situ OAM domain. In
+              addition each IPv6 underlay network which connects two NSH nodes
+              forms an in-situ OAM domain. The in-situ OAM domain with NSH as
+              transport could be considered as layered on top of the different
+              in-situ OAM domains which use IPv6 as transport. </t>
+
+              <t>NSH using an in-situ OAM aware transport: Consider a case
+              where the underlay network would not natively support in-situ
+              OAM, still the individual transport nodes would have the
+              capability to "look deep into the packet" and update/add in-situ
+              OAM information in the NSH header. The in-situ OAM domain with
+              NSH as transport could be considered as layered on top of the
+              different in-situ OAM domains which are in-situ OAM aware and
+              connect the individual NSH nodes.</t>
+            </list></t>
+        </section>
       </section>
 
       <section title="Selective Enablement">
@@ -984,6 +1014,11 @@
             <t>Unaltered forwarding behavior of in-situ OAM nodes: The
             addition of in-situ OAM data-records should not change the way
             packets are forwarded within the in-situ OAM domain.</t>
+
+            <t>Layering of in-situ OAM domains: It should be possible to layer
+            in-situ OAM domains on each other. Layering should be supported
+            within the same, as well as with different transport protocols
+            which carry in-situ OAM data-records.</t>
           </list></t>
       </section>
 

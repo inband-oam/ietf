@@ -25,7 +25,7 @@ Expires: September 14, 2017                                 C. Pignataro
 
 
                       Requirements for In-situ OAM
-               draft-brockners-inband-oam-requirements-02
+               draft-brockners-inband-oam-requirements-03
 
 Abstract
 
@@ -98,14 +98,14 @@ Table of Contents
      4.1.  Type of Information to be Recorded  . . . . . . . . . . .  11
      4.2.  MTU and Packet Size . . . . . . . . . . . . . . . . . . .  12
      4.3.  Administrative Boundaries . . . . . . . . . . . . . . . .  13
-     4.4.  Selective Enablement  . . . . . . . . . . . . . . . . . .  13
-     4.5.  Forwarding Behavior . . . . . . . . . . . . . . . . . . .  13
+       4.3.1.  Layered In-Situ OAM Domains . . . . . . . . . . . . .  13
+     4.4.  Selective Enablement  . . . . . . . . . . . . . . . . . .  14
+     4.5.  Forwarding Behavior . . . . . . . . . . . . . . . . . . .  14
      4.6.  Optimization of Node and Interface Identifiers  . . . . .  14
-     4.7.  Loop Communication Path (IPv6-specifics)  . . . . . . . .  14
-   5.  Requirements for In-situ OAM Data Types . . . . . . . . . . .  14
+     4.7.  Loop Communication Path (IPv6-specifics)  . . . . . . . .  15
+   5.  Requirements for In-situ OAM Data Types . . . . . . . . . . .  15
      5.1.  Generic Requirements  . . . . . . . . . . . . . . . . . .  15
-     5.2.  In-situ OAM Data with Per-hop Scope . . . . . . . . . . .  16
-     5.3.  In-situ OAM with Selected Hop Scope . . . . . . . . . . .  17
+     5.2.  In-situ OAM Data with Per-hop Scope . . . . . . . . . . .  17
 
 
 
@@ -114,15 +114,16 @@ Brockners, et al.      Expires September 14, 2017               [Page 2]
 Internet-Draft          In-situ OAM Requirements              March 2017
 
 
+     5.3.  In-situ OAM with Selected Hop Scope . . . . . . . . . . .  18
      5.4.  In-situ OAM with End-to-end Scope . . . . . . . . . . . .  18
-   6.  Security Considerations and Requirements  . . . . . . . . . .  18
-     6.1.  General considerations  . . . . . . . . . . . . . . . . .  18
-     6.2.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  18
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  19
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  19
+   6.  Security Considerations and Requirements  . . . . . . . . . .  19
+     6.1.  General considerations  . . . . . . . . . . . . . . . . .  19
+     6.2.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  19
+   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  20
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  20
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  20
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  20
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  21
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 1.  Introduction
@@ -161,7 +162,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    described in [I-D.lapukhov-dataplane-probe].  In-situ OAM mechanisms
    can be leveraged where current out-of-band mechanisms do not apply or
    do not offer the desired characteristics or requirements, such as
-   proving that a certain set of traffic takes a pre-defined path,
 
 
 
@@ -170,6 +170,7 @@ Brockners, et al.      Expires September 14, 2017               [Page 3]
 Internet-Draft          In-situ OAM Requirements              March 2017
 
 
+   proving that a certain set of traffic takes a pre-defined path,
    strict congruency between overlay and underlay transports is in
    place, checking service level agreements for the live data traffic,
    detailed statistics or verification of path selections within a
@@ -220,7 +221,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
 
 
 
-
 Brockners, et al.      Expires September 14, 2017               [Page 4]
 
 Internet-Draft          In-situ OAM Requirements              March 2017
@@ -241,6 +241,11 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    SLA:       Service Level Agreement
 
    SR:        Segment Routing
+
+   SID:       Segment Identifier
+
+   VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
+              Extension
 
    This document defines in-situ Operations, Administration, and
    Maintenance (in-situ OAM), as the subset in which OAM information is
@@ -269,11 +274,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    would need to be artificially constructed as "fake" packets and
    inserted along the path.  Both approaches are often not feasible from
    an operational perspective, be it that access to the end-system is
-   not feasible, or that the diversity of parameters and associated
-   probe packets to be created is simply too large.  An in-situ
-   mechanism is an alternative in those cases.
-
-
 
 
 
@@ -281,6 +281,10 @@ Brockners, et al.      Expires September 14, 2017               [Page 5]
 
 Internet-Draft          In-situ OAM Requirements              March 2017
 
+
+   not feasible, or that the diversity of parameters and associated
+   probe packets to be created is simply too large.  An in-situ
+   mechanism is an alternative in those cases.
 
    In-situ mechanisms are not impacted by differences in the handling of
    probe traffic compared to other data packets, where probe traffic is
@@ -326,10 +330,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    are mapped to the same underlay elements.  Deployment dependent
    underlay transit nodes can be configured to update OAM information in
    the overlay transport encapsulation.  The operator of the egress
-   tunnel router could choose to share the recorded information about
-   the path with the user of the overlay.
-
-
 
 
 
@@ -337,6 +337,9 @@ Brockners, et al.      Expires September 14, 2017               [Page 6]
 
 Internet-Draft          In-situ OAM Requirements              March 2017
 
+
+   tunnel router could choose to share the recorded information about
+   the path with the user of the overlay.
 
    Coupled with mechanisms such as Segment Routing (SR)
    [I-D.ietf-spring-segment-routing], overlay network and underlay
@@ -382,9 +385,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    If a network supports ECMP, one can create detailed statistics for
    the different paths packets take through the network at the egress
    system, without a need to correlate/aggregate statistics from every
-   router in the system.  Transit devices are off-loaded from the task
-   of gathering packet statistics.
-
 
 
 
@@ -393,6 +393,9 @@ Brockners, et al.      Expires September 14, 2017               [Page 7]
 
 Internet-Draft          In-situ OAM Requirements              March 2017
 
+
+   router in the system.  Transit devices are off-loaded from the task
+   of gathering packet statistics.
 
    In high-speed networks one can leverage and benefit from packet-
    accurate measurements with for example hardware-accurate timestamping
@@ -439,9 +442,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    domains (i.e., physical interfaces).  Or in other terms, in the
    "network forwarding domain" things are wired up in a way that traffic
    is delivered to the ingress interface of a service appliance and
-   received back from an egress interface of a service appliance.  This
-   "wiring" is verified and trusted.  The evolution to Network Function
-   Virtualization (NFV) and modern service chaining concepts (using
 
 
 
@@ -450,6 +450,9 @@ Brockners, et al.      Expires September 14, 2017               [Page 8]
 Internet-Draft          In-situ OAM Requirements              March 2017
 
 
+   received back from an egress interface of a service appliance.  This
+   "wiring" is verified and trusted.  The evolution to Network Function
+   Virtualization (NFV) and modern service chaining concepts (using
    technologies such as Locator/ID Separation Protocol (LISP), Network
    Service Header (NSH), Segment Routing (SR), etc.) blurs the line
    between the different trust domains, because the hand-off-points are
@@ -495,9 +498,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    o  Flow Debugging: Discover which path(s) a particular set of traffic
       (identified by an n-tuple) takes in the network.  Such a procedure
       is particularly useful in case traffic is balanced across multiple
-      paths, like with link aggregation (LACP) or equal cost multi-
-      pathing (ECMP).
-
 
 
 
@@ -505,6 +505,9 @@ Brockners, et al.      Expires September 14, 2017               [Page 9]
 
 Internet-Draft          In-situ OAM Requirements              March 2017
 
+
+      paths, like with link aggregation (LACP) or equal cost multi-
+      pathing (ECMP).
 
    o  Loss Statistics per Path: Retrieve loss statistics per flow and
       path in the network.
@@ -551,9 +554,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
       cases, this information changes over per-packet timescales (i.e.,
       nanoseconds) and as such it is extremely challenging to collect
       and report this info in an accurate and scalable manner.  By
-      encoding the information from the forwarding element directly
-      within a data packet (i.e., within the 'fast-path') this
-      information can be added to some or all data packets and then
 
 
 
@@ -562,6 +562,9 @@ Brockners, et al.      Expires September 14, 2017              [Page 10]
 Internet-Draft          In-situ OAM Requirements              March 2017
 
 
+      encoding the information from the forwarding element directly
+      within a data packet (i.e., within the 'fast-path') this
+      information can be added to some or all data packets and then
       collected and analyzed by human or machine tools.  This type of
       information is particularly valuable for troubleshooting low-level
       device errors as well as providing a knowledge feedback loop for
@@ -607,9 +610,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
       *  Hop by Hop information e.g., Nodes visited for path tracing,
          Timestamps at each hop to find delays along the path
 
-      *  Stats collection at each hop to optimize communication in
-         resource constrained networks e.g., battery, CPU, memory status
-         of each node piggy backed in a data packet is useful in low
 
 
 
@@ -618,6 +618,9 @@ Brockners, et al.      Expires September 14, 2017              [Page 11]
 Internet-Draft          In-situ OAM Requirements              March 2017
 
 
+      *  Stats collection at each hop to optimize communication in
+         resource constrained networks e.g., battery, CPU, memory status
+         of each node piggy backed in a data packet is useful in low
          power lossy networks where network nodes are mostly asleep and
          communication is expensive
 
@@ -666,9 +669,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
 
 
 
-
-
-
 Brockners, et al.      Expires September 14, 2017              [Page 12]
 
 Internet-Draft          In-situ OAM Requirements              March 2017
@@ -704,6 +704,46 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    dropped, it may lead to every node in the path to make this policy
    decision.
 
+4.3.1.  Layered In-Situ OAM Domains
+
+   Like any OAM domain, in-situ OAM domains could also be layered/
+   nested.  Layering/nesting of in-situ OAM follows the general approach
+   of OAM layering: An in-situ OAM domain consists of maintenance end-
+   points (MEP) and maintenance intermediate points (MIP).  MEP add to
+   or remove the entire set of in-situ OAM data records from the
+   traffic, while only MIP update or add in-situ OAM data records.  When
+   in-situ OAM layering is employed, a MEP of one layer becomes a MIP in
+   the layer above, while MIP of the lower layer are not visible to the
+   layer above - unless specifically configured otherwise.
+
+   Consider the following examples:
+
+   o  NSH over IPv6: In-situ OAM data records could be present in both
+      transport protocols: NSH and IPv6, with NSH forming the overlay
+      network and IPv6 forming the underlay network.  The network which
+      deploys NSH would form an in-situ OAM domain.  In addition each
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 13]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
+
+
+      IPv6 underlay network which connects two NSH nodes forms an in-
+      situ OAM domain.  The in-situ OAM domain with NSH as transport
+      could be considered as layered on top of the different in-situ OAM
+      domains which use IPv6 as transport.
+
+   o  NSH using an in-situ OAM aware transport: Consider a case where
+      the underlay network would not natively support in-situ OAM, still
+      the individual transport nodes would have the capability to "look
+      deep into the packet" and update/add in-situ OAM information in
+      the NSH header.  The in-situ OAM domain with NSH as transport
+      could be considered as layered on top of the different in-situ OAM
+      domains which are in-situ OAM aware and connect the individual NSH
+      nodes.
+
 4.4.  Selective Enablement
 
    The ability to selectively enable in-situ OAM is valuable.  While it
@@ -722,14 +762,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    such changes the packet which is also why in-situ OAM is
    characterized as "hybrid, type 1" OAM.  The effectiveness of in-situ
    OAM as a tool for operations depends on forwarding nodes not altering
-
-
-
-Brockners, et al.      Expires September 14, 2017              [Page 13]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
    their forwarding behavior in case of in-situ OAM data records being
    present in the packet.  As a consequence, an implementation of in-
    situ OAM should not change the forwarding behavior of the packet,
@@ -746,6 +778,14 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    Since packets have a finite maximum size, the data recording or
    carrying capacity of one packet in which the in-situ OAM metadata is
    present is limited.  In-situ OAM should use its own dedicated
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 14]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
+
+
    namespace (confined to the domain in-situ OAM operates in) to
    represent node and interface IDs to save space in the header.
    Generic representations of node and interface identifiers which are
@@ -777,63 +817,23 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    data.  This section details requirements for in-situ OAM derived from
    the discussion above.
 
-
-
-
-
-Brockners, et al.      Expires September 14, 2017              [Page 14]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
 5.1.  Generic Requirements
 
-   REQ-G1:  Classification: It should be possible to enable in-situ OAM
-            on a selected set of traffic (e.g., per interface, based on
-            an access control list specifying a specific set of traffic,
-            etc.)  The selected set of traffic can also be all traffic.
+   REQ-G1:   Classification: It should be possible to enable in-situ OAM
+             on a selected set of traffic (e.g., per interface, based on
+             an access control list specifying a specific set of
+             traffic, etc.)  The selected set of traffic can also be all
+             traffic.
 
-   REQ-G2:  Scope: If in-situ OAM is used only within a specific domain,
-            provisions need to be put in place to ensure that in-situ
-            OAM data stays within the specific domain only.
+   REQ-G2:   Scope: If in-situ OAM is used only within a specific
+             domain, provisions need to be put in place to ensure that
+             in-situ OAM data stays within the specific domain only.
 
-   REQ-G3:  Transport independence: Data formats for in-situ OAM shall
-            be defined in a transport independent way.  In-situ OAM
-            applies to a variety of transport protocols.  Encapsulations
-            should be defined how the generic data formats are carried
-            by a specific protocol.
-
-   REQ-G4:  Layering: It should be possible to have in-situ OAM
-            information for different transport protocol layers be
-            present in several fields within a single packet.  This
-            could for example be the case when tunnels are employed and
-            in-situ OAM information is to be gathered for both the
-            underlay as well as the overlay network.  Layering support
-            should not be limited to just underlay and overlay, but
-            include more than two layers.
-
-   REQ-G5:  MTU size: With in-situ OAM information added, packets MUST
-            NOT become larger than the path MTU.
-
-            REQ-G5.1:  If due to some reason a packet which contains in
-                       situ OAM data record cannot be forwarded due to
-                       the presence of in-situ OAM data records, the
-                       node SHOULD remove the in situ OAM data records
-                       and forward the packet, rather than drop the
-                       entire packet.
-
-            REQ-G5.2:  If the encapsulating router is unable to insert
-                       in-situ OAM data records into a packet, e.g., due
-                       to MTU issues, even though it is configured to do
-                       so, it should use some operational means to
-                       inform the operator (e.g., syslog) about the
-                       inability to add in-situ OAM data records.  Even
-                       if the in-situ OAM encapsulating node fails to
-                       add in-situ OAM data records, it should forward
-                       the packet normally.
-
-            REQ-G5.3:  MTU size consideration for in-situ OAM MUST take
-                       domain specifics into account, e.g., changes of
+   REQ-G3:   Transport independence: Data formats for in-situ OAM shall
+             be defined in a transport independent way.  In-situ OAM
+             applies to a variety of transport protocols.
+             Encapsulations should be defined how the generic data
+             formats are carried by a specific protocol.
 
 
 
@@ -842,28 +842,73 @@ Brockners, et al.      Expires September 14, 2017              [Page 15]
 Internet-Draft          In-situ OAM Requirements              March 2017
 
 
-                       the domain topology due to path protection
-                       mechanisms might extend the hop count of a path
-                       etc.
+   REQ-G4:   Layering: It should be possible to have in-situ OAM
+             information for different transport protocol layers be
+             present in several fields within a single packet.  This
+             could for example be the case when tunnels are employed and
+             in-situ OAM information is to be gathered for both the
+             underlay as well as the overlay network.  Layering support
+             should not be limited to just underlay and overlay, but
+             include more than two layers.
 
-   REQ-G6:  Data structure reuse: The data types and data formats
-            defined and used for in-situ OAM ought to be reusable for
-            out-of-band OAM telemetry as well.
+   REQ-G5:   MTU size: With in-situ OAM information added, packets MUST
+             NOT become larger than the path MTU.
 
-   REQ-G7:  Data records format: It is desirable that the format of in-
-            situ OAM data-records leverages already defined data formats
-            for OAM as much as feasible.
+             REQ-G5.1:  If due to some reason a packet which contains in
+                        situ OAM data record cannot be forwarded due to
+                        the presence of in-situ OAM data records, the
+                        node SHOULD remove the in situ OAM data records
+                        and forward the packet, rather than drop the
+                        entire packet.
 
-   REQ-G8:  Combination with active OAM mechanisms: In-situ OAM should
-            be useable for active network probing, like for example a
-            customized version of traceroute.  Decapsulating in-situ OAM
-            nodes may have an ability to send the in-situ OAM
-            information retrieved from the packet back to the source
-            address of the packet or to the encapsulating node.
+             REQ-G5.2:  If the encapsulating router is unable to insert
+                        in-situ OAM data records into a packet, e.g.,
+                        due to MTU issues, even though it is configured
+                        to do so, it should use some operational means
+                        to inform the operator (e.g., syslog) about the
+                        inability to add in-situ OAM data records.  Even
+                        if the in-situ OAM encapsulating node fails to
+                        add in-situ OAM data records, it should forward
+                        the packet normally.
 
-   REQ-G9:  Unaltered forwarding behavior of in-situ OAM nodes: The
-            addition of in-situ OAM data-records should not change the
-            way packets are forwarded within the in-situ OAM domain.
+             REQ-G5.3:  MTU size consideration for in-situ OAM MUST take
+                        domain specifics into account, e.g., changes of
+                        the domain topology due to path protection
+                        mechanisms might extend the hop count of a path
+                        etc.
+
+   REQ-G6:   Data structure reuse: The data types and data formats
+             defined and used for in-situ OAM ought to be reusable for
+             out-of-band OAM telemetry as well.
+
+   REQ-G7:   Data records format: It is desirable that the format of in-
+             situ OAM data-records leverages already defined data
+             formats for OAM as much as feasible.
+
+   REQ-G8:   Combination with active OAM mechanisms: In-situ OAM should
+             be useable for active network probing, like for example a
+             customized version of traceroute.  Decapsulating in-situ
+             OAM nodes may have an ability to send the in-situ OAM
+
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 16]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
+
+
+             information retrieved from the packet back to the source
+             address of the packet or to the encapsulating node.
+
+   REQ-G9:   Unaltered forwarding behavior of in-situ OAM nodes: The
+             addition of in-situ OAM data-records should not change the
+             way packets are forwarded within the in-situ OAM domain.
+
+   REQ-G10:  Layering of in-situ OAM domains: It should be possible to
+             layer in-situ OAM domains on each other.  Layering should
+             be supported within the same, as well as with different
+             transport protocols which carry in-situ OAM data-records.
 
 5.2.  In-situ OAM Data with Per-hop Scope
 
@@ -890,14 +935,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
 
    REQ-H5:  Time-related requirements
 
-
-
-
-Brockners, et al.      Expires September 14, 2017              [Page 16]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
             REQ-H5.1:  Delay: Data shall be present that allows to
                        retrieve the delay between two or more points of
                        interest within the system.  Those points can be
@@ -908,6 +945,15 @@ Internet-Draft          In-situ OAM Requirements              March 2017
                        interest within the system.  Those points can be
                        within the same device or on different devices.
                        Jitter can be derived from the different
+
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 17]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
+
+
                        timestamps gathered and does not necessarily need
                        to be an explicit data record.
 
@@ -943,17 +989,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
                        converted into a fail-closed service chaining
                        system.
 
-
-
-
-
-
-
-Brockners, et al.      Expires September 14, 2017              [Page 17]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
 5.4.  In-situ OAM with End-to-end Scope
 
    REQ-E1:  Sequence numbering:
@@ -965,6 +1000,15 @@ Internet-Draft          In-situ OAM Requirements              March 2017
             REQ-E1.2:  Duplicates detection: It should be possible to
                        detect whether packets have been duplicated while
                        traversing an in situ OAM domain.
+
+
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 18]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
+
 
             REQ-E1.3:  Detection of packet drops: It should be possible
                        to detect whether packets have been dropped while
@@ -1001,15 +1045,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
               in parts and bypass few (or all) nodes.  Any deviation
               from the expected path should be accurately determined.
 
-
-
-
-
-Brockners, et al.      Expires September 14, 2017              [Page 18]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
    REQ-SEC3:  Replay Attacks: A attacker (active/passive) should not be
               able to reuse the POT bits in the packet by observing the
               OAM data in the packet, packet characteristics (like IP
@@ -1023,6 +1058,14 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    REQ-SEC4:  Pre-play Attacks: A active attacker should not be able to
               generate or reuse valid POT bits from legitimate packets,
               in order to prove to the verifier as valid packets.  This
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 19]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
+
+
               slight variant of replay attacks.  The attacker extracts
               POT bits from legitimate packets and ensure they do not
               reach the verifier.  Subsequently reuse those POT bits in
@@ -1059,13 +1102,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    acknowledge the work done by the author Hiroshi Kitamura and people
    involved in writing it.
 
-
-
-Brockners, et al.      Expires September 14, 2017              [Page 19]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
 9.  References
 
 9.1.  Normative References
@@ -1074,6 +1110,17 @@ Internet-Draft          In-situ OAM Requirements              March 2017
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 20]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
+
 
 9.2.  Informative References
 
@@ -1112,16 +1159,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    [P4]       Kim, , "P4: In-band Network Telemetry (INT)", September
               2015.
 
-
-
-
-
-
-Brockners, et al.      Expires September 14, 2017              [Page 20]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
    [RFC0791]  Postel, J., "Internet Protocol", STD 5, RFC 791,
               DOI 10.17487/RFC0791, September 1981,
               <http://www.rfc-editor.org/info/rfc791>.
@@ -1130,6 +1167,16 @@ Internet-Draft          In-situ OAM Requirements              March 2017
               "Extended ICMP to Support Multi-Part Messages", RFC 4884,
               DOI 10.17487/RFC4884, April 2007,
               <http://www.rfc-editor.org/info/rfc4884>.
+
+
+
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 21]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
+
 
    [RFC4950]  Bonica, R., Gan, D., Tappan, D., and C. Pignataro, "ICMP
               Extensions for Multiprotocol Label Switching", RFC 4950,
@@ -1167,17 +1214,6 @@ Internet-Draft          In-situ OAM Requirements              March 2017
               DOI 10.17487/RFC7872, June 2016,
               <http://www.rfc-editor.org/info/rfc7872>.
 
-
-
-
-
-
-
-Brockners, et al.      Expires September 14, 2017              [Page 21]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
 Authors' Addresses
 
    Frank Brockners
@@ -1187,6 +1223,15 @@ Authors' Addresses
    Germany
 
    Email: fbrockne@cisco.com
+
+
+
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 22]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
 
 
    Shwetha Bhandari
@@ -1228,12 +1273,6 @@ Authors' Addresses
    Email: John_Leddy@cable.comcast.com
 
 
-
-Brockners, et al.      Expires September 14, 2017              [Page 22]
-
-Internet-Draft          In-situ OAM Requirements              March 2017
-
-
    Stephen Youell
    JP Morgan Chase
    25 Bank Street
@@ -1241,6 +1280,14 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    United Kingdom
 
    Email: stephen.youell@jpmorgan.com
+
+
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 23]
+
+Internet-Draft          In-situ OAM Requirements              March 2017
 
 
    David Mozes
@@ -1285,4 +1332,13 @@ Internet-Draft          In-situ OAM Requirements              March 2017
 
 
 
-Brockners, et al.      Expires September 14, 2017              [Page 23]
+
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 14, 2017              [Page 24]
