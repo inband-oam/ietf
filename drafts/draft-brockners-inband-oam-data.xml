@@ -540,13 +540,12 @@ L2/L3 distributed scenario is currently deployed by operator.
               <artwork><![CDATA[ 
 In-situ OAM Pre-allocated Trace Option: 
 
+
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Option Type  |  Opt Data Len | Elements-left |    Reserved1  |
+|  Elements-left|         iOAM-Trace-Type       |  Reserved     |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         OAM-Trace-Type        |         Reserved2             |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
 |                        Node data List [0]                     |  |
 |                                                               |  |
@@ -569,15 +568,6 @@ In-situ OAM Pre-allocated Trace Option:
 
 ]]></artwork>
             </figure><list style="hanging">
-              <t hangText="Option Type:">8-bit identifier of the type of
-              option. Option number is defined based on the encapsulation
-              protocol.</t>
-
-              <t hangText="Opt Data Len:">8-bit unsigned integer. Length of
-              the Option Data field of this option, in octets.</t>
-
-              <!---->
-
               <t hangText="Elements-left:">8-bit unsigned integer. A pointer
               that indicates the next data recording point in the data space
               of the packet in octets. It is the index into the "Node data
@@ -586,7 +576,7 @@ In-situ OAM Pre-allocated Trace Option:
               <t hangText="Reserved1:">8-bit unused field in this document and
               MUST be set to zero.</t>
 
-              <t hangText="OAM-trace-type:">16-bit identifier of a particular
+              <t hangText="iOAM-trace-type:">16-bit identifier of a particular
               trace element variant.</t>
 
               <t hangText=" ">The trace type value is a bit field. The
@@ -651,9 +641,7 @@ In-situ OAM Incremental Trace Option:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Option Type  |  Opt Data Len | Maximum Length|    Flags      |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         OAM Trace Type        |         Reserved              |
+|        iOAM Trace Type        | Maximum Length|    Flags      |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 |                        Node data List [0]                     |
@@ -677,12 +665,8 @@ In-situ OAM Incremental Trace Option:
 
 ]]></artwork>
             </figure><list style="hanging">
-              <t hangText="Option Type:">8-bit identifier of the type of
-              option. Option number is defined based on the encapsulation
-              protocol.</t>
-
-              <t hangText="Opt Data Len:">8-bit unsigned integer. Length of
-              the Option Data field of this option, in octets.</t>
+              <t hangText="iOAM-trace-type:">16-bit identifier of a particular
+              trace element variant.</t>
 
               <t hangText="Maximum Length:">8-bit unsigned integer. This field
               specifies the maximum length of the node data list in octets.
@@ -704,8 +688,6 @@ In-situ OAM Incremental Trace Option:
                   set to "1" in the header.</t>
                 </list></t>
 
-              <t hangText="OAM-trace-type:">16-bit identifier of a particular
-              trace element variant.</t>
 
               <t hangText=" ">The trace type value is a bit field. The
               following bit fields are defined in this document, with details
@@ -1086,7 +1068,7 @@ In-situ OAM Proof of Transit option:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Option Type  |  Opt Data Len |  POT type = 0 |P|  reserved   |
+|iOAM POT Type  |P|                  Reserved (MBZ)             |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -1100,13 +1082,8 @@ In-situ OAM Proof of Transit option:
 
 ]]></artwork>
           </figure><list style="hanging">
-            <t hangText="Option Type:">8-bit identifier of the type of
-            option.</t>
 
-            <t hangText="Opt Data Len:">8-bit unsigned integer. Length of the
-            Option Data field of this option, in octets.</t>
-
-            <t hangText="POT Type:">8-bit identifier of a particular POT
+            <t hangText="iOAM POT Type:">8-bit identifier of a particular POT
             variant that dictates the POT data that is included. This document
             defines POT Type 0:<list style="hanging">
                 <t hangText="0:">POT data is a 16 Octet field as described
@@ -1152,20 +1129,15 @@ In-situ OAM Proof of Transit option:
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Option Type  |  Opt Data Len | OAM-E2E-Type  |    reserved   |
+   | iOAM-E2E-Type |            Reserved (MBZ)                     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |      E2E Option data format determined by iOAM-E2E-Type       ~
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 ]]></artwork>
           </figure><list style="hanging">
-            <t hangText="Option Type:">8-bit identifier of the type of
-            option.</t>
 
-            <t hangText="Opt Data Len:">8-bit unsigned integer. Length of the
-            Option Data field of this option, in octets.</t>
-
-            <t hangText="OAM-E2E-Type:">8-bit identifier of a particular in
+            <t hangText="iOAM-E2E-Type:">8-bit identifier of a particular in
             situ OAM E2E variant.<list style="empty">
                 <t>0: E2E option data is a 64-bit sequence number added to a
                 specific tube which is used to identify packet loss and

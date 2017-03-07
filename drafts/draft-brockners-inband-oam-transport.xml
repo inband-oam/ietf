@@ -409,9 +409,15 @@
  |                                                               |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
-   |  Option Type  |  Opt Data Len |  Option Data
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Option Type  |  Opt Data Len |         Reserved (MBZ)        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   .                                                               .
+   .                     Option Data                               .
+   .                                                               .
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 With 2 highest order bits of Option Type indicating the following:
 
@@ -614,10 +620,16 @@ In-situ OAM header in VXLAN GPE header:
           format:</t>
         </list><figure>
           <artwork><![CDATA[
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
-|  Option Type  |  Opt Data Len |  Option Data
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Option Type  |  Opt Data Len |         Reserved (MBZ)        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   .                                                               .
+   .                     Option Data                               .
+   .                                                               .
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    Option Type          8-bit identifier of the type of option.
 
    Opt Data Len         8-bit unsigned integer.  Length of the Option
@@ -672,9 +684,9 @@ PadN option  (alignment requirement: none)
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      TLV Class= TBD           |C|  Type=Trace |R|R|R| Len=n   |
+|      TLV Class= TBD           |C|  Type=Trace |R|     Len=n   |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|      Reserved                 | OAM-trace-type| Elements-left |  |
+|Elements-left  |     iOAM-trace-type           |    Reserved   |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
 |                                                               |  |
 |                        Node data List [0]                     |  |
@@ -714,7 +726,7 @@ PadN option  (alignment requirement: none)
           <t hangText="Length:">Length of the variable metadata, in 4-octet
           words. Here the length is 4.</t>
 
-          <t hangText="OAM-trace-type:"> Type of iOAM trace. See
+          <t hangText="iOAM-trace-type:"> Type of iOAM trace. See
           <xref target="I-D.brockners-inband-oam-data"></xref> for list
           of iOAM trace types.</t>
 
@@ -741,8 +753,10 @@ PadN option  (alignment requirement: none)
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      TLV Class=TBD            |C|    Type=POT |R|    Len=4    |
+|      TLV Class=TBD            |C|    Type=POT |R|    Len=20   |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|iOAM POT Type  |P|                  Reserved (MBZ)             |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
 |                        Random(contd.)                         |  O
@@ -767,18 +781,72 @@ PadN option  (alignment requirement: none)
           <t hangText="Reserved bits:">Two reserved bit are present for future
           use. The reserved bits MUST be set to 0x0.</t>
 
-          <t hangText="F:">One bit. Indicates which POT-profile is active. 0
-          means the even POT-profile is active, 1 means the odd POT-profile is
-          active.</t>
+            <t hangText="iOAM POT Type:">8-bit identifier of a particular POT
+            variant that dictates the POT data that is included. </t>
 
-          <t hangText="Length:">Length of the variable metadata, in 4-octet
-          words. Here the length is 4.</t>
+            <t hangText="Profile to use (P):">1-bit. Indicates which
+            POT-profile is used to generate the Cumulative. Any node
+            participating in POT will have a maximum of 2 profiles configured
+            that drive the computation of cumulative. The two profiles are
+            numbered 0, 1. This bit conveys whether profile 0 or profile 1 is
+            used to compute the Cumulative.</t>
+
+          <t hangText="Length:">Length of the variable metadata, in octets
+          . Here the length is 20.</t>
 
           <t hangText="Random:">64-bit Per-packet Random number.</t>
 
           <t hangText="Cumulative:">64-bit Cumulative that is updated by the
           Service Functions.</t>
         </list></t>
+    </section>
+
+    <section title="In-situ OAM Edge-to-Edge in NSH">
+      <t>The "Edge-to-Edge" capabilities (see <xref
+      target="I-D.brockners-inband-oam-requirements"></xref>) of in-situ OAM can be
+      leveraged within NSH. In an administrative domain where in-situ OAM is
+      used, insertion of the in-situ OAM data into the NSH header is enabled
+      at the required nodes (i.e. at the in-situ OAM
+      encapsulating/decapsulating nodes) by means of configuration.</t>
+
+      <t>Edge-to-Edge in-situ OAM data is added as NSH Type 2
+      metadata:</t>
+
+      <t><figure>
+          <artwork><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      TLV Class=TBD            |C|    Type=E2E |R|    Len=4    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|iOAM E2E Type  |                    Reserved (MBZ)             |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  E2E
+|      E2E Option data format determined by iOAM-E2E-Type       ~  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
+
+        </figure><list style="hanging">
+          <t hangText="TLV Class:">Describes the scope of the "Type" field. In
+          some cases, the TLV Class will identify a specific vendor, in
+          others, the TLV Class will identify specific standards body
+          allocated types. POT is currently defined using the Cisco (0x0009)
+          TLV class.</t>
+
+          <t hangText="Type:">The specific type of information being carried,
+          within the scope of a given TLV Class. Value allocation is the
+          responsibility of the TLV Class owner. Currently a type value of
+          0x94 is used for proof of transit</t>
+
+          <t hangText="Reserved bits:">Two reserved bit are present for future
+          use. The reserved bits MUST be set to 0x0.</t>
+
+            <t hangText="iOAM E2E Type:">8-bit identifier of a particular E2E
+            variant that dictates the POT data that is included. </t>
+
+          <t hangText="Length:">Length of the variable metadata, in bytes.
+          </t>
+
+        </list></t>
+
     </section>
     </section>
 
