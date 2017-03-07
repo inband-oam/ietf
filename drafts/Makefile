@@ -1,5 +1,5 @@
 XML2RFC=xml2rfc
-VERSION=02
+VERSION=03
 
 all:	drafts
 
