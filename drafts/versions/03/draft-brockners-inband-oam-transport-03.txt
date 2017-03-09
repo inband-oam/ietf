@@ -181,6 +181,8 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
 
    Abbreviations used in this document:
 
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
    MTU:       Maximum Transmit Unit
 
    NSH:       Network Service Header
@@ -215,9 +217,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    it is imperative to further mature the Operations, Administration,
    and Maintenance mechanisms available to IPv6 networks.
 
-   The in-situ OAM options translate into options for an IPv6 extension
-   header.  The extension header would be inserted by either a host
-   source of the packet, or by a transit/domain-edge node.  If the
+
 
 
 
@@ -226,6 +226,9 @@ Brockners, et al.          Expires May 3, 2017                  [Page 4]
 Internet-Draft         In-situ OAM Data Transport           October 2016
 
 
+   The in-situ OAM options translate into options for an IPv6 extension
+   header.  The extension header would be inserted by either a host
+   source of the packet, or by a transit/domain-edge node.  If the
    addition of the in-situ OAM Hop-by-Hop Option header would lead to
    the packet exceeding the MTU of the domain an error should be
    reported.  The methods and procedures of how the error is reported
@@ -244,9 +247,6 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
 
    Brief recap of the IPv6 hop-by-hop header as well as the options used
    for carrying in-situ OAM data:
-
-
-
 
 
 
@@ -522,7 +522,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    |     Virtual Network Identifier (VNI)          | Reserved      |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
    | Type =i.s.OAM | i.s.OAM HDR len |  Reserved     | NP = IP/Eth |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+iOAM
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
    |                     in-situ OAM options                       |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
    |                                                               |
@@ -625,14 +625,14 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    In Service Function Chaining (SFC) [RFC7665], the Network Service
    Header (NSH) [I-D.ietf-sfc-nsh] already includes path tracing
    capabilities [I-D.penno-sfc-trace].  Tracing information can be
-   carried in-situ as iOAM records over NSH Type 2 metadata TLVs.
+   carried in-situ as IOAM records over NSH Type 2 metadata TLVs.
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |      TLV Class= TBD           |C|  Type=Trace |R|     Len=n   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |Elements-left  |     iOAM-trace-type           |    Reserved   |  |
+   |Elements-left  |     IOAM-trace-type           |    Reserved   |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
    |                                                               |  |
    |                        Node data List [0]                     |  |
@@ -680,10 +680,10 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    Length:  Length of the variable metadata, in 4-octet words.  Here the
       length is 4.
 
-   iOAM-trace-type:  Type of iOAM trace.  See
-      [I-D.brockners-inband-oam-data] for list of iOAM trace types.
+   IOAM-trace-type:  Type of IOAM trace.  See
+      [I-D.brockners-inband-oam-data] for list of IOAM-Trace-Types.
 
-   Elements-left:  Number of elements left in the iOAM record.
+   Elements-left:  Number of elements left in the IOAM record.
       [I-D.brockners-inband-oam-data] for detailed description.
 
 6.2.  In-situ OAM POT in NSH
@@ -703,7 +703,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |      TLV Class=TBD            |C|    Type=POT |R|    Len=20   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |iOAM POT Type  |P|                  Reserved (MBZ)             |  |
+   |IOAM POT Type  |P|                  Reserved (MBZ)             |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
    |                           Random                              |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -736,7 +736,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    Reserved bits:  Two reserved bit are present for future use.  The
       reserved bits MUST be set to 0x0.
 
-   iOAM POT Type:  8-bit identifier of a particular POT variant that
+   IOAM POT Type:  8-bit identifier of a particular POT variant that
       dictates the POT data that is included.
 
    Profile to use (P):  1-bit.  Indicates which POT-profile is used to
@@ -769,9 +769,9 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   |      TLV Class=TBD            |C|    Type=E2E |R|    Len=4    |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-  |iOAM E2E Type  |                    Reserved (MBZ)             |  |
+  |IOAM E2E Type  |                    Reserved (MBZ)             |  |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  E2E
-  |      E2E Option data format determined by iOAM-E2E-Type       ~  |
+  |      E2E Option data format determined by IOAM-E2E-Type       ~  |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
    TLV Class:  Describes the scope of the "Type" field.  In some cases,
@@ -794,7 +794,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    Reserved bits:  Two reserved bit are present for future use.  The
       reserved bits MUST be set to 0x0.
 
-   iOAM E2E Type:  8-bit identifier of a particular E2E variant that
+   IOAM E2E Type:  8-bit identifier of a particular E2E variant that
       dictates the POT data that is included.
 
    Length:  Length of the variable metadata, in bytes.
