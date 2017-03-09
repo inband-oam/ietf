@@ -85,9 +85,10 @@ Table of Contents
    3.  In-situ OAM Data Types and Data Format  . . . . . . . . . . .   4
      3.1.  In-situ OAM Tracing Options . . . . . . . . . . . . . . .   4
        3.1.1.  Pre-allocated Trace Option  . . . . . . . . . . . . .   6
-       3.1.2.  Incremental Trace Option  . . . . . . . . . . . . . .   9
-       3.1.3.  In-situ OAM node data element format  . . . . . . . .  12
-       3.1.4.  Examples of In-situ OAM node data . . . . . . . . . .  15
+       3.1.2.  new section . . . . . . . . . . . . . . . . . . . . .   9
+       3.1.3.  Incremental Trace Option  . . . . . . . . . . . . . .   9
+       3.1.4.  In-situ OAM node data element format  . . . . . . . .  12
+       3.1.5.  Examples of In-situ OAM node data . . . . . . . . . .  15
      3.2.  In-situ OAM Proof of Transit Option . . . . . . . . . . .  17
      3.3.  In-situ OAM Edge-to-Edge Option . . . . . . . . . . . . .  19
    4.  In-situ OAM Data Export . . . . . . . . . . . . . . . . . . .  20
@@ -105,7 +106,6 @@ Table of Contents
    This document defines data record types for "in-situ" Operations,
    Administration, and Maintenance (OAM).  In-situ OAM records OAM
    information within the packet while the packet traverses a particular
-   network domain.  The term "in-situ" refers to the fact that the OAM
 
 
 
@@ -114,6 +114,7 @@ Brockners, et al.       Expires September 9, 2017               [Page 2]
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
+   network domain.  The term "in-situ" refers to the fact that the OAM
    data is added to the data packets rather than is being sent within
    packets specifically dedicated to OAM.  A discussion of the
    motivation and requirements for in-situ OAM can be found in
@@ -146,6 +147,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    Geneve:    Generic Network Virtualization Encapsulation
               [I-D.ietf-nvo3-geneve]
 
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
    MTU:       Maximum Transmit Unit
 
    NSH:       Network Service Header [I-D.ietf-sfc-nsh]
@@ -160,15 +163,15 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    TLV:       Type-Length-Value
 
-   VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
-              Extension [I-D.ietf-nvo3-vxlan-gpe]
-
 
 
 Brockners, et al.       Expires September 9, 2017               [Page 3]
 
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
+
+   VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
+              Extension [I-D.ietf-nvo3-vxlan-gpe]
 
 3.  In-situ OAM Data Types and Data Format
 
@@ -215,9 +218,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    To optimize hardware and software implementations tracing is defined
    as two separate options.  Any deployment MAY choose to configure and
-   support one or both of the following options.  An implementation of
-   the transport protocol that carries these in-situ OAM data MAY choose
-   to support only one of the options.  In the event that both options
 
 
 
@@ -226,6 +226,9 @@ Brockners, et al.       Expires September 9, 2017               [Page 4]
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
+   support one or both of the following options.  An implementation of
+   the transport protocol that carries these in-situ OAM data MAY choose
+   to support only one of the options.  In the event that both options
    are utilized at the same time, the Incremental Trace Option MUST be
    placed before the Pre-allocated Trace Option.
 
@@ -271,9 +274,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    whereas in another case it could refer to a logical interface (e.g.,
    in case of tunnels).
 
-   The following in-situ OAM data is defined for in-situ OAM tracing:
-
-
 
 
 
@@ -281,6 +281,8 @@ Brockners, et al.       Expires September 9, 2017               [Page 5]
 
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
+
+   The following in-situ OAM data is defined for in-situ OAM tracing:
 
    o  Identification of the in-situ OAM node.  An in-situ OAM node
       identifier can match to a device identifier or a particular
@@ -331,8 +333,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
 
-
-
 Brockners, et al.       Expires September 9, 2017               [Page 6]
 
 Internet-Draft          In-situ OAM Data Formats              March 2017
@@ -345,7 +345,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |         iOAM-Trace-Type       |  Bytes-left   |     Flags     |
+   |         IOAM-Trace-Type       |  Bytes-left   |     Flags     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    Pre-allocated Trace Option Data MUST be 4-byte aligned:
@@ -371,20 +371,20 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
 
-   iOAM-Trace-Type:  16-bit identifier of a particular trace element
+   IOAM-Trace-Type:  16-bit identifier of a particular trace element
       variant.
 
       The trace type value is a bit field.  The following bit fields are
       defined in this document, with details on each field described in
-      the Section 3.1.3.  The order of packing the trace data in each
+      the Section 3.1.4.  The order of packing the trace data in each
       Node-data element follows the bit order for setting each trace
       data element.
 
-      Bit 0    (Most significant bit) When set indicates presence of
+      Bit 0    (Least significant bit) When set indicates presence of
                Hop_Lim and node_id in the Node data.
 
       Bit 1    When set indicates presence of ingress_if_id and
-               egress_if_id in the Node data.
+               egress_if_id (short format) in the Node data.
 
 
 
@@ -403,7 +403,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       Bit 4    When set indicates presence of transit delay in the Node
                data.
 
-      Bit 5    When set indicates presence of app_data in the Node data.
+      Bit 5    When set indicates presence of app_data (short format) in
+               the Node data.
 
       Bit 6    When set indicates presence of queue depth in the Node
                data.
@@ -411,20 +412,20 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       Bit 7    When set indicates presence of variable length Opaque
                State Snapshot field.
 
-      Bit 8    When set indicates presence of Hop_Lim and node_id wide
-               in the Node data.
+      Bit 8    When set indicates presence of Hop_Lim and node_id in
+               wide format in the Node data.
 
       Bit 9    When set indicates presence of ingress_if_id and
-               egress_if_id wide in the Node data.
+               egress_if_id in wide format in the Node data.
 
       Bit 10   When set indicates presence of app_data wide in the Node
                data.
 
       Bit 11-15  Undefined in this draft.
 
-      Section 3.1.4 describes the format of a number of trace types.
+      Section 3.1.5 describes the format of a number of trace types.
       Within an in-situ OAM domain possible combinations of these bits
-      making the iOAM-Trace-Type can be restricted by configuration
+      making the IOAM-Trace-Type can be restricted by configuration
       knobs.
 
    Bytes-left:  8-bit unsigned integer.  It is the data space in octets
@@ -433,15 +434,14 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    Flags  8-bit field.  The following flags are defined:
 
-      Bit 0  "Overflow" (O-bit) (least significant bit).  This bit is
-         set by the network element if there is not enough number of
-         bytes left to record node data, no record is added and the
-         overflow "O-bit" must be set to "1" in the header.  This is
-         useful for transit nodes to ignore further processing of the
-         option.
+      Bit 0  "Overflow" (O-bit) (most significant bit).  This bit is set
+         by the network element if there is not enough number of bytes
+         left to record node data, no record is added and the overflow
+         "O-bit" must be set to "1" in the header.  This is useful for
+         transit nodes to ignore further processing of the option.
 
-      Bit 1  "Loopback" (L-bit).  This bit when set indicates to the
-         transit nodes processing this option to send a copy of the
+      Bit 1  "Loopback" (L-bit).  Loopback mode is used to send a copy
+         of a packet back towards the source.  Loopback mode assumes
 
 
 
@@ -450,39 +450,39 @@ Brockners, et al.       Expires September 9, 2017               [Page 8]
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
-         packet back to the source of the packet while it continues to
-         forward the original packet towards the destination.  The L-bit
-         MUST be cleared in the copy of the packet before sending it.
+         that a return path from transit nodes and destination nodes
+         towards the source exists.  The encapsulating node decides
+         (e.g. using a filter) which packets loopback mode is enabled
+         for by setting the loopback bit.  The encapsulating node also
+         needs to ensure that sufficient space is available in the IOAM
+         header for loopback operation.  The loopback bit when set
+         indicates to the transit nodes processing this option to create
+         a copy of the packet received and send this copy of the packet
+         back to the source of the packet while it continues to forward
+         the original packet towards the destination.  The source
+         address of the original packet is used as destination address
+         in the copied packet.  The address of the node performing the
+         copy operation is used as the source address.  The L-bit MUST
+         be cleared in the copy of the packet a nodes sends it back
+         towards the source.  On its way back towards the source, the
+         packet is processed like a regular packet with IOAM
+         information.  Once the return packet reaches the IOAM domain
+         boundary IOAM decapsulation occurs as with any other packet
+         containing IOAM information.
 
    Node data List [n]:  Variable-length field.  The format of which is
-      determined by the OAM Type representing the n-th Node data in the
-      Node data List.  The Node data List is encoded starting from the
-      last Node data of the path.  The first element of the node data
-      list (Node data List [0]) contains the last node of the path while
-      the last node data of the Node data List (Node data List[n])
-      contains the first Node data of the path traced.  The index
-      contained in "Bytes-left" identifies the offset for current active
-      Node data to be populated.
+      determined by the IOAM-Trace-Type representing the n-th Node data
+      in the Node data List.  The Node data List is encoded starting
+      from the last Node data of the path.  The first element of the
+      node data list (Node data List [0]) contains the last node of the
+      path while the last node data of the Node data List (Node data
+      List[n]) contains the first Node data of the path traced.  The
+      index contained in "Bytes-left" identifies the offset for current
+      active Node data to be populated.
 
-3.1.2.  Incremental Trace Option
+3.1.2.  new section
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+3.1.3.  Incremental Trace Option
 
 
 
@@ -545,7 +545,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
       The trace type value is a bit field.  The following bit fields are
       defined in this document, with details on each field described in
-      the Section 3.1.3.  The order of packing the trace data in each
+      the Section 3.1.4.  The order of packing the trace data in each
       Node-data element follows the bit order for setting each trace
       data element.
 
@@ -590,7 +590,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
       Bit 11-15  Undefined in this draft.
 
-      Section 3.1.4 describes the format of a number of trace types.
+      Section 3.1.5 describes the format of a number of trace types.
 
    Maximum Length:  8-bit unsigned integer.  This field specifies the
       maximum length of the node data list in octets.  Given that the
@@ -630,7 +630,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       the last node data of the Node data List (Node data List[n])
       contains the first Node data of the path traced.
 
-3.1.3.  In-situ OAM node data element format
+3.1.4.  In-situ OAM node data element format
 
    All the data records MUST be 4-byte aligned.  If a node is updating
    its data record is not capable of populating the value of a field set
@@ -817,7 +817,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    app_data wide:  8-octet placeholder which can be used by the node to
       add application specific data.
 
-3.1.4.  Examples of In-situ OAM node data
+3.1.5.  Examples of In-situ OAM node data
 
    An entry in the "Node data List" array can have different formats,
    following the needs of the deployment.  Some deployments might only
