@@ -28,15 +28,15 @@ Expires: September 9, 2017                                         Cisco
 
 Abstract
 
-   In-situ Operations, Administration, and Maintenance (OAM) records
+   In-situ Operations, Administration, and Maintenance (IOAM) records
    operational and telemetry information in the packet while the packet
    traverses a path between two points in the network.  This document
    discusses the data types and data formats for in-situ OAM data
    records.  In-situ OAM data records can be embedded into a variety of
-   transports such as NSH, Segment Routing, VXLAN-GPE, native IPv6 (via
-   extension header), or IPv4.  In-situ OAM is to complement current
-   out-of-band OAM mechanisms based on ICMP or other types of probe
-   packets.
+   transports such as NSH, Segment Routing, VXLAN-GPE, Geneve, native
+   IPv6 (via extension header), or IPv4.  In-situ OAM can be used to
+   complement current out-of-band OAM mechanisms based on ICMP or other
+   types of probe packets.
 
 Status of This Memo
 
@@ -118,22 +118,22 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    packets specifically dedicated to OAM.  A discussion of the
    motivation and requirements for in-situ OAM can be found in
    [I-D.brockners-inband-oam-requirements].  In-situ OAM is to
-   complement "out-of-band" or "active" mechanisms such as ping or
-   traceroute, or more recent active probing mechanisms as described in
+   complement "out-of-band" or "active" mechanisms such as Ping or
+   Traceroute, or more recent active probing mechanisms as described in
    [I-D.lapukhov-dataplane-probe].  In-situ OAM mechanisms can be
    leveraged where current out-of-band mechanisms do not apply or do not
-   offer the desired results, such as proving that a certain set of
-   traffic takes a pre-defined path, SLA verification for the live data
+   offer the desired results, such as proving that a certain traffic
+   flow takes a pre-defined path, SLA verification for the live data
    traffic, detailed statistics on traffic distribution paths in
    networks that distribute traffic across multiple paths, or scenarios
-   where probe traffic is potentially handled differently from regular
-   data traffic by the network devices.
+   in which probe traffic is potentially handled differently from
+   regular data traffic by the network devices.
 
    This document defines the data types and data formats for in-situ OAM
    data records.  The in-situ OAM data records can be transported by a
    variety of transport protocols, including NSH, Segment Routing,
-   VXLAN-GPE, IPv6, IPv4.  Encapsulation details for these different
-   transport protocols are outside the scope of this document.
+   VXLAN-GPE, Geneve, IPv6, or IPv4.  Encapsulation details for these
+   different transport protocols are outside the scope of this document.
 
 2.  Conventions
 
@@ -143,9 +143,12 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    Abbreviations used in this document:
 
+   Geneve:    Generic Network Virtualization Encapsulation
+              [I-D.ietf-nvo3-geneve]
+
    MTU:       Maximum Transmit Unit
 
-   NSH:       Network Service Header
+   NSH:       Network Service Header [I-D.ietf-sfc-nsh]
 
    OAM:       Operations, Administration, and Maintenance
 
@@ -158,10 +161,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    TLV:       Type-Length-Value
 
    VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
-              Extension
-
-
-
+              Extension [I-D.ietf-nvo3-vxlan-gpe]
 
 
 
@@ -177,22 +177,22 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    OAM require the definition of different types of data.  The in-situ
    OAM data format for the data being carried corresponds to the three
    main categories of in-situ OAM data defined in
-   [I-D.brockners-inband-oam-requirements], which are : edge-to-edge,
-   per node, and for selected nodes only.
+   [I-D.brockners-inband-oam-requirements], which are: edge-to-edge, per
+   node, and for selected nodes only.
 
-   Transport options for in-situ OAM data are found in
-   [I-D.brockners-inband-oam-transport].  In-situ OAM data is defined as
-   options in Type-Length-Value (TLV) format.  The TLV format for each
-   of the three different types of in-situ OAM data is defined in this
-   document.
+   Transport options for in-situ OAM data are outside the scope of this
+   memo, and are discussed in [I-D.brockners-inband-oam-transport].  In-
+   situ OAM data is defined as options in Type-Length-Value (TLV)
+   format.  The TLV format for each of the three different types of in-
+   situ OAM data is defined in this document.
 
    In-situ OAM is expected to be deployed in a specific domain rather
    than on the overall Internet.  The part of the network which employs
-   in situ OAM is referred to as the "in-situ OAM-domain".  In-situ OAM
+   in- situ OAM is referred to as the "in-situ OAM-domain".  In-situ OAM
    data is added to a packet upon entering the in-situ OAM-domain and is
    removed from the packet when exiting the domain.  Within the in-situ
    OAM-domain, the in-situ OAM data may be updated by network nodes that
-   the packet traverses.  The device which adds in-situ OAM data
+   the packet traverses.  The device which adds an in-situ OAM data
    container to the packet to capture in-situ OAM data is called the
    "in-situ OAM encapsulating node", whereas the device which removes
    the in-situ OAM data container is referred to as the "in-situ OAM
@@ -210,7 +210,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    that a packet traverses, i.e., in a typical deployment all nodes in
    an in-situ OAM-domain would participate in in-situ OAM and thus be
    in-situ OAM transit nodes, in-situ OAM encapsulating or in-situ OAM
-   decapsulating nodes.  The maximum network diameter and minimum path
+   decapsulating nodes.  The maximum number of hops and the minimum path
    MTU of the in-situ OAM domain is assumed to be known.
 
    To optimize hardware and software implementations tracing is defined
@@ -236,33 +236,33 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       space once and index into the array to populate the data during
       transit.  The in-situ OAM encapsulating node allocates the option
       header and sets the fields in the option header.  The in situ OAM
-      encapsulating node allocates an array which is to store
+      encapsulating node allocates an array which is used to store
       operational data retrieved from every node while the packet
       traverses the domain.  In-situ OAM transit nodes update the
       content of the array.  A pointer which is part of the in-situ OAM
       trace data points to the next empty slot in the array, which is
       where the next in-situ OAM transit node fills in its data.
 
-   Incremental Trace Option:  This trace options is defined as a
+   Incremental Trace Option:  This trace option is defined as a
       container of node-data elements where each node allocates and
       pushes its node data immediately following the option header.  The
-      number of node-data recorded and maximum number of node data that
-      can be recorded are written into the option header.  This format
-      of trace recording is useful for some of the hardware
+      number of node-data elements recorded and maximum number of node
+      data that can be recorded are written into the option header.
+      This format of trace recording is useful for some of the hardware
       implementations as this eliminates the need for the transit
       network elements to read the full array in the option and allows
       for arbitrarily long packets as the MTU allows.  The in-situ OAM
       encapsulating node allocates the option header.  The in-situ OAM
       encapsulating node based on operational state and configuration
       sets the fields in the header to control how large the node data
-      list can grow.  In-situ OAM transit nodes pushes its node data to
-      the node data list and increments the number of node data records
+      list can grow.  In-situ OAM transit nodes push their node data to
+      the node data list and increment the number of node data records
       in the header.
 
-   Every node data entry is to hold information for a particular in situ
+   Every node data entry is to hold information for a particular in-situ
    OAM transit node that is traversed by a packet.  The in-situ OAM
-   decapsulating node removes the in-situ OAM data and process and/or
-   export the metadata.  In-situ OAM data uses its own name-space for
+   decapsulating node removes the in-situ OAM data and processes and/or
+   exports the metadata.  In-situ OAM data uses its own name-space for
    information such as node identifier or interface identifier.  This
    allows for a domain-specific definition and interpretation.  For
    example: In one case an interface-id could point to a physical
@@ -371,7 +371,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
 
-   iOAM-trace-type:  16-bit identifier of a particular trace element
+   iOAM-Trace-Type:  16-bit identifier of a particular trace element
       variant.
 
       The trace type value is a bit field.  The following bit fields are
@@ -380,8 +380,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       Node-data element follows the bit order for setting each trace
       data element.
 
-      Bit 0    When set indicates presence of Hop_Lim and node_id in the
-               Node data.
+      Bit 0    (Most significant bit) When set indicates presence of
+               Hop_Lim and node_id in the Node data.
 
       Bit 1    When set indicates presence of ingress_if_id and
                egress_if_id in the Node data.
@@ -424,14 +424,14 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
       Section 3.1.4 describes the format of a number of trace types.
       Within an in-situ OAM domain possible combinations of these bits
-      making the ioam-trace-type can be restricted by configuration
+      making the iOAM-Trace-Type can be restricted by configuration
       knobs.
 
    Bytes-left:  8-bit unsigned integer.  It is the data space in octets
       remaining for recording the node data.  This is used as an offset
       in bytes in data space to record node data element.
 
-   Flags  8-bit field.  Following flags are defined:
+   Flags  8-bit field.  The following flags are defined:
 
       Bit 0  "Overflow" (O-bit) (least significant bit).  This bit is
          set by the network element if there is not enough number of
@@ -634,7 +634,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    All the data records MUST be 4-byte aligned.  If a node is updating
    its data record is not capable of populating the value of a field set
-   int the iOAM-trace-type, the field value MUST be filled with zeroes.
+   in the iOAM-trace-type, the field value MUST be filled with zeroes.
 
    Data type and format for each of the data records is shown below:
 
@@ -648,9 +648,10 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
          value in the packet at the node that records this data.  Hop
          Limit information is used to identify the location of the node
-         in the communication path.  This is copied from the lower layer
-         for e.g.  TTL value in IPv4 header or hop limit field from IPv6
-         header of the packet when the packet is ready for transmission.
+         in the communication path.  This is copied from the lower
+         layer, e.g., TTL value in IPv4 header or hop limit field from
+         IPv6 header of the packet when the packet is ready for
+         transmission.
 
       node_id:  3-octet unsigned integer.  Node identifier field to
          uniquely identify a node within in-situ OAM domain.  The
@@ -664,8 +665,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    |     ingress_if_id             |         egress_if_id          |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-      ingress_if_id:  2-octet unsigned integer.  Interface identifier to
-         record the ingress interface the packet was received on.
+
 
 
 
@@ -674,17 +674,20 @@ Brockners, et al.       Expires September 9, 2017              [Page 12]
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
+      ingress_if_id:  2-octet unsigned integer.  Interface identifier to
+         record the ingress interface the packet was received on.
+
       egress_if_id:  2-octet unsigned integer.  Interface identifier to
          record the egress interface the packet is forwarded out of.
 
    timestamp seconds:  4-octet unsigned integer.  Absolute timestamp in
       seconds that specifies the time at which the packet was received
       by the node.  The format of this field is identical to the most
-      significant 32 bits of 64 least significant bits of the
-      [IEEE1588v2].  This truncated format consists of a 32-bit seconds
-      field.  As defined in [IEEE1588v2], the timestamp specifies the
-      number of seconds elapsed since 1 January 1970 00:00:00 according
-      to the International Atomic Time (TAI).
+      significant 32 bits of the 64 least significant bits of the
+      [IEEE1588v2] timestamp format.  This truncated format consists of
+      a 32-bit seconds field.  As defined in [IEEE1588v2], the timestamp
+      specifies the number of seconds elapsed since 1 January 1970
+      00:00:00 according to the International Atomic Time (TAI).
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -694,8 +697,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    timestamp nanoseconds:  4-octet unsigned integer in the range 0 to
       10^9-1.  This timestamp specifies the fractional part of the wall
       clock time at which the packet was received by the node in units
-      of nanoseconds.  It is nanoseconds that are recorded in 32 least
-      significant bits of absolute time as per [IEEE1588v2].  This
+      of nanoseconds.  The format of this field is identical to the 32
+      least significant bits of the [IEEE1588v2] timestamp format.  This
       fields allows for delay computation between any two nodes in the
       network when the nodes are time synchronized.
 
@@ -705,10 +708,10 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    transit delay:  4-octet unsigned integer in the range 0 to 2^30-1.
-      It is the time in nanoseconds packet spent in transiting a node.
-      This can serve to give an indication of queuing delay at the node.
-      If the transit delay exceeds 2^30-1 nanoseconds then the top bit
-      'O' is set to indicate overflow.
+      It is the time in nanoseconds the packet spent in the transit
+      node.  This can serve as an indication of the queuing delay at the
+      node.  If the transit delay exceeds 2^30-1 nanoseconds then the
+      top bit 'O' is set to indicate overflow.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -718,9 +721,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    app_data:  4-octet placeholder which can be used by the node to add
       application specific data
 
-   queue depth:  4-octet unsigned integer field.  This field indicates
-      the length of the egress interface queue of the interface where
-      the packet is forwarded out of.
 
 
 
@@ -730,19 +730,21 @@ Brockners, et al.       Expires September 9, 2017              [Page 13]
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
+   queue depth:  4-octet unsigned integer field.  This field indicates
+      the length of the egress interface queue of the interface where
+      the packet is forwarded out of.
+
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                       queue depth                             |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    Opaque State Snapshot:  Variable length field.  It allows the network
-      element to store arbitrary state in the node data record, without
-      a pre-defined schema.  The schema needs to made known to the
-      analyzer by some out-of-band means.  The 24-bit "Schema Id" field
-      in the record is supposed to let the analyzer know which
-      particular schema to use, and it is expected to be configured on
-      the network element by the operator.  This ID is expected to be
-      configured on the device by the network operator.
+      element to store an arbitrary state in the node data record,
+      without a pre-defined schema.  The schema needs to be made known
+      to the analyzer by some out-of-band means.  The 24-bit "Schema Id"
+      field in the record indicates which particular schema is used, and
+      should be configured on the network element by the operator.
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -757,9 +759,9 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       .                                                               .
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-      Length:  1-octet unsigned integer.  It is the length of the Opaque
-         data field that follows Schema Id.  It MUST always be a
-         multiple of 4.
+      Length:  1-octet unsigned integer.  It is the length in octets of
+         the Opaque data field that follows Schema Id.  It MUST always
+         be a multiple of 4.
 
       Schema ID:  3-octet unsigned integer identifying the schema of
          Opaque data.
@@ -776,8 +778,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    ~                         node_id (contd)                       |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-      Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
-         value in the packet at the node that records this data.  Hop
 
 
 
@@ -786,6 +786,8 @@ Brockners, et al.       Expires September 9, 2017              [Page 14]
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
+      Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
+         value in the packet at the node that records this data.  Hop
          Limit information is used to identify the location of the node
          in the communication path.  This is copied from the lower layer
          for e.g.  TTL value in IPv4 header or hop limit field from IPv6
@@ -826,8 +828,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    0x002B:  In-situ OAM-trace-type is 0x2B then the format of node data
       is:
-
-
 
 
 
@@ -1133,13 +1133,13 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
               Institute of Electrical and Electronics Engineers,
               "1588-2008 - IEEE Standard for a Precision Clock
               Synchronization Protocol for Networked Measurement and
-              Control Systems", IEEE Std 1588-2008, 2008,
+              Control Systems",  IEEE Std 1588-2008, 2008,
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
-              RFC2119, March 1997,
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
 9.2.  Informative References
@@ -1156,6 +1156,28 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
               User Datagrams (SPUD) Prototype", draft-hildebrand-spud-
               prototype-03 (work in progress), March 2015.
 
+   [I-D.ietf-nvo3-geneve]
+              Gross, J., Ganga, I., and T. Sridhar, "Geneve: Generic
+              Network Virtualization Encapsulation", draft-ietf-
+              nvo3-geneve-03 (work in progress), September 2016.
+
+   [I-D.ietf-nvo3-vxlan-gpe]
+              Maino, F., Kreeger, L., and U. Elzur, "Generic Protocol
+              Extension for VXLAN", draft-ietf-nvo3-vxlan-gpe-03 (work
+              in progress), October 2016.
+
+   [I-D.ietf-sfc-nsh]
+              Quinn, P. and U. Elzur, "Network Service Header", draft-
+              ietf-sfc-nsh-12 (work in progress), February 2017.
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 21]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
+
    [I-D.kitamura-ipv6-record-route]
               Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
               Option Extension", draft-kitamura-ipv6-record-route-00
@@ -1167,16 +1189,9 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
               dataplane-probe-01 (work in progress), June 2016.
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
-              RFC7665, October 2015,
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015,
               <http://www.rfc-editor.org/info/rfc7665>.
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 21]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
 
 Authors' Addresses
 
@@ -1213,6 +1228,12 @@ Authors' Addresses
    Email: hannes@rtbrick.com
 
 
+
+Brockners, et al.       Expires September 9, 2017              [Page 22]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
+
    John Leddy
    Comcast
 
@@ -1228,16 +1249,10 @@ Authors' Addresses
    Email: stephen.youell@jpmorgan.com
 
 
-
-Brockners, et al.       Expires September 9, 2017              [Page 22]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
    Tal Mizrahi
    Marvell
    6 Hamada St.
-   Yokneam  20692
+   Yokneam  2066721
    Israel
 
    Email: talmi@marvell.com
@@ -1263,21 +1278,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    2185 Park Boulevard
    Palo Alto, CA  94306
    US
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
