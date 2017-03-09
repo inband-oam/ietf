@@ -731,8 +731,10 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
    queue depth:  4-octet unsigned integer field.  This field indicates
-      the length of the egress interface queue of the interface where
-      the packet is forwarded out of.
+      the current length of the egress interface queue of the interface
+      from where the packet is forwarded out.  The queue depth is
+      expressed as the current number of packets (i.e.  number of
+      currently used packet buffers) in the queue.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -771,12 +773,10 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    Hop_Lim and node_id wide:  8-octet field defined as follows:
 
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   Hop_Lim     |              node_id                          ~
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   ~                         node_id (contd)                       |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+
+
 
 
 
@@ -785,6 +785,13 @@ Brockners, et al.       Expires September 9, 2017              [Page 14]
 
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   Hop_Lim     |              node_id                          ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   ~                         node_id (contd)                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
       Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
          value in the packet at the node that records this data.  Hop
@@ -826,13 +833,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    section defines different formats that an entry in "Node data List"
    can take.
 
-   0x002B:  In-situ OAM-trace-type is 0x2B then the format of node data
-      is:
-
-
-
-
-
 
 
 
@@ -841,6 +841,9 @@ Brockners, et al.       Expires September 9, 2017              [Page 15]
 
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
+
+   0x002B:  In-situ OAM-trace-type is 0x2B then the format of node data
+      is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -886,9 +889,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
    0x0029:  In-situ OAM-trace-type is 0x0029 then the format is:
-
-
-
 
 
 
