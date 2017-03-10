@@ -88,18 +88,18 @@ Table of Contents
        3.1.2.  new section . . . . . . . . . . . . . . . . . . . . .   9
        3.1.3.  Incremental Trace Option  . . . . . . . . . . . . . .   9
        3.1.4.  In-situ OAM node data element format  . . . . . . . .  12
-       3.1.5.  Examples of In-situ OAM node data . . . . . . . . . .  15
-     3.2.  In-situ OAM Proof of Transit Option . . . . . . . . . . .  17
-     3.3.  In-situ OAM Edge-to-Edge Option . . . . . . . . . . . . .  19
+       3.1.5.  Examples of In-situ OAM node data . . . . . . . . . .  16
+     3.2.  In-situ OAM Proof of Transit Option . . . . . . . . . . .  18
+     3.3.  In-situ OAM Edge-to-Edge Option . . . . . . . . . . . . .  20
    4.  In-situ OAM Data Export . . . . . . . . . . . . . . . . . . .  20
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  20
-   6.  Manageability Considerations  . . . . . . . . . . . . . . . .  20
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  20
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  20
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  20
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  21
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  21
+   6.  Manageability Considerations  . . . . . . . . . . . . . . . .  21
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  21
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  21
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  21
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  22
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  23
 
 1.  Introduction
 
@@ -345,7 +345,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |         IOAM-Trace-Type       |  Bytes-left   |     Flags     |
+   |         IOAM-Trace-Type       |  Octets-left  |     Flags     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    Pre-allocated Trace Option Data MUST be 4-byte aligned:
@@ -428,9 +428,9 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       making the IOAM-Trace-Type can be restricted by configuration
       knobs.
 
-   Bytes-left:  8-bit unsigned integer.  It is the data space in octets
+   Octets-left:  8-bit unsigned integer.  It is the data space in octets
       remaining for recording the node data.  This is used as an offset
-      in bytes in data space to record node data element.
+      in octets in data space to record node data element.
 
    Flags  8-bit field.  The following flags are defined:
 
@@ -477,7 +477,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       node data list (Node data List [0]) contains the last node of the
       path while the last node data of the Node data List (Node data
       List[n]) contains the first Node data of the path traced.  The
-      index contained in "Bytes-left" identifies the offset for current
+      index contained in "Octets-left" identifies the offset for current
       active Node data to be populated.
 
 3.1.2.  new section
@@ -632,9 +632,14 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 3.1.4.  In-situ OAM node data element format
 
-   All the data records MUST be 4-byte aligned.  If a node is updating
-   its data record is not capable of populating the value of a field set
-   in the IOAM-Trace-Type, the field value MUST be filled with zeroes.
+   All the data records MUST be 4-byte aligned.  The IOAM encapsulating
+   node MUST initialize data records that it adds to the packet to zero.
+   If a node which is supposed to update an IOAM data record is not
+   capable of populating the value of a field set in the iOAM-trace-
+   type, the field value MUST be left unaltered except when explicitly
+   specified in the field description below.  In the description of data
+   record field below if zero is valid value then a non-zero value to
+   mean not populated is specified.
 
    Data type and format for each of the data records is shown below:
 
@@ -659,12 +664,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
          the scope of this document.
 
    ingress_if_id and egress_if_id:  4-octet field defined as follows:
-
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |     ingress_if_id             |         egress_if_id          |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
+      When this field is part of the data record but a node populating
 
 
 
@@ -673,6 +673,14 @@ Brockners, et al.       Expires September 9, 2017              [Page 12]
 
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
+
+      the record is not able to fill it, the field position in the
+      record must be filled with value 0xFFFF to mean not populated.
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     ingress_if_id             |         egress_if_id          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
       ingress_if_id:  2-octet unsigned integer.  Interface identifier to
          record the ingress interface the packet was received on.
@@ -700,7 +708,10 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       of nanoseconds.  The format of this field is identical to the 32
       least significant bits of the [IEEE1588v2] timestamp format.  This
       fields allows for delay computation between any two nodes in the
-      network when the nodes are time synchronized.
+      network when the nodes are time synchronized.  When this field is
+      part of the data record but a node populating the record is not
+      able to fill it, the field position in the record must be filled
+      with value 0xFFFF to mean not populated.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -711,7 +722,18 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       It is the time in nanoseconds the packet spent in the transit
       node.  This can serve as an indication of the queuing delay at the
       node.  If the transit delay exceeds 2^30-1 nanoseconds then the
-      top bit 'O' is set to indicate overflow.
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 13]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
+
+      top bit 'O' is set to indicate overflow.  When this field is part
+      of the data record but a node populating the record is not able to
+      fill it, the field position in the record must be filled with
+      value 0xFFFF to mean not populated.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -721,20 +743,14 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    app_data:  4-octet placeholder which can be used by the node to add
       application specific data
 
-
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 13]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
    queue depth:  4-octet unsigned integer field.  This field indicates
       the current length of the egress interface queue of the interface
       from where the packet is forwarded out.  The queue depth is
       expressed as the current number of packets (i.e.  number of
-      currently used packet buffers) in the queue.
+      currently used packet buffers) in the queue.  When this field is
+      part of the data record but a node populating the record is not
+      able to fill it, the field position in the record must be filled
+      with value 0xFFFF to mean not populated.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -761,6 +777,15 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       .                                                               .
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 14]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
+
       Length:  1-octet unsigned integer.  It is the length in octets of
          the Opaque data field that follows Schema Id.  It MUST always
          be a multiple of 4.
@@ -772,19 +797,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
          specified by the schema identified by the Schema ID.
 
    Hop_Lim and node_id wide:  8-octet field defined as follows:
-
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 14]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -806,7 +818,10 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
          the scope of this document.
 
    ingress_if_id and egress_if_id wide:  8-octet field defined as
-      follows:
+      follows: When this field is part of the data record but a node
+      populating the record is not able to fill it, the field position
+      in the record must be filled with value 0xFFFFFFFF to mean not
+      populated.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -817,6 +832,15 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
       ingress_if_id:  4-octet unsigned integer.  Interface identifier to
          record the ingress interface the packet was received on.
+
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 15]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
 
       egress_if_id:  4-octet unsigned integer.  Interface identifier to
          record the egress interface the packet is forwarded out of.
@@ -832,15 +856,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    be interested in recording node identifier and timestamp.  The
    section defines different formats that an entry in "Node data List"
    can take.
-
-
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 15]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
 
    0x002B:  In-situ OAM-trace-type is 0x2B then the format of node data
       is:
@@ -870,6 +885,19 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    0x0009:  In-situ OAM-trace-type is 0x0009 then the format is:
 
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 16]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
+
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |   Hop_Lim     |              node_id                          |
@@ -890,14 +918,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    0x0029:  In-situ OAM-trace-type is 0x0029 then the format is:
 
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 16]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |   Hop_Lim     |              node_id                          |
@@ -909,6 +929,30 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
    0x018C:  In-situ OAM-trace-type is 0x104D then the format is:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 17]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -945,20 +989,26 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    to node.  Correspondingly, two pieces of information are added as in-
    situ OAM data to the packet:
 
-
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 17]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
    o  Random: Unique identifier for the packet (e.g., 64-bits allow for
       the unique identification of 2^64 packets).
 
    o  Cumulative: Information which is handed from node to node and
       updated by every node according to a verification algorithm.
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 18]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
 
    In-situ OAM Proof of Transit Option:
 
@@ -1003,18 +1053,18 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       processing per packet Random number field and configured
       parameters.
 
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 18]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
    Note: Larger or smaller sizes of "Random" and "Cumulative" data are
    feasible and could be required for certain deployments (e.g.  in case
    of space constraints in the transport protocol used).  Future
    versions of this document will address different sizes of data for
    "proof of transit".
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 19]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
 
 3.3.  In-situ OAM Edge-to-Edge Option
 
@@ -1054,18 +1104,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
          specific tube which is used to identify packet loss and
          reordering for that tube.
 
-
-
-
-
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 19]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
 4.  In-situ OAM Data Export
 
    In-situ OAM nodes collect information for packets traversing a domain
@@ -1075,6 +1113,14 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    within the packet.  This decapsulating node can simply discard the
    information collected, can process the information further, or export
    the information using e.g., IPFIX.
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 20]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
 
    The discussion of in-situ OAM data processing and export is left for
    a future version of this document.
@@ -1109,19 +1155,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 9.1.  Normative References
 
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 20]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
    [I-D.brockners-inband-oam-requirements]
               Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
               Gredler, H., Leddy, J., Youell, S., Mozes, D., Mizrahi,
@@ -1133,13 +1166,21 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
               Institute of Electrical and Electronics Engineers,
               "1588-2008 - IEEE Standard for a Precision Clock
               Synchronization Protocol for Networked Measurement and
-              Control Systems",  IEEE Std 1588-2008, 2008,
+              Control Systems", IEEE Std 1588-2008, 2008,
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
 
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 21]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
+              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
+              RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
 9.2.  Informative References
@@ -1170,14 +1211,6 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
               Quinn, P. and U. Elzur, "Network Service Header", draft-
               ietf-sfc-nsh-12 (work in progress), February 2017.
 
-
-
-
-Brockners, et al.       Expires September 9, 2017              [Page 21]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
    [I-D.kitamura-ipv6-record-route]
               Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
               Option Extension", draft-kitamura-ipv6-record-route-00
@@ -1189,9 +1222,17 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
               dataplane-probe-01 (work in progress), June 2016.
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665,
-              DOI 10.17487/RFC7665, October 2015,
+              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
+              RFC7665, October 2015,
               <http://www.rfc-editor.org/info/rfc7665>.
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 22]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
+
 
 Authors' Addresses
 
@@ -1228,12 +1269,6 @@ Authors' Addresses
    Email: hannes@rtbrick.com
 
 
-
-Brockners, et al.       Expires September 9, 2017              [Page 22]
-
-Internet-Draft          In-situ OAM Data Formats              March 2017
-
-
    John Leddy
    Comcast
 
@@ -1247,6 +1282,12 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    United Kingdom
 
    Email: stephen.youell@jpmorgan.com
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 23]
+
+Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
    Tal Mizrahi
@@ -1285,4 +1326,19 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
 
-Brockners, et al.       Expires September 9, 2017              [Page 23]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires September 9, 2017              [Page 24]
