@@ -85,10 +85,9 @@ Table of Contents
    3.  In-situ OAM Data Types and Data Format  . . . . . . . . . . .   4
      3.1.  In-situ OAM Tracing Options . . . . . . . . . . . . . . .   4
        3.1.1.  Pre-allocated Trace Option  . . . . . . . . . . . . .   6
-       3.1.2.  new section . . . . . . . . . . . . . . . . . . . . .   9
-       3.1.3.  Incremental Trace Option  . . . . . . . . . . . . . .   9
-       3.1.4.  In-situ OAM node data element format  . . . . . . . .  12
-       3.1.5.  Examples of In-situ OAM node data . . . . . . . . . .  16
+       3.1.2.  Incremental Trace Option  . . . . . . . . . . . . . .   9
+       3.1.3.  In-situ OAM node data element format  . . . . . . . .  12
+       3.1.4.  Examples of In-situ OAM node data . . . . . . . . . .  16
      3.2.  In-situ OAM Proof of Transit Option . . . . . . . . . . .  18
      3.3.  In-situ OAM Edge-to-Edge Option . . . . . . . . . . . . .  20
    4.  In-situ OAM Data Export . . . . . . . . . . . . . . . . . . .  20
@@ -106,6 +105,7 @@ Table of Contents
    This document defines data record types for "in-situ" Operations,
    Administration, and Maintenance (OAM).  In-situ OAM records OAM
    information within the packet while the packet traverses a particular
+   network domain.  The term "in-situ" refers to the fact that the OAM
 
 
 
@@ -114,7 +114,6 @@ Brockners, et al.       Expires September 9, 2017               [Page 2]
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
-   network domain.  The term "in-situ" refers to the fact that the OAM
    data is added to the data packets rather than is being sent within
    packets specifically dedicated to OAM.  A discussion of the
    motivation and requirements for in-situ OAM can be found in
@@ -161,7 +160,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    SR:        Segment Routing
 
-   TLV:       Type-Length-Value
+   VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
+              Extension [I-D.ietf-nvo3-vxlan-gpe]
 
 
 
@@ -169,9 +169,6 @@ Brockners, et al.       Expires September 9, 2017               [Page 3]
 
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
-
-   VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
-              Extension [I-D.ietf-nvo3-vxlan-gpe]
 
 3.  In-situ OAM Data Types and Data Format
 
@@ -185,9 +182,10 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    Transport options for in-situ OAM data are outside the scope of this
    memo, and are discussed in [I-D.brockners-inband-oam-transport].  In-
-   situ OAM data is defined as options in Type-Length-Value (TLV)
-   format.  The TLV format for each of the three different types of in-
-   situ OAM data is defined in this document.
+   situ OAM data records are fixed length data fields.  A bit field
+   determines the set of OAM data records embedded in a packet.
+   Depending on the type of the encapsulation, a counter field indicates
+   how many data records are included in a particular packet.
 
    In-situ OAM is expected to be deployed in a specific domain rather
    than on the overall Internet.  The part of the network which employs
@@ -218,6 +216,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
    To optimize hardware and software implementations tracing is defined
    as two separate options.  Any deployment MAY choose to configure and
+   support one or both of the following options.  An implementation of
+   the transport protocol that carries these in-situ OAM data MAY choose
 
 
 
@@ -226,8 +226,6 @@ Brockners, et al.       Expires September 9, 2017               [Page 4]
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
-   support one or both of the following options.  An implementation of
-   the transport protocol that carries these in-situ OAM data MAY choose
    to support only one of the options.  In the event that both options
    are utilized at the same time, the Incremental Trace Option MUST be
    placed before the Pre-allocated Trace Option.
@@ -274,6 +272,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    whereas in another case it could refer to a logical interface (e.g.,
    in case of tunnels).
 
+   The following in-situ OAM data is defined for in-situ OAM tracing:
+
 
 
 
@@ -281,8 +281,6 @@ Brockners, et al.       Expires September 9, 2017               [Page 5]
 
 Internet-Draft          In-situ OAM Data Formats              March 2017
 
-
-   The following in-situ OAM data is defined for in-situ OAM tracing:
 
    o  Identification of the in-situ OAM node.  An in-situ OAM node
       identifier can match to a device identifier or a particular
@@ -316,6 +314,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    "Node data List [n-1]" is the second one, etc.
 
 3.1.1.  Pre-allocated Trace Option
+
+
 
 
 
@@ -376,7 +376,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
       The trace type value is a bit field.  The following bit fields are
       defined in this document, with details on each field described in
-      the Section 3.1.4.  The order of packing the trace data in each
+      the Section 3.1.3.  The order of packing the trace data in each
       Node-data element follows the bit order for setting each trace
       data element.
 
@@ -423,7 +423,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
       Bit 11-15  Undefined in this draft.
 
-      Section 3.1.5 describes the format of a number of trace types.
+      Section 3.1.4 describes the format of a number of trace types.
       Within an in-situ OAM domain possible combinations of these bits
       making the IOAM-Trace-Type can be restricted by configuration
       knobs.
@@ -480,9 +480,9 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       index contained in "Octets-left" identifies the offset for current
       active Node data to be populated.
 
-3.1.2.  new section
+3.1.2.  Incremental Trace Option
 
-3.1.3.  Incremental Trace Option
+
 
 
 
@@ -545,7 +545,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
       The trace type value is a bit field.  The following bit fields are
       defined in this document, with details on each field described in
-      the Section 3.1.4.  The order of packing the trace data in each
+      the Section 3.1.3.  The order of packing the trace data in each
       Node-data element follows the bit order for setting each trace
       data element.
 
@@ -590,7 +590,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
       Bit 11-15  Undefined in this draft.
 
-      Section 3.1.5 describes the format of a number of trace types.
+      Section 3.1.4 describes the format of a number of trace types.
 
    Maximum Length:  8-bit unsigned integer.  This field specifies the
       maximum length of the node data list in octets.  Given that the
@@ -630,7 +630,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
       the last node data of the Node data List (Node data List[n])
       contains the first Node data of the path traced.
 
-3.1.4.  In-situ OAM node data element format
+3.1.3.  In-situ OAM node data element format
 
    All the data records MUST be 4-byte aligned.  The IOAM encapsulating
    node MUST initialize data records that it adds to the packet to zero.
@@ -848,7 +848,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
    app_data wide:  8-octet placeholder which can be used by the node to
       add application specific data.
 
-3.1.5.  Examples of In-situ OAM node data
+3.1.4.  Examples of In-situ OAM node data
 
    An entry in the "Node data List" array can have different formats,
    following the needs of the deployment.  Some deployments might only
@@ -1166,7 +1166,7 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
               Institute of Electrical and Electronics Engineers,
               "1588-2008 - IEEE Standard for a Precision Clock
               Synchronization Protocol for Networked Measurement and
-              Control Systems", IEEE Std 1588-2008, 2008,
+              Control Systems",  IEEE Std 1588-2008, 2008,
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
 
@@ -1179,8 +1179,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
 
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
-              RFC2119, March 1997,
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
               <http://www.rfc-editor.org/info/rfc2119>.
 
 9.2.  Informative References
@@ -1222,8 +1222,8 @@ Internet-Draft          In-situ OAM Data Formats              March 2017
               dataplane-probe-01 (work in progress), June 2016.
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
-              RFC7665, October 2015,
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015,
               <http://www.rfc-editor.org/info/rfc7665>.
 
 
