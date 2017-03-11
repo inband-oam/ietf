@@ -33,7 +33,7 @@ Abstract
    traverses a path between two points in the network.  In-situ OAM is
    to complement current out-of-band OAM mechanisms based on ICMP or
    other types of probe packets.  This document outlines how in-situ OAM
-   data records can be transported in protocols such as NSH, Segment
+   data fields can be transported in protocols such as NSH, Segment
    Routing, VXLAN-GPE, native IPv6 (via extension headers), and IPv4.
    Transport options are currently investigated as part of an
    implementation study.  This document is intended to only serve
@@ -121,7 +121,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
 1.  Introduction
 
    This document discusses transport mechanisms for "in-situ"
-   Operations, Administration, and Maintenance (OAM) data records.  In-
+   Operations, Administration, and Maintenance (OAM) data fields.  In-
    situ OAM records OAM information within the packet while the packet
    traverses a particular network domain.  The term "in-situ" refers to
    the fact that the OAM data is added to the data packets rather than
@@ -324,8 +324,8 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
 
       1 - Option Data may change en-route
 
-   In-situ OAM data records are inserted as options in an IPv6 hop-by-
-   hop extension header:
+   In-situ OAM data fields are inserted as options in an IPv6 hop-by-hop
+   extension header:
 
    1.  Tracing Option: The in-situ OAM Tracing option defined in
        [I-D.brockners-inband-oam-data] is represented as a IPv6 option
@@ -398,14 +398,14 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    (calculated based on the packet size and the minimal MTU on all
    links within the OAM domain)
 
-   Let k = number of node data records that can be allocated
+   Let k = number of node data fields that can be allocated
    by this node.
 
    Let node_data_size = size of each node_data based on
    in-situ OAM type.
 
    if (packet matches traffic for which in-situ OAM is enabled) {
-       Create in-situ OAM hbyh ext-header with k node data records
+       Create in-situ OAM hbyh ext-header with k node data fields
        preallocated.
        Increment payload length in IPv6 header:
                          with size of in-situ OAM hbyh ext-header
@@ -457,7 +457,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
 
    if (in-situ OAM hbyh ext-header is present) {
       remove the in-situ OAM hbyh ext-header,
-      possibly store the record along with additional
+      possibly store the field along with additional
       fields for analysis and export
       Decrement Payload Length in IPv6 header
       by size of in-situ OAM ext header
@@ -625,7 +625,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    In Service Function Chaining (SFC) [RFC7665], the Network Service
    Header (NSH) [I-D.ietf-sfc-nsh] already includes path tracing
    capabilities [I-D.penno-sfc-trace].  Tracing information can be
-   carried in-situ as IOAM records over NSH Type 2 metadata TLVs.
+   carried in-situ as IOAM data fields over NSH Type 2 metadata TLVs.
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -683,7 +683,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
    IOAM-trace-type:  Type of IOAM trace.  See
       [I-D.brockners-inband-oam-data] for list of IOAM-Trace-Types.
 
-   Elements-left:  Number of elements left in the IOAM record.
+   Elements-left:  Number of elements left in the node data list.
       [I-D.brockners-inband-oam-data] for detailed description.
 
 6.2.  In-situ OAM POT in NSH
@@ -771,7 +771,7 @@ Internet-Draft         In-situ OAM Data Transport           October 2016
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
   |IOAM E2E Type  |                    Reserved (MBZ)             |  |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  E2E
-  |      E2E Option data format determined by IOAM-E2E-Type       ~  |
+  |      E2E Option data field determined by IOAM-E2E-Type        |  |
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
    TLV Class:  Describes the scope of the "Type" field.  In some cases,

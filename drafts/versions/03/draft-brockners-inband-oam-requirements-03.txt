@@ -638,12 +638,12 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    interfaces (MTU_EXT) and the total size of in-situ OAM data to be
    recorded MUST be <= (MTU_INT - MTU_EXT).
 
-   In-situ OAM comprises two approaches to insert OAM data-records in
-   the packets:
+   In-situ OAM comprises two approaches to insert OAM data fields in the
+   packets:
 
    o  Pre-allocated: In this case, the encapsulating node inserts empty
-      data records into the packet to cover the entire domain.  The data
-      records will be incrementally updated/filled as the packet
+      data fields into the packet to cover the entire domain.  The data
+      fields will be incrementally updated/filled as the packet
       progresses through the network.  With pre-allocation the packet
       size is only changed at the encapsulating node and is kept
       constant throughout the domain.  The pre-allocated approach is
@@ -657,7 +657,7 @@ Internet-Draft          In-situ OAM Requirements              March 2017
       approach is beneficial for hardware data-plane implementations as
       it eliminates the need for the transit nodes to read the full
       array and lookup the pointer in the option prior to updating the
-      data record contents.
+      data fields contents.
 
    The "incremental" or the "pre-allocated" approaches could even be
    combined in the same deployment - in which case two in-situ OAM
@@ -710,15 +710,15 @@ Internet-Draft          In-situ OAM Requirements              March 2017
    nested.  Layering/nesting of in-situ OAM follows the general approach
    of OAM layering: An in-situ OAM domain consists of maintenance end-
    points (MEP) and maintenance intermediate points (MIP).  MEP add to
-   or remove the entire set of in-situ OAM data records from the
-   traffic, while only MIP update or add in-situ OAM data records.  When
-   in-situ OAM layering is employed, a MEP of one layer becomes a MIP in
-   the layer above, while MIP of the lower layer are not visible to the
+   or remove the entire set of in-situ OAM data fields from the traffic,
+   while only MIP update or add in-situ OAM data fields.  When in-situ
+   OAM layering is employed, a MEP of one layer becomes a MIP in the
+   layer above, while MIP of the lower layer are not visible to the
    layer above - unless specifically configured otherwise.
 
    Consider the following examples:
 
-   o  NSH over IPv6: In-situ OAM data records could be present in both
+   o  NSH over IPv6: In-situ OAM data fields could be present in both
       transport protocols: NSH and IPv6, with NSH forming the overlay
       network and IPv6 forming the underlay network.  The network which
       deploys NSH would form an in-situ OAM domain.  In addition each
@@ -758,14 +758,14 @@ Internet-Draft          In-situ OAM Requirements              March 2017
 
 4.5.  Forwarding Behavior
 
-   In-situ OAM adds additional data records to live user traffic and as
+   In-situ OAM adds additional data fields to live user traffic and as
    such changes the packet which is also why in-situ OAM is
    characterized as "hybrid, type 1" OAM.  The effectiveness of in-situ
    OAM as a tool for operations depends on forwarding nodes not altering
-   their forwarding behavior in case of in-situ OAM data records being
+   their forwarding behavior in case of in-situ OAM data fields being
    present in the packet.  As a consequence, an implementation of in-
    situ OAM should not change the forwarding behavior of the packet,
-   i.e.  packets with or without in-situ OAM data records should be
+   i.e.  packets with or without in-situ OAM data fields should be
    handled the same way by a forwarding node (see also the associated
    requirement further below).  Note that there are implementations
    where the addition of meta-data to live user traffic might cause the
@@ -855,20 +855,20 @@ Internet-Draft          In-situ OAM Requirements              March 2017
              NOT become larger than the path MTU.
 
              REQ-G5.1:  If due to some reason a packet which contains in
-                        situ OAM data record cannot be forwarded due to
-                        the presence of in-situ OAM data records, the
-                        node SHOULD remove the in situ OAM data records
+                        situ OAM data fields cannot be forwarded due to
+                        the presence of in-situ OAM data fields, the
+                        node SHOULD remove the in situ OAM data fields
                         and forward the packet, rather than drop the
                         entire packet.
 
              REQ-G5.2:  If the encapsulating router is unable to insert
-                        in-situ OAM data records into a packet, e.g.,
-                        due to MTU issues, even though it is configured
-                        to do so, it should use some operational means
-                        to inform the operator (e.g., syslog) about the
-                        inability to add in-situ OAM data records.  Even
+                        in-situ OAM data fields into a packet, e.g., due
+                        to MTU issues, even though it is configured to
+                        do so, it should use some operational means to
+                        inform the operator (e.g., syslog) about the
+                        inability to add in-situ OAM data fields.  Even
                         if the in-situ OAM encapsulating node fails to
-                        add in-situ OAM data records, it should forward
+                        add in-situ OAM data fields, it should forward
                         the packet normally.
 
              REQ-G5.3:  MTU size consideration for in-situ OAM MUST take
@@ -877,13 +877,13 @@ Internet-Draft          In-situ OAM Requirements              March 2017
                         mechanisms might extend the hop count of a path
                         etc.
 
-   REQ-G6:   Data structure reuse: The data types and data formats
+   REQ-G6:   Data structure reuse: The data fields and associated types
              defined and used for in-situ OAM ought to be reusable for
              out-of-band OAM telemetry as well.
 
-   REQ-G7:   Data records format: It is desirable that the format of in-
-             situ OAM data-records leverages already defined data
-             formats for OAM as much as feasible.
+   REQ-G7:   Data fields: It is desirable that the format of in-situ OAM
+             data fields leverages already defined data formats for OAM
+             as much as feasible.
 
    REQ-G8:   Combination with active OAM mechanisms: In-situ OAM should
              be useable for active network probing, like for example a
@@ -902,13 +902,13 @@ Internet-Draft          In-situ OAM Requirements              March 2017
              address of the packet or to the encapsulating node.
 
    REQ-G9:   Unaltered forwarding behavior of in-situ OAM nodes: The
-             addition of in-situ OAM data-records should not change the
+             addition of in-situ OAM data fields should not change the
              way packets are forwarded within the in-situ OAM domain.
 
    REQ-G10:  Layering of in-situ OAM domains: It should be possible to
              layer in-situ OAM domains on each other.  Layering should
              be supported within the same, as well as with different
-             transport protocols which carry in-situ OAM data-records.
+             transport protocols which carry in-situ OAM data fields.
 
 5.2.  In-situ OAM Data with Per-hop Scope
 
@@ -955,7 +955,7 @@ Internet-Draft          In-situ OAM Requirements              March 2017
 
 
                        timestamps gathered and does not necessarily need
-                       to be an explicit data record.
+                       to be an explicit data field.
 
             REQ-H5.3:  Wall-clock time: Data shall be present that
                        allows to retrieve the wall-clock time visited a
@@ -966,7 +966,7 @@ Internet-Draft          In-situ OAM Requirements              March 2017
                        required precision could e.g., be nanoseconds,
                        microseconds, milliseconds, or seconds.
 
-   REQ-H6:  Generic data records (like e.g., GPS/Geo-location
+   REQ-H6:  Generic data fields (like e.g., GPS/Geo-location
             information): It should be possible to add user-defined OAM
             data at select hops to the packet.  The semantics of the
             data are defined by the user.
@@ -979,10 +979,10 @@ Internet-Draft          In-situ OAM Requirements              March 2017
             nodes).
 
             REQ-S1.1:  In case "Shamir's secret sharing scheme" is used
-                       for proof of transit, two data records, "random"
+                       for proof of transit, two data fields, "random"
                        and "cumulative" shall be present.  The number of
                        bits used for "random" and "cumulative" data
-                       records can vary between deployments and should
+                       fields can vary between deployments and should
                        thus be configurable.
 
             REQ-S1.2:  Enable a fail-open service chaining system to be
