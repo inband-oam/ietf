@@ -417,7 +417,7 @@ L2/L3 distributed scenario is currently deployed by operator.
     </section>
 
     <section anchor="IOAM_option_format"
-             title="In-situ OAM Data Types and Data Format">
+             title="In-situ OAM Data Types and Formats">
       <t>This section defines in-situ OAM data types and data fields and
       associated data types required for in-situ OAM. The different uses of
       in-situ OAM require the definition of different types of data. The
@@ -586,15 +586,15 @@ Pre-allocated Trace Option Data MUST be 4-byte aligned:
 
 ]]></artwork>
             </figure> <list style="hanging">
-              <t hangText="IOAM-Trace-Type:">16-bit identifier of a particular
-              trace element variant.</t>
+              <t hangText="IOAM-Trace-Type:">A 16-bit identifier which
+	      specifies which data types are used in this node data list.</t>
 
               <t hangText=" ">The IOAM-Trace-Type value is a bit field. The
               following bit fields are defined in this document, with details
               on each field described in the <xref
               target="trace-node-data-element"></xref>. The order of packing
-              the trace data in each node data element follows the bit order
-              for setting each trace data element. <list hangIndent="9"
+              the data fields in each node data element follows the bit order
+              of the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
                   <t hangText="Bit 0">(Least significant bit) When set
                   indicates presence of Hop_Lim and node_id in the node
@@ -636,9 +636,10 @@ Pre-allocated Trace Option Data MUST be 4-byte aligned:
                 </list></t>
 
               <t hangText=" "><xref target="trace-type-node-data"></xref>
-              describes the in-situ OAM trace types. Within an in-situ OAM
-              domain possible combinations of these bits making the
-              IOAM-Trace-Type can be restricted by configuration knobs.</t>
+              describes the in-situ OAM data types and their formats.
+	      Within an in-situ OAM domain possible combinations of
+	      these bits making the IOAM-Trace-Type can be restricted by
+	      configuration knobs.</t>
 
               <t hangText="Octets-left:">8-bit unsigned integer. It is the
               data space in octets remaining for recording the node data. This
@@ -728,15 +729,15 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
 
 ]]></artwork>
             </figure><list style="hanging">
-              <t hangText="IOAM-trace-type:">16-bit identifier of a particular
-              trace element variant.</t>
+              <t hangText="IOAM-trace-type:">A 16-bit identifier which
+              specifies which data types are used in this node data list.</t>
 
               <t hangText=" ">The IOAM-Trace-Type value is a bit field. The
               following bit fields are defined in this document, with details
               on each field described in the <xref
               target="trace-node-data-element"></xref>. The order of packing
-              the trace data in each node data element follows the bit order
-              for setting each trace data element. <list hangIndent="9"
+              the data fields in each node data element follows the bit order
+              of the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
                   <t hangText="Bit 0">When set indicates presence of Hop_Lim
                   and node_id in the node data.</t>
@@ -775,7 +776,7 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                 </list></t>
 
               <t hangText=" "><xref target="trace-type-node-data"></xref>
-              describes the in-situ OAM trace types.</t>
+              describes the in-situ OAM data types and their formats.</t>
 
               <t hangText="Maximum Length:">8-bit unsigned integer. This field
               specifies the maximum length of the node data list in octets.
@@ -813,7 +814,7 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
         </section>
 
         <section anchor="trace-node-data-element"
-                 title="In-situ OAM node data fields and associated data formats">
+                 title="In-situ OAM node data fields and associated formats">
           <t>All the data fields MUST be 4-byte aligned. The IOAM
           encapsulating node MUST initialize data fields that it adds to the
           packet to zero. If a node which is supposed to update an IOAM data
@@ -921,10 +922,11 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               <t hangText="queue depth:">4-octet unsigned integer field. This
               field indicates the current length of the egress interface queue
               of the interface from where the packet is forwarded out. The
-              queue depth is expressed as the current number of packets (i.e.
-              number of currently used packet buffers) in the queue. When this
-              field is part of the data field but a node populating the field
-              is not able to fill it, the field position in the field must be
+              queue depth is expressed as the current number of memory
+	      buffers used by the queue (a packet may consume one or more memory
+	      buffers, depending on its size). When this field is part of the
+	      data field but a node populating the field is not able to
+	      fill it, the field position in the field must be
               filled with value 0xFFFF to mean not populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
