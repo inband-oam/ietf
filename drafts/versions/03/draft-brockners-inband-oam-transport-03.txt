@@ -88,23 +88,23 @@ Table of Contents
      3.1.  In-situ OAM in IPv6 Hop by Hop Extension Header . . . . .   5
        3.1.1.  In-situ OAM Hop by Hop Options  . . . . . . . . . . .   5
    4.  In-situ OAM Metadata Transport in IPv4  . . . . . . . . . . .   6
-   5.  In-situ OAM Metadata Transport in VXLAN-GPE . . . . . . . . .   6
-   6.  In-situ OAM Metadata Transport in NSH . . . . . . . . . . . .   9
-     6.1.  In-situ OAM Tracing in NSH  . . . . . . . . . . . . . . .   9
-     6.2.  In-situ OAM POT in NSH  . . . . . . . . . . . . . . . . .  10
-     6.3.  In-situ OAM Edge-to-Edge in NSH . . . . . . . . . . . . .  11
-   7.  In-situ OAM Metadata Transport in Segment Routing . . . . . .  12
-     7.1.  In-situ OAM in SR with IPv6 Transport . . . . . . . . . .  12
-     7.2.  In-situ OAM in SR with MPLS Transport . . . . . . . . . .  13
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
-   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  14
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .  14
-   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  14
-   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     12.1.  Normative References . . . . . . . . . . . . . . . . . .  14
-     12.2.  Informative References . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
-
+     4.1.  In-situ OAM Metadata Transport in GRE . . . . . . . . . .   6
+   5.  In-situ OAM Metadata Transport in VXLAN-GPE . . . . . . . . .   9
+   6.  In-situ OAM Metadata Transport in NSH . . . . . . . . . . . .  11
+     6.1.  In-situ OAM Tracing in NSH  . . . . . . . . . . . . . . .  11
+     6.2.  In-situ OAM POT in NSH  . . . . . . . . . . . . . . . . .  13
+     6.3.  In-situ OAM Edge-to-Edge in NSH . . . . . . . . . . . . .  14
+   7.  In-situ OAM Metadata Transport in Segment Routing . . . . . .  15
+     7.1.  In-situ OAM in SR with IPv6 Transport . . . . . . . . . .  15
+     7.2.  In-situ OAM in SR with MPLS Transport . . . . . . . . . .  16
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
+   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  16
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  16
+   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  17
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  17
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  18
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
 
 
@@ -316,19 +316,19 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
 
 4.  In-situ OAM Metadata Transport in IPv4
 
-   Transport of in-situ OAM data in IPv4 will be detailed in a future
-   version of this document.
+   Transport of in-situ OAM data in IPv4 will use GRE encapsulation.
 
-5.  In-situ OAM Metadata Transport in VXLAN-GPE
+4.1.  In-situ OAM Metadata Transport in GRE
 
-   VXLAN-GPE [I-D.ietf-nvo3-vxlan-gpe] encapsulation is somewhat similar
-   to IPv6 extension headers in that a series of headers can be
-   contained in the header as a linked list.  The different in-situ OAM
-   types are added as options within a new in-situ OAM protocol header
-   in VXLAN GPE.  In an administrative domain where in-situ OAM is used,
-   insertion of the in-situ OAM protocol header in VXLAN GPE is enabled
-   at the VXLAN GPE tunnel endpoint which also serve as in-situ OAM
+   GRE encapsulation is defined in [RFC2784].  IOAM is defined as a
+   "Protocol Type" TBD_IANA_ETHERNET_NUMBER_IOAM and follows GRE header.
+   The different IOAM data fields defined in
+   [I-D.brockners-inband-oam-data] are added as options within a new
+   IOAM protocol header following GRE header.  In an administrative
+   domain where IOAM is used, insertion of the IOAM protocol header in
+   GRE is enabled at the GRE tunnel endpoints which also serve as IOAM
    encapsulating/decapsulating nodes by means of configuration.
+
 
 
 
@@ -338,25 +338,18 @@ Brockners, et al.      Expires September 13, 2017               [Page 6]
 Internet-Draft         In-situ OAM Data Transport             March 2017
 
 
-   In-situ OAM header in VXLAN GPE header:
+   In-situ OAM header following GRE header:
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Outer Ethernet Header                      |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                        Outer IP Header                        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                       Outer UDP Header                        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-   |R|R|Ver|I|P|R|O|          Reserved             | NP = i.s.OAM  |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
-   |     Virtual Network Identifier (VNI)          | Reserved      |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-   | Type =i.s.OAM | i.s.OAM HDR len |  Reserved     | NP = IP/Eth |  |
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |C|       Reserved0       | Ver |          Protocol Type        |  G
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+   |      Checksum (optional)      |       Reserved1 (Optional)    |  E
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   | Version     |  IOAM HDR len   |     Next Protocol Type        |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-   |                     in-situ OAM options                       |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |                          IOAM options                         |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
    |                                                               |
    |                                                               |
    |                     Payload + Padding (L2/L3/ESP/...)         |
@@ -365,16 +358,23 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   The VXLAN-GPE header and fields are defined in
-   [I-D.ietf-nvo3-vxlan-gpe]. in-situ OAM specific fields and header are
-   defined here:
+   The GRE header and fields are defined in [RFC2784] with Protocol Type
+   set to TBD_IANA_ETHERNET_NUMBER_IOAM.  IOAM specific fields and
+   header are defined here:
 
-   Type:  8-bit unsigned integer defining in-situ OAM header type
+   Version:  8-bit unsigned integer defining IOAM protocol version.
 
-   in-situ OAM HDR len:  8-bit unsigned integer.  Length of the in-situ
-      OAM HDR in 8-octet units
+   IOAM HDR len:  8-bit unsigned integer.  Length of the in-situ OAM HDR
+      in 8-octet units.
 
-   in-situ OAM options:  Variable-length field, of length such that the
+   Next Protocol Type:  16 bits Next Protocol Type field contains the
+      protocol type of the packet following IOAM protocol header.  These
+      Protocol Types are defined in [RFC1700] as "ETHER TYPES" and in
+      [ETYPES].  An implementation receiving a packet containing a
+      Protocol Type which is not listed in [RFC1700] or [ETYPES] SHOULD
+      discard the packet.
+
+   IOAM options:  Variable-length field, of length such that the
       complete in-situ OAM header is an integer multiple of 8 octets
       long.  Contains one or more TLV-encoded options of the format:
 
@@ -392,6 +392,128 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
 Brockners, et al.      Expires September 13, 2017               [Page 7]
 
 Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |  Option Type  |  Opt Data Len |                               .
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               .
+      |                                                               .
+      .                                                               .
+      .                     Option Data                               .
+      .                                                               .
+      |                                                               |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      Option Type          8-bit identifier of the type of option.
+
+      Opt Data Len         8-bit unsigned integer.  Length of the
+                           Option Data field of this option, in octets.
+
+      Option Data          Variable-length field.  Option-Type-specific
+                           data.
+
+   The IOAM data fields defined in [I-D.brockners-inband-oam-data] are
+   encoded with an option type allocated in the new IOAM IANA registry -
+   IOAM_PROTOCOL_OPTION_REGISTRY_IANA_TBD.  In addition the following
+   padding options are defined to be used when necessary to align
+   subsequent options and to pad out the containing header to a multiple
+   of 8 octets in length.
+
+   Pad1 option  (alignment requirement: none)
+
+       +-+-+-+-+-+-+-+-+
+       |       0       |
+       +-+-+-+-+-+-+-+-+
+       NOTE: The format of the Pad1 option is a special case -- it does
+             not have length and value fields.
+
+       The Pad1 option is used to insert one octet of padding into the
+       Options area of a header.  If more than one octet of padding is
+       required, the PadN option, described next, should be used, rather
+       than multiple Pad1 options.
+
+   PadN option  (alignment requirement: none)
+
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
+       |       1       |  Opt Data Len |  Option Data
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
+       The PadN option is used to insert two or more octets of padding
+       into the Options area of a header.  For N octets of padding, the
+       Opt Data Len field contains the value N-2, and the Option Data
+       consists of N-2 zero-valued octets.
+
+
+
+
+
+Brockners, et al.      Expires September 13, 2017               [Page 8]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
+5.  In-situ OAM Metadata Transport in VXLAN-GPE
+
+   VXLAN-GPE [I-D.ietf-nvo3-vxlan-gpe] encapsulation is somewhat similar
+   to IPv6 extension headers in that a series of headers can be
+   contained in the header as a linked list.  The different iIOAM types
+   are added as options within a new IOAM protocol header in VXLAN GPE.
+   In an administrative domain where IOAM is used, insertion of the IOAM
+   protocol header in VXLAN GPE is enabled at the VXLAN GPE tunnel
+   endpoint which also serve as IOAM encapsulating/decapsulating nodes
+   by means of configuration.
+
+   In-situ OAM header in VXLAN GPE header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Outer Ethernet Header                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Outer IP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Outer UDP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |R|R|Ver|I|P|R|O|          Reserved             | NP = IOAM     |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+   |     Virtual Network Identifier (VNI)          | Reserved      |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   | Type =IOAM    |   IOAM HDR len  |  Reserved   | Next Protocol |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+   |                         IOAM options                          |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+   |                                                               |
+   |                                                               |
+   |                     Payload + Padding (L2/L3/ESP/...)         |
+   |                                                               |
+   |                                                               |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   The VXLAN-GPE header and fields are defined in
+   [I-D.ietf-nvo3-vxlan-gpe].  IOAM specific fields and header are
+   defined here:
+
+   Type:  8-bit unsigned integer defining IOAM header type
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the in-situ OAM HDR
+      in 8-octet units
+
+   Reserved:  8-bit reserved field MUST be set to zero.
+
+
+
+Brockners, et al.      Expires September 13, 2017               [Page 9]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.  The value is from the IANA
+      registery setup for VXLAN GPE Next Protocol defined in
+      [I-D.ietf-nvo3-vxlan-gpe].
+
+   IOAM options:  Variable-length field, of length such that the
+      complete IOAM header is an integer multiple of 8 octets long.
+      Contains one or more TLV-encoded options of the format:
 
 
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -420,6 +542,26 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
    necessary to align subsequent options and to pad out the containing
    header to a multiple of 8 octets in length.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 10]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
    Pad1 option  (alignment requirement: none)
 
        +-+-+-+-+-+-+-+-+
@@ -443,13 +585,6 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
        Opt Data Len field contains the value N-2, and the Option Data
        consists of N-2 zero-valued octets.
 
-
-
-Brockners, et al.      Expires September 13, 2017               [Page 8]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
-
-
 6.  In-situ OAM Metadata Transport in NSH
 
 6.1.  In-situ OAM Tracing in NSH
@@ -458,6 +593,30 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
    Header (NSH) [I-D.ietf-sfc-nsh] already includes path tracing
    capabilities [I-D.penno-sfc-trace].  Tracing information can be
    carried in-situ as IOAM data fields over NSH Type 2 metadata TLVs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 11]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -497,15 +656,6 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
       responsibility of the TLV Class owner.  A type value of
       0xTBD_NSH_IOAM_TRACE is used for IOAM Preallocated trace option.
 
-
-
-
-
-Brockners, et al.      Expires September 13, 2017               [Page 9]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
-
-
    Reserved bits and R-bits:  one reserved bit is present for future
       use.  The reserved bits MUST be set to 0x0.
 
@@ -516,6 +666,13 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
 
    Octets-left:  8-bit unsigned integer as defined in
       [I-D.brockners-inband-oam-data].
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 12]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
 
    Flags  8-bit field as defined in [I-D.brockners-inband-oam-data].
 
@@ -555,13 +712,6 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
       Class will identify specific standards body allocated types.  POT
       is currently defined using the Cisco (0x0009) TLV class.
 
-
-
-Brockners, et al.      Expires September 13, 2017              [Page 10]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
-
-
    C bit:  Critical bit, See [I-D.ietf-sfc-nsh] for description.
 
    Type:  The specific type of information being carried, within the
@@ -571,6 +721,14 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
 
    Reserved bit:  one reserved bit is present for future use.  The
       reserved bits MUST be set to 0x0.
+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 13]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
 
    Length:  Length of the variable metadata, in octets.  Here the length
       is 20.
@@ -611,13 +769,6 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
 
-
-
-Brockners, et al.      Expires September 13, 2017              [Page 11]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
-
-
    TLV Class:  Describes the scope of the "Type" field.  In some cases,
       the TLV Class will identify a specific vendor, in others, the TLV
       Class will identify specific standards body allocated types.  POT
@@ -627,6 +778,14 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
 
    Type:  The specific type of information being carried, within the
       scope of a given TLV Class.  Value allocation is the
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 14]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
       responsibility of the TLV Class owner.  Currently a type value of
       0xTBD_NSH_IOAM_E2E is used.
 
@@ -660,20 +819,6 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
    A new "POT TLV" is defined for the SRH which is to carry proof of
    transit in situ OAM data.
 
-
-
-
-
-
-
-
-
-
-Brockners, et al.      Expires September 13, 2017              [Page 12]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
-
-
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -689,6 +834,13 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
    |                    Cumulative (contd.)                        |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 15]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
 
    Type:  To be assigned by IANA.
 
@@ -722,14 +874,6 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
    the MPLS label stack.  Details will be addressed in a future version
    of this document.
 
-
-
-
-Brockners, et al.      Expires September 13, 2017              [Page 13]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
-
-
 8.  IANA Considerations
 
    IANA considerations will be added in a future version of this
@@ -746,31 +890,34 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
    document.  For a discussion of security requirements of in-situ OAM,
    please refer to [I-D.brockners-inband-oam-requirements].
 
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 16]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
 11.  Acknowledgements
 
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
    Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
-   and Andrew Yourtchenko for the comments and advice.  For the IPv6
-   encapsulation, this document leverages and builds on top of several
-   concepts described in [I-D.kitamura-ipv6-record-route].  The authors
-   would like to acknowledge the work done by the author Hiroshi
-   Kitamura and people involved in writing it.
+   and Andrew Yourtchenko for the comments and advice.  The authors
+   would like to acknowledge Craig Hill for contributing GRE IOAM
+   encapsulation.  For the IPv6 encapsulation, this document leverages
+   and builds on top of several concepts described in
+   [I-D.kitamura-ipv6-record-route].  The authors would like to
+   acknowledge the work done by the author Hiroshi Kitamura and people
+   involved in writing it.
 
 12.  References
 
 12.1.  Normative References
 
-   [I-D.brockners-inband-oam-requirements]
-              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
-              Gredler, H., Leddy, J., Youell, S., Mozes, D., Mizrahi,
-              T., <>, P., and r. remy@barefootnetworks.com,
-              "Requirements for In-situ OAM", draft-brockners-inband-
-              oam-requirements-02 (work in progress), October 2016.
-
-12.2.  Informative References
-
-   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
+   [ETYPES]   "IANA Ethernet Numbers",
+              <https://www.iana.org/assignments/ethernet-numbers/
+              ethernet-numbers.xhtml>.
 
    [I-D.brockners-inband-oam-data]
               Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
@@ -779,18 +926,12 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
               brockners-inband-oam-data-02 (work in progress), October
               2016.
 
-
-
-Brockners, et al.      Expires September 13, 2017              [Page 14]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
-
-
-   [I-D.brockners-proof-of-transit]
+   [I-D.brockners-inband-oam-requirements]
               Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
-              Leddy, J., Youell, S., Mozes, D., and T. Mizrahi, "Proof
-              of Transit", draft-brockners-proof-of-transit-02 (work in
-              progress), October 2016.
+              Gredler, H., Leddy, J., Youell, S., Mozes, D., Mizrahi,
+              T., <>, P., and r. remy@barefootnetworks.com,
+              "Requirements for In-situ OAM", draft-brockners-inband-
+              oam-requirements-02 (work in progress), October 2016.
 
    [I-D.ietf-6man-segment-routing-header]
               Previdi, S., Filsfils, C., Field, B., Leung, I., Linkova,
@@ -799,20 +940,53 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
               segment-routing-header-05 (work in progress), February
               2017.
 
-   [I-D.ietf-ippm-6man-pdm-option]
-              Elkins, N., Hamilton, R., and m. mackermann@bcbsm.com,
-              "IPv6 Performance and Diagnostic Metrics (PDM) Destination
-              Option", draft-ietf-ippm-6man-pdm-option-08 (work in
-              progress), February 2017.
-
    [I-D.ietf-nvo3-vxlan-gpe]
               Maino, F., Kreeger, L., and U. Elzur, "Generic Protocol
               Extension for VXLAN", draft-ietf-nvo3-vxlan-gpe-03 (work
               in progress), October 2016.
 
+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 17]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
    [I-D.ietf-sfc-nsh]
               Quinn, P. and U. Elzur, "Network Service Header", draft-
               ietf-sfc-nsh-12 (work in progress), February 2017.
+
+   [RFC1700]  Reynolds, J. and J. Postel, "Assigned Numbers", RFC 1700,
+              DOI 10.17487/RFC1700, October 1994,
+              <http://www.rfc-editor.org/info/rfc1700>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
+              RFC2119, March 1997,
+              <http://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
+              Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
+              DOI 10.17487/RFC2784, March 2000,
+              <http://www.rfc-editor.org/info/rfc2784>.
+
+12.2.  Informative References
+
+   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
+
+   [I-D.brockners-proof-of-transit]
+              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
+              Leddy, J., Youell, S., Mozes, D., and T. Mizrahi, "Proof
+              of Transit", draft-brockners-proof-of-transit-02 (work in
+              progress), October 2016.
+
+   [I-D.ietf-ippm-6man-pdm-option]
+              Elkins, N., Hamilton, R., and m. mackermann@bcbsm.com,
+              "IPv6 Performance and Diagnostic Metrics (PDM) Destination
+              Option", draft-ietf-ippm-6man-pdm-option-08 (work in
+              progress), February 2017.
 
    [I-D.ietf-spring-segment-routing]
               Filsfils, C., Previdi, S., Decraene, B., Litkowski, S.,
@@ -825,22 +999,21 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
               Option Extension", draft-kitamura-ipv6-record-route-00
               (work in progress), November 2000.
 
+
+
+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 18]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
    [I-D.penno-sfc-trace]
               Penno, R., Quinn, P., Pignataro, C., and D. Zhou,
               "Services Function Chaining Traceroute", draft-penno-sfc-
               trace-03 (work in progress), September 2015.
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
-              RFC2119, March 1997,
-              <http://www.rfc-editor.org/info/rfc2119>.
-
-
-
-Brockners, et al.      Expires September 13, 2017              [Page 15]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
-
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
               Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
@@ -882,20 +1055,21 @@ Authors' Addresses
    Email: cpignata@cisco.com
 
 
+
+
+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 19]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
    Hannes Gredler
    RtBrick Inc.
 
    Email: hannes@rtbrick.com
-
-
-
-
-
-
-
-Brockners, et al.      Expires September 13, 2017              [Page 16]
-
-Internet-Draft         In-situ OAM Data Transport             March 2017
 
 
    John Leddy
@@ -937,6 +1111,17 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
    Email: petr@fb.com
 
 
+
+
+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 20]
+
+Internet-Draft         In-situ OAM Data Transport             March 2017
+
+
    Remy Chang
    Barefoot Networks
    2185 Park Boulevard
@@ -949,4 +1134,43 @@ Internet-Draft         In-situ OAM Data Transport             March 2017
 
 
 
-Brockners, et al.      Expires September 13, 2017              [Page 17]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 13, 2017              [Page 21]

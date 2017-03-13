@@ -14,6 +14,8 @@
 <!ENTITY RFC7112 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7112.xml">
 <!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
+<!ENTITY RFC1700 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1700.xml">
 <!ENTITY I-D.brockners-inband-oam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-data.xml">
 <!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
 <!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
@@ -491,20 +493,128 @@
     </section>
 
     <section title="In-situ OAM Metadata Transport in IPv4">
-      <t>Transport of in-situ OAM data in IPv4 will be detailed in a future
-      version of this document.</t>
+      <t>Transport of in-situ OAM data in IPv4 will use GRE encapsulation.</t>
+
+      <section title="In-situ OAM Metadata Transport in GRE">
+        <t>GRE encapsulation is defined in <xref target="RFC2784"></xref>.
+        IOAM is defined as a "Protocol Type" TBD_IANA_ETHERNET_NUMBER_IOAM and
+        follows GRE header. The different IOAM data fields defined in <xref
+        target="I-D.brockners-inband-oam-data"></xref> are added as options
+        within a new IOAM protocol header following GRE header. In an
+        administrative domain where IOAM is used, insertion of the IOAM
+        protocol header in GRE is enabled at the GRE tunnel endpoints which
+        also serve as IOAM encapsulating/decapsulating nodes by means of
+        configuration.</t>
+
+        <t><figure>
+            <artwork><![CDATA[
+In-situ OAM header following GRE header:
+
+0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|C|       Reserved0       | Ver |          Protocol Type        |  G
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+|      Checksum (optional)      |       Reserved1 (Optional)    |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+| Version     |  IOAM HDR len   |     Next Protocol Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|                          IOAM options                         |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+          </figure>The GRE header and fields are defined in <xref
+        target="RFC2784"></xref> with Protocol Type set to
+        TBD_IANA_ETHERNET_NUMBER_IOAM. IOAM specific fields and header are
+        defined here:<list style="hanging">
+            <t hangText="Version:">8-bit unsigned integer defining IOAM
+            protocol version.</t>
+
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            in-situ OAM HDR in 8-octet units.</t>
+
+            <t hangText="Next Protocol Type:">16 bits Next Protocol Type field
+            contains the protocol type of the packet following IOAM protocol
+            header. These Protocol Types are defined in <xref
+            target="RFC1700"></xref> as "ETHER TYPES" and in <xref
+            target="ETYPES"></xref>. An implementation receiving a packet
+            containing a Protocol Type which is not listed in <xref
+            target="RFC1700"></xref> or <xref target="ETYPES"></xref> SHOULD
+            discard the packet.</t>
+
+            <t hangText="IOAM options:">Variable-length field, of length such
+            that the complete in-situ OAM header is an integer multiple of 8
+            octets long. Contains one or more TLV-encoded options of the
+            format:</t>
+          </list><figure>
+            <artwork><![CDATA[
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Option Type  |  Opt Data Len |                               .
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               .
+   |                                                               .
+   .                                                               .
+   .                     Option Data                               .
+   .                                                               .
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   Option Type          8-bit identifier of the type of option.
+
+   Opt Data Len         8-bit unsigned integer.  Length of the 
+                        Option Data field of this option, in octets.
+
+   Option Data          Variable-length field.  Option-Type-specific
+                        data.]]></artwork>
+          </figure>The IOAM data fields defined in <xref
+        target="I-D.brockners-inband-oam-data"></xref> are encoded with an
+        option type allocated in the new IOAM IANA registry -
+        IOAM_PROTOCOL_OPTION_REGISTRY_IANA_TBD. In addition the following
+        padding options are defined to be used when necessary to align
+        subsequent options and to pad out the containing header to a multiple
+        of 8 octets in length.</t>
+
+        <t><figure>
+            <artwork><![CDATA[
+Pad1 option  (alignment requirement: none)
+
+    +-+-+-+-+-+-+-+-+
+    |       0       |
+    +-+-+-+-+-+-+-+-+
+    NOTE: The format of the Pad1 option is a special case -- it does
+          not have length and value fields.
+
+    The Pad1 option is used to insert one octet of padding into the
+    Options area of a header.  If more than one octet of padding is
+    required, the PadN option, described next, should be used, rather
+    than multiple Pad1 options.
+
+PadN option  (alignment requirement: none)
+
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
+    |       1       |  Opt Data Len |  Option Data
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
+    The PadN option is used to insert two or more octets of padding
+    into the Options area of a header.  For N octets of padding, the
+    Opt Data Len field contains the value N-2, and the Option Data
+    consists of N-2 zero-valued octets.]]></artwork>
+          </figure></t>
+      </section>
     </section>
 
     <section title="In-situ OAM Metadata Transport in VXLAN-GPE">
       <t>VXLAN-GPE <xref target="I-D.ietf-nvo3-vxlan-gpe"></xref>
       encapsulation is somewhat similar to IPv6 extension headers in that a
       series of headers can be contained in the header as a linked list. The
-      different in-situ OAM types are added as options within a new in-situ
-      OAM protocol header in VXLAN GPE. In an administrative domain where
-      in-situ OAM is used, insertion of the in-situ OAM protocol header in
-      VXLAN GPE is enabled at the VXLAN GPE tunnel endpoint which also serve
-      as in-situ OAM encapsulating/decapsulating nodes by means of
-      configuration.</t>
+      different iIOAM types are added as options within a new IOAM protocol
+      header in VXLAN GPE. In an administrative domain where IOAM is used,
+      insertion of the IOAM protocol header in VXLAN GPE is enabled at the
+      VXLAN GPE tunnel endpoint which also serve as IOAM
+      encapsulating/decapsulating nodes by means of configuration.</t>
 
       <t><figure>
           <artwork><![CDATA[
@@ -519,13 +629,13 @@ In-situ OAM header in VXLAN GPE header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       Outer UDP Header                        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-|R|R|Ver|I|P|R|O|          Reserved             | NP = i.s.OAM  |  |
+|R|R|Ver|I|P|R|O|          Reserved             | NP = IOAM     |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
 |     Virtual Network Identifier (VNI)          | Reserved      |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-| Type =i.s.OAM | i.s.OAM HDR len |  Reserved     | NP = IP/Eth |  |
+| Type =IOAM    |   IOAM HDR len  |  Reserved   | Next Protocol |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-|                     in-situ OAM options                       |  |
+|                         IOAM options                          |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
 |                                                               |
 |                                                               |
@@ -536,18 +646,25 @@ In-situ OAM header in VXLAN GPE header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
         </figure>The VXLAN-GPE header and fields are defined in <xref
-      target="I-D.ietf-nvo3-vxlan-gpe"></xref>. in-situ OAM specific fields
-      and header are defined here:<list style="hanging">
-          <t hangText="Type:">8-bit unsigned integer defining in-situ OAM
-          header type</t>
+      target="I-D.ietf-nvo3-vxlan-gpe"></xref>. IOAM specific fields and
+      header are defined here:<list style="hanging">
+          <t hangText="Type:">8-bit unsigned integer defining IOAM header
+          type</t>
 
-          <t hangText="in-situ OAM HDR len:">8-bit unsigned integer. Length of
-          the in-situ OAM HDR in 8-octet units</t>
+          <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+          in-situ OAM HDR in 8-octet units</t>
 
-          <t hangText="in-situ OAM options:">Variable-length field, of length
-          such that the complete in-situ OAM header is an integer multiple of
-          8 octets long. Contains one or more TLV-encoded options of the
-          format:</t>
+          <t hangText="Reserved:">8-bit reserved field MUST be set to
+          zero.</t>
+
+          <t hangText="Next Protocol:">8-bit unsigned integer that determines
+          the type of header following IOAM protocol. The value is from the
+          IANA registery setup for VXLAN GPE Next Protocol defined in <xref
+          target="I-D.ietf-nvo3-vxlan-gpe"></xref>.</t>
+
+          <t hangText="IOAM options:">Variable-length field, of length such
+          that the complete IOAM header is an integer multiple of 8 octets
+          long. Contains one or more TLV-encoded options of the format:</t>
         </list><figure>
           <artwork><![CDATA[
 
@@ -729,14 +846,14 @@ PadN option  (alignment requirement: none)
 
             <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
             variant that dictates the POT data that is included as defined in
-            <xref target="I-D.brockners-inband-oam-data"></xref>. </t>
+            <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
 
             <t hangText="Profile to use (P):">1-bit as defined in <xref
             target="I-D.brockners-inband-oam-data"></xref> IOAM POT
             Option.</t>
 
             <t hangText="Reserved (MBZ):">24-bit field MUST be filled with
-            zeroes. </t>
+            zeroes.</t>
 
             <t hangText="Random:">64-bit Per-packet Random number.</t>
 
@@ -765,7 +882,9 @@ PadN option  (alignment requirement: none)
 |IOAM E2E Type  |                    Reserved (MBZ)             |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  E2E
 |      E2E Option data field determined by IOAM-E2E-Type        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+]]></artwork>
           </figure><list style="hanging">
             <t hangText="TLV Class:">Describes the scope of the "Type" field.
             In some cases, the TLV Class will identify a specific vendor, in
@@ -897,9 +1016,10 @@ PadN option  (alignment requirement: none)
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
       Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
       Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker, and
-      Andrew Yourtchenko for the comments and advice. For the IPv6
-      encapsulation, this document leverages and builds on top of several
-      concepts described in <xref
+      Andrew Yourtchenko for the comments and advice. The authors would like
+      to acknowledge Craig Hill for contributing GRE IOAM encapsulation. For
+      the IPv6 encapsulation, this document leverages and builds on top of
+      several concepts described in <xref
       target="I-D.kitamura-ipv6-record-route"></xref>. The authors would like
       to acknowledge the work done by the author Hiroshi Kitamura and people
       involved in writing it.</t>
@@ -923,21 +1043,38 @@ PadN option  (alignment requirement: none)
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
     <references title="Normative References">
-      &I-D.brockners-inband-oam-requirements;
-    </references>
-
-    <references title="Informative References">
       &RFC2119;
 
-      &RFC7665;
+      &I-D.brockners-inband-oam-requirements;
 
-      &I-D.ietf-spring-segment-routing;
+      &I-D.brockners-inband-oam-data;
+
+      &I-D.ietf-nvo3-vxlan-gpe;
 
       &I-D.ietf-sfc-nsh;
 
       &I-D.ietf-6man-segment-routing-header;
 
-      &I-D.ietf-nvo3-vxlan-gpe;
+      &RFC2784;
+
+      &RFC1700;
+
+      <reference anchor="ETYPES"
+                 target="https://www.iana.org/assignments/ethernet-numbers/ethernet-numbers.xhtml">
+        <front>
+          <title>IANA Ethernet Numbers</title>
+
+          <author></author>
+
+          <date />
+        </front>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      &RFC7665;
+
+      &I-D.ietf-spring-segment-routing;
 
       <reference anchor="I-D.kitamura-ipv6-record-route">
         <front>
@@ -955,8 +1092,6 @@ PadN option  (alignment requirement: none)
         <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
                 type="TXT" />
       </reference>
-
-      &I-D.brockners-inband-oam-data;
 
       &I-D.brockners-proof-of-transit;
 
