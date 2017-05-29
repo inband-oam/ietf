@@ -33,72 +33,6 @@
 <!ENTITY I-D.SPUD SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
-<!-- Comments received
-Jen Linkova:
-
-1)
-
-"In-band OAM data is added to a packet on entering the in-situ
-OAM-domain and is removed from the packet when exiting the domain. " -
-it might be just me but I found the terminology a bit confusing. When
-I read it for the first time I assumed that "data" means "data in OAM
-header. While it looks like by "data" you mean "the data container".
-Shall the container and the data be called differently?
-
-2) IMHO calling a node "in-situ OAM encapsulating" is a bit confusing
-as at least for some cases there is no encapsulation. Maybe smth like
-'pop/push' MPLS terminology? Or would it confuse people even more?
-
-3) (sorry for nitpicking)
-
-"Hop_Lim:  1-octet Hop limit that is set to the TTL value in the
-packet at the node that records this data."
-s/TTL/TTL or Hop Limit/ - that field is called Hop Limit in IPv6, not TTL.
-
-
-Deepak Kumar:
-
-I believe just I-oam header should be placed flexibly, if network is l2/l3 leaf and traffic is within one data center then current format is fine.
-If traffic is going over L2 and L3 vxlan seperated, or Border Leaf, Data Center Interconnect I-oam header can come fixed byte inside data and configuration policy can determine this behavior if required.
-Now How to indicate if common OAM header is starting immediately or after Fixed byte, I will left to community.
-Using single "O" bit is also fine for active OAM as we can look at two places if we use optional Fixed byte.
-
-As I-OAM is for real data it will be issue and they might not support that mode or getting extra bit in Datapath header will solve this issue.
-
-L2/L3 distributed scenario is currently deployed by operator.
-
-   In-band OAM header in VXLAN GPE header:
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    Outer Ethernet Header                      |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                        Outer IP Header                        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                       Outer UDP Header                        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-   |R|R|Ver|I|P|R|O|          Reserved             | NP = i.s.OAM  |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
-   |     Virtual Network Identifier (VNI)          | Reserved      |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-
-            Fixed Byte of Inner Packet Real Data (Optional)
-
-
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-   | Type =i.s.OAM | i.s.OAM HDR len |  Reserved     | NP = IP/Eth |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-   |                     in-situ OAM options                       |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-   |                                                               |
-   |                                                               |
-   |                     Payload + Padding (L2/L3/ESP/...)         |
-   |                                                               |
-   |                                                               |
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
--->
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
 <!-- For a complete list and description of processing instructions (PIs), 
@@ -124,7 +58,7 @@ L2/L3 distributed scenario is currently deployed by operator.
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-brockners-inband-oam-data-04"
+<rfc category="exp" docName="draft-brockners-inband-oam-data-05"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -331,7 +265,7 @@ L2/L3 distributed scenario is currently deployed by operator.
       </address>
     </author>
 
-    <date day="29" month="March" year="2017"/>
+    <date day="29" month="May" year="2017"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -366,10 +300,9 @@ L2/L3 distributed scenario is currently deployed by operator.
       traverses a path between two points in the network. This document
       discusses the data fields and associated data types for in-situ OAM.
       In-situ OAM data fields can be embedded into a variety of transports
-      such as NSH, Segment Routing, VXLAN-GPE, Geneve, native IPv6 (via
+      such as NSH, Segment Routing, Geneve, native IPv6 (via
       extension header), or IPv4. In-situ OAM can be used to complement
-      current out-of-band OAM mechanisms based on ICMP or other types of probe
-      packets.</t>
+      OAM mechanisms based on e.g. ICMP or other types of probe packets.</t>
     </abstract>
   </front>
 
@@ -383,7 +316,7 @@ L2/L3 distributed scenario is currently deployed by operator.
       specifically dedicated to OAM. A discussion of the motivation and
       requirements for in-situ OAM can be found in <xref
       target="I-D.brockners-inband-oam-requirements"/>. In-situ OAM is to
-      complement "out-of-band" or "active" mechanisms such as Ping or
+      complement mechanisms such as Ping or
       Traceroute, or more recent active probing mechanisms as described in
       <xref target="I-D.lapukhov-dataplane-probe"/>. In terms of "active" or
       "passive" OAM, "in-situ" OAM can be considered a hybrid OAM type. While
@@ -392,8 +325,9 @@ L2/L3 distributed scenario is currently deployed by operator.
       given in <xref target="RFC7799"/> in-situ OAM could be portrayed as
       "hybrid OAM, type 1". "In-situ" mechanisms do not require extra packets
       to be sent and hence don't change the packet traffic mix within the
-      network. In-situ OAM mechanisms can be leveraged where current
-      out-of-band mechanisms do not apply or do not offer the desired results,
+      network. In-situ OAM mechanisms can be leveraged where 
+      mechanisms using e.g. ICMP do not apply or do not offer
+      the desired results,
       such as proving that a certain traffic flow takes a pre-defined path,
       SLA verification for the live data traffic, detailed statistics on
       traffic distribution paths in networks that distribute traffic across
@@ -443,7 +377,7 @@ L2/L3 distributed scenario is currently deployed by operator.
       <t>Scope: This document defines the data fields and associated data
       types for in-situ OAM. The in-situ OAM data field can be transported by
       a variety of transport protocols, including NSH, Segment Routing,
-      VXLAN-GPE, Geneve, IPv6, or IPv4. Encapsulation details for these
+      Geneve, IPv6, or IPv4. Encapsulation details for these
       different transport protocols are outside the scope of this
       document.</t>
 
@@ -453,11 +387,22 @@ L2/L3 distributed scenario is currently deployed by operator.
       a network domain can include an enterprise campus using physical
       connections between devices or an overlay network using virtual
       connections / tunnels for connectivity between said devices. A network
-      domain is defined by its perimeter or edge. The operator of such a
-      domain MUST put provisions in place to ensure that in-situ OAM data
-      stays within the specific domain only (i.e., does not leak beyond the
-      edge) and consider potential impact of IOAM to ECMP processing, path MTU
-      and ICMP message handling.</t>
+      domain is defined by its perimeter or edge. Designers of carrier
+      protocols for IOAM must specify mechanisms to ensure that
+      in-situ OAM data stays within an IOAM domain. In addition,
+      the operator of such a domain is expected to put provisions in
+      place to ensure that IOAM data does not leak beyond the edge of
+      an IOAM domain, e.g. using for example packet filtering methods.
+      The operator should consider potential operational impact of
+      IOAM to mechanisms such as ECMP processing (e.g. load-balancing
+      schemes based on packet length could be impacted by the increased
+      packet size due to IOAM), path MTU (i.e. ensure that the MTU of
+      all links within a domain is sufficiently large to support the
+      increased packet size due to IOAM) and ICMP message handling
+      (i.e. in case of a native IPv6 transport, IOAM support for ICMPv6
+      Echo Request/Reply could desired which would translate into
+      ICMPv6 extensions to enable IOAM data fields to be copied from
+      an Echo Request message to an Echo Reply message).</t>
 
       <t>In-situ OAM control points: IOAM data fields are added to or removed
       from the live user traffic by the devices which form the edge of a
@@ -482,7 +427,7 @@ L2/L3 distributed scenario is currently deployed by operator.
       could be present at every layer. The behavior follows the
       ships-in-the-night model.</t>
 
-      <t>Combination with active OAM mechanisms: In-situ OAM SHOULD be usable
+      <t>Combination with active OAM mechanisms: In-situ OAM should be usable
       for active network probing, enabling for example a customized version of
       traceroute. Decapsulating in-situ OAM nodes may have an ability to send
       the in-situ OAM information retrieved from the packet back to the source
@@ -928,7 +873,7 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               <t hangText="ingress_if_id and egress_if_id:">4-octet field
               defined as follows: When this field is part of the data field
               but a node populating the field is not able to fill it, the
-              position in the field must be filled with value 0xFFFF to mean
+              position in the field must be filled with value 0xFFFFFFFF to mean
               not populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -968,7 +913,7 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               two nodes in the network when the nodes are time synchronized.
               When this field is part of the data field but a node populating
               the field is not able to fill it, the field position in the
-              field must be filled with value 0xFFFF to mean not
+              field must be filled with value 0xFFFFFFFF to mean not
               populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -983,7 +928,7 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               2^30-1 nanoseconds then the top bit 'O' is set to indicate
               overflow. When this field is part of the data field but a node
               populating the field is not able to fill it, the field position
-              in the field must be filled with value 0xFFFF to mean not
+              in the field must be filled with value 0xFFFFFFFF to mean not
               populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1002,7 +947,7 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               buffers, depending on its size). When this field is part of the
               data field but a node populating the field is not able to fill
               it, the field position in the field must be filled with value
-              0xFFFF to mean not populated.<figure>
+              0xFFFFFFFF to mean not populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       queue depth                             |
@@ -1012,8 +957,10 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               <t hangText="Opaque State Snapshot:">Variable length field. It
               allows the network element to store an arbitrary state in the
               node data field , without a pre-defined schema. The schema needs
-              to be made known to the analyzer by some out-of-band means. The
-              24-bit "Schema Id" field in the field indicates which particular
+              to be made known to the analyzer by some out-of-band mechanism.
+              The specification of this mechanism is beyond the scope of
+              this document. The 24-bit "Schema Id" field in
+              the field indicates which particular
               schema is used, and should be configured on the network element
               by the operator. <figure>
                   <artwork><![CDATA[    0                   1                   2                   3
@@ -1067,7 +1014,8 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               <t hangText="ingress_if_id and egress_if_id wide:">8-octet field
               defined as follows: When this field is part of the data field
               but a node populating the field is not able to fill it, the
-              field position in the field must be filled with value 0xFFFFFFFF
+              field position in the field must be filled with value
+              0xFFFFFFFF
               to mean not populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
