@@ -618,7 +618,7 @@ Pre-allocated Trace Option Data MUST be 4-byte aligned:
               data fields in each node data element follows the bit order of
               the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
-                  <t hangText="Bit 0">(Least significant bit) When set
+                  <t hangText="Bit 0">(Most significant bit) When set
                   indicates presence of Hop_Lim and node_id in the node
                   data.</t>
 
@@ -654,7 +654,10 @@ Pre-allocated Trace Option Data MUST be 4-byte aligned:
                   <t hangText="Bit 10">When set indicates presence of app_data
                   wide in the node data.</t>
 
-                  <t hangText="Bit 11-15">Undefined in this draft.</t>
+                  <t hangText="Bit 11">When set indicates presence of
+                  the Checksum Complement node data.</t>
+
+                  <t hangText="Bit 12-15">Undefined in this draft.</t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-type-node-data"/> describes
@@ -760,8 +763,8 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               data fields in each node data element follows the bit order of
               the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
-                  <t hangText="Bit 0">When set indicates presence of Hop_Lim
-                  and node_id in the node data.</t>
+                  <t hangText="Bit 0">(Most significant bit) When set
+                  indicates presence of Hop_Lim and node_id in the node data.</t>
 
                   <t hangText="Bit 1">When set indicates presence of
                   ingress_if_id and egress_if_id in the node data.</t>
@@ -793,7 +796,10 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                   <t hangText="Bit 10">When set indicates presence of app_data
                   wide in the node data.</t>
 
-                  <t hangText="Bit 11-15">Undefined in this draft.</t>
+                  <t hangText="Bit 11">When set indicates presence of
+                  the Checksum Complement node data.</t>
+
+                  <t hangText="Bit 12-15">Undefined in this draft.</t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-type-node-data"/> describes
@@ -803,8 +809,13 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               specifies the maximum length of the node data list in octets.
               Given that the sender knows the minimum path MTU, the sender can
               set the maximum of node data bytes allowed before exceeding the
-              MTU. Thus, a simple comparison between "Opt data Len" and "Max
-              Length" allows to decide whether or not data could be added.</t>
+              MTU. It is assumed that every protocol that IOAM can be
+              encapsulated over will include a shim header that includes an "Opt Data
+              Len" field, specifying the total length of the IOAM
+              options. Thus, a simple comparison between "Opt data Len"
+              and "Maximum Length" allows to decide whether or not data
+              could be added. The specification of the "Opt Data Len" field, as well
+              as the shim header it resides in, is outside the scope of this memo.</t>
 
               <t hangText="Flags">8-bit field. Following flags are
               defined:<list style="hanging">
@@ -862,7 +873,10 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                   the location of the node in the communication path. This is
                   copied from the lower layer, e.g., TTL value in IPv4 header
                   or hop limit field from IPv6 header of the packet when the
-                  packet is ready for transmission.</t>
+                  packet is ready for transmission. The semantics of the
+                  Hop_Lim field depend on the lower layer protocol that
+                  IOAM is encapsulated over, and therefore its specific semantics are
+                  outside the scope of this memo.</t>
 
                   <t hangText="node_id:">3-octet unsigned integer. Node
                   identifier field to uniquely identify a node within in-situ
@@ -1003,7 +1017,10 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                   the location of the node in the communication path. This is
                   copied from the lower layer for e.g. TTL value in IPv4
                   header or hop limit field from IPv6 header of the
-                  packet.</t>
+                  packet. The semantics of the
+                  Hop_Lim field depend on the lower layer protocol that
+                  IOAM is encapsulated over, and therefore its specific
+                  semantics are outside the scope of this memo.</t>
 
                   <t hangText="node_id:">7-octet unsigned integer. Node
                   identifier field to uniquely identify a node within in-situ
@@ -1035,7 +1052,27 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
 
               <t hangText="app_data wide:">8-octet placeholder which can be
               used by the node to add application specific data.</t>
-            </list></t>
+
+              <t hangText="Checksum Complement:">4-octet node data which contains
+              a two-octet Checksum Complement field, and a 2-octet reserved field.
+              The Checksum Complement can be used when IOAM is
+              transported over encapsulations that make use of a UDP
+              transport, such as VXLAN-GPE or Geneve. In this
+              case, incorporating the IOAM node data requires the UDP Checksum field
+              to be updated. Rather than to recompute the Chekcsum field, a node can
+              use the Checksum Complement to make a checksum-neutral update in the UDP
+              payload; the Checksum Complement is assigned a value that
+              complements the rest of the node data fields that were added by the
+              current node, causing the existing UDP Checksum field to remain correct.
+              Checksum Complement fields are used in a similar manner in
+              <xref target="RFC7820"/> and <xref target="RFC7821"/>.<figure>
+                  <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
+8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      Checksum Complement      |           Reserved            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
+                </figure></t>
+
         </section>
 
         <section anchor="trace-type-node-data"
@@ -1350,6 +1387,10 @@ In-situ OAM Proof of Transit Option Data MUST be 4-byte aligned:
 
     <references title="Informative References">
       &RFC7665;
+
+      &RFC7820;
+
+      &RFC7821;
 
       &I-D.lapukhov-dataplane-probe;
 
