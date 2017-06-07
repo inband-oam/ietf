@@ -59,7 +59,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-brockners-inband-oam-transport-03"
+<rfc category="info" docName="draft-brockners-inband-oam-transport-04"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -417,36 +417,36 @@
 
           <t><figure>
               <artwork><![CDATA[
- 
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Option Type  |  Opt Data Len |         Reserved (MBZ)        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |                                                               |  |
-   .                                                               .  I
-   .                     Option Data                               .  O
-   .                                                               .  A
-   .                                                               .  M
-   .                                                               .  .
-   .                                                               .  O
-   .                                                               .  P
-   .                                                               .  T
-   .                                                               .  I
-   .                                                               .  O
-   .                                                               .  N
-   .                                                               .  |
-   |                                                               |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
-   Option Type          8-bit identifier of the type of option.
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Option Type  |  Opt Data Len |         Reserved (MBZ)        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+.                                                               .  I
+.                     Option Data                               .  O
+.                                                               .  A
+.                                                               .  M
+.                                                               .  .
+.                                                               .  O
+.                                                               .  P
+.                                                               .  T
+.                                                               .  I
+.                                                               .  O
+.                                                               .  N
+.                                                               .  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
-   Opt Data Len         8-bit unsigned integer.  Length of the 
-                        Reserved and Option Data field of this option, 
-                        in octets.
+Option Type          8-bit identifier of the type of option.
 
-   Reserved (MBZ)       16-bit field MUST be filled with zeroes.            
+Opt Data Len         8-bit unsigned integer.  Length of the
+                     Reserved and Option Data field of this option,
+                     in octets.
 
-   Option Data          Variable-length field.  Option-Type-specific
-                        data.
+Reserved (MBZ)       16-bit field MUST be filled with zeroes.
+
+Option Data          Variable-length field.  Option-Type-specific
+                     data.
 
 ]]></artwork>
             </figure></t>
@@ -494,51 +494,194 @@
 
     <section title="In-situ OAM Metadata Transport in IPv4">
       <t>Transport of in-situ OAM data in IPv4 will use GRE encapsulation.</t>
-
-      <section title="In-situ OAM Metadata Transport in GRE">
         <t>GRE encapsulation is defined in <xref target="RFC2784"></xref>.
-        IOAM is defined as a "Protocol Type" TBD_IANA_ETHERNET_NUMBER_IOAM and
-        follows GRE header. The different IOAM data fields defined in <xref
-        target="I-D.brockners-inband-oam-data"></xref> are added as options
-        within a new IOAM protocol header following GRE header. In an
+        IOAM is defined as a "set of Protocol Types" TBD_IANA_ETHERNET_NUMBER_IOAM_* and
+        follows GRE header.  These Protocol Types are defined in <xref
+            target="RFC3232"></xref> as "ETHER TYPES" and in <xref
+            target="ETYPES"></xref>.</t>
+        <t>The different IOAM data fields defined in <xref
+        target="I-D.brockners-inband-oam-data"></xref> are added as TLVs
+        following the GRE header. In an
         administrative domain where IOAM is used, insertion of the IOAM
         protocol header in GRE is enabled at the GRE tunnel endpoints which
         also serve as IOAM encapsulating/decapsulating nodes by means of
         configuration.</t>
+        <t> For IOAM the following new GRE protocol types are requested:</t>
+          <t><list style="numbers">
+          <t> IOAM_Trace_Preallocated:  TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE_PREALLOCATED</t>
+          <t> IOAM_Trace_Incremental:  TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE_INCREMENTAL</t>
+          <t> IOAM_POT:  TBD_IANA_ETHERNET_NUMBER_IOAM_POT</t>
+          <t> IOAM_End-to_End:  TBD_IANA_ETHERNET_NUMBER_IOAM_E2E</t>
+          </list></t>
+
+      <section title="In-situ OAM Tracing in GRE">
+      <t> The packet formats of the pre-allocated IOAM trace and incremental
+          IOAM trace when transported using GRE are defined as below.
+          See  <xref
+        target="I-D.brockners-inband-oam-data"></xref> for details about pre-allocated and incremental IOAM trace options.</t>
 
         <t><figure>
             <artwork><![CDATA[
-In-situ OAM header following GRE header:
+In-situ OAM Trace header following GRE header(Preallocated IOAM trace):
 
-0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|C|       Reserved0       | Ver |          Protocol Type        |  G
+|C|       Reserved0       | Ver | Protocol Type = IOAM_Trace    |  G
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
 |      Checksum (optional)      |       Reserved1 (Optional)    |  E
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-| Version     |  IOAM HDR len   |     Next Protocol Type        |  |
+|   Reserved    |   IOAM HDR len|        Next Protocol          |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-|                          IOAM options                         |  |
+|         IOAM-Trace-Type       |  Octets-left  |     Flags     |Trace
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|                                                               |
+|                                                               |  |
+|                        node data list [0]                     |  IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |
 |                     Payload + Padding (L2/L3/ESP/...)         |
 |                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Pre-allocated Trace Option Data MUST be 4-byte aligned:
+]]></artwork>
+        </figure></t>
+
+
+        <t><figure>
+            <artwork><![CDATA[
+In-situ OAM Trace header following GRE header(Incremental IOAM trace):
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|C|       Reserved0       | Ver | Protocol Type = IOAM_Trace    |  G
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+|      Checksum (optional)      |       Reserved1 (Optional)    |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|   Reserved    |   IOAM HDR len|        Next Protocol          |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|        IOAM-Trace-Type        | Maximum Length|    Flags      |Trace
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     |  IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
+]]></artwork>
+        </figure>
+
+
+        The GRE header and fields are defined in <xref
+        target="RFC2784"></xref> with Protocol Type set to
+        TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE. IOAM specific fields and header are
+        defined here:<list style="hanging">
+
+        <t hangText="IOAM HDR Len:">8 bits Length field contains the length of the variable metadata octets.</t>
+
+        <t hangText="Next Protocol:">16 bits Next Protocol Type field
+        contains the protocol type of the packet following IOAM protocol
+        header. These Protocol Types are defined in <xref
+        target="RFC3232"></xref> as "ETHER TYPES" and in <xref
+        target="ETYPES"></xref>. An implementation receiving a packet
+        containing a Protocol Type which is not listed in <xref
+        target="RFC3232"></xref> or <xref target="ETYPES"></xref> SHOULD
+        discard the packet.</t>
+
+        <t hangText="IOAM-trace-type:">16-bit identifier of IOAM Trace
+        Type as defined in <xref
+        target="I-D.brockners-inband-oam-data"></xref>
+        IOAM-Trace-Types.</t>
+
+        <t hangText="Octets-left:">8-bit unsigned integer as defined in
+        <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+        <t hangText="Maximum-length:">8-bit unsigned integer as defined in
+        <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+        <t hangText="Flags:">8-bit field as defined in <xref
+        target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+        <t hangText="Node data List [n]:">Variable-length field as defined
+        in <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+        </list> </t>
+      </section>
+
+      <section title="In-situ OAM POT in GRE">
+        <t><figure>
+            <artwork><![CDATA[
+In-situ OAM POT header following GRE header:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|C|       Reserved0       | Ver | Protocol Type = IOAM_POT      |  G
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+|      Checksum (optional)      |       Reserved1 (Optional)    |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|IOAM POT Ty|P|     IOAM HDR len|     Next Protocol             |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|                           Random                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+|                        Random(contd.)                         |  O
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+|                         Cumulative                            |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                    Cumulative (contd.)                        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
-          </figure>The GRE header and fields are defined in <xref
+          </figure>
+The GRE header and fields are defined in <xref
         target="RFC2784"></xref> with Protocol Type set to
-        TBD_IANA_ETHERNET_NUMBER_IOAM. IOAM specific fields and header are
+        TBD_IANA_ETHERNET_NUMBER_IOAM_POT. IOAM specific fields and header are
         defined here:<list style="hanging">
-            <t hangText="Version:">8-bit unsigned integer defining IOAM
-            protocol version.</t>
 
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            in-situ OAM HDR in 8-octet units.</t>
+           <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
+            variant that dictates the POT data that is included as defined in
+            <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
 
-            <t hangText="Next Protocol Type:">16 bits Next Protocol Type field
+            <t hangText="IOAM HDR Len:">8 bits Length field contains the length of the variable metadata octets.</t>
+
+            <t hangText="Next Protocol:">16 bits Next Protocol Type field
             contains the protocol type of the packet following IOAM protocol
             header. These Protocol Types are defined in <xref
             target="RFC3232"></xref> as "ETHER TYPES" and in <xref
@@ -547,63 +690,61 @@ In-situ OAM header following GRE header:
             target="RFC3232"></xref> or <xref target="ETYPES"></xref> SHOULD
             discard the packet.</t>
 
-            <t hangText="IOAM options:">Variable-length field, of length such
-            that the complete in-situ OAM header is an integer multiple of 8
-            octets long. Contains one or more TLV-encoded options of the
-            format:</t>
-          </list><figure>
-            <artwork><![CDATA[
+            <t hangText="Profile to use (P):">1-bit as defined in <xref
+            target="I-D.brockners-inband-oam-data"></xref> IOAM POT
+            Option.</t>
 
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Option Type  |  Opt Data Len |                               .
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+                               .
-   |                                                               .
-   .                                                               .
-   .                     Option Data                               .
-   .                                                               .
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   Option Type          8-bit identifier of the type of option.
+            <t hangText="Random:">64-bit Per-packet random number.</t>
 
-   Opt Data Len         8-bit unsigned integer.  Length of the 
-                        Option Data field of this option, in octets.
+            <t hangText="Cumulative:">64-bit Cumulative value that is updated by the
+            Service Functions.</t>
+          </list></t>
+    </section>
 
-   Option Data          Variable-length field.  Option-Type-specific
-                        data.]]></artwork>
-          </figure>The IOAM data fields defined in <xref
-        target="I-D.brockners-inband-oam-data"></xref> are encoded with an
-        option type allocated in the new IOAM IANA registry -
-        IOAM_PROTOCOL_OPTION_REGISTRY_IANA_TBD. In addition the following
-        padding options are defined to be used when necessary to align
-        subsequent options and to pad out the containing header to a multiple
-        of 8 octets in length.</t>
-
+      <section title="In-situ OAM End-to-End in GRE">
         <t><figure>
             <artwork><![CDATA[
-Pad1 option  (alignment requirement: none)
+In-situ OAM End-to-End header following GRE header:
 
-    +-+-+-+-+-+-+-+-+
-    |       0       |
-    +-+-+-+-+-+-+-+-+
-    NOTE: The format of the Pad1 option is a special case -- it does
-          not have length and value fields.
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|C|       Reserved0       | Ver | Protocol Type = IOAM_E2E      |  G
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+|      Checksum (optional)      |       Reserved1 (Optional)    |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|IOAM_E2E_Type  |   IOAM HDR len|     Next Protocol             |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|      E2E Option data field determined by IOAM-E2E-Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-    The Pad1 option is used to insert one octet of padding into the
-    Options area of a header.  If more than one octet of padding is
-    required, the PadN option, described next, should be used, rather
-    than multiple Pad1 options.
+]]></artwork>
+          </figure><list style="hanging">
+            <t hangText="IOAM E2E Type:">8-bit identifier of a particular E2E
+            variant that dictates the POT data that is included as defined in
+            <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
 
-PadN option  (alignment requirement: none)
+            <t hangText="IOAM HDR Len:">8 bits Length field contains the length of the variable metadata octets.</t>
 
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
-    |       1       |  Opt Data Len |  Option Data
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
-    The PadN option is used to insert two or more octets of padding
-    into the Options area of a header.  For N octets of padding, the
-    Opt Data Len field contains the value N-2, and the Option Data
-    consists of N-2 zero-valued octets.]]></artwork>
-          </figure></t>
-      </section>
+            <t hangText="Next Protocol:">16 bits Next Protocol Type field
+            contains the protocol type of the packet following IOAM protocol
+            header. These Protocol Types are defined in <xref
+            target="RFC3232"></xref> as "ETHER TYPES" and in <xref
+            target="ETYPES"></xref>. An implementation receiving a packet
+            containing a Protocol Type which is not listed in <xref
+            target="RFC3232"></xref> or <xref target="ETYPES"></xref> SHOULD
+            discard the packet.</t>
+
+            <t hangText="E2E Option data field:">Variable length field as
+            defined in <xref target="I-D.brockners-inband-oam-data"></xref>
+            IOAM E2E Option.</t>
+          </list></t>
+
+    </section>
     </section>
 
     <section title="In-situ OAM Metadata Transport in VXLAN-GPE">
@@ -616,9 +757,20 @@ PadN option  (alignment requirement: none)
       VXLAN GPE tunnel endpoint which also serve as IOAM
       encapsulating/decapsulating nodes by means of configuration.</t>
 
+      <section title="In-situ OAM Tracing in VXLAN-GPE">
+      <t> The packet formats of the pre-allocated IOAM trace and incremental
+      IOAM trace when transported in VXLAN-GPE are defined as below.  See  <xref
+      target="I-D.brockners-inband-oam-data"></xref> for details about
+      pre-allocated and incremental IOAM trace options.</t>
+
+      <t>The VXLAN-GPE header and fields are defined in <xref
+      target="I-D.ietf-nvo3-vxlan-gpe"></xref>. IOAM specific fields and
+      header are defined here:</t>
+
       <t><figure>
           <artwork><![CDATA[
-In-situ OAM header in VXLAN GPE header:
+In-situ OAM Trace header following VXLAN GPE header
+(Pre-allocated trace):
 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -628,15 +780,33 @@ In-situ OAM header in VXLAN GPE header:
 |                        Outer IP Header                        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       Outer UDP Header                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-|R|R|Ver|I|P|R|O|          Reserved             | NP = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|R|R|Ver|I|P|R|O|          Reserved             |NP = IOAM_Trace|  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
 |     Virtual Network Identifier (VNI)          | Reserved      |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
-| Type =IOAM    |   IOAM HDR len  |  Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Type=IOAM_Trace|   IOAM HDR len|    Reserved   | Next Protocol |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-|                         IOAM options                          |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ +
+|         IOAM-Trace-Type       |  Octets-left  |     Flags     |Trace
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     |  IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
 |                                                               |
 |                                                               |
 |                     Payload + Padding (L2/L3/ESP/...)         |
@@ -644,85 +814,223 @@ In-situ OAM header in VXLAN GPE header:
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-]]></artwork>
-        </figure>The VXLAN-GPE header and fields are defined in <xref
-      target="I-D.ietf-nvo3-vxlan-gpe"></xref>. IOAM specific fields and
-      header are defined here:<list style="hanging">
-          <t hangText="Type:">8-bit unsigned integer defining IOAM header
-          type</t>
+Pre-allocated Trace Option Data MUST be 4-byte aligned:
+]]></artwork> </figure></t>
 
-          <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-          in-situ OAM HDR in 8-octet units</t>
-
-          <t hangText="Reserved:">8-bit reserved field MUST be set to
-          zero.</t>
-
-          <t hangText="Next Protocol:">8-bit unsigned integer that determines
-          the type of header following IOAM protocol. The value is from the
-          IANA registry setup for VXLAN GPE Next Protocol defined in <xref
-          target="I-D.ietf-nvo3-vxlan-gpe"></xref>.</t>
-
-          <t hangText="IOAM options:">Variable-length field, of length such
-          that the complete IOAM header is an integer multiple of 8 octets
-          long. Contains one or more TLV-encoded options of the format:</t>
-        </list><figure>
-          <artwork><![CDATA[
-
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Option Type  |  Opt Data Len |         Reserved (MBZ)        |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                                                               |
-   .                                                               .
-   .                     Option Data                               .
-   .                                                               .
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   Option Type          8-bit identifier of the type of option.
-
-   Opt Data Len         8-bit unsigned integer.  Length of the 
-                        Option Data field of this option, in octets.
-
-   Reserved (MBZ)       16-bit field MUST be filled with zeroes.            
-
-   Option Data          Variable-length field.  Option-Type-specific
-                        data.]]></artwork>
-        </figure>The in-situ OAM options defined in <xref
-      target="I-D.brockners-inband-oam-data"></xref> are encoded with an
-      option type allocated in the new in-situ OAM IANA registry - in-situ
-      OAM_PROTOCOL_OPTION_REGISTRY_IANA_TBD. In addition the following padding
-      options are defined to be used when necessary to align subsequent
-      options and to pad out the containing header to a multiple of 8 octets
-      in length.</t>
 
       <t><figure>
           <artwork><![CDATA[
-Pad1 option  (alignment requirement: none)
+In-situ OAM Trace header following VXLAN GPE header
+(Incremental IOAM trace):
 
-    +-+-+-+-+-+-+-+-+
-    |       0       |
-    +-+-+-+-+-+-+-+-+
-    NOTE: The format of the Pad1 option is a special case -- it does
-          not have length and value fields.
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Outer Ethernet Header                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Outer IP Header                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Outer UDP Header                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|R|R|Ver|I|P|R|O|          Reserved             |NP = IOAM_Trace|  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+|     Virtual Network Identifier (VNI)          | Reserved      |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Type=IOAM_Trace|Maximum Length |    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|         IOAM-Trace-Type       |  Octets-left  |     Flags     |Trace
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     |  IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+|                                                               |
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
+]]></artwork> </figure>
 
-    The Pad1 option is used to insert one octet of padding into the
-    Options area of a header.  If more than one octet of padding is
-    required, the PadN option, described next, should be used, rather
-    than multiple Pad1 options.
+      <list style="hanging">
+      <t hangText="Type:">8-bit unsigned integer defining IOAM header
+      type.</t>
 
-PadN option  (alignment requirement: none)
+      <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+      in-situ OAM HDR in 8-octet units</t>
 
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
-    |       1       |  Opt Data Len |  Option Data
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+- - - - - - - - -
-    The PadN option is used to insert two or more octets of padding
-    into the Options area of a header.  For N octets of padding, the
-    Opt Data Len field contains the value N-2, and the Option Data
-    consists of N-2 zero-valued octets.]]></artwork>
-        </figure></t>
+      <t hangText="Reserved:">8-bit reserved field MUST be set to
+      zero.</t>
+
+      <t hangText="Next Protocol:">8-bit unsigned integer that determines
+      the type of header following IOAM protocol. The value is from the
+      IANA registry setup for VXLAN GPE Next Protocol defined in <xref
+      target="I-D.ietf-nvo3-vxlan-gpe"></xref>.</t>
+
+      <t hangText="IOAM options:">Variable-length field, of length such
+      that the complete IOAM header is an integer multiple of 8 octets
+      long. Contains one or more TLV-encoded options of the format:</t>
+
+      <t hangText="Length:">Length of the variable metadata octets.</t>
+
+      <t hangText="IOAM-trace-type:">16-bit identifier of IOAM Trace
+      Type as defined in <xref
+      target="I-D.brockners-inband-oam-data"></xref>
+      IOAM-Trace-Types.</t>
+
+      <t hangText="Octets-left:">8-bit unsigned integer as defined in
+      <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+      <t hangText="Maximum-length:">8-bit unsigned integer as defined in
+      <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+      <t hangText="Flags:">8-bit field as defined in <xref
+      target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+      <t hangText="Node data List [n]:">Variable-length field as defined
+      in <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+      </list></t>
+      </section>
+
+      <section title="In-situ OAM POT in VXLAN-GPE">
+     <t>The VXLAN-GPE header and fields are defined in <xref
+      target="I-D.ietf-nvo3-vxlan-gpe"></xref>. IOAM specific fields and
+      header are defined here:</t>
+
+
+      <t><figure>
+          <artwork><![CDATA[
+In-situ OAM POT header following VXLAN GPE header:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Outer Ethernet Header                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Outer IP Header                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Outer UDP Header                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|R|R|Ver|I|P|R|O|          Reserved(MBZ)        |NP = IOAM_POT  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+|     Virtual Network Identifier (VNI)          | Reserved      |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|IOAM POT Ty|P|     IOAM HDR len|     Next Protocol             |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|                           Random                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+|                        Random(contd.)                         |  O
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+|                         Cumulative                            |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                    Cumulative (contd.)                        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
+          </figure><list style="hanging">
+           <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
+            variant that dictates the POT data that is included as defined in
+            <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            in-situ OAM HDR in 8-octet units</t>
+
+
+            <t hangText="Next Protocol:">8-bit unsigned integer that determines
+            the type of header following IOAM protocol. The value is from the
+            IANA registry setup for VXLAN GPE Next Protocol defined in <xref
+            target="I-D.ietf-nvo3-vxlan-gpe"></xref>.</t>
+
+            <t hangText="Profile to use (P):">1-bit as defined in <xref
+            target="I-D.brockners-inband-oam-data"></xref> IOAM POT
+            Option.</t>
+
+            <t hangText="Reserved:"> MUST be filled with zeroes.</t>
+
+            <t hangText="Random:">64-bit Per-packet random number.</t>
+
+            <t hangText="Cumulative:">64-bit Cumulative value that is updated by the
+            Service Functions.</t>
+          </list></t>
+      </section>
+
+      <section title="In-situ OAM Edge-to-Edge in VXLAN-GPE">
+      <t><figure>
+          <artwork><![CDATA[
+In-situ OAM Edge-to-Edge in VXLAN GPE header:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Outer Ethernet Header                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Outer IP Header                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Outer UDP Header                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|R|R|Ver|I|P|R|O|          Reserved             |NP = IOAM_E2E  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+|     Virtual Network Identifier (VNI)          | Reserved      |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Type=IOAM_E2E  |   IOAM HDR len  |  Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|      E2E Option data field determined by IOAM-E2E-Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+]]></artwork>
+          </figure><list style="hanging">
+            <t hangText="Type:">The specific type of information being
+            carried, within the scope of a given TLV Class. Value allocation
+            is the responsibility of the TLV Class owner. Currently a type
+            value of 0xTBD_NSH_IOAM_E2E is used.</t>
+
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            in-situ OAM HDR in 8-octet units</t>
+
+            <t hangText="Next Protocol:">8-bit unsigned integer that determines
+            the type of header following IOAM protocol. The value is from the
+            IANA registry setup for VXLAN GPE Next Protocol defined in <xref
+            target="I-D.ietf-nvo3-vxlan-gpe"></xref>.</t>
+
+
+            <t hangText="Reserved bits and R-bits:">one reserved bit is
+            present for future use. The reserved bits MUST be set to 0x0.</t>
+
+            <t hangText="IOAM E2E Type:">8-bit identifier of a particular E2E
+            variant that dictates the POT data that is included as defined in
+            <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+            <t hangText="E2E Option data field:">Variable length field as
+            defined in <xref target="I-D.brockners-inband-oam-data"></xref>
+            IOAM E2E Option.</t>
+          </list></t>
+
+      </section>
     </section>
 
     <section title="In-situ OAM Metadata Transport in NSH">
       <section title="In-situ OAM Tracing in NSH">
+      <t> The packet formats of the pre-allocated IOAM trace and incremental
+      IOAM trace when transported in NSH-MD2 are defined as below.  See  <xref
+      target="I-D.brockners-inband-oam-data"></xref> for details about
+      pre-allocated and incremental IOAM trace options.</t>
+
+
         <t>In Service Function Chaining (SFC) <xref target="RFC7665"></xref>,
         the Network Service Header (NSH) <xref
         target="I-D.ietf-sfc-nsh"></xref> already includes path tracing
@@ -732,6 +1040,8 @@ PadN option  (alignment requirement: none)
 
         <t><figure>
             <artwork><![CDATA[
+In-situ OAM Trace header following NSH MD2 header
+(Pre-allocated IOAM trace):
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -746,7 +1056,7 @@ PadN option  (alignment requirement: none)
 |                                                               |  a
 |                        node data list [1]                     |  t
 |                                                               |  a
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~                             ...                               ~  S
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
 |                                                               |  a
@@ -756,8 +1066,45 @@ PadN option  (alignment requirement: none)
 |                                                               |  |
 |                        node data list [n]                     |  |
 |                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-++]]></artwork>
-          </figure><list style="hanging">
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-++
+In-situ OAM Pre-allocated Trace Option Data MUST be 4-byte aligned:
+
+]]></artwork>
+          </figure></t>
+
+        <t><figure>
+            <artwork><![CDATA[
+In-situ OAM Trace header following NSH MD2 header
+(Incremental IOAM trace):
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      TLV Class= TBD           |C|  Type=Trace |R|     Len=n   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         IOAM-Trace-Type       |Maximum Length |     Flags     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-++
+In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
+]]></artwork>
+          </figure>
+            <list style="hanging">
             <t hangText="TLV Class:">Describes the scope of the "Type" field.
             In some cases, the TLV Class will identify a specific vendor, in
             others, the TLV Class will identify specific standards body
@@ -786,7 +1133,10 @@ PadN option  (alignment requirement: none)
             <t hangText="Octets-left:">8-bit unsigned integer as defined in
             <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
 
-            <t hangText="Flags">8-bit field as defined in <xref
+            <t hangText="Maximum-length:">8-bit unsigned integer as defined in
+            <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+            <t hangText="Flags:">8-bit field as defined in <xref
             target="I-D.brockners-inband-oam-data"></xref>.</t>
 
             <t hangText="Node data List [n]:">Variable-length field as defined
@@ -808,6 +1158,7 @@ PadN option  (alignment requirement: none)
 
         <t><figure>
             <artwork><![CDATA[
+In-situ OAM POT header following NSH MD2 header:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -855,9 +1206,9 @@ PadN option  (alignment requirement: none)
             <t hangText="Reserved (MBZ):">24-bit field MUST be filled with
             zeroes.</t>
 
-            <t hangText="Random:">64-bit Per-packet Random number.</t>
+            <t hangText="Random:">64-bit Per-packet random number.</t>
 
-            <t hangText="Cumulative:">64-bit Cumulative that is updated by the
+            <t hangText="Cumulative:">64-bit Cumulative value that is updated by the
             Service Functions.</t>
           </list></t>
       </section>
@@ -874,6 +1225,7 @@ PadN option  (alignment requirement: none)
 
         <t><figure>
             <artwork><![CDATA[
+In-situ OAM E2E header following NSH MD2 header:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
