@@ -60,7 +60,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-brockners-inband-oam-data-05"
+<rfc category="std" docName="draft-brockners-inband-oam-data-06"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -267,7 +267,7 @@
       </address>
     </author>
 
-    <date day="29" month="May" year="2017"/>
+    <date day="26" month="June" year="2017"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -302,40 +302,38 @@
       traverses a path between two points in the network. This document
       discusses the data fields and associated data types for in-situ OAM.
       In-situ OAM data fields can be embedded into a variety of transports
-      such as NSH, Segment Routing, Geneve, native IPv6 (via
-      extension header), or IPv4. In-situ OAM can be used to complement
-      OAM mechanisms based on e.g. ICMP or other types of probe packets.</t>
+      such as NSH, Segment Routing, Geneve, native IPv6 (via extension
+      header), or IPv4. In-situ OAM can be used to complement OAM mechanisms
+      based on e.g. ICMP or other types of probe packets.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction" toc="default">
       <t>This document defines data fields for "in-situ" Operations,
-      Administration, and Maintenance (OAM). In-situ OAM records OAM
+      Administration, and Maintenance (IOAM). In-situ OAM records OAM
       information within the packet while the packet traverses a particular
       network domain. The term "in-situ" refers to the fact that the OAM data
       is added to the data packets rather than is being sent within packets
       specifically dedicated to OAM. A discussion of the motivation and
       requirements for in-situ OAM can be found in <xref
-      target="I-D.brockners-inband-oam-requirements"/>. In-situ OAM is to
-      complement mechanisms such as Ping or
-      Traceroute, or more recent active probing mechanisms as described in
-      <xref target="I-D.lapukhov-dataplane-probe"/>. In terms of "active" or
+      target="I-D.brockners-inband-oam-requirements"/>. IOAM is to complement
+      mechanisms such as Ping or Traceroute, or more recent active probing
+      mechanisms as described in <xref
+      target="I-D.lapukhov-dataplane-probe"/>. In terms of "active" or
       "passive" OAM, "in-situ" OAM can be considered a hybrid OAM type. While
-      no extra packets are sent, in-situ OAM adds information to the packets
+      no extra packets are sent, IOAM adds information to the packets
       therefore cannot be considered passive. In terms of the classification
-      given in <xref target="RFC7799"/> in-situ OAM could be portrayed as
-      "hybrid OAM, type 1". "In-situ" mechanisms do not require extra packets
-      to be sent and hence don't change the packet traffic mix within the
-      network. In-situ OAM mechanisms can be leveraged where 
-      mechanisms using e.g. ICMP do not apply or do not offer
-      the desired results,
-      such as proving that a certain traffic flow takes a pre-defined path,
-      SLA verification for the live data traffic, detailed statistics on
-      traffic distribution paths in networks that distribute traffic across
-      multiple paths, or scenarios in which probe traffic is potentially
-      handled differently from regular data traffic by the network
-      devices.</t>
+      given in <xref target="RFC7799"/> IOAM could be portrayed as Hybrid Type
+      1. "In-situ" mechanisms do not require extra packets to be sent and
+      hence don't change the packet traffic mix within the network. IOAM
+      mechanisms can be leveraged where mechanisms using e.g. ICMP do not
+      apply or do not offer the desired results, such as proving that a
+      certain traffic flow takes a pre-defined path, SLA verification for the
+      live data traffic, detailed statistics on traffic distribution paths in
+      networks that distribute traffic across multiple paths, or scenarios in
+      which probe traffic is potentially handled differently from regular data
+      traffic by the network devices.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
@@ -347,6 +345,8 @@
       <t>Abbreviations used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
+          <t hangText="E2E">Edge to Edge</t>
+
           <t hangText="Geneve:">Generic Network Virtualization Encapsulation
           <xref target="I-D.ietf-nvo3-geneve"/></t>
 
@@ -359,6 +359,8 @@
           target="I-D.ietf-sfc-nsh"/></t>
 
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="POT:">Proof of Transit</t>
 
           <t hangText="SFC:">Service Function Chain</t>
 
@@ -373,15 +375,14 @@
     </section>
 
     <section title="Scope, Applicability, and Assumptions ">
-      <t>In-situ OAM deployment assumes a set of constraints, requirements, and
+      <t>IOAM deployment assumes a set of constraints, requirements, and
       guiding principles which are described in this section.</t>
 
       <t>Scope: This document defines the data fields and associated data
       types for in-situ OAM. The in-situ OAM data field can be transported by
       a variety of transport protocols, including NSH, Segment Routing,
-      Geneve, IPv6, or IPv4. Encapsulation details for these
-      different transport protocols are outside the scope of this
-      document.</t>
+      Geneve, IPv6, or IPv4. Specification details for these different
+      transport protocols are outside the scope of this document.</t>
 
       <t>Deployment domain (or scope) of in-situ OAM deployment: IOAM is a
       network domain focused feature, with "network domain" being a set of
@@ -390,100 +391,100 @@
       connections between devices or an overlay network using virtual
       connections / tunnels for connectivity between said devices. A network
       domain is defined by its perimeter or edge. Designers of carrier
-      protocols for IOAM must specify mechanisms to ensure that
-      in-situ OAM data stays within an IOAM domain. In addition,
-      the operator of such a domain is expected to put provisions in
-      place to ensure that IOAM data does not leak beyond the edge of
-      an IOAM domain, e.g. using for example packet filtering methods.
-      The operator should consider potential operational impact of
-      IOAM to mechanisms such as ECMP processing (e.g. load-balancing
-      schemes based on packet length could be impacted by the increased
-      packet size due to IOAM), path MTU (i.e. ensure that the MTU of
-      all links within a domain is sufficiently large to support the
-      increased packet size due to IOAM) and ICMP message handling
-      (i.e. in case of a native IPv6 transport, IOAM support for ICMPv6
-      Echo Request/Reply could desired which would translate into
-      ICMPv6 extensions to enable IOAM data fields to be copied from
-      an Echo Request message to an Echo Reply message).</t>
+      protocols for IOAM must specify mechanisms to ensure that IOAM data
+      stays within an IOAM domain. In addition, the operator of such a domain
+      is expected to put provisions in place to ensure that IOAM data does not
+      leak beyond the edge of an IOAM domain, e.g. using for example packet
+      filtering methods. The operator should consider potential operational
+      impact of IOAM to mechanisms such as ECMP processing (e.g.
+      load-balancing schemes based on packet length could be impacted by the
+      increased packet size due to IOAM), path MTU (i.e. ensure that the MTU
+      of all links within a domain is sufficiently large to support the
+      increased packet size due to IOAM) and ICMP message handling (i.e. in
+      case of a native IPv6 transport, IOAM support for ICMPv6 Echo
+      Request/Reply could desired which would translate into ICMPv6 extensions
+      to enable IOAM data fields to be copied from an Echo Request message to
+      an Echo Reply message).</t>
 
-      <t>In-situ OAM control points: IOAM data fields are added to or removed
-      from the live user traffic by the devices which form the edge of a
-      domain. Devices within an IOAM domain can update and/or add IOAM
-      data-fields. Domain edge devices can be hosts or network devices.</t>
+      <t>IOAM control points: IOAM data fields are added to or removed from
+      the live user traffic by the devices which form the edge of a domain.
+      Devices within an IOAM domain can update and/or add IOAM data-fields.
+      Domain edge devices can be hosts or network devices.</t>
 
-      <t>Traffic-sets that in-situ OAM is applied to: IOAM can be deployed on
-      all or only on subsets of the live user traffic. It SHOULD be possible
-      to enable in-situ OAM on a selected set of traffic (e.g., per interface,
-      based on an access control list or flow specification defining a
-      specific set of traffic, etc.) The selected set of traffic can also be
-      all traffic.</t>
+      <t>Traffic-sets that IOAM is applied to: IOAM can be deployed on all or
+      only on subsets of the live user traffic. It SHOULD be possible to
+      enable IOAM on a selected set of traffic (e.g., per interface, based on
+      an access control list or flow specification defining a specific set of
+      traffic, etc.) The selected set of traffic can also be all traffic.</t>
 
-      <t>Encapsulation independence: Data formats for in-situ OAM SHOULD be
-      defined in a transport-independent manner. In-situ OAM applies to a
-      variety of encapsulating protocols. A definition of how IOAM data fields
-      are carried by different transport protocols is outside the scope of
-      this document.</t>
+      <t>Encapsulation independence: Data formats for IOAM SHOULD be defined
+      in a transport-independent manner. IOAM applies to a variety of
+      encapsulating protocols. A definition of how IOAM data fields are
+      carried by different transport protocols is outside the scope of this
+      document.</t>
 
       <t>Layering: If several encapsulation protocols (e.g., in case of
-      tunneling) are stacked on top of each other, in-situ OAM data-records
-      could be present at every layer. The behavior follows the
-      ships-in-the-night model.</t>
+      tunneling) are stacked on top of each other, IOAM data-records could be
+      present at every layer. The behavior follows the ships-in-the-night
+      model.</t>
 
-      <t>Combination with active OAM mechanisms: In-situ OAM should be usable
-      for active network probing, enabling for example a customized version of
-      traceroute. Decapsulating in-situ OAM nodes may have an ability to send
-      the in-situ OAM information retrieved from the packet back to the source
-      address of the packet or to the encapsulating node.</t>
+      <t>Combination with active OAM mechanisms: IOAM should be usable for
+      active network probing, enabling for example a customized version of
+      traceroute. Decapsulating IOAM nodes may have an ability to send the
+      IOAM information retrieved from the packet back to the source address of
+      the packet or to the encapsulating node.</t>
 
-      <t>In-situ OAM implementation: The IOAM data-field definitions take the
+      <t>IOAM implementation: The IOAM data-field definitions take the
       specifics of devices with hardware data-plane and software data-plane
       into account.</t>
     </section>
 
-    <section anchor="IOAM_option_format"
-             title="In-situ OAM Data Types and Formats">
-      <t>This section defines in-situ OAM data types and data fields and
-      associated data types required for in-situ OAM. The different uses of
-      in-situ OAM require the definition of different types of data. The
-      in-situ OAM data fields for the data being carried corresponds to the
-      three main categories of in-situ OAM data defined in <xref
-      target="I-D.brockners-inband-oam-requirements"/>, which are:
-      edge-to-edge, per node, and for selected nodes only.</t>
+    <section anchor="IOAM_option_format" title="IOAM Data Types and Formats">
+      <t>This section defines IOAM data types and data fields and associated
+      data types required for IOAM. The different uses of IOAM require the
+      definition of different types of data. The IOAM data fields for the data
+      being carried corresponds to the three main categories of IOAM data
+      defined in <xref target="I-D.brockners-inband-oam-requirements"/>, which
+      are: edge-to-edge, per node, and for selected nodes only.</t>
 
-      <t>Transport options for in-situ OAM data are outside the scope of this
-      memo, and are discussed in <xref
-      target="I-D.brockners-inband-oam-transport"/>. In-situ OAM data fields
-      are fixed length data fields. A bit field determines the set of OAM data
+      <t>Transport options for IOAM data are outside the scope of this memo,
+      and are discussed in <xref
+      target="I-D.brockners-inband-oam-transport"/>. IOAM data fields are
+      fixed length data fields. A bit field determines the set of OAM data
       fields embedded in a packet. Depending on the type of the encapsulation,
       a counter field indicates how many data fields are included in a
       particular packet.</t>
 
-      <t>In-situ OAM is expected to be deployed in a specific domain rather
-      than on the overall Internet. The part of the network which employs in-
-      situ OAM is referred to as the "in-situ OAM-domain". In-situ OAM data is
-      added to a packet upon entering the in-situ OAM-domain and is removed
-      from the packet when exiting the domain. Within the in-situ OAM-domain,
-      the in-situ OAM data may be updated by network nodes that the packet
-      traverses. The device which adds an in-situ OAM data container to the
-      packet to capture in-situ OAM data is called the "in-situ OAM
-      encapsulating node", whereas the device which removes the in-situ OAM
-      data container is referred to as the "in-situ OAM decapsulating node".
-      Nodes within the domain which are aware of in-situ OAM data and read
-      and/or write or process the in-situ OAM data are called "in-situ OAM
-      transit nodes". Note that not every node in an in-situ OAM domain needs
-      to be an in-situ OAM transit node. For example, a Segment Routing
-      deployment might require the segment routing path to be verified. In
-      that case, only the SR nodes would also be in-situ OAM transit nodes
-      rather than all nodes.</t>
+      <t>IOAM is expected to be deployed in a specific domain rather than on
+      the overall Internet. The part of the network which employs IOAM is
+      referred to as the "IOAM-domain". IOAM data is added to a packet upon
+      entering the IOAM-domain and is removed from the packet when exiting the
+      domain. Within the IOAM-domain, the IOAM data may be updated by network
+      nodes that the packet traverses. The device which adds an IOAM data
+      container to the packet to capture IOAM data is called the "IOAM
+      encapsulating node", whereas the device which removes the IOAM data
+      container is referred to as the "IOAM decapsulating node". Nodes within
+      the domain which are aware of IOAM data and read and/or write or process
+      the IOAM data are called "IOAM transit nodes". IOAM nodes which add or
+      remove the IOAM data container can also update the IOAM data fields at
+      the same time. Or in other words, IOAM encapsulation or decapsulating
+      nodes can also serve as IOAM transit nodes at the same time. Note that
+      not every node in an IOAM domain needs to be an IOAM transit node. For
+      example, a Segment Routing deployment might require the segment routing
+      path to be verified. In that case, only the SR nodes would also be IOAM
+      transit nodes rather than all nodes.</t>
 
-      <section anchor="IOAM_tracing_option"
-               title="In-situ OAM Tracing Options">
-        <t>"In-situ OAM tracing data" is expected to be collected at every
-        node that a packet traverses, i.e., in a typical deployment all nodes
-        in an in-situ OAM-domain would participate in in-situ OAM and thus be
-        in-situ OAM transit nodes, in-situ OAM encapsulating or in-situ OAM
-        decapsulating nodes. The maximum number of hops and the minimum path
-        MTU of the in-situ OAM domain is assumed to be known.</t>
+      <section anchor="IOAM_tracing_option" title="IOAM Tracing Options">
+        <t>"IOAM tracing data" is expected to be collected at every node that
+        a packet traverses to ensure visibility into the entire path a packet
+        takes within an IOAM domain, i.e., in a typical deployment all nodes
+        in an in-situ OAM-domain would participate in IOAM and thus be IOAM
+        transit nodes, IOAM encapsulating or IOAM decapsulating nodes. If not
+        all nodes within a domain are IOAM capable, IOAM tracing information
+        will only be collected on those nodes which are IOAM capable. Nodes
+        which are not IOAM capable will forward the packet without any changes
+        to the IOAM data fields. The maximum number of hops and the minimum
+        path MTU of the IOAM domain is assumed to be known.</t>
 
         <t>To optimize hardware and software implementations tracing is
         defined as two separate options. Any deployment MAY choose to
@@ -491,7 +492,10 @@
         implementation of the transport protocol that carries these in-situ
         OAM data MAY choose to support only one of the options. In the event
         that both options are utilized at the same time, the Incremental Trace
-        Option MUST be placed before the Pre-allocated Trace Option.</t>
+        Option MUST be placed before the Pre-allocated Trace Option. Given
+        that the operator knows which equipment is deployed in a particular
+        IOAM, the operator will decide by means of configuration which type(s)
+        of trace options will be enabled for a particular domain. </t>
 
         <t><list style="hanging">
             <t hangText="Pre-allocated Trace Option:">This trace option is
@@ -499,57 +503,54 @@
             space for each node to populate its information. This option is
             useful for software implementations where it is efficient to
             allocate the space once and index into the array to populate the
-            data during transit. The in-situ OAM encapsulating node allocates
-            the option header and sets the fields in the option header. The in
+            data during transit. The IOAM encapsulating node allocates the
+            option header and sets the fields in the option header. The in
             situ OAM encapsulating node allocates an array which is used to
             store operational data retrieved from every node while the packet
-            traverses the domain. In-situ OAM transit nodes update the content
-            of the array. A pointer which is part of the in-situ OAM trace
-            data points to the next empty slot in the array, which is where
-            the next in-situ OAM transit node fills in its data.</t>
+            traverses the domain. IOAM transit nodes update the content of the
+            array. A pointer which is part of the IOAM trace data points to
+            the next empty slot in the array, which is where the next IOAM
+            transit node fills in its data.</t>
 
             <t hangText="Incremental Trace Option:">This trace option is
             defined as a container of node data fields where each node
             allocates and pushes its node data immediately following the
-            option header. The number of node data fields recorded and maximum
-            number of node data that can be recorded are written into the
-            option header. This type of trace recording is useful for some of
-            the hardware implementations as this eliminates the need for the
-            transit network elements to read the full array in the option and
-            allows for arbitrarily long packets as the MTU allows. The in-situ
-            OAM encapsulating node allocates the option header. The in-situ
-            OAM encapsulating node based on operational state and
+            option header. The maximum length of the node data list is written
+            into the option header. This type of trace recording is useful for
+            some of the hardware implementations as this eliminates the need
+            for the transit network elements to read the full array in the
+            option and allows for arbitrarily long packets as the MTU allows.
+            The in-situ OAM encapsulating node allocates the option header.
+            The in-situ OAM encapsulating node based on operational state and
             configuration sets the fields in the header to control how large
-            the node data list can grow. In-situ OAM transit nodes push their
-            node data to the node data list and increment the number of node
-            data fields in the header.</t>
+            the node data list can grow. IOAM transit nodes push their node
+            data to the node data list and increment the number of node data
+            fields in the header.</t>
           </list></t>
 
-        <t>Every node data entry is to hold information for a particular
-        in-situ OAM transit node that is traversed by a packet. The in-situ
-        OAM decapsulating node removes the in-situ OAM data and processes
-        and/or exports the metadata. In-situ OAM data uses its own name-space
-        for information such as node identifier or interface identifier. This
-        allows for a domain-specific definition and interpretation. For
-        example: In one case an interface-id could point to a physical
-        interface (e.g., to understand which physical interface of an
-        aggregated link is used when receiving or transmitting a packet)
-        whereas in another case it could refer to a logical interface (e.g.,
-        in case of tunnels).</t>
+        <t>Every node data entry is to hold information for a particular IOAM
+        transit node that is traversed by a packet. The in-situ OAM
+        decapsulating node removes the IOAM data and processes and/or exports
+        the metadata. IOAM data uses its own name-space for information such
+        as node identifier or interface identifier. This allows for a
+        domain-specific definition and interpretation. For example: In one
+        case an interface-id could point to a physical interface (e.g., to
+        understand which physical interface of an aggregated link is used when
+        receiving or transmitting a packet) whereas in another case it could
+        refer to a logical interface (e.g., in case of tunnels).</t>
 
-        <t>The following in-situ OAM data is defined for in-situ OAM
-        tracing:</t>
+        <t>The following IOAM data is defined for IOAM tracing:</t>
 
         <t><list style="symbols">
-            <t>Identification of the in-situ OAM node. An in-situ OAM node
-            identifier can match to a device identifier or a particular
-            control point or subsystem within a device.</t>
+            <t>Identification of the IOAM node. An IOAM node identifier can
+            match to a device identifier or a particular control point or
+            subsystem within a device.</t>
 
-            <t>Identification of the interface that a packet was received
-            on.</t>
+            <t>Identification of the interface that a packet was received on,
+            i.e. ingress interface.</t>
 
-            <t>Identification of the interface that a packet was sent out
-            on.</t>
+            <t>Identification of the interface that a packet was sent out on,
+            i.e. egress interface.</t>
 
             <t>Time of day when the packet was processed by the node.
             Different definitions of processing time are feasible and
@@ -558,15 +559,15 @@
 
             <t>Generic data: Format-free information where syntax and semantic
             of the information is defined by the operator in a specific
-            deployment. For a specific deployment, all in-situ OAM nodes
-            should interpret the generic data the same way. Examples for
-            generic in-situ OAM data include geo-location information
-            (location of the node at the time the packet was processed),
-            buffer queue fill level or cache fill level at the time the packet
-            was processed, or even a battery charge level.</t>
+            deployment. For a specific deployment, all IOAM nodes should
+            interpret the generic data the same way. Examples for generic IOAM
+            data include geo-location information (location of the node at the
+            time the packet was processed), buffer queue fill level or cache
+            fill level at the time the packet was processed, or even a battery
+            charge level.</t>
 
-            <t>A mechanism to detect whether in-situ OAM trace data was added
-            at every hop or whether certain hops in the domain weren't in-situ
+            <t>A mechanism to detect whether IOAM trace data was added at
+            every hop or whether certain hops in the domain weren't in-situ
             OAM transit nodes.</t>
           </list>The "node data list" array in the packet is populated
         iteratively as the packet traverses the network, starting with the
@@ -576,9 +577,9 @@
         <section title="Pre-allocated Trace Option">
           <t><figure>
               <artwork><![CDATA[ 
-In-situ OAM Pre-allocated Trace Option: 
+In-situ OAM pre-allocated trace option: 
 
-Pre-allocated Trace Option header:
+Pre-allocated trace option header:
 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -656,16 +657,17 @@ Pre-allocated Trace Option Data MUST be 4-byte aligned:
                   <t hangText="Bit 10">When set indicates presence of app_data
                   wide in the node data.</t>
 
-                  <t hangText="Bit 11">When set indicates presence of
-                  the Checksum Complement node data.</t>
+                  <t hangText="Bit 11">When set indicates presence of the
+                  Checksum Complement node data.</t>
 
                   <t hangText="Bit 12-15">Undefined in this draft.</t>
                 </list></t>
 
-              <t hangText=" "><xref target="trace-type-node-data"/> describes
-              the in-situ OAM data types and their formats. Within an in-situ
-              OAM domain possible combinations of these bits making the
-              IOAM-Trace-Type can be restricted by configuration knobs.</t>
+              <t hangText=" "> <xref target="trace-node-data-element"/>
+              describes the IOAM data types and their formats. Within an
+              in-situ OAM domain possible combinations of these bits making
+              the IOAM-Trace-Type can be restricted by configuration
+              knobs.</t>
 
               <t hangText="Octets-left:">8-bit unsigned integer. It is the
               data space in octets remaining for recording the node data. This
@@ -703,6 +705,8 @@ Pre-allocated Trace Option Data MUST be 4-byte aligned:
                   information. Once the return packet reaches the IOAM domain
                   boundary IOAM decapsulation occurs as with any other packet
                   containing IOAM information.</t>
+
+                  <t hangText="Bit 2-7">Reserved: Must be zero.</t>
                 </list></t>
 
               <t hangText="Node data List [n]:">Variable-length field. The
@@ -720,9 +724,9 @@ Pre-allocated Trace Option Data MUST be 4-byte aligned:
         <section title="Incremental Trace Option">
           <t><figure>
               <artwork><![CDATA[ 
-In-situ OAM Incremental Trace Option: '
+In-situ OAM incremental trace option: '
 
-In-situ OAM Incremental Trace Option Header:
+In-situ OAM incremental trace option Header:
 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -730,7 +734,7 @@ In-situ OAM Incremental Trace Option Header:
 |        IOAM-Trace-Type        | Maximum Length|    Flags      |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned: 
+IOAM Incremental Trace Option Data MUST be 4-byte aligned: 
 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
@@ -766,10 +770,12 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
                   <t hangText="Bit 0">(Most significant bit) When set
-                  indicates presence of Hop_Lim and node_id in the node data.</t>
+                  indicates presence of Hop_Lim and node_id in the node
+                  data.</t>
 
                   <t hangText="Bit 1">When set indicates presence of
-                  ingress_if_id and egress_if_id in the node data.</t>
+                  ingress_if_id and egress_if_id (short format) in the node
+                  data. </t>
 
                   <t hangText="Bit 2">When set indicates presence of timestamp
                   seconds in the node data.</t>
@@ -793,31 +799,31 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                   and node_id wide in the node data.</t>
 
                   <t hangText="Bit 9">When set indicates presence of
-                  ingress_if_id and egress_if_id wide in the node data.</t>
+                  ingress_if_id and egress_if_id in wide format in the node
+                  data. </t>
 
                   <t hangText="Bit 10">When set indicates presence of app_data
                   wide in the node data.</t>
 
-                  <t hangText="Bit 11">When set indicates presence of
-                  the Checksum Complement node data.</t>
+                  <t hangText="Bit 11">When set indicates presence of the
+                  Checksum Complement node data.</t>
 
                   <t hangText="Bit 12-15">Undefined in this draft.</t>
                 </list></t>
 
-              <t hangText=" "><xref target="trace-type-node-data"/> describes
-              the in-situ OAM data types and their formats.</t>
+              <t hangText=" "> <xref target="trace-node-data-element"/>
+              describes the IOAM data types and their formats.</t>
 
               <t hangText="Maximum Length:">8-bit unsigned integer. This field
               specifies the maximum length of the node data list in octets.
               Given that the sender knows the minimum path MTU, the sender can
               set the maximum of node data bytes allowed before exceeding the
               MTU. It is assumed that every protocol that IOAM can be
-              encapsulated over will include a shim header that includes an "Opt Data
-              Len" field, specifying the total length of the IOAM
-              options. Thus, a simple comparison between "Opt data Len"
-              and "Maximum Length" allows to decide whether or not data
-              could be added. The specification of the "Opt Data Len" field, as well
-              as the shim header it resides in, is outside the scope of this memo.</t>
+              encapsulated over will include a shim header that includes a
+              field describing the current length of the IOAM data fields. In
+              which case the "current length of the IOAM data fields" combined
+              with the "Maximum Length" allows to decide whether or not data
+              could be added.</t>
 
               <t hangText="Flags">8-bit field. Following flags are
               defined:<list style="hanging">
@@ -834,6 +840,8 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                   while it continues to forward the original packet towards
                   the destination. The L-bit MUST be cleared in the copy of
                   the packet before sending it.</t>
+
+                  <t hangText="Bit 2-7">Reserved. Must be zero.</t>
                 </list></t>
 
               <t hangText="Node data List [n]:">Variable-length field. The
@@ -848,7 +856,7 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
         </section>
 
         <section anchor="trace-node-data-element"
-                 title="In-situ OAM node data fields and associated formats">
+                 title="IOAM node data fields and associated formats">
           <t>All the data fields MUST be 4-byte aligned. The IOAM
           encapsulating node MUST initialize data fields that it adds to the
           packet to zero. If a node which is supposed to update an IOAM data
@@ -876,9 +884,9 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                   copied from the lower layer, e.g., TTL value in IPv4 header
                   or hop limit field from IPv6 header of the packet when the
                   packet is ready for transmission. The semantics of the
-                  Hop_Lim field depend on the lower layer protocol that
-                  IOAM is encapsulated over, and therefore its specific semantics are
-                  outside the scope of this memo.</t>
+                  Hop_Lim field depend on the lower layer protocol that IOAM
+                  is encapsulated over, and therefore its specific semantics
+                  are outside the scope of this memo.</t>
 
                   <t hangText="node_id:">3-octet unsigned integer. Node
                   identifier field to uniquely identify a node within in-situ
@@ -889,8 +897,8 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               <t hangText="ingress_if_id and egress_if_id:">4-octet field
               defined as follows: When this field is part of the data field
               but a node populating the field is not able to fill it, the
-              position in the field must be filled with value 0xFFFFFFFF to mean
-              not populated.<figure>
+              position in the field must be filled with value 0xFFFFFFFF to
+              mean not populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |     ingress_if_id             |         egress_if_id          |
@@ -953,7 +961,14 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                 </figure></t>
 
               <t hangText="app_data:">4-octet placeholder which can be used by
-              the node to add application specific data</t>
+              the node to add application specific data. App_data represents a
+              "free-format" 4-octet bit field with its semantics defined by a
+              specific deployment.<figure>
+                  <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       app_data                                |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
+                </figure></t>
 
               <t hangText="queue depth:">4-octet unsigned integer field. This
               field indicates the current length of the egress interface queue
@@ -974,11 +989,10 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               allows the network element to store an arbitrary state in the
               node data field , without a pre-defined schema. The schema needs
               to be made known to the analyzer by some out-of-band mechanism.
-              The specification of this mechanism is beyond the scope of
-              this document. The 24-bit "Schema Id" field in
-              the field indicates which particular
-              schema is used, and should be configured on the network element
-              by the operator. <figure>
+              The specification of this mechanism is beyond the scope of this
+              document. The 24-bit "Schema Id" field in the field indicates
+              which particular schema is used, and should be configured on the
+              network element by the operator. <figure>
                   <artwork><![CDATA[    0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1018,11 +1032,10 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                   records this data. Hop Limit information is used to identify
                   the location of the node in the communication path. This is
                   copied from the lower layer for e.g. TTL value in IPv4
-                  header or hop limit field from IPv6 header of the
-                  packet. The semantics of the
-                  Hop_Lim field depend on the lower layer protocol that
-                  IOAM is encapsulated over, and therefore its specific
-                  semantics are outside the scope of this memo.</t>
+                  header or hop limit field from IPv6 header of the packet.
+                  The semantics of the Hop_Lim field depend on the lower layer
+                  protocol that IOAM is encapsulated over, and therefore its
+                  specific semantics are outside the scope of this memo.</t>
 
                   <t hangText="node_id:">7-octet unsigned integer. Node
                   identifier field to uniquely identify a node within in-situ
@@ -1034,8 +1047,7 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
               defined as follows: When this field is part of the data field
               but a node populating the field is not able to fill it, the
               field position in the field must be filled with value
-              0xFFFFFFFF
-              to mean not populated.<figure>
+              0xFFFFFFFFFFFFFFFF to mean not populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       ingress_if_id                           |
@@ -1053,34 +1065,43 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
                 </list></t>
 
               <t hangText="app_data wide:">8-octet placeholder which can be
-              used by the node to add application specific data.</t>
+              used by the node to add application specific data. App data
+              represents a "free-format" 8-octed bit field with its semantics
+              defined by a specific deployment. <figure>
+                  <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       app data                                ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                       app data (contd)                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+                </figure></t>
 
-              <t hangText="Checksum Complement:">4-octet node data which contains
-              a two-octet Checksum Complement field, and a 2-octet reserved field.
-              The Checksum Complement can be used when IOAM is
+              <t hangText="Checksum Complement:">4-octet node data which
+              contains a two-octet Checksum Complement field, and a 2-octet
+              reserved field. The Checksum Complement can be used when IOAM is
               transported over encapsulations that make use of a UDP
-              transport, such as VXLAN-GPE or Geneve. In this
-              case, incorporating the IOAM node data requires the UDP Checksum field
-              to be updated. Rather than to recompute the Chekcsum field, a node can
-              use the Checksum Complement to make a checksum-neutral update in the UDP
-              payload; the Checksum Complement is assigned a value that
-              complements the rest of the node data fields that were added by the
-              current node, causing the existing UDP Checksum field to remain correct.
-              Checksum Complement fields are used in a similar manner in
-              <xref target="RFC7820"/> and <xref target="RFC7821"/>.<figure>
+              transport, such as VXLAN-GPE or Geneve. In this case,
+              incorporating the IOAM node data requires the UDP Checksum field
+              to be updated. Rather than to recompute the Chekcsum field, a
+              node can use the Checksum Complement to make a checksum-neutral
+              update in the UDP payload; the Checksum Complement is assigned a
+              value that complements the rest of the node data fields that
+              were added by the current node, causing the existing UDP
+              Checksum field to remain correct. Checksum Complement fields are
+              used in a similar manner in <xref target="RFC7820"/> and <xref
+              target="RFC7821"/>.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |      Checksum Complement      |           Reserved            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
-
-                </list></t>
-
+            </list></t>
         </section>
 
         <section anchor="trace-type-node-data"
-                 title=" Examples of In-situ OAM node data">
+                 title=" Examples of IOAM node data">
           <t>An entry in the "node data list" array can have different
           formats, following the needs of the deployment. Some deployments
           might only be interested in recording the node identifiers, whereas
@@ -1185,18 +1206,18 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
       </section>
 
       <section anchor="IOAM_proof_of_transit_option"
-               title="In-situ OAM Proof of Transit Option">
-        <t>In-situ OAM Proof of Transit data is to support the path or service
+               title="IOAM Proof of Transit Option">
+        <t>IOAM Proof of Transit data is to support the path or service
         function chain <xref target="RFC7665"/> verification use cases.
         Proof-of-transit uses methods like nested hashing or nested encryption
-        of the in-situ OAM data or mechanisms such as Shamir's Secret Sharing
-        Schema (SSSS). While details on how the in-situ OAM data for the proof
-        of transit option is processed at in-situ OAM encapsulating,
-        decapsulating and transit nodes are outside the scope of the document,
-        all of these approaches share the need to uniquely identify a packet
-        as well as iteratively operate on a set of information that is handed
-        from node to node. Correspondingly, two pieces of information are
-        added as in-situ OAM data to the packet:</t>
+        of the IOAM data or mechanisms such as Shamir's Secret Sharing Schema
+        (SSSS). While details on how the IOAM data for the proof of transit
+        option is processed at IOAM encapsulating, decapsulating and transit
+        nodes are outside the scope of the document, all of these approaches
+        share the need to uniquely identify a packet as well as iteratively
+        operate on a set of information that is handed from node to node.
+        Correspondingly, two pieces of information are added as IOAM data to
+        the packet:</t>
 
         <t><list style="symbols">
             <t>Random: Unique identifier for the packet (e.g., 64-bits allow
@@ -1208,16 +1229,16 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
 
         <t><figure>
             <artwork><![CDATA[ 
-In-situ OAM Proof of Transit Option:
+IOAM proof of transit option:
 
-In-situ OAM Proof of Transit Option Header:
+IOAM proof of transit option header:
  
  0 1 2 3 4 5 6 7 
 +-+-+-+-+-+-+-+-+
 |IOAM POT Type|P|  
 +-+-+-+-+-+-+-+-+
 
-In-situ OAM Proof of Transit Option Data MUST be 4-byte aligned:
+IOAM proof of transit option data MUST be 4-byte aligned:
 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1260,15 +1281,13 @@ In-situ OAM Proof of Transit Option Data MUST be 4-byte aligned:
         "proof of transit".</t>
       </section>
 
-      <section anchor="IOAM_edge_to_edge_opt"
-               title="In-situ OAM Edge-to-Edge Option">
-        <t>The in-situ OAM Edge-to-Edge Option is to carry data that is added
-        by the in-situ OAM encapsulating node and interpreted by in-situ OAM
-        decapsulating node. The in-situ OAM transit nodes MAY process the data
-        without modifying it.</t>
+      <section anchor="IOAM_edge_to_edge_opt" title="IOAM Edge-to-Edge Option">
+        <t>The IOAM edge-to-edge option is to carry data that is added by the
+        IOAM encapsulating node and interpreted by IOAM decapsulating node.
+        The IOAM transit nodes MAY process the data without modifying it.</t>
 
-        <t>Currently only sequence numbers use the in-situ OAM Edge-to-Edge
-        option. In order to detect packet loss, packet reordering, or packet
+        <t>Currently only sequence numbers use the IOAM edge-to-edge option.
+        In order to detect packet loss, packet reordering, or packet
         duplication in an in-situ OAM-domain, sequence numbers can be added to
         packets of a particular tube (see <xref
         target="I-D.hildebrand-spud-prototype"/>). Each tube leverages a
@@ -1276,16 +1295,16 @@ In-situ OAM Proof of Transit Option Data MUST be 4-byte aligned:
 
         <t><figure>
             <artwork><![CDATA[
-  In-situ OAM Edge-to-Edge Option:
+  IOAM edge-to-edge option:
 
-   In-situ OAM Edge-to-Edge Option Header:
+   IOAM edge-to-edge option header:
    
     0 1 2 3 4 5 6 7 
    +-+-+-+-+-+-+-+-+
    | IOAM-E2E-Type |
    +-+-+-+-+-+-+-+-+
 
-   In-situ OAM Edge-to-Edge Option Data MUST be 4-byte aligned:
+   IOAM edge-to-edge option data MUST be 4-byte aligned:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1305,17 +1324,14 @@ In-situ OAM Proof of Transit Option Data MUST be 4-byte aligned:
       </section>
     </section>
 
-    <section title="In-situ OAM Data Export">
-      <t>In-situ OAM nodes collect information for packets traversing a domain
-      that supports in-situ OAM. The device at the domain edge (which could
-      also be an end-host) which receives a packet with in-situ OAM
-      information chooses how to process the in-situ OAM data collected within
-      the packet. This decapsulating node can simply discard the information
-      collected, can process the information further, or export the
-      information using e.g., IPFIX.</t>
+    <section title="IOAM Data Export">
+      <t>IOAM nodes collect information for packets traversing a domain that
+      supports IOAM. IOAM decapsulating nodes as well as IOAM transit nodes
+      can choose to retrieve IOAM information from the packet, process the
+      information further and export the information using e.g., IPFIX.</t>
 
-      <t>The discussion of in-situ OAM data processing and export is left for
-      a future version of this document.</t>
+      <t>The discussion of IOAM data processing and export is left for a
+      future version of this document.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
