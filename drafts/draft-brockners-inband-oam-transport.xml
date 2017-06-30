@@ -997,7 +997,7 @@ In-situ OAM Edge-to-Edge in VXLAN GPE header:
             <t hangText="Type:">The specific type of information being
             carried, within the scope of a given TLV Class. Value allocation
             is the responsibility of the TLV Class owner. Currently a type
-            value of 0xTBD_NSH_IOAM_E2E is used.</t>
+            value of 0xTBD_VXLAN_GPE_IOAM_E2E is used.</t>
 
             <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
             in-situ OAM HDR in 8-octet units</t>
@@ -1026,7 +1026,7 @@ In-situ OAM Edge-to-Edge in VXLAN GPE header:
     <section title="In-situ OAM Metadata Transport in NSH">
       <section title="In-situ OAM Tracing in NSH">
       <t> The packet formats of the pre-allocated IOAM trace and incremental
-      IOAM trace when transported in NSH-MD2 are defined as below.  See  <xref
+      IOAM trace when transported in NSH are defined as below.  See  <xref
       target="I-D.brockners-inband-oam-data"></xref> for details about
       pre-allocated and incremental IOAM trace options.</t>
 
@@ -1035,22 +1035,30 @@ In-situ OAM Edge-to-Edge in VXLAN GPE header:
         the Network Service Header (NSH) <xref
         target="I-D.ietf-sfc-nsh"></xref> already includes path tracing
         capabilities <xref target="I-D.penno-sfc-trace"></xref>. Tracing
-        information can be carried in-situ as IOAM data fields over NSH Type 2
+        information can be carried in-situ as IOAM data fields following NSH MDx
         metadata TLVs.</t>
 
         <t><figure>
             <artwork><![CDATA[
-In-situ OAM Trace header following NSH MD2 header
+In-situ OAM Trace header following NSH MDx header
 (Pre-allocated IOAM trace):
+
+
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      TLV Class= TBD           |C|  Type=Trace |R|     Len=n   |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         IOAM-Trace-Type       |  Octets-left  |     Flags     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      |NP = IOAM_Trace|  N
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
+|          Service Path Identifer               | Service Index |  H
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Type=IOAM_Trace|   IOAM HDR len|    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|         IOAM-Trace-Type       |  Octets-left  |     Flags     |Trace
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
-|                        node data list [0]                     |  |
+|                        node data list [0]                     |  IOAM
 |                                                               |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
 |                                                               |  a
@@ -1066,7 +1074,15 @@ In-situ OAM Trace header following NSH MD2 header
 |                                                               |  |
 |                        node data list [n]                     |  |
 |                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-++
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+|                                                               |
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
 In-situ OAM Pre-allocated Trace Option Data MUST be 4-byte aligned:
 
 ]]></artwork>
@@ -1074,17 +1090,24 @@ In-situ OAM Pre-allocated Trace Option Data MUST be 4-byte aligned:
 
         <t><figure>
             <artwork><![CDATA[
-In-situ OAM Trace header following NSH MD2 header
+In-situ OAM Trace header following NSH MDx header
 (Incremental IOAM trace):
+
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      TLV Class= TBD           |C|  Type=Trace |R|     Len=n   |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         IOAM-Trace-Type       |Maximum Length |     Flags     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      |NP = IOAM_Trace|  N
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
+|          Service Path Identifer               | Service Index |  H
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Type=IOAM_Trace|   IOAM HDR len|    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|         IOAM-Trace-Type       | Maximum Length|     Flags     |Trace
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
-|                        node data list [0]                     |  |
+|                        node data list [0]                     |  IOAM
 |                                                               |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
 |                                                               |  a
@@ -1100,28 +1123,27 @@ In-situ OAM Trace header following NSH MD2 header
 |                                                               |  |
 |                        node data list [n]                     |  |
 |                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-++
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+|                                                               |
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
 In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
 ]]></artwork>
           </figure>
             <list style="hanging">
-            <t hangText="TLV Class:">Describes the scope of the "Type" field.
-            In some cases, the TLV Class will identify a specific vendor, in
-            others, the TLV Class will identify specific standards body
-            allocated types. TRACE is currently defined using the TBD TLV
-            class.</t>
+            <t hangText="Next Protocol:">TBD values for IOAM_Trace.</t>
 
-            <t hangText="C bit:">Critical bit, See <xref
-            target="I-D.ietf-sfc-nsh"></xref> for description.</t>
-
-            <t hangText="Type:">The specific type of information being
-            carried, within the scope of a given TLV Class. Value allocation
-            is the responsibility of the TLV Class owner. A type value of
-            0xTBD_NSH_IOAM_TRACE is used for IOAM Preallocated trace
-            option.</t>
-
-            <t hangText="Reserved bits and R-bits:">one reserved bit is
+            <t hangText="Reserved bits and R bits:"> Reserved bits are
             present for future use. The reserved bits MUST be set to 0x0.</t>
+
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            in-situ OAM HDR in 8-octet units</t>
 
             <t hangText="Length:">Length of the variable metadata octets.</t>
 
@@ -1158,13 +1180,18 @@ In-situ OAM Incremental Trace Option Data MUST be 4-byte aligned:
 
         <t><figure>
             <artwork><![CDATA[
-In-situ OAM POT header following NSH MD2 header:
+In-situ OAM POT header following NSH MDx header:
+
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      TLV Class=TBD            |C|    Type=POT |R|    Len=20   |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|IOAM POT Type|P|                    Reserved (MBZ)             |  |
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      |NP = IOAM_POT  |  N
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
+|          Service Path Identifer               | Service Index |  H
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|IOAM_POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -1175,19 +1202,7 @@ In-situ OAM POT header following NSH MD2 header:
 |                    Cumulative (contd.)                        |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
           </figure><list style="hanging">
-            <t hangText="TLV Class:">Describes the scope of the "Type" field.
-            In some cases, the TLV Class will identify a specific vendor, in
-            others, the TLV Class will identify specific standards body
-            allocated types. POT is currently defined using the Cisco (0x0009)
-            TLV class.</t>
-
-            <t hangText="C bit:">Critical bit, See <xref
-            target="I-D.ietf-sfc-nsh"></xref> for description.</t>
-
-            <t hangText="Type:">The specific type of information being
-            carried, within the scope of a given TLV Class. Value allocation
-            is the responsibility of the TLV Class owner. A type value of
-            0xTBD_NSH_IOAM_POT is used.</t>
+            <t hangText="Next Protocol:">TBD values for IOAM_POT.</t>
 
             <t hangText="Reserved bit:">one reserved bit is present for future
             use. The reserved bits MUST be set to 0x0.</t>
@@ -1198,6 +1213,9 @@ In-situ OAM POT header following NSH MD2 header:
             <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
             variant that dictates the POT data that is included as defined in
             <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
+
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            in-situ OAM HDR in 8-octet units</t>
 
             <t hangText="Profile to use (P):">1-bit as defined in <xref
             target="I-D.brockners-inband-oam-data"></xref> IOAM POT
@@ -1221,36 +1239,30 @@ In-situ OAM POT header following NSH MD2 header:
         enabled at the required nodes (i.e. at the in-situ OAM
         encapsulating/decapsulating nodes) by means of configuration.</t>
 
-        <t>Edge-to-Edge in-situ OAM data is added as NSH Type 2 metadata:</t>
+        <t>Edge-to-Edge in-situ OAM data is added as a TLV following NSH MDx metadata:</t>
 
         <t><figure>
             <artwork><![CDATA[
-In-situ OAM E2E header following NSH MD2 header:
+In-situ OAM E2E header following NSH MDx header:
+
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      TLV Class=TBD            |C|    Type=E2E |R|    Len      |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|IOAM E2E Type  |                    Reserved (MBZ)             |  |
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      |NP = IOAM_E2E  |  N
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
+|          Service Path Identifer               | Service Index |  H
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|IOAM_E2E_Type  |   IOAM HDR len|    Reserved   | Next Protocol | IOAM
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  E2E
 |      E2E Option data field determined by IOAM-E2E-Type        |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
 ]]></artwork>
           </figure><list style="hanging">
-            <t hangText="TLV Class:">Describes the scope of the "Type" field.
-            In some cases, the TLV Class will identify a specific vendor, in
-            others, the TLV Class will identify specific standards body
-            allocated types. POT is currently defined using the Cisco (0x0009)
-            TLV class.</t>
 
-            <t hangText="C bit:">Critical bit, See <xref
-            target="I-D.ietf-sfc-nsh"></xref> for description.</t>
-
-            <t hangText="Type:">The specific type of information being
-            carried, within the scope of a given TLV Class. Value allocation
-            is the responsibility of the TLV Class owner. Currently a type
-            value of 0xTBD_NSH_IOAM_E2E is used.</t>
+            <t hangText="Next Protocol:">TBD values for IOAM_E2E.</t>
 
             <t hangText="Reserved bits and R-bits:">one reserved bit is
             present for future use. The reserved bits MUST be set to 0x0.</t>
@@ -1262,8 +1274,8 @@ In-situ OAM E2E header following NSH MD2 header:
             variant that dictates the POT data that is included as defined in
             <xref target="I-D.brockners-inband-oam-data"></xref>.</t>
 
-            <t hangText="Reserved (MBZ):">24-bit field MUST be filled with
-            zeroes.</t>
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            in-situ OAM HDR in 8-octet units</t>
 
             <t hangText="E2E Option data field:">Variable length field as
             defined in <xref target="I-D.brockners-inband-oam-data"></xref>
