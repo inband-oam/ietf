@@ -7,6 +7,7 @@ bootstrap:
 	sudo pip install xml2rfc
 draft-brockners-inband-oam-data: draft-brockners-inband-oam-data.xml 
 	$(XML2RFC) $< -o $@-$(VERSION).txt
+	cp $@-$(VERSION).txt versions/$(VERSION)/
 draft-brockners-inband-oam-requirements: draft-brockners-inband-oam-requirements.xml 
 	$(XML2RFC) $< -o $@-$(VERSION).txt
 draft-brockners-inband-oam-requirements: draft-brockners-inband-oam-requirements.xml 
