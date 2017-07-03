@@ -460,7 +460,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2017
    |         IOAM-Trace-Type       |  Octets-left  |     Flags     |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   Pre-allocated Trace Option Data MUST be 4-byte aligned:
+   Pre-allocated Trace Option Data MUST be 4-octet aligned:
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
    |                                                               |  |
    |                        node data list [0]                     |  |
@@ -550,7 +550,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2017
    Flags  8-bit field.  The following flags are defined:
 
       Bit 0  "Overflow" (O-bit) (most significant bit).  This bit is set
-         by the network element if there is not enough number of bytes
+         by the network element if there is not enough number of octets
          left to record node data, no field is added and the overflow
          "O-bit" must be set to "1" in the header.  This is useful for
          transit nodes to ignore further processing of the option.
@@ -628,7 +628,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2017
    |        IOAM-Trace-Type        | Maximum Length|    Flags      |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   IOAM Incremental Trace Option Data MUST be 4-byte aligned:
+   IOAM Incremental Trace Option Data MUST be 4-octet aligned:
 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                                                               |
@@ -710,7 +710,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2017
    Maximum Length:  8-bit unsigned integer.  This field specifies the
       maximum length of the node data list in octets.  Given that the
       sender knows the minimum path MTU, the sender can set the maximum
-      of node data bytes allowed before exceeding the MTU.  It is
+      of node data octets allowed before exceeding the MTU.  It is
       assumed that every protocol that IOAM can be encapsulated over
       will include a shim header that includes a field describing the
       current length of the IOAM data fields.  In which case the
@@ -730,7 +730,7 @@ Brockners, et al.       Expires December 28, 2017              [Page 13]
 Internet-Draft           In-situ OAM Data Fields               June 2017
 
 
-         bytes left to record node data, no field is added and the
+         octets left to record node data, no field is added and the
          overflow "O-bit" must be set to "1" in the header.  This is
          useful for transit nodes to ignore further processing of the
          option.
@@ -753,7 +753,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2017
 
 4.1.3.  IOAM node data fields and associated formats
 
-   All the data fields MUST be 4-byte aligned.  The IOAM encapsulating
+   All the data fields MUST be 4-octet aligned.  The IOAM encapsulating
    node MUST initialize data fields that it adds to the packet to zero.
    If a node which is supposed to update an IOAM data field is not
    capable of populating the value of a field set in the IOAM-Trace-
@@ -1187,7 +1187,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2017
    |IOAM POT Type|P|
    +-+-+-+-+-+-+-+-+
 
-   IOAM proof of transit option data MUST be 4-byte aligned:
+   IOAM proof of transit option data MUST be 4-octet aligned:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1255,7 +1255,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2017
       | IOAM-E2E-Type |
       +-+-+-+-+-+-+-+-+
 
-      IOAM edge-to-edge option data MUST be 4-byte aligned:
+      IOAM edge-to-edge option data MUST be 4-octet aligned:
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1

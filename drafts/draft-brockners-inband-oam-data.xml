@@ -587,7 +587,7 @@ Pre-allocated trace option header:
 |         IOAM-Trace-Type       |  Octets-left  |     Flags     |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-Pre-allocated Trace Option Data MUST be 4-byte aligned:
+Pre-allocated Trace Option Data MUST be 4-octet aligned:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
 |                        node data list [0]                     |  |
@@ -678,7 +678,7 @@ Pre-allocated Trace Option Data MUST be 4-byte aligned:
               defined:<list style="hanging">
                   <t hangText="Bit 0">"Overflow" (O-bit) (most significant
                   bit). This bit is set by the network element if there is not
-                  enough number of bytes left to record node data, no field is
+                  enough number of octets left to record node data, no field is
                   added and the overflow "O-bit" must be set to "1" in the
                   header. This is useful for transit nodes to ignore further
                   processing of the option.</t>
@@ -734,7 +734,7 @@ In-situ OAM incremental trace option Header:
 |        IOAM-Trace-Type        | Maximum Length|    Flags      |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-IOAM Incremental Trace Option Data MUST be 4-byte aligned: 
+IOAM Incremental Trace Option Data MUST be 4-octet aligned: 
 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
@@ -817,7 +817,7 @@ IOAM Incremental Trace Option Data MUST be 4-byte aligned:
               <t hangText="Maximum Length:">8-bit unsigned integer. This field
               specifies the maximum length of the node data list in octets.
               Given that the sender knows the minimum path MTU, the sender can
-              set the maximum of node data bytes allowed before exceeding the
+              set the maximum of node data octets allowed before exceeding the
               MTU. It is assumed that every protocol that IOAM can be
               encapsulated over will include a shim header that includes a
               field describing the current length of the IOAM data fields. In
@@ -829,7 +829,7 @@ IOAM Incremental Trace Option Data MUST be 4-byte aligned:
               defined:<list style="hanging">
                   <t hangText="Bit 0">"Overflow" (O-bit) (least significant
                   bit). This bit is set by the network element if there is not
-                  enough number of bytes left to record node data, no field is
+                  enough number of octets left to record node data, no field is
                   added and the overflow "O-bit" must be set to "1" in the
                   header. This is useful for transit nodes to ignore further
                   processing of the option.</t>
@@ -857,7 +857,7 @@ IOAM Incremental Trace Option Data MUST be 4-byte aligned:
 
         <section anchor="trace-node-data-element"
                  title="IOAM node data fields and associated formats">
-          <t>All the data fields MUST be 4-byte aligned. The IOAM
+          <t>All the data fields MUST be 4-octet aligned. The IOAM
           encapsulating node MUST initialize data fields that it adds to the
           packet to zero. If a node which is supposed to update an IOAM data
           field is not capable of populating the value of a field set in the
@@ -1238,7 +1238,7 @@ IOAM proof of transit option header:
 |IOAM POT Type|P|  
 +-+-+-+-+-+-+-+-+
 
-IOAM proof of transit option data MUST be 4-byte aligned:
+IOAM proof of transit option data MUST be 4-octet aligned:
 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1304,7 +1304,7 @@ IOAM proof of transit option data MUST be 4-byte aligned:
    | IOAM-E2E-Type |
    +-+-+-+-+-+-+-+-+
 
-   IOAM edge-to-edge option data MUST be 4-byte aligned:
+   IOAM edge-to-edge option data MUST be 4-octet aligned:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
