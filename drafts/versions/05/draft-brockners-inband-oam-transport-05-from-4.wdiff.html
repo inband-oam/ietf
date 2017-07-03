@@ -1,0 +1,1685 @@
+<html><head><title>wdiff draft-brockners-inband-oam-transport-04.txt draft-brockners-inband-oam-transport-05.txt</title></head><body>
+<pre>
+
+
+
+
+ippm                                                        F. Brockners
+Internet-Draft                                               S. Bhandari
+Intended status: Informational                               V. Govindan
+Expires: January 3, 2018                                    C. Pignataro
+                                                                   Cisco
+                                                              H. Gredler
+                                                            RtBrick Inc.
+                                                                J. Leddy
+                                                                 Comcast
+                                                               S. Youell
+                                                                    JMPC
+                                                              T. Mizrahi
+                                                                 Marvell
+                                                                D. Mozes
+                                              Mellanox Technologies Ltd.
+                                                             P. Lapukhov
+                                                                Facebook
+                                                                R. Chang
+                                                       Barefoot Networks
+                                                           July 02, 2017
+
+
+                  Encapsulations for In-situ OAM Data
+                <strike><font color='red'>draft-brockners-inband-oam-transport-04</font></strike>
+                <strong><font color='green'>draft-brockners-inband-oam-transport-05</font></strong>
+
+Abstract
+
+   In-situ Operations, Administration, and Maintenance (OAM) records
+   operational and telemetry information in the packet while the packet
+   traverses a path between two points in the network.  In-situ OAM is
+   to complement current out-of-band OAM mechanisms based on ICMP or
+   other types of probe packets.  This document outlines how in-situ OAM
+   data fields can be transported in protocols such as NSH, Segment
+   Routing, VXLAN-GPE, native IPv6 (via extension headers), and IPv4.
+   Transport options are currently investigated as part of an
+   implementation study.  This document is intended to only serve
+   informational purposes.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 1]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on January 3, 2018.
+
+Copyright Notice
+
+   Copyright (c) 2017 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  In-Situ OAM Metadata Transport in IPv6  . . . . . . . . . . .   4
+     3.1.  In-situ OAM in IPv6 Hop by Hop Extension Header . . . . .   5
+       3.1.1.  In-situ OAM Hop by Hop Options  . . . . . . . . . . .   5
+   4.  In-situ OAM Metadata Transport in IPv4  . . . . . . . . . . .   7
+     4.1.  In-situ OAM Tracing in GRE  . . . . . . . . . . . . . . .   7
+     4.2.  In-situ OAM POT in GRE  . . . . . . . . . . . . . . . . .  10
+     4.3.  In-situ OAM End-to-End in GRE . . . . . . . . . . . . . .  12
+   5.  In-situ OAM Metadata Transport in VXLAN-GPE . . . . . . . . .  12
+     5.1.  In-situ OAM Tracing in VXLAN-GPE  . . . . . . . . . . . .  13
+     5.2.  In-situ OAM POT in VXLAN-GPE  . . . . . . . . . . . . . .  16
+     5.3.  In-situ OAM Edge-to-Edge in VXLAN-GPE . . . . . . . . . .  18
+   6.  In-situ OAM Metadata Transport in NSH . . . . . . . . . . . .  18
+     6.1.  In-situ OAM Tracing in NSH  . . . . . . . . . . . . . . .  18
+     6.2.  In-situ OAM POT in NSH  . . . . . . . . . . . . . . . . .  22
+     6.3.  In-situ OAM Edge-to-Edge in NSH . . . . . . . . . . . . .  24
+   7.  In-situ OAM Metadata Transport in Segment Routing . . . . . .  25
+     7.1.  In-situ OAM in SR with IPv6 Transport . . . . . . . . . .  25
+     7.2.  In-situ OAM in SR with MPLS Transport . . . . . . . . . .  26
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  26
+   9.  Manageability Considerations  . . . . . . . . . . . . . . . .  26
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  26
+   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  26
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 2]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  27
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .  27
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  28
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
+
+1.  Introduction
+
+   This document discusses transport mechanisms for "in-situ"
+   Operations, Administration, and Maintenance (OAM) data fields.  In-
+   situ OAM records OAM information within the packet while the packet
+   traverses a particular network domain.  The term "in-situ" refers to
+   the fact that the OAM data is added to the data packets rather than
+   is being sent within packets specifically dedicated to OAM.  A
+   discussion of the motivation and requirements for in-situ OAM can be
+   found in [I-D.brockners-inband-oam-requirements].  Data types and
+   data formats for in-situ OAM are defined in
+   [I-D.brockners-inband-oam-data].
+
+   This document outlines transport encapsulations for the in-situ OAM
+   data defined in [I-D.brockners-inband-oam-data].  This document is to
+   serve informational purposes only.  As part of an in-situ OAM
+   implementation study different protocol encapsulations for in-situ
+   OAM data are being explored.  Once data formats and encapsulation
+   approaches are settled, protocol specific specifications for in-situ
+   OAM data transport will address the standardization aspect.
+
+   The data for in-situ OAM defined in [I-D.brockners-inband-oam-data]
+   can be carried in a variety of protocols based on the deployment
+   needs.  This document discusses transport of in-situ OAM data for the
+   following protocols:
+
+   o  IPv6
+
+   o  IPv4
+
+   o  VXLAN-GPE
+
+   o  NSH
+
+   o  Segment Routing (IPv6 and MPLS)
+
+   This list is non-exhaustive, as it is possible to carry the in-situ
+   OAM data in several other protocols and transports.
+
+   A feasibility study of in-situ OAM is currently underway as part of
+   the FD.io project [FD.io].  The in-situ OAM implementation study
+   should be considered as a "tool box" to showcase how "in-situ" OAM
+   can complement probe-packet based OAM mechanisms for different
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 3]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   deployments and packet transport formats.  For details, see the open
+   source code in the FD.io [FD.io].
+
+2.  Conventions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+   Abbreviations used in this document:
+
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
+   MTU:       Maximum Transmit Unit
+
+   NSH:       Network Service Header
+
+   OAM:       Operations, Administration, and Maintenance
+
+   POT:       Proof of Transit
+
+   SFC:       Service Function Chain
+
+   SID:       Segment Identifier
+
+   SR:        Segment Routing
+
+   VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
+              Extension
+
+3.  In-Situ OAM Metadata Transport in IPv6
+
+   This mechanisms of in-situ OAM in IPv6 complement others proposed to
+   enhance diagnostics of IPv6 networks, such as the IPv6 Performance
+   and Diagnostic Metrics Destination Option described in
+   [I-D.ietf-ippm-6man-pdm-option].  The IP Performance and Diagnostic
+   Metrics Destination Option is destination focused and specific to
+   IPv6, whereas in-situ OAM is performed between end-points of the
+   network or a network domain where it is enabled and used.
+
+   A historical note: The idea of IPv6 route recording was originally
+   introduced by [I-D.kitamura-ipv6-record-route] back in year 2000.
+   With IPv6 now being generally deployed and new concepts such as
+   Segment Routing [I-D.ietf-spring-segment-routing] being introduced,
+   it is imperative to further mature the Operations, Administration,
+   and Maintenance mechanisms available to IPv6 networks.
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 4]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   The in-situ OAM options translate into options for an IPv6 hop by hop
+   extension header.  The extension header would be inserted by either a
+   host source of the packet, or by a transit/domain-edge node.  If the
+   addition of the in-situ OAM Hop-by-Hop Option header would lead to
+   the packet exceeding the MTU of the domain an error should be
+   reported.  The methods and procedures of how the error is reported
+   are outside the scope of this document.  Likewise if an ICMPv6
+   forwarding error occurs between encapsulating and decapsulating
+   nodes, the node generating the ICMPv6 error should strip the in-situ
+   OAM Hop-by-Hop Option header before sending the ICMPv6 message to the
+   source.
+
+3.1.  In-situ OAM in IPv6 Hop by Hop Extension Header
+
+   This section defines in-situ OAM for IPv6 transport.  In-situ OAM
+   Options are transported in IPv6 hop-by-hop extension header.
+
+3.1.1.  In-situ OAM Hop by Hop Options
+
+   IPv6 hop-by-hop option format for carrying in-situ OAM data fields:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 5]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Option Type  |  Opt Data Len |         Reserved (MBZ)        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |                                                               |  |
+   .                                                               .  I
+   .                     Option Data                               .  O
+   .                                                               .  A
+   .                                                               .  M
+   .                                                               .  .
+   .                                                               .  O
+   .                                                               .  P
+   .                                                               .  T
+   .                                                               .  I
+   .                                                               .  O
+   .                                                               .  N
+   .                                                               .  |
+   |                                                               |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+
+   Option Type          8-bit identifier of the type of option.
+
+   Opt Data Len         8-bit unsigned integer.  Length of the
+                        Reserved and Option Data field of this option,
+                        in octets.
+
+   Reserved (MBZ)       16-bit field MUST be filled with zeroes.
+
+   Option Data          Variable-length field.  Option-Type-specific
+                        data.
+
+
+   In-situ OAM Options are inserted as Option data as follows:
+
+   1.  Pre-allocated Tracing Option: The in-situ OAM Preallocated
+       Tracing option defined in [I-D.brockners-inband-oam-data] is
+       represented as a IPv6 option in hop by hop extension header by
+       allocating following type:
+
+       Option Type:  001xxxxxx 8-bit identifier of the type of option.
+          xxxxxx=TBD_IANA_PRE_TRACE_OPTION_IPV6.
+
+   2.  Incremental Tracing Option: The in-situ OAM Incremental Tracing
+       option defined in [I-D.brockners-inband-oam-data] is represented
+       as a IPv6 option in hop by hop extension header by allocating
+       following type:
+
+       Option Type:  001xxxxxx 8-bit identifier of the type of option.
+          xxxxxx=TBD_IANA_INCR_TRACE_OPTION_IPV6.
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 6]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   3.  Proof of Transit Option: The in-situ OAM POT option defined in
+       [I-D.brockners-inband-oam-data] is represented as a IPv6 option
+       in hop by hop extension header by allocating following type:
+
+       Option Type:  001xxxxxx 8-bit identifier of the type of option.
+          xxxxxx=TBD_IANA_POT_OPTION_IPV6.
+
+   4.  Edge to Edge Option: The in-situ OAM E2E option defined in
+       [I-D.brockners-inband-oam-data] is represented as a IPv6 option
+       in hop by hop extension header by allocating following type:
+
+       Option Type:  000xxxxxx 8-bit identifier of the type of option.
+          xxxxxx=TBD_IANA_E2E_OPTION_IPV6.
+
+4.  In-situ OAM Metadata Transport in IPv4
+
+   Transport of in-situ OAM data in IPv4 will use GRE encapsulation.
+
+   GRE encapsulation is defined in [RFC2784].  IOAM is defined as a "set
+   of Protocol Types" TBD_IANA_ETHERNET_NUMBER_IOAM_* and follows GRE
+   header.  These Protocol Types are defined in [RFC3232] as "ETHER
+   TYPES" and in [ETYPES].
+
+   The different IOAM data fields defined in
+   [I-D.brockners-inband-oam-data] are added as TLVs following the GRE
+   header.  In an administrative domain where IOAM is used, insertion of
+   the IOAM protocol header in GRE is enabled at the GRE tunnel
+   endpoints which also serve as IOAM encapsulating/decapsulating nodes
+   by means of configuration.
+
+   For IOAM the following new GRE protocol types are requested:
+
+   1.  IOAM_Trace_Preallocated:
+       TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE_PREALLOCATED
+
+   2.  IOAM_Trace_Incremental:
+       TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE_INCREMENTAL
+
+   3.  IOAM_POT: TBD_IANA_ETHERNET_NUMBER_IOAM_POT
+
+   4.  IOAM_End-to_End: TBD_IANA_ETHERNET_NUMBER_IOAM_E2E
+
+4.1.  In-situ OAM Tracing in GRE
+
+   The packet formats of the pre-allocated IOAM trace and incremental
+   IOAM trace when transported using GRE are defined as below.  See
+   [I-D.brockners-inband-oam-data] for details about pre-allocated and
+   incremental IOAM trace options.
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 7]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+ In-situ OAM Trace header following GRE header(Preallocated IOAM trace):
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |C|       Reserved0       | Ver | Protocol Type = IOAM_Trace    |  G
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+ |      Checksum (optional)      |       Reserved1 (Optional)    |  E
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |     Type      |   IOAM HDR len|        Next Protocol          |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+ |         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left |Trace
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |                                                               |  |
+ |                        node data list [0]                     |  IOAM
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+ |                                                               |  a
+ |                        node data list [1]                     |  t
+ |                                                               |  a
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ ~                             ...                               ~  S
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+ |                                                               |  a
+ |                        node data list [n-1]                   |  c
+ |                                                               |  e
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+ |                                                               |  |
+ |                        node data list [n]                     |  |
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |                                                               |
+ |                     Payload + Padding (L2/L3/ESP/...)         |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+ Pre-allocated Trace Option Data MUST be <strike><font color='red'>4-byte</font></strike> <strong><font color='green'>4-octet</font></strong> aligned:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 8]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+ In-situ OAM Trace header following GRE header(Incremental IOAM trace):
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |C|       Reserved0       | Ver |Protocol Type = IOAM_Trace     |  G
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+ |      Checksum (optional)      |       Reserved1 (Optional)    |  E
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |     Type      |   IOAM HDR len|        Next Protocol          |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+ |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |Trace
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |                                                               |  |
+ |                        node data list [0]                     |  IOAM
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+ |                                                               |  a
+ |                        node data list [1]                     |  t
+ |                                                               |  a
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ ~                             ...                               ~  S
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+ |                                                               |  a
+ |                        node data list [n-1]                   |  c
+ |                                                               |  e
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+ |                                                               |  |
+ |                        node data list [n]                     |  |
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |                                                               |
+ |                     Payload + Padding (L2/L3/ESP/...)         |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+ In-situ OAM Incremental Trace Option Data MUST be <strike><font color='red'>4-byte</font></strike> <strong><font color='green'>4-octet</font></strong> aligned:
+
+   The GRE header and fields are defined in [RFC2784] with Protocol Type
+   set to TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE.  IOAM specific fields and
+   header are defined here:
+
+   Type:  8-bit unsigned integer defining IOAM header type
+      IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
+      here.
+
+   IOAM HDR Len:  8 bits Length field contains the length of the
+      variable metadata octets.
+
+
+
+Brockners, et al.        Expires January 3, 2018                [Page 9]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   Next Protocol:  16 bits Next Protocol Type field contains the
+      protocol type of the packet following IOAM protocol header.  These
+      Protocol Types are defined in [RFC3232] as "ETHER TYPES" and in
+      [ETYPES].  An implementation receiving a packet containing a
+      Protocol Type which is not listed in [RFC3232] or [ETYPES] SHOULD
+      discard the packet.
+
+   IOAM-Trace-Type:  16-bit identifier of IOAM Trace Type as defined in
+      [I-D.brockners-inband-oam-data] IOAM-Trace-Types.
+
+   Node Data Length:  4-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Flags:  5-bit field as defined in [I-D.brockners-inband-oam-data].
+
+   Octets-left:  7-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Maximum-length:  7-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Node data List [n]:  Variable-length field as defined in
+      [I-D.brockners-inband-oam-data].
+
+4.2.  In-situ OAM POT in GRE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 10]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   In-situ OAM POT header following GRE header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |C|       Reserved0       | Ver | Protocol Type = IOAM_POT      |  G
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+   |      Checksum (optional)      |       Reserved1 (Optional)    |  E
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |IOAM POT Type|P|   IOAM HDR len|     Next Protocol             |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+   |                           Random                              |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+   |                        Random(contd.)                         |  O
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+   |                         Cumulative                            |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                    Cumulative (contd.)                        |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |                                                               |
+   |                     Payload + Padding (L2/L3/ESP/...)         |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   The GRE header and fields are defined in [RFC2784] with Protocol Type
+   set to TBD_IANA_ETHERNET_NUMBER_IOAM_POT.  IOAM specific fields and
+   header are defined here:
+
+   IOAM POT Type:  7-bit identifier of a particular POT variant that
+      dictates the POT data that is included as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Profile to use (P):  1-bit as defined in
+      [I-D.brockners-inband-oam-data] IOAM POT Option.
+
+   IOAM HDR Len:  8 bits Length field contains the length of the
+      variable metadata octets.
+
+   Next Protocol:  16 bits Next Protocol Type field contains the
+      protocol type of the packet following IOAM protocol header.  These
+      Protocol Types are defined in [RFC3232] as "ETHER TYPES" and in
+      [ETYPES].  An implementation receiving a packet containing a
+      Protocol Type which is not listed in [RFC3232] or [ETYPES] SHOULD
+      discard the packet.
+
+   Random:  64-bit Per-packet random number.
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 11]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   Cumulative:  64-bit Cumulative value that is updated by the Service
+      Functions.
+
+4.3.  In-situ OAM End-to-End in GRE
+
+   In-situ OAM End-to-End header following GRE header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |C|       Reserved0       | Ver | Protocol Type = IOAM_E2E      |  G
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+   |      Checksum (optional)      |       Reserved1 (Optional)    |  E
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |IOAM_E2E_Type  |   IOAM HDR len|     Next Protocol             |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+   |      E2E Option data field determined by IOAM-E2E-Type        |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |                                                               |
+   |                     Payload + Padding (L2/L3/ESP/...)         |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   IOAM E2E Type:  8-bit identifier of a particular E2E variant that
+      dictates the E2E data that is included as defined in
+      [I-D.brockners-inband-oam-data].
+
+   IOAM HDR Len:  8 bits Length field contains the length of the
+      variable metadata octets.
+
+   Next Protocol:  16 bits Next Protocol Type field contains the
+      protocol type of the packet following IOAM protocol header.  These
+      Protocol Types are defined in [RFC3232] as "ETHER TYPES" and in
+      [ETYPES].  An implementation receiving a packet containing a
+      Protocol Type which is not listed in [RFC3232] or [ETYPES] SHOULD
+      discard the packet.
+
+   E2E Option data field:  Variable length field as defined in
+      [I-D.brockners-inband-oam-data] IOAM E2E Option.
+
+5.  In-situ OAM Metadata Transport in VXLAN-GPE
+
+   VXLAN-GPE [I-D.ietf-nvo3-vxlan-gpe] encapsulation is somewhat similar
+   to IPv6 extension headers in that a series of headers can be
+   contained in the header as a linked list.  The different iIOAM types
+   are added as options within a new IOAM protocol header in VXLAN GPE.
+   In an administrative domain where IOAM is used, insertion of the IOAM
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 12]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   protocol header in VXLAN GPE is enabled at the VXLAN GPE tunnel
+   endpoint which also serve as IOAM encapsulating/decapsulating nodes
+   by means of configuration.
+
+5.1.  In-situ OAM Tracing in VXLAN-GPE
+
+   The packet formats of the pre-allocated IOAM trace and incremental
+   IOAM trace when transported in VXLAN-GPE are defined as below.  See
+   [I-D.brockners-inband-oam-data] for details about pre-allocated and
+   incremental IOAM trace options.
+
+   The VXLAN-GPE header and fields are defined in
+   [I-D.ietf-nvo3-vxlan-gpe].  IOAM specific fields and header are
+   defined here:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 13]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+ In-situ OAM Trace header following VXLAN GPE header
+ (Pre-allocated trace):
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                    Outer Ethernet Header                      |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                        Outer IP Header                        |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                       Outer UDP Header                        |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+ |R|R|Ver|I|P|R|O|          Reserved             |NP=IOAM_Trace  |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+ |     Virtual Network Identifier (VNI)          | Reserved      |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+ |      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+ |         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left |Trace
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |                                                               |  |
+ |                        node data list [0]                     |  IOAM
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+ |                                                               |  a
+ |                        node data list [1]                     |  t
+ |                                                               |  a
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ ~                             ...                               ~  S
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+ |                                                               |  a
+ |                        node data list [n-1]                   |  c
+ |                                                               |  e
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+ |                                                               |  |
+ |                        node data list [n]                     |  |
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-&lt;--+
+ |                                                               |
+ |                                                               |
+ |                     Payload + Padding (L2/L3/ESP/...)         |
+ |                                                               |
+ |                                                               |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ Pre-allocated Trace Option Data MUST be <strike><font color='red'>4-byte</font></strike> <strong><font color='green'>4-octet</font></strong> aligned:
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 14]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+ In-situ OAM Trace header following VXLAN GPE header
+ (Incremental IOAM trace):
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                    Outer Ethernet Header                      |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                        Outer IP Header                        |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |                       Outer UDP Header                        |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+ |R|R|Ver|I|P|R|O|          Reserved             | NP=IOAM_Trace |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+ |     Virtual Network Identifier (VNI)          | Reserved      |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+ |      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+ |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |Trace
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+ |                                                               |  |
+ |                        node data list [0]                     |  IOAM
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+ |                                                               |  a
+ |                        node data list [1]                     |  t
+ |                                                               |  a
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ ~                             ...                               ~  S
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+ |                                                               |  a
+ |                        node data list [n-1]                   |  c
+ |                                                               |  e
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+ |                                                               |  |
+ |                        node data list [n]                     |  |
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-&lt;--+
+ |                                                               |
+ |                                                               |
+ |                     Payload + Padding (L2/L3/ESP/...)         |
+ |                                                               |
+ |                                                               |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ In-situ OAM Incremental Trace Option Data MUST be <strike><font color='red'>4-byte</font></strike> <strong><font color='green'>4-octet</font></strong> aligned:
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 15]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   Type:  8-bit unsigned integer defining IOAM header type
+      IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
+      here.
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the in-situ OAM HDR
+      in 8-octet units.
+
+   Reserved:  8-bit reserved field MUST be set to zero.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.  The value is from the IANA
+      registry setup for VXLAN GPE Next Protocol defined in
+      [I-D.ietf-nvo3-vxlan-gpe].
+
+   IOAM-Trace-Type:  16-bit identifier of IOAM Trace Type as defined in
+      [I-D.brockners-inband-oam-data] IOAM-Trace-Types.
+
+   Node Data Length:  4-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Flags:  5-bit field as defined in [I-D.brockners-inband-oam-data].
+
+   Octets-left:  7-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Maximum-length:  7-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Node data List [n]:  Variable-length field as defined in
+      [I-D.brockners-inband-oam-data].
+
+5.2.  In-situ OAM POT in VXLAN-GPE
+
+   The VXLAN-GPE header and fields are defined in
+   [I-D.ietf-nvo3-vxlan-gpe].  IOAM specific fields and header are
+   defined here:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 16]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   In-situ OAM POT header following VXLAN GPE header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Outer Ethernet Header                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Outer IP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Outer UDP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+   |R|R|Ver|I|P|R|O|          Reserved(MBZ)        |NP = IOAM_POT  |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+   |     Virtual Network Identifier (VNI)          | Reserved      |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+   |IOAM POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+   |                           Random                              |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+   |                        Random(contd.)                         |  O
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+   |                         Cumulative                            |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                    Cumulative (contd.)                        |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+
+   IOAM POT Type:  7-bit identifier of a particular POT variant that
+      dictates the POT data that is included as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Profile to use (P):  1-bit as defined in
+      [I-D.brockners-inband-oam-data] IOAM POT Option.
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the in-situ OAM HDR
+      in 8-octet units
+
+   Reserved:  8-bit reserved field MUST be set to zero.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.  The value is from the IANA
+      registry setup for VXLAN GPE Next Protocol defined in
+      [I-D.ietf-nvo3-vxlan-gpe].
+
+   Random:  64-bit Per-packet random number.
+
+   Cumulative:  64-bit Cumulative value that is updated by the Service
+      Functions.
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 17]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+5.3.  In-situ OAM Edge-to-Edge in VXLAN-GPE
+
+   In-situ OAM Edge-to-Edge in VXLAN GPE header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Outer Ethernet Header                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Outer IP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Outer UDP Header                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+   |R|R|Ver|I|P|R|O|          Reserved             |NP = IOAM_E2E  |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
+   |     Virtual Network Identifier (VNI)          | Reserved      |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+   |Type=IOAM_E2E  |   IOAM HDR len  |  Reserved   | Next Protocol |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+   |      E2E Option data field determined by IOAM-E2E-Type        |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+
+
+   Type:  8-bit identifier of a particular E2E variant that dictates the
+      E2E data that is included as defined in
+      [I-D.brockners-inband-oam-data].
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the in-situ OAM HDR
+      in 8-octet units
+
+   Reserved:  8-bit reserved field MUST be set to zero.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.  The value is from the IANA
+      registry setup for VXLAN GPE Next Protocol defined in
+      [I-D.ietf-nvo3-vxlan-gpe].
+
+   E2E Option data field:  Variable length field as defined in
+      [I-D.brockners-inband-oam-data] IOAM E2E Option.
+
+6.  In-situ OAM Metadata Transport in NSH
+
+6.1.  In-situ OAM Tracing in NSH
+
+   The packet formats of the pre-allocated IOAM trace and incremental
+   IOAM trace when transported in NSH are defined as below.  See
+   [I-D.brockners-inband-oam-data] for details about pre-allocated and
+   incremental IOAM trace options.
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 18]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   In Service Function Chaining (SFC) [RFC7665], the Network Service
+   Header (NSH) [I-D.ietf-sfc-nsh] already includes path tracing
+   capabilities [I-D.penno-sfc-trace].  Tracing information can be
+   carried in-situ as IOAM data fields following NSH MDx metadata TLVs.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 19]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+  In-situ OAM Trace header following NSH MDx header
+  (Pre-allocated IOAM trace):
+
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+  |Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+  |          Service Path Identifer               | Service Index |  S
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+  |                            ...                                |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+  |      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+  |         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left |Trace
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+  |                                                               |  |
+  |                        node data list [0]                     |IOAM
+  |                                                               |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+  |                                                               |  a
+  |                        node data list [1]                     |  t
+  |                                                               |  a
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  ~                             ...                               ~  S
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+  |                                                               |  a
+  |                        node data list [n-1]                   |  c
+  |                                                               |  e
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+  |                                                               |  |
+  |                        node data list [n]                     |  |
+  |                                                               |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-&lt;--+
+  |                                                               |
+  |                                                               |
+  |                     Payload + Padding (L2/L3/ESP/...)         |
+  |                                                               |
+  |                                                               |
+  |                                                               |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+  In-situ OAM Pre-allocated Trace Option Data MUST be <strike><font color='red'>4-byte</font></strike> <strong><font color='green'>4-octet</font></strong> aligned:
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 20]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+  In-situ OAM Trace header following NSH MDx header
+  (Incremental IOAM trace):
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+  |Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  N
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
+  |          Service Path Identifer               | Service Index |  H
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+  |                            ...                                |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+  |      Type     |  IOAM HDR len |    Reserved   | Next Protocol |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+  |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |Trace
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+  |                                                               |  |
+  |                        node data list [0]                     |IOAM
+  |                                                               |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+  |                                                               |  a
+  |                        node data list [1]                     |  t
+  |                                                               |  a
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+  ~                             ...                               ~  S
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+  |                                                               |  a
+  |                        node data list [n-1]                   |  c
+  |                                                               |  e
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+  |                                                               |  |
+  |                        node data list [n]                     |  |
+  |                                                               |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-&lt;--+
+  |                                                               |
+  |                                                               |
+  |                     Payload + Padding (L2/L3/ESP/...)         |
+  |                                                               |
+  |                                                               |
+  |                                                               |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+  In-situ OAM Incremental Trace Option Data MUST be <strike><font color='red'>4-byte</font></strike> <strong><font color='green'>4-octet</font></strong> aligned:
+
+   Next Protocol of NSH:  TBD value for IOAM_Trace.
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 21]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   Type:  8-bit unsigned integer defining IOAM header type
+      IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
+      here.
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the in-situ OAM HDR
+      in 8-octet units.
+
+   Reserved bits and R bits:  Reserved bits are present for future use.
+      The reserved bits MUST be set to 0x0.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.
+
+   IOAM-Trace-Type:  16-bit identifier of IOAM Trace Type as defined in
+      [I-D.brockners-inband-oam-data] IOAM-Trace-Types.
+
+   Node Data Length:  4-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Flags:  5-bit field as defined in [I-D.brockners-inband-oam-data].
+
+   Octets-left:  7-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Maximum-length:  7-bit unsigned integer as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Node data List [n]:  Variable-length field as defined in
+      [I-D.brockners-inband-oam-data].
+
+6.2.  In-situ OAM POT in NSH
+
+   The "Proof of Transit" capabilities (see
+   [I-D.brockners-inband-oam-requirements] and
+   [I-D.brockners-proof-of-transit]) of in-situ OAM can be leveraged
+   within NSH.  In an administrative domain where in-situ OAM is used,
+   insertion of the in-situ OAM data into the NSH header is enabled at
+   the required nodes (i.e. at the in-situ OAM encapsulating/
+   decapsulating nodes) by means of configuration.
+
+   Proof of transit in-situ OAM data is added as NSH Type 2 metadata:
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 22]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   In-situ OAM POT header following NSH MDx header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      |NP = IOAM_POT  |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+   |          Service Path Identifer               | Service Index |  S
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+   |                            ...                                |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |IOAM_POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                           Random                              |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+   |                        Random(contd.)                         |  O
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+   |                         Cumulative                            |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                    Cumulative (contd.)                        |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+
+   Next Protocol of NSH:  TBD value for IOAM_POT.
+
+   IOAM POT Type:  7-bit identifier of a particular POT variant that
+      dictates the POT data that is included as defined in
+      [I-D.brockners-inband-oam-data].
+
+   Profile to use (P):  1-bit as defined in
+      [I-D.brockners-inband-oam-data] IOAM POT Option.
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the in-situ OAM HDR
+      in 8-octet units
+
+   Reserved bits and R bits:  Reserved bits are present for future use.
+      The reserved bits MUST be set to 0x0.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.
+
+   Random:  64-bit Per-packet random number.
+
+   Cumulative:  64-bit Cumulative value that is updated by the Service
+      Functions.
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 23]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+6.3.  In-situ OAM Edge-to-Edge in NSH
+
+   The "Edge-to-Edge" capabilities (see
+   [I-D.brockners-inband-oam-requirements]) of in-situ OAM can be
+   leveraged within NSH.  In an administrative domain where in-situ OAM
+   is used, insertion of the in-situ OAM data into the NSH header is
+   enabled at the required nodes (i.e. at the in-situ OAM encapsulating/
+   decapsulating nodes) by means of configuration.
+
+   Edge-to-Edge in-situ OAM data is added as a TLV following NSH MDx
+   metadata:
+
+  In-situ OAM E2E header following NSH MDx header:
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+  |Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      |NP = IOAM_E2E  |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+  |          Service Path Identifer               | Service Index |  S
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+  |                            ...                                |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+  |IOAM_E2E_Type  |   IOAM HDR len|    Reserved   | Next Protocol | IOAM
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  E2E
+  |      E2E Option data field determined by IOAM-E2E-Type        |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+
+
+   Next Protocol of NSH:  TBD value for IOAM_E2E.
+
+   IOAM E2E Type:  8-bit identifier of a particular E2E variant that
+      dictates the IOAM E2E data that is included as defined in
+      [I-D.brockners-inband-oam-data].
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the in-situ OAM HDR
+      in 8-octet units
+
+   Reserved bits and R bits:  Reserved bits are present for future use.
+      The reserved bits MUST be set to 0x0.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.
+
+   E2E Option data field:  Variable length field as defined in
+      [I-D.brockners-inband-oam-data] IOAM E2E Option.
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 24]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+7.  In-situ OAM Metadata Transport in Segment Routing
+
+7.1.  In-situ OAM in SR with IPv6 Transport
+
+   Similar to NSH, a policy defined using Segment Routing for IPv6 can
+   be verified using the in-situ OAM "Proof of Transit" approach.  The
+   Segment Routing Header (SRH) for IPv6 offers the ability to transport
+   TLV structured data, similar to what NSH does (see
+   [I-D.ietf-6man-segment-routing-header]).  In an domain where in-situ
+   OAM is used, insertion of the in-situ OAM data is enabled at the
+   required edge nodes (i.e. at the in-situ OAM encapsulating/
+   decapsulating nodes) by means of configuration.
+
+   A new "POT TLV" is defined for the SRH which is to carry proof of
+   transit in situ OAM data.
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      Type     |    Length     |   RESERVED    |F|   Flags     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+   |IOAM POT Type|P|                    Reserved (MBZ)             |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                           Random                              |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+   |                        Random(contd.)                         |  O
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+   |                         Cumulative                            |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                    Cumulative (contd.)                        |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
+
+   Type:  To be assigned by IANA.
+
+   Length:  20.
+
+   RESERVED:  8 bits.  SHOULD be unset on transmission and MUST be
+      ignored on receipt.
+
+   F: 1 bit.  Indicates which POT-profile is active. 0 means the even
+      POT-profile is active, 1 means the odd POT-profile is active.
+
+   Flags:  8 bits.  No flags are defined in this document.
+
+   IOAM POT Type:  7-bit identifier of a particular POT variant that
+      dictates the POT data that is included as defined in
+      [I-D.brockners-inband-oam-data].
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 25]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   Profile to use (P):  1-bit as defined in
+      [I-D.brockners-inband-oam-data] IOAM POT Option.
+
+   Reserved (MBZ):  24-bit field MUST be filled with zeroes.
+
+   Random:  64-bit per-packet random number.
+
+   Cumulative:  64-bit cumulative value that is updated at specific
+      nodes that form the service path to be verified.
+
+7.2.  In-situ OAM in SR with MPLS Transport
+
+   In-situ OAM "Proof of Transit" data can also be carried as part of
+   the MPLS label stack.  Details will be addressed in a future version
+   of this document.
+
+8.  IANA Considerations
+
+   IANA considerations will be added in a future version of this
+   document.
+
+9.  Manageability Considerations
+
+   Manageability considerations will be addressed in a later version of
+   this document..
+
+10.  Security Considerations
+
+   Security considerations will be addressed in a later version of this
+   document.  For a discussion of security requirements of in-situ OAM,
+   please refer to [I-D.brockners-inband-oam-requirements].
+
+11.  Acknowledgements
+
+   The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+   Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+   Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
+   and Andrew Yourtchenko for the comments and advice.  The authors
+   would like to acknowledge Craig Hill for contributing GRE IOAM
+   encapsulation.  For the IPv6 encapsulation, this document leverages
+   and builds on top of several concepts described in
+   [I-D.kitamura-ipv6-record-route].  The authors would like to
+   acknowledge the work done by the author Hiroshi Kitamura and people
+   involved in writing it.
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 26]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+12.  References
+
+12.1.  Normative References
+
+   [ETYPES]   "IANA Ethernet Numbers",
+              &lt;https://www.iana.org/assignments/ethernet-numbers/
+              ethernet-numbers.xhtml&gt;.
+
+   [I-D.brockners-inband-oam-data]
+              Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
+              Leddy, J., Youell, S., Mizrahi, T., Mozes, D., Lapukhov,
+              P., &lt;&gt;, R., and d. daniel.bernier@bell.ca, "Data Fields
+              for In-situ OAM", draft-brockners-inband-oam-data-05 (work
+              in progress), May 2017.
+
+   [I-D.brockners-inband-oam-requirements]
+              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
+              Gredler, H., Leddy, J., Youell, S., Mozes, D., Mizrahi,
+              T., &lt;&gt;, P., and r. remy@barefootnetworks.com,
+              "Requirements for In-situ OAM", draft-brockners-inband-
+              oam-requirements-03 (work in progress), March 2017.
+
+   [I-D.ietf-6man-segment-routing-header]
+              Previdi, S., Filsfils, C., Raza, K., Leddy, J., Field, B.,
+              daniel.voyer@bell.ca, d., daniel.bernier@bell.ca, d.,
+              Matsushima, S., Leung, I., Linkova, J., Aries, E., Kosugi,
+              T., Vyncke, E., Lebrun, D., Steinberg, D., and R. Raszuk,
+              "IPv6 Segment Routing Header (SRH)", draft-ietf-6man-
+              segment-routing-header-06 (work in progress), March 2017.
+
+   [I-D.ietf-nvo3-vxlan-gpe]
+              Maino, F., Kreeger, L., and U. Elzur, "Generic Protocol
+              Extension for VXLAN", draft-ietf-nvo3-vxlan-gpe-04 (work
+              in progress), April 2017.
+
+   [I-D.ietf-sfc-nsh]
+              Quinn, P. and U. Elzur, "Network Service Header", draft-
+              ietf-sfc-nsh-13 (work in progress), June 2017.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              &lt;http://www.rfc-editor.org/info/rfc2119&gt;.
+
+   [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
+              Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
+              DOI 10.17487/RFC2784, March 2000,
+              &lt;http://www.rfc-editor.org/info/rfc2784&gt;.
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 27]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   [RFC3232]  Reynolds, J., Ed., "Assigned Numbers: RFC 1700 is Replaced
+              by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
+              January 2002, &lt;http://www.rfc-editor.org/info/rfc3232&gt;.
+
+12.2.  Informative References
+
+   [FD.io]    "Fast Data Project: FD.io", &lt;https://fd.io/&gt;.
+
+   [I-D.brockners-proof-of-transit]
+              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
+              Leddy, J., Youell, S., Mozes, D., and T. Mizrahi, "Proof
+              of Transit", draft-brockners-proof-of-transit-03 (work in
+              progress), March 2017.
+
+   [I-D.ietf-ippm-6man-pdm-option]
+              Elkins, N., Hamilton, R., and m. mackermann@bcbsm.com,
+              "IPv6 Performance and Diagnostic Metrics (PDM) Destination
+              Option", draft-ietf-ippm-6man-pdm-option-13 (work in
+              progress), June 2017.
+
+   [I-D.ietf-spring-segment-routing]
+              Filsfils, C., Previdi, S., Decraene, B., Litkowski, S.,
+              and R. Shakir, "Segment Routing Architecture", draft-ietf-
+              spring-segment-routing-12 (work in progress), June 2017.
+
+   [I-D.kitamura-ipv6-record-route]
+              Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
+              Option Extension", draft-kitamura-ipv6-record-route-00
+              (work in progress), November 2000.
+
+   [I-D.penno-sfc-trace]
+              Penno, R., Quinn, P., Pignataro, C., and D. Zhou,
+              "Services Function Chaining Traceroute", draft-penno-sfc-
+              trace-03 (work in progress), September 2015.
+
+   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015,
+              &lt;http://www.rfc-editor.org/info/rfc7665&gt;.
+
+Authors' Addresses
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 28]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   Frank Brockners
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
+
+
+   Shwetha Bhandari
+   Cisco Systems, Inc.
+   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+   Bangalore, KARNATAKA 560 087
+   India
+
+   Email: shwethab@cisco.com
+
+
+   Vengada Prasad Govindan
+   Cisco Systems, Inc.
+
+   Email: venggovi@cisco.com
+
+
+   Carlos Pignataro
+   Cisco Systems, Inc.
+   7200-11 Kit Creek Road
+   Research Triangle Park, NC  27709
+   United States
+
+   Email: cpignata@cisco.com
+
+
+   Hannes Gredler
+   RtBrick Inc.
+
+   Email: hannes@rtbrick.com
+
+
+   John Leddy
+   Comcast
+
+   Email: John_Leddy@cable.comcast.com
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 29]
+
+Internet-Draft         In-situ OAM Data Transport              July 2017
+
+
+   Stephen Youell
+   JP Morgan Chase
+   25 Bank Street
+   London  E14 5JP
+   United Kingdom
+
+   Email: stephen.youell@jpmorgan.com
+
+
+   Tal Mizrahi
+   Marvell
+   6 Hamada St.
+   Yokneam  20692
+   Israel
+
+   Email: talmi@marvell.com
+
+
+   David Mozes
+   Mellanox Technologies Ltd.
+
+   Email: davidm@mellanox.com
+
+
+   Petr Lapukhov
+   Facebook
+   1 Hacker Way
+   Menlo Park, CA  94025
+   US
+
+   Email: petr@fb.com
+
+
+   Remy Chang
+   Barefoot Networks
+   2185 Park Boulevard
+   Palo Alto, CA  94306
+   US
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires January 3, 2018               [Page 30]
+</pre>
+</body></html>
