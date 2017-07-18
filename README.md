@@ -17,4 +17,4 @@ https://github.com/CiscoDevNet/iOAM
  - https://tools.ietf.org/html/draft-brockners-proof-of-transit-03
 
 # Presentations
- - IETF99 - IPPM - https://inband-oam.github.com/ietf/presentations/ietf99-ioam-slides.html
+ - IETF99 - IPPM - https://inband-oam.github.io/ietf/presentations/ietf99-ioam-slides.html
