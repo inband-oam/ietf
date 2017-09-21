@@ -18,6 +18,7 @@
 <!ENTITY RFC7820 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7820.xml">
 <!ENTITY RFC7821 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7821.xml">
 <!ENTITY RFC8126 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
+<!ENTITY RFC5905 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-inband-oam-requirements.xml">
 <!ENTITY I-D.brockners-inband-oam-transport SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-inband-oam-transport.xml">
 <!ENTITY I-D.brockners-proof-of-transit SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-proof-of-transit.xml">
@@ -634,7 +635,7 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
                   seconds in the node data</t>
 
                   <t hangText="Bit 3">When set indicates presence of timestamp
-                  nanoseconds in the node data.</t>
+                  nanoseconds or fractional seconds in the node data.</t>
 
                   <t hangText="Bit 4">When set indicates presence of transit
                   delay in the node data.</t>
@@ -789,7 +790,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                   seconds in the node data.</t>
 
                   <t hangText="Bit 3">When set indicates presence of timestamp
-                  nanoseconds in the node data.</t>
+                  nanoseconds or fractional seconds in the node data.</t>
 
                   <t hangText="Bit 4">When set indicates presence of transit
                   delay in the node data.</t>
@@ -941,12 +942,16 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
 
-              <t hangText="timestamp nanoseconds:">4-octet unsigned integer in
+              <t hangText="timestamp subseconds:">4-octet unsigned integer in
               the range 0 to 10^9-1. This timestamp specifies the fractional
               part of the wall clock time at which the packet was received by
-              the node in units of nanoseconds. This field is identical to the
+              the node in units of nanoseconds. This format is identical to the
               32 least significant bits of the <xref
-              target="IEEE1588v2"></xref> timestamp. This fields allows for
+              target="IEEE1588v2"></xref> timestamp. Or it specifies the
+              fractional part of the wall clock time at which the packet was
+              received in fractions of a second. This format is identical to
+              the 32 least significant bits of the <xref
+              target="RFC5905"></xref> timestamp. This field allows for
               delay computation between any two nodes in the network when the
               nodes are time synchronized. When this field is part of the data
               field but a node populating the field is not able to fill it,
@@ -954,7 +959,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               0xFFFFFFFF to mean not populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       timestamp nanoseconds                   |
+|                       timestamp subseconds                    |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
 
@@ -1131,7 +1136,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |     ingress_if_id             |         egress_if_id          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                  timestamp nanoseconds                        |
+    |                  timestamp subseconds                         |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                            app_data                           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1158,7 +1163,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                   timestamp nanoseconds                       |
+    |                   timestamp subseconds                        |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 ]]></artwork>
@@ -1182,7 +1187,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                    timestamp nanoseconds                      |
+    |                    timestamp subseconds                       |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                            app_data                           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1196,7 +1201,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                      timestamp seconds                        |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                    timestamp nanoseconds                      |
+    |                    timestamp subseconds                       |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Length      |                     Schema Id                 |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1299,12 +1304,21 @@ IOAM proof of transit option data MUST be 4-octet aligned:
         IOAM encapsulating node and interpreted by IOAM decapsulating node.
         The IOAM transit nodes MAY process the data without modifying it.</t>
 
-        <t>Currently only sequence numbers use the IOAM edge-to-edge option.
-        In order to detect packet loss, packet reordering, or packet
-        duplication in an in-situ OAM-domain, sequence numbers can be added to
+        <t>The following IOAM data is defined for use with the IOAM edge-to-edge
+        option:</t>
+
+        <t><list style="symbols">
+        <t>Packet sequence numbers.  In order to detect packet loss, packet
+        reordering, or packet duplication in an in-situ OAM-domain, sequence numbers can be added to
         packets of a particular tube (see <xref
         target="I-D.hildebrand-spud-prototype"></xref>). Each tube leverages a
         dedicated namespace for its sequence numbers.</t>
+
+        <t>Time of day when the packet was transmitted.  Different
+           definitions of processing time are feasible and expected, though
+           it is important that all devices of an in-situ OAM domain follow
+           the same definition.</t></list></t>
+
 
         <t><figure>
             <artwork><![CDATA[
@@ -1328,10 +1342,23 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 ]]></artwork>
           </figure><list style="hanging">
             <t hangText="IOAM-E2E-Type:">8-bit identifier of a particular in
-            situ OAM E2E variant.<list style="empty">
-                <t>0: E2E option data is a 64-bit sequence number added to a
-                specific tube which is used to identify packet loss and
-                reordering for that tube.</t>
+            situ OAM E2E variant.<list hangIndent="9"
+            style="hanging">
+            <t hangText="Bit 0">(Most significant bit) When set indicates
+            presence of a 64-bit sequence number added to a specific tube
+            which is used to identify packet loss and reordering for that
+            tube.</t>
+
+            <t hangText="Bit 1">When set indicates presence of a 32-bit
+            sequence number added to a specific tube which is used to identify
+	          packet loss and reordering for that tube.</t>
+
+            <t hangText="Bit 2">When set indicates presence of timestamp
+            seconds for the transmission of the frame.</t>
+
+            <t hangText="Bit 3">When set indicates presence of timestamp
+            nanoseconds or fractional seconds for the transmission of the
+            frame.</t>
               </list></t>
           </list></t>
       </section>
@@ -1458,6 +1485,8 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
     <references title="Normative References">
       &RFC2119;
+
+      &RFC5905;
 
       &RFC8126;
 
