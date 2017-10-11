@@ -1,0 +1,728 @@
+
+
+
+
+sfc                                                         F. Brockners
+Internet-Draft                                               S. Bhandari
+Intended status: Standards Track                             V. Govindan
+Expires: May 2, 2018                                        C. Pignataro
+                                                                   Cisco
+                                                              H. Gredler
+                                                            RtBrick Inc.
+                                                                J. Leddy
+                                                                 Comcast
+                                                               S. Youell
+                                                                    JMPC
+                                                              T. Mizrahi
+                                                                 Marvell
+                                                                D. Mozes
+                                              Mellanox Technologies Ltd.
+                                                             P. Lapukhov
+                                                                Facebook
+                                                                R. Chang
+                                                       Barefoot Networks
+                                                        October 29, 2017
+
+
+                 NSH Encapsulation for In-situ OAM Data
+                    draft-brockners-sfc-ioam-nsh-00
+
+Abstract
+
+   In-situ Operations, Administration, and Maintenance (OAM) records
+   operational and telemetry information in the packet while the packet
+   traverses a path between two points in the network.  This document
+   outlines how IOAM data fields are encapsulated in the Network Service
+   Header (NSH).
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 1]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+   This Internet-Draft will expire on May 2, 2018.
+
+Copyright Notice
+
+   Copyright (c) 2017 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  IOAM data fields encapsulation in NSH . . . . . . . . . . . .   3
+     3.1.  IOAM trace data in NSH  . . . . . . . . . . . . . . . . .   3
+     3.2.  IOAM POT in NSH . . . . . . . . . . . . . . . . . . . . .   6
+     3.3.  IOAM Edge-to-Edge in NSH  . . . . . . . . . . . . . . . .   8
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+
+1.  Introduction
+
+   In-situ OAM (IOAM) records OAM information within the packet while
+   the packet traverses a particular network domain.  The term "in-situ"
+   refers to the fact that the OAM data is added to the data packets
+   rather than is being sent within packets specifically dedicated to
+   OAM.  This document defines how IOAM data fields are transported as
+   part of the Network Service Header (NSH) [I-D.ietf-sfc-nsh])
+   encapsulation.  The IOAM data fields are defined in
+   [I-D.ietf-ippm-ioam-data].  An implementation of IOAM which leverages
+   NSH to carry the IOAM data is available from the FD.io open source
+   software project [FD.io].
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 2]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+2.  Conventions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+   Abbreviations used in this document:
+
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
+   MTU:       Maximum Transmit Unit
+
+   NSH:       Network Service Header
+
+   OAM:       Operations, Administration, and Maintenance
+
+   POT:       Proof of Transit
+
+   SFC:       Service Function Chain
+
+3.  IOAM data fields encapsulation in NSH
+
+   IOAM data fields are carried within the NSH header following NSH MDx
+   metadata TLVs.
+
+3.1.  IOAM trace data in NSH
+
+   IOAM tracing data represents data that is inserted at nodes that a
+   packet traverses.  To allow for optimal implementations in both
+   software as well as hardware forwarders, two different ways to
+   encapsulate IOAM data are defined: "Pre-allocated" and "incremental".
+   See [I-D.ietf-ippm-ioam-data] for details on IOAM tracing and the
+   pre-allocated and incremental IOAM trace options.
+
+   The packet formats of the pre-allocated IOAM trace and incremental
+   IOAM trace when transported in NSH are defined as below.
+
+   Note that in Service Function Chaining (SFC) [RFC7665], the Network
+   Service Header (NSH) [I-D.ietf-sfc-nsh] already includes path tracing
+   capabilities [I-D.penno-sfc-trace].  IOAM data fields for tracing
+   complement the capabilities in NSH, in that IOAM data fields carry
+   information complementary to information in NSH and benefit from the
+   fact, that IOAM data fields use their own namespace.  This allows
+   intermediate nodes, which are not NSH hops to also process and update
+   the IOAM data fields if configured to do so.
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 3]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+ IOAM Trace header following NSH MDx header
+ (Pre-allocated IOAM trace):
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+ |          Service Path Identifer               | Service Index |  S
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+ |                            ...                                |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
+ |         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left | Trace
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |                                                               |  |
+ |                        node data list [0]                     | IOAM
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+ |                                                               |  a
+ |                        node data list [1]                     |  t
+ |                                                               |  a
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ ~                             ...                               ~  S
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+ |                                                               |  a
+ |                        node data list [n-1]                   |  c
+ |                                                               |  e
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+ |                                                               |  |
+ |                        node data list [n]                     |  |
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+ |                                                               |
+ |                                                               |
+ |                     Payload + Padding (L2/L3/ESP/...)         |
+ |                                                               |
+ |                                                               |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+ IOAM Pre-allocated Trace Option Data MUST be 4-octet aligned:
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 4]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+ IOAM Trace header following NSH MDx header
+ (Incremental IOAM trace):
+
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  N
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
+ |          Service Path Identifer               | Service Index |  H
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+ |                            ...                                |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |      Type     |  IOAM HDR len |    Reserved   | Next Protocol |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
+ |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  | Trace
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |                                                               |  |
+ |                        node data list [0]                     | IOAM
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+ |                                                               |  a
+ |                        node data list [1]                     |  t
+ |                                                               |  a
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ ~                             ...                               ~  S
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+ |                                                               |  a
+ |                        node data list [n-1]                   |  c
+ |                                                               |  e
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+ |                                                               |  |
+ |                        node data list [n]                     |  |
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+ |                                                               |
+ |                                                               |
+ |                     Payload + Padding (L2/L3/ESP/...)         |
+ |                                                               |
+ |                                                               |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
+
+   Next Protocol of NSH:  TBD value for IOAM_Trace.
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 5]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+   Type:  8-bit unsigned integer defining IOAM header type
+      IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
+      here.
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the IOAM HDR in
+      8-octet units.
+
+   Reserved bits and R bits:  Reserved bits are present for future use.
+      The reserved bits MUST be set to 0x0.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.
+
+   IOAM-Trace-Type:  16-bit identifier of IOAM Trace Type as defined in
+      [I-D.ietf-ippm-ioam-data] IOAM-Trace-Types.
+
+   Node Data Length:  4-bit unsigned integer as defined in
+      [I-D.ietf-ippm-ioam-data].
+
+   Flags:  5-bit field as defined in [I-D.ietf-ippm-ioam-data].
+
+   Octets-left:  7-bit unsigned integer as defined in
+      [I-D.ietf-ippm-ioam-data].
+
+   Maximum-length:  7-bit unsigned integer as defined in
+      [I-D.ietf-ippm-ioam-data].
+
+   Node data List [n]:  Variable-length field as defined in
+      [I-D.ietf-ippm-ioam-data].
+
+3.2.  IOAM POT in NSH
+
+   IOAM proof of transit (POT, see [I-D.brockners-proof-of-transit])
+   offers a means to verify that a packet has traversed a defined set of
+   nodes.  In an administrative domain where IOAM is used, insertion of
+   the IOAM data into the NSH header is enabled at the required nodes
+   (i.e. at the IOAM encapsulating/decapsulating nodes) by means of
+   configuration.
+
+   IOAM POT data fields are added as a TLV following NSH MDx metadata:
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 6]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+   IOAM POT header following NSH MDx header:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = IOAM_POT |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+   |          Service Path Identifer               | Service Index |  S
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+   |                            ...                                |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |IOAM_POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                           Random                              |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+   |                        Random(contd.)                         |  O
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+   |                         Cumulative                            |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                    Cumulative (contd.)                        |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+   Next Protocol of NSH:  TBD value for IOAM_POT.
+
+   IOAM POT Type:  7-bit identifier of a particular POT variant that
+      specifies the POT data that is to be included as defined in
+      [I-D.ietf-ippm-ioam-data].
+
+   Profile to use (P):  1-bit as defined in [I-D.ietf-ippm-ioam-data]
+      IOAM POT Option.
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the IOAM HDR in
+      8-octet units.
+
+   Reserved bits and R bits:  Reserved bits are present for future use.
+      The reserved bits MUST be set to 0x0.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.
+
+   Random:  64-bit Per-packet random number.
+
+   Cumulative:  64-bit Cumulative value that is updated by the Service
+      Functions.
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 7]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+3.3.  IOAM Edge-to-Edge in NSH
+
+   The IOAM edge-to-edge option is to carry data that is added by the
+   IOAM encapsulating node and interpreted by the IOAM decapsulating
+   node.  The "Edge-to-Edge" capabilities (see
+   [I-D.brockners-inband-oam-requirements]) of IOAM can be leveraged
+   within NSH.  In an administrative domain where IOAM is used,
+   insertion of the IOAM data into the NSH header is enabled at the
+   required nodes (i.e. at the IOAM encapsulating/decapsulating nodes)
+   by means of configuration.
+
+   IOAM Edge-to-Edge data fields are added as a TLV following NSH MDx
+   metadata:
+
+  IOAM E2E header following NSH MDx header:
+
+   0                   1                   2                   3
+   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+  |Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = IOAM_E2E |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+  |          Service Path Identifer               | Service Index |  S
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+  |                            ...                                |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+  |IOAM_E2E_Type  |   IOAM HDR len|    Reserved   | Next Protocol | IOAM
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  E2E
+  |      E2E Option data field determined by IOAM-E2E-Type        |  |
+  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+
+   Next Protocol of NSH:  TBD value for IOAM_E2E.
+
+   IOAM E2E Type:  8-bit identifier of a particular E2E variant that
+      specifies the IOAM E2E data that is to be included as defined in
+      [I-D.ietf-ippm-ioam-data].
+
+   IOAM HDR len:  8-bit unsigned integer.  Length of the IOAM HDR in
+      8-octet units.
+
+   Reserved bits and R bits:  Reserved bits are present for future use.
+      The reserved bits MUST be set to 0x0.
+
+   Next Protocol:  8-bit unsigned integer that determines the type of
+      header following IOAM protocol.
+
+   E2E Option data field:  Variable length field as defined in
+      [I-D.ietf-ippm-ioam-data] IOAM E2E Option.
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 8]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+4.  IANA Considerations
+
+   IANA is requested to allocate protocol numbers for the following NSH
+   "Next Protocols" related to IOAM:
+
+                 +---------------+-------------+---------------+
+                 | Next Protocol | Description | Reference     |
+                 +---------------+-------------+---------------+
+                 | x             | IOAM_Trace  | This Document |
+                 | y             | IOAM_POT    | This Document |
+                 | z             | IOAM_E2E    | This Document |
+                 +---------------+-------------+---------------+
+
+
+5.  Security Considerations
+
+   IOAM is considered a "per domain" feature, where one or several
+   operators decide on leveraging and configuring IOAM according to
+   their needs.  Still, operators need to properly secure the IOAM
+   domain to avoid malicious configuration and use, which could include
+   injecting malicious IOAM packets into a domain.
+
+6.  Acknowledgements
+
+   The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+   Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+   Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
+   and Andrew Yourtchenko for the comments and advice.
+
+7.  References
+
+7.1.  Normative References
+
+   [ETYPES]   "IANA Ethernet Numbers",
+              <https://www.iana.org/assignments/ethernet-numbers/
+              ethernet-numbers.xhtml>.
+
+   [I-D.brockners-inband-oam-requirements]
+              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
+              Gredler, H., Leddy, J., Youell, S., Mozes, D., Mizrahi,
+              T., <>, P., and r. remy@barefootnetworks.com,
+              "Requirements for In-situ OAM", draft-brockners-inband-
+              oam-requirements-03 (work in progress), March 2017.
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 9]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+   [I-D.ietf-ippm-ioam-data]
+              Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
+              Leddy, J., Youell, S., Mizrahi, T., Mozes, D., Lapukhov,
+              P., Chang, R., and d. daniel.bernier@bell.ca, "Data Fields
+              for In-situ OAM", draft-ietf-ippm-ioam-data-00 (work in
+              progress), September 2017.
+
+   [I-D.ietf-nvo3-vxlan-gpe]
+              Maino, F., Kreeger, L., and U. Elzur, "Generic Protocol
+              Extension for VXLAN", draft-ietf-nvo3-vxlan-gpe-04 (work
+              in progress), April 2017.
+
+   [I-D.ietf-sfc-nsh]
+              Quinn, P., Elzur, U., and C. Pignataro, "Network Service
+              Header (NSH)", draft-ietf-sfc-nsh-26 (work in progress),
+              October 2017.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
+
+   [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
+              Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
+              DOI 10.17487/RFC2784, March 2000, <https://www.rfc-
+              editor.org/info/rfc2784>.
+
+   [RFC3232]  Reynolds, J., Ed., "Assigned Numbers: RFC 1700 is Replaced
+              by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
+              January 2002, <https://www.rfc-editor.org/info/rfc3232>.
+
+7.2.  Informative References
+
+   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
+
+   [I-D.brockners-proof-of-transit]
+              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
+              Leddy, J., Youell, S., Mozes, D., and T. Mizrahi, "Proof
+              of Transit", draft-brockners-proof-of-transit-03 (work in
+              progress), March 2017.
+
+   [I-D.ietf-ippm-6man-pdm-option]
+              Elkins, N., Hamilton, R., and m. mackermann@bcbsm.com,
+              "IPv6 Performance and Diagnostic Metrics (PDM) Destination
+              Option", draft-ietf-ippm-6man-pdm-option-13 (work in
+              progress), June 2017.
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 10]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+   [I-D.ietf-spring-segment-routing]
+              Filsfils, C., Previdi, S., Decraene, B., Litkowski, S.,
+              and R. Shakir, "Segment Routing Architecture", draft-ietf-
+              spring-segment-routing-12 (work in progress), June 2017.
+
+   [I-D.kitamura-ipv6-record-route]
+              Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
+              Option Extension", draft-kitamura-ipv6-record-route-00
+              (work in progress), November 2000.
+
+   [I-D.penno-sfc-trace]
+              Penno, R., Quinn, P., Pignataro, C., and D. Zhou,
+              "Services Function Chaining Traceroute", draft-penno-sfc-
+              trace-03 (work in progress), September 2015.
+
+   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
+              editor.org/info/rfc7665>.
+
+Authors' Addresses
+
+   Frank Brockners
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
+
+
+   Shwetha Bhandari
+   Cisco Systems, Inc.
+   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+   Bangalore, KARNATAKA 560 087
+   India
+
+   Email: shwethab@cisco.com
+
+
+   Vengada Prasad Govindan
+   Cisco Systems, Inc.
+
+   Email: venggovi@cisco.com
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 11]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+   Carlos Pignataro
+   Cisco Systems, Inc.
+   7200-11 Kit Creek Road
+   Research Triangle Park, NC  27709
+   United States
+
+   Email: cpignata@cisco.com
+
+
+   Hannes Gredler
+   RtBrick Inc.
+
+   Email: hannes@rtbrick.com
+
+
+   John Leddy
+   Comcast
+
+   Email: John_Leddy@cable.comcast.com
+
+
+   Stephen Youell
+   JP Morgan Chase
+   25 Bank Street
+   London  E14 5JP
+   United Kingdom
+
+   Email: stephen.youell@jpmorgan.com
+
+
+   Tal Mizrahi
+   Marvell
+   6 Hamada St.
+   Yokneam  20692
+   Israel
+
+   Email: talmi@marvell.com
+
+
+   David Mozes
+   Mellanox Technologies Ltd.
+
+   Email: davidm@mellanox.com
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 12]
+
+Internet-Draft        In-situ OAM NSH encapsulation         October 2017
+
+
+   Petr Lapukhov
+   Facebook
+   1 Hacker Way
+   Menlo Park, CA  94025
+   US
+
+   Email: petr@fb.com
+
+
+   Remy Chang
+   Barefoot Networks
+   2185 Park Boulevard
+   Palo Alto, CA  94306
+   US
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 13]

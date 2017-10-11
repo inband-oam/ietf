@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml2rfc.tools.ietf.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced.
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC6830 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
+<!ENTITY RFC6833 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6833.xml">
+<!ENTITY RFC2460 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2460.xml">
+<!ENTITY RFC7276 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7276.xml">
+<!ENTITY RFC7112 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7112.xml">
+<!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
+<!ENTITY RFC3232 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3232.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
+<!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
+<!ENTITY I-D.brockners-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-proof-of-transit.xml">
+<!ENTITY I-D.penno-sfc-trace SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.penno-sfc-trace.xml">
+<!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
+<!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
+<!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-6man-pdm-option.xml">
+<!ENTITY I-D.gont-v6ops-ipv6-ehs-in-real-world SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.gont-v6ops-ipv6-ehs-in-real-world.xml">
+<!ENTITY I-D.brockners-lisp-sr SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-lisp-sr.xml">
+<!ENTITY I-D.hildebrand-spud-prototype SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY I-D.ietf-sfc-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-nsh.xml">
+<!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
+<!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.SPUD SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+     please see http://xml2rfc.tools.ietf.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="std" docName="draft-brockners-sfc-ioam-nsh-00"
+     ipr="trust200902">
+  <!-- ipr="full3978"-->
+
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN"
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the
+         full title is longer than 39 characters -->
+
+    <title abbrev="In-situ OAM NSH encapsulation">NSH Encapsulation for
+    In-situ OAM Data</title>
+
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+
+    <!-- Another author who claims to be an editor -->
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Vengada Prasad Govindan" initials="V."
+            surname="Govindan">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <email>venggovi@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>7200-11 Kit Creek Road</street>
+
+          <city>Research Triangle Park</city>
+
+          <region>NC</region>
+
+          <code>27709</code>
+
+          <country>United States</country>
+        </postal>
+
+        <email>cpignata@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+      <organization>RtBrick Inc.</organization>
+
+      <address>
+        <email>hannes@rtbrick.com</email>
+      </address>
+    </author>
+
+    <author fullname="John Leddy" initials="J." surname="Leddy">
+      <organization abbrev="Comcast">Comcast</organization>
+
+      <address>
+        <email>John_Leddy@cable.comcast.com</email>
+      </address>
+    </author>
+
+    <author fullname="Stephen Youell" initials="S." surname="Youell">
+      <organization abbrev="JMPC">JP Morgan Chase</organization>
+
+      <address>
+        <postal>
+          <street>25 Bank Street</street>
+
+          <city>London</city>
+
+          <code>E14 5JP</code>
+
+          <country>United Kingdom</country>
+        </postal>
+
+        <email>stephen.youell@jpmorgan.com</email>
+      </address>
+    </author>
+
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
+      <organization abbrev="">Marvell</organization>
+
+      <address>
+        <postal>
+          <street>6 Hamada St.</street>
+
+          <city>Yokneam</city>
+
+          <code>20692</code>
+
+          <country>Israel</country>
+        </postal>
+
+        <email>talmi@marvell.com</email>
+      </address>
+    </author>
+
+    <author fullname="David Mozes" initials="D." surname="Mozes">
+      <organization abbrev="">Mellanox Technologies Ltd.</organization>
+
+      <address>
+        <postal>
+          <street/>
+
+          <city/>
+
+          <code/>
+
+          <country/>
+        </postal>
+
+        <email>davidm@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
+      <organization abbrev="">Facebook</organization>
+
+      <address>
+        <postal>
+          <street>1 Hacker Way</street>
+
+          <city>Menlo Park, CA</city>
+
+          <code>94025</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>petr@fb.com</email>
+      </address>
+    </author>
+
+    <author fullname="Remy Chang" initials="R." surname="Chang">
+      <organization abbrev="">Barefoot Networks</organization>
+
+      <address>
+        <postal>
+          <street>2185 Park Boulevard</street>
+
+          <city>Palo Alto, CA</city>
+
+          <code>94306</code>
+
+          <country>US</country>
+        </postal>
+
+        <email/>
+      </address>
+    </author>
+
+    <date day="29" month="October" year="2017"/>
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
+         in the current day for you. If only the current year is specified, xml2rfc will fill
+	 in the current day and month for you. If the year is not the current one, it is
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to
+	 specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>rtg</area>
+
+    <workgroup>sfc</workgroup>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>inband</keyword>
+
+    <keyword>Telemetry, Tracing</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>In-situ Operations, Administration, and Maintenance (OAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      outlines how IOAM data fields are encapsulated in the Network Service
+      Header (NSH).</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction" toc="default">
+      <t>In-situ OAM (IOAM) records OAM information within the packet while
+      the packet traverses a particular network domain. The term "in-situ"
+      refers to the fact that the OAM data is added to the data packets rather
+      than is being sent within packets specifically dedicated to OAM. This
+      document defines how IOAM data fields are transported as part of the
+      Network Service Header (NSH) <xref target="I-D.ietf-sfc-nsh"/>)
+      encapsulation. The IOAM data fields are defined in <xref
+      target="I-D.ietf-ippm-ioam-data"/>. An implementation of IOAM which
+      leverages NSH to carry the IOAM data is available from the FD.io open
+      source software project <xref target="FD.io"/>.</t>
+    </section>
+
+    <section anchor="Conventions" title="Conventions">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119"/>.</t>
+
+      <t>Abbreviations used in this document:</t>
+
+      <t><list hangIndent="11" style="hanging">
+          <t hangText="IOAM:">In-situ Operations, Administration, and
+          Maintenance</t>
+
+          <t hangText="MTU:">Maximum Transmit Unit</t>
+
+          <t hangText="NSH:">Network Service Header</t>
+
+          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="POT:">Proof of Transit</t>
+
+          <t hangText="SFC:">Service Function Chain</t>
+        </list></t>
+    </section>
+
+    <section title="IOAM data fields encapsulation in NSH">
+      <t>IOAM data fields are carried within the NSH header following NSH MDx
+      metadata TLVs.</t>
+
+      <section title="IOAM trace data in NSH">
+        <t>IOAM tracing data represents data that is inserted at nodes that a
+        packet traverses. To allow for optimal implementations in both
+        software as well as hardware forwarders, two different ways to
+        encapsulate IOAM data are defined: "Pre-allocated" and "incremental".
+        See <xref target="I-D.ietf-ippm-ioam-data"/> for details on IOAM
+        tracing and the pre-allocated and incremental IOAM trace options.</t>
+
+        <t>The packet formats of the pre-allocated IOAM trace and incremental
+        IOAM trace when transported in NSH are defined as below.</t>
+
+        <t>Note that in Service Function Chaining (SFC) <xref
+        target="RFC7665"/>, the Network Service Header (NSH) <xref
+        target="I-D.ietf-sfc-nsh"/> already includes path tracing capabilities
+        <xref target="I-D.penno-sfc-trace"/>. IOAM data fields for tracing
+        complement the capabilities in NSH, in that IOAM data fields carry
+        information complementary to information in NSH and benefit from the
+        fact, that IOAM data fields use their own namespace. This allows
+        intermediate nodes, which are not NSH hops to also process and update
+        the IOAM data fields if configured to do so.</t>
+
+        <t><figure>
+            <artwork><![CDATA[
+IOAM Trace header following NSH MDx header
+(Pre-allocated IOAM trace):
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+|          Service Path Identifer               | Service Index |  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
+|         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left | Trace
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     | IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+|                                                               |
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+IOAM Pre-allocated Trace Option Data MUST be 4-octet aligned:
+
+]]></artwork>
+          </figure></t>
+
+        <t><figure>
+            <artwork><![CDATA[
+IOAM Trace header following NSH MDx header
+(Incremental IOAM trace):
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  N
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
+|          Service Path Identifer               | Service Index |  H
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|      Type     |  IOAM HDR len |    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
+|        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  | Trace
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     | IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+|                                                               |
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+IOAM Incremental Trace Option Data MUST be 4-octet aligned:
+]]></artwork>
+          </figure> <list style="hanging">
+            <t hangText="Next Protocol of NSH:">TBD value for IOAM_Trace.</t>
+
+            <t hangText="Type:">8-bit unsigned integer defining IOAM header
+            type IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
+            here.</t>
+
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            IOAM HDR in 8-octet units.</t>
+
+            <t hangText="Reserved bits and R bits:">Reserved bits are present
+            for future use. The reserved bits MUST be set to 0x0.</t>
+
+            <t hangText="Next Protocol:">8-bit unsigned integer that
+            determines the type of header following IOAM protocol.</t>
+
+            <t hangText="IOAM-Trace-Type:">16-bit identifier of IOAM Trace
+            Type as defined in <xref target="I-D.ietf-ippm-ioam-data"/>
+            IOAM-Trace-Types.</t>
+
+            <t hangText="Node Data Length:">4-bit unsigned integer as defined
+            in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+            <t hangText="Flags:">5-bit field as defined in <xref
+            target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+            <t hangText="Octets-left:">7-bit unsigned integer as defined in
+            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+            <t hangText="Maximum-length:">7-bit unsigned integer as defined in
+            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+            <t hangText="Node data List [n]:">Variable-length field as defined
+            in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+          </list></t>
+      </section>
+
+      <section title="IOAM POT in NSH">
+        <t>IOAM proof of transit (POT, see <xref
+        target="I-D.brockners-proof-of-transit"/>) offers a means to verify
+        that a packet has traversed a defined set of nodes. In an
+        administrative domain where IOAM is used, insertion of the IOAM data
+        into the NSH header is enabled at the required nodes (i.e. at the IOAM
+        encapsulating/decapsulating nodes) by means of configuration.</t>
+
+        <t>IOAM POT data fields are added as a TLV following NSH MDx
+        metadata:</t>
+
+        <t><figure>
+            <artwork><![CDATA[
+IOAM POT header following NSH MDx header:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = IOAM_POT |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+|          Service Path Identifer               | Service Index |  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|IOAM_POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                           Random                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+|                        Random(contd.)                         |  O
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+|                         Cumulative                            |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                    Cumulative (contd.)                        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
+          </figure><list style="hanging">
+            <t hangText="Next Protocol of NSH:">TBD value for IOAM_POT.</t>
+
+            <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
+            variant that specifies the POT data that is to be included as
+            defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+            <t hangText="Profile to use (P):">1-bit as defined in <xref
+            target="I-D.ietf-ippm-ioam-data"/> IOAM POT Option.</t>
+
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            IOAM HDR in 8-octet units.</t>
+
+            <t hangText="Reserved bits and R bits:">Reserved bits are present
+            for future use. The reserved bits MUST be set to 0x0.</t>
+
+            <t hangText="Next Protocol:">8-bit unsigned integer that
+            determines the type of header following IOAM protocol.</t>
+
+            <t hangText="Random:">64-bit Per-packet random number.</t>
+
+            <t hangText="Cumulative:">64-bit Cumulative value that is updated
+            by the Service Functions.</t>
+          </list></t>
+      </section>
+
+      <section title="IOAM Edge-to-Edge in NSH">
+        <t>The IOAM edge-to-edge option is to carry data that is added by the
+        IOAM encapsulating node and interpreted by the IOAM decapsulating
+        node. The "Edge-to-Edge" capabilities (see <xref
+        target="I-D.brockners-inband-oam-requirements"/>) of IOAM can be
+        leveraged within NSH. In an administrative domain where IOAM is used,
+        insertion of the IOAM data into the NSH header is enabled at the
+        required nodes (i.e. at the IOAM encapsulating/decapsulating nodes) by
+        means of configuration.</t>
+
+        <t>IOAM Edge-to-Edge data fields are added as a TLV following NSH MDx
+        metadata:</t>
+
+        <t><figure>
+            <artwork><![CDATA[
+IOAM E2E header following NSH MDx header:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = IOAM_E2E |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+|          Service Path Identifer               | Service Index |  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|IOAM_E2E_Type  |   IOAM HDR len|    Reserved   | Next Protocol | IOAM
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  E2E
+|      E2E Option data field determined by IOAM-E2E-Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+]]></artwork>
+          </figure><list style="hanging">
+            <t hangText="Next Protocol of NSH:">TBD value for IOAM_E2E.</t>
+
+            <t hangText="IOAM E2E Type:">8-bit identifier of a particular E2E
+            variant that specifies the IOAM E2E data that is to be included as
+            defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            IOAM HDR in 8-octet units.</t>
+
+            <t hangText="Reserved bits and R bits:">Reserved bits are present
+            for future use. The reserved bits MUST be set to 0x0.</t>
+
+            <t hangText="Next Protocol:">8-bit unsigned integer that
+            determines the type of header following IOAM protocol.</t>
+
+            <t hangText="E2E Option data field:">Variable length field as
+            defined in <xref target="I-D.ietf-ippm-ioam-data"/> IOAM E2E
+            Option.</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>IANA is requested to allocate protocol numbers for the following NSH
+      "Next Protocols" related to IOAM:</t>
+
+      <t><figure>
+          <artwork><![CDATA[              +---------------+-------------+---------------+
+              | Next Protocol | Description | Reference     |
+              +---------------+-------------+---------------+
+              | x             | IOAM_Trace  | This Document |
+              | y             | IOAM_POT    | This Document |
+              | z             | IOAM_E2E    | This Document |
+              +---------------+-------------+---------------+
+
+]]></artwork>
+        </figure></t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>IOAM is considered a "per domain" feature, where one or several
+      operators decide on leveraging and configuring IOAM according to their
+      needs. Still, operators need to properly secure the IOAM domain to avoid
+      malicious configuration and use, which could include injecting malicious
+      IOAM packets into a domain.</t>
+    </section>
+
+    <section title="Acknowledgements">
+      <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+      Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+      Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker, and
+      Andrew Yourtchenko for the comments and advice.</t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <!-- References split into informative and normative -->
+
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
+     1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+     2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+        (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+
+     Both are cited textually in the same manner: by using xref elements.
+     If you use the PI option, xml2rfc will, by default, try to find included files in the same
+     directory as the including file. You can also define the XML_LIBRARY environment variable
+     with a value containing a set of directories to search.  These can be either in the local
+     filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+    <references title="Normative References">
+      &RFC2119;
+
+      &I-D.brockners-inband-oam-requirements;
+
+      &I-D.ietf-ippm-ioam-data;
+
+      &I-D.ietf-nvo3-vxlan-gpe;
+
+      &I-D.ietf-sfc-nsh;
+
+      &RFC2784;
+
+      &RFC3232;
+
+      <reference anchor="ETYPES"
+                 target="https://www.iana.org/assignments/ethernet-numbers/ethernet-numbers.xhtml">
+        <front>
+          <title>IANA Ethernet Numbers</title>
+
+          <author/>
+
+          <date/>
+        </front>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      &RFC7665;
+
+      &I-D.ietf-spring-segment-routing;
+
+      <reference anchor="I-D.kitamura-ipv6-record-route">
+        <front>
+          <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
+          Extension</title>
+
+          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
+
+          <date month="November" year="2000"/>
+        </front>
+
+        <seriesInfo name="Internet-Draft"
+                    value="draft-kitamura-ipv6-record-route-00"/>
+
+        <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
+                type="TXT"/>
+      </reference>
+
+      &I-D.brockners-proof-of-transit;
+
+      &I-D.ietf-ippm-6man-pdm-option;
+
+      <reference anchor="FD.io" target="https://fd.io/">
+        <front>
+          <title>Fast Data Project: FD.io</title>
+
+          <author/>
+
+          <date/>
+        </front>
+      </reference>
+
+      &I-D.penno-sfc-trace;
+    </references>
+  </back>
+</rfc>
