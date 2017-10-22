@@ -305,11 +305,15 @@
     </section>
 
     <section anchor="Conventions" title="Conventions">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+
+	 <section title="Requirement Language">
+	  <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
       document are to be interpreted as described in <xref
       target="RFC2119"/>.</t>
+	 </section>
 
+	 <section title="Abbreviations">
       <t>Abbreviations used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
@@ -325,18 +329,19 @@
           <t hangText="Geneve:">Generic Network Virtualization
           Encapsulation</t>
         </list></t>
+	 </section>
     </section>
 
-    <section title="IOAM data fields encapsulation in Geneve">
+    <section title="IOAM Data Field Encapsulation in Geneve">
       <t>For encapsulating IOAM data fields into Geneve <xref
       target="I-D.ietf-nvo3-geneve"/> the different IOAM data fields are
       included in the Geneve header using tunnel options. IOAM data fields use
-      a set of tunnel option class which correspond to the different classes
-      of , i.e. trace data, proof-of-transit data, and edge-to-edge data. In
+      a tunnel option class which includes the different types of IOAM data, 
+      including trace data, proof-of-transit data, and edge-to-edge data. In
       an administrative domain where IOAM is used, insertion of the IOAM
       tunnel option(s) in Geneve is enabled at the Geneve tunnel endpoints
       which also serve as IOAM encapsulating/decapsulating nodes by means of
-      configuration.The Geneve header is defined in <xref
+      configuration. The Geneve header is defined in <xref
       target="I-D.ietf-nvo3-geneve"/>. IOAM specific fields for Geneve are
       defined in this document.</t>
 
@@ -351,11 +356,9 @@
         <t>The packet formats of the pre-allocated IOAM trace and incremental
         IOAM trace when encapsulated in Geneve are defined as below.</t>
 
-        <t><figure>
+        <figure align="center" anchor="PreAllocHeader" title="IOAM Pre-allocated 
+		Trace Option Format as a Geneve Tunnel Option">
             <artwork><![CDATA[
-IOAM trace data fields using the tunnel options of the Geneve header:
-(Pre-allocated trace):
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
@@ -394,13 +397,11 @@ IOAM trace data fields using the tunnel options of the Geneve header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 Pre-allocated Trace Option Data MUST be 4-octet aligned.
 ]]></artwork>
-          </figure></t>
+          </figure>
 
-        <t><figure>
+        <figure align="center" anchor="Incremental" title="IOAM Incremental 
+		Trace Option Format as a Geneve Tunnel Option">
             <artwork><![CDATA[
-IOAM trace data fields using the tunnel options of the Geneve header:
-(Incremental IOAM trace):
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
@@ -439,25 +440,50 @@ IOAM trace data fields using the tunnel options of the Geneve header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 IOAM Incremental Trace Option Data MUST be 4-octet aligned.
 ]]></artwork>
-          </figure> <list style="hanging">
+          </figure> 
+		  
+		    <t>The IOAM Trace header consists of 8 octets, as illustrated in 
+			<xref target="PreAllocHeader"/> and <xref target="Incremental"/>.
+			The first 4 octets are the Geneve Tunnel Option header 
+			<xref target="I-D.ietf-nvo3-geneve"/>. The next 4 octets are
+			the trace option header; its format is defined in 
+			<xref target="I-D.ietf-ippm-ioam-data"/>, and is described here for 
+			the sake of clarity.</t>
+
+        <figure align="center" anchor="GeneveTraceOpt" title="Geneve Tunnel 
+		Option for IOAM">
+            <artwork><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Option Class = IOAM_Trace    |      Type     |R|R|R| Length  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+          </figure> 
+			
+		  <t>The fields of the Geneve tunnel option are as follows: 
+
+		  <list style="hanging">
+            <t hangText="Option Class:">16-bit unsigned integer that
+            determines the IOAM option class. The value is from the IANA
+            registry setup for Geneve option classes as defined in <xref
+            target="I-D.ietf-nvo3-geneve"/>.</t>
+
             <t hangText="Type:">8-bit unsigned integer defining IOAM header
-            type IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
-            here.</t>
-
-            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
-            HDR in 4-octet units.</t>
-
-            <t hangText="Reserved:">8-bit reserved field MUST be set to
-            zero.</t>
+            type. Two values are defined here: IOAM_TRACE_Preallocated and IOAM_Trace_Incremental.</t>
 
             <t hangText="R (3 bits):">Option control flags reserved for future
             use. MUST be zero on transmission and ignored on receipt.</t>
 
-            <t hangText="Option Class:">16-bit unsigned integer that
-            determines the IOAM option class.The value is from the IANA
-            registry setup for Geneve option classes as defined in <xref
-            target="I-D.ietf-nvo3-geneve"/>..</t>
+            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
+            HDR in 4-octet units.</t>
 
+          </list></t>
+
+		  <t>The fields of the trace option header 
+		  <xref target="I-D.ietf-ippm-ioam-data"/> are as follows: 
+		  <list style="hanging">
+			
             <t hangText="IOAM-Trace-Type:">16-bit identifier of IOAM Trace
             Type as defined in <xref target="I-D.ietf-ippm-ioam-data"/>
             IOAM-Trace-Types.</t>
@@ -485,10 +511,9 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
         that a packet has traversed a defined set of nodes. IOAM POT data
         fields are encapsulated in Geneve as follows:</t>
 
-        <t><figure>
+        <figure align="center" anchor="PotEncap" title="IOAM POT Header 
+		Following using a Geneve Tunnel Option">
             <artwork><![CDATA[
-IOAM POT data fields using the tunnel options of the Geneve header:
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
@@ -506,7 +531,18 @@ IOAM POT data fields using the tunnel options of the Geneve header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
 |                    Cumulative (contd.)                        |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
-          </figure><list style="hanging">
+          </figure>
+
+		  <t>The first 4 octets of the IOAM POT are the Geneve tunnel option
+		  header (<xref target="GenevePotOpt"/>), which includes 
+		  the following fields:</t>
+		  
+		  <t><list style="hanging">
+            <t hangText="Option Class:">16-bit unsigned integer that
+            determines the IOAM_POT option class.The value is from the IANA
+            registry setup for Geneve option classes as defined in <xref
+            target="I-D.ietf-nvo3-geneve"/>.</t>
+
             <t hangText="Type:">7-bit identifier of a particular POT variant
             that specifies the POT data that is to be included as defined in
             <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
@@ -514,19 +550,28 @@ IOAM POT data fields using the tunnel options of the Geneve header:
             <t hangText="Profile to use (P):">1-bit as defined in <xref
             target="I-D.ietf-ippm-ioam-data"/> IOAM POT Option.</t>
 
-            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
-            HDR in 4-octet units.</t>
-
             <t hangText="R (3 bits):">Option control flags reserved for future
             use. MUST be zero on transmission and ignored on receipt.</t>
 
-            <t hangText="Reserved:">8-bit reserved field MUST be set to
-            zero.</t>
+            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
+            HDR in 4-octet units.</t>
 
-            <t hangText="Option Class:">16-bit unsigned integer that
-            determines the IOAM_POT option class.The value is from the IANA
-            registry setup for Geneve option classes as defined in <xref
-            target="I-D.ietf-nvo3-geneve"/>.</t>
+          </list></t>
+
+        <figure align="center" anchor="GenevePotOpt" title="Geneve Tunnel
+		Option for IOAM POT">
+            <artwork><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     Option Class = IOAM_POT   |     Type    |P|R|R|R| Length  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+          </figure>
+		  
+		  <t>The rest of the fields in the POT option 
+		  <xref target="I-D.ietf-ippm-ioam-data"/> are as follows: 
+		  <list style="hanging">
 
             <t hangText="Random:">64-bit Per-packet random number.</t>
 
@@ -539,11 +584,12 @@ IOAM POT data fields using the tunnel options of the Geneve header:
         <t>The IOAM edge-to-edge option is to carry data that is added by the
         IOAM encapsulating node and interpreted by the IOAM decapsulating
         node. IOAM specific fields to encapsulate IOAM Edge-to-Edge data
-        fields are defined as follows:<figure>
+        fields are defined as follows:</t>
+		
+		
+        <figure align="center" anchor="GeneveE2e" title="IOAM 
+		Edge-to-Edge using a Geneve Tunnel Option"> 
             <artwork><![CDATA[
-IOAM Edge-to-Edge data fields using the tunnel options 
-of the Geneve header:
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
@@ -557,24 +603,44 @@ of the Geneve header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
 ]]></artwork>
-          </figure><list style="hanging">
-            <t hangText="Type:">8-bit identifier of a particular E2E variant
-            that specifies the E2E data that is included as defined in <xref
-            target="I-D.ietf-ippm-ioam-data"/>.</t>
+          </figure>
+		  
+		  <t>The first 4 octets of the IOAM E2E option are the Geneve tunnel 
+		  option header (<xref target="GenevePotOpt"/>), which includes 
+		  the following fields:</t>
 
-            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
-            HDR in 4-octet units.</t>
-
-            <t hangText="Reserved:">8-bit reserved field MUST be set to
-            zero.</t>
-
-            <t hangText="R (3 bits):">Option control flags reserved for future
-            use. MUST be zero on transmission and ignored on receipt.</t>
-
+		  <t><list style="hanging">
             <t hangText="Option Class">16-bit unsigned integer that determines
             the IOAM_E2E option class.The value is from the IANA registry
             setup for Geneve option classes as defined in <xref
             target="I-D.ietf-nvo3-geneve"/>.</t>
+
+            <t hangText="Type:">8-bit identifier of a particular E2E variant
+            that specifies the E2E data that is included as defined in <xref
+            target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+            <t hangText="R (3 bits):">Option control flags reserved for future
+            use. MUST be zero on transmission and ignored on receipt.</t>
+
+            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
+            HDR in 4-octet units.</t>
+
+          </list></t>
+
+        <figure align="center" anchor="GeneveE2eOpt" title="Geneve Tunnel
+		Option for IOAM E2E">
+            <artwork><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      Option Class = IOAM_E2E  |    Type       |R|R|R| Length  | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+          </figure>
+		  
+		  <t>The rest of the E2E option <xref target="I-D.ietf-ippm-ioam-data"/> 
+		  consists of: 
+		  <list style="hanging">
 
             <t hangText="E2E Option data field:">Variable length field as
             defined in <xref target="I-D.ietf-ippm-ioam-data"/> IOAM E2E
@@ -601,6 +667,12 @@ of the Geneve header:
     </section>
 
     <section anchor="Security" title="Security Considerations">
+	  <t>The security considerations of Geneve are discussed in 
+	  <xref target="I-D.ietf-nvo3-geneve"/>, and the security considerations 
+	  of IOAM in general are discussed in 
+	  <xref target="I-D.ietf-ippm-ioam-data"/>.
+	  </t>
+	  
       <t>IOAM is considered a "per domain" feature, where one or several
       operators decide on leveraging and configuring IOAM according to their
       needs. Still, operators need to properly secure the IOAM domain to avoid
