@@ -20,6 +20,7 @@ Expires: May 2, 2018                                        C. Pignataro
                                                              P. Lapukhov
                                                                 Facebook
                                                                 R. Chang
+                                                              M. Spiegel
                                                        Barefoot Networks
                                                         October 29, 2017
 
@@ -42,14 +43,13 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 2, 2018.
 
 
 
@@ -58,6 +58,8 @@ Brockners, et al.          Expires May 2, 2018                  [Page 1]
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
+   This Internet-Draft will expire on May 2, 2018.
+
 Copyright Notice
 
    Copyright (c) 2017 IETF Trust and the persons identified as the
@@ -65,7 +67,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -81,14 +83,14 @@ Table of Contents
      2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
    3.  IOAM Data Field Encapsulation in Geneve . . . . . . . . . . .   3
      3.1.  IOAM trace data in Geneve . . . . . . . . . . . . . . . .   3
-     3.2.  IOAM POT in Geneve  . . . . . . . . . . . . . . . . . . .   7
+     3.2.  IOAM POT in Geneve  . . . . . . . . . . . . . . . . . . .   6
      3.3.  IOAM Edge-to-Edge in Geneve . . . . . . . . . . . . . . .   8
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  10
+   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .  11
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .  10
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
@@ -101,8 +103,6 @@ Table of Contents
    transported as part of the Geneve [I-D.ietf-nvo3-geneve]
    encapsulation.  The IOAM data fields are defined in
    [I-D.ietf-ippm-ioam-data].
-
-
 
 
 
@@ -138,17 +138,10 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 3.  IOAM Data Field Encapsulation in Geneve
 
-   For encapsulating IOAM data fields into Geneve [I-D.ietf-nvo3-geneve]
-   the different IOAM data fields are included in the Geneve header
-   using tunnel options.  IOAM data fields use a tunnel option class
-   which includes the different types of IOAM data, including trace
-   data, proof-of-transit data, and edge-to-edge data.  In an
-   administrative domain where IOAM is used, insertion of the IOAM
-   tunnel option(s) in Geneve is enabled at the Geneve tunnel endpoints
-   which also serve as IOAM encapsulating/decapsulating nodes by means
-   of configuration.  The Geneve header is defined in
-   [I-D.ietf-nvo3-geneve].  IOAM specific fields for Geneve are defined
-   in this document.
+   IOAM data fields are carried within Geneve [I-D.ietf-nvo3-geneve]
+   packets following the Geneve tunnel header and the Geneve variable
+   length options.  The Protocol Type value indicates whether IOAM data
+   fields are present.
 
 3.1.  IOAM trace data in Geneve
 
@@ -165,52 +158,59 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
+
+
+
+
+
+
+
 Brockners, et al.          Expires May 2, 2018                  [Page 3]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-  0                   1                   2                   3
-  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
- |Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
- |        Virtual Network Identifier (VNI)       |    Reserved   |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
- |  Option Class = IOAM_Trace    |Type (prealloc)|R|R|R| Length  |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
- |         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left | Trace
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
- |                                                               |  |
- |                        node data list [0]                     | IOAM
- |                                                               |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
- |                                                               |  a
- |                        node data list [1]                     |  t
- |                                                               |  a
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- ~                             ...                               ~  S
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
- |                                                               |  a
- |                        node data list [n-1]                   |  c
- |                                                               |  e
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
- |                                                               |  |
- |                        node data list [n]                     |  |
- |                                                               |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
- |                                                               |
- |                                                               |
- |                     Payload + Padding (L2/L3/ESP/...)         |
- |                                                               |
- |                                                               |
- |                                                               |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- Pre-allocated Trace Option Data MUST be 4-octet aligned.
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Ver|  Opt Len  |O|C|    Rsvd.  |      Protocol Type = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Geneve
+|        Virtual Network Identifier (VNI)       |    Reserved   | tunnel +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ options
+|                      Variable length options                  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
+|         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left | Trace
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     | IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+|                                                               |
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+Pre-allocated Trace Option Data MUST be 4-octet aligned.
 
-    Figure 1: IOAM Pre-allocated Trace Option Format as a Geneve Tunnel
-                                  Option
-
+        Figure 1: IOAM Pre-allocated Trace Option Format in Geneve
 
 
 
@@ -226,53 +226,53 @@ Brockners, et al.          Expires May 2, 2018                  [Page 4]
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-  0                   1                   2                   3
-  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
- |Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
- |        Virtual Network Identifier (VNI)       |    Reserved   |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
- |  Option Class = IOAM_Trace    |  Type (incr.) |R|R|R| Length  |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
- |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  | Trace
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
- |                                                               |  |
- |                        node data list [0]                     | IOAM
- |                                                               |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
- |                                                               |  a
- |                        node data list [1]                     |  t
- |                                                               |  a
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- ~                             ...                               ~  S
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
- |                                                               |  a
- |                        node data list [n-1]                   |  c
- |                                                               |  e
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
- |                                                               |  |
- |                        node data list [n]                     |  |
- |                                                               |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
- |                                                               |
- |                                                               |
- |                     Payload + Padding (L2/L3/ESP/...)         |
- |                                                               |
- |                                                               |
- |                                                               |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- IOAM Incremental Trace Option Data MUST be 4-octet aligned.
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Ver|  Opt Len  |O|C|    Rsvd.  |      Protocol Type = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Geneve
+|        Virtual Network Identifier (VNI)       |    Reserved   | tunnel +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ options
+|                      Variable length options                  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
+|        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  | Trace
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     | IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
+|                                                               |
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+IOAM Incremental Trace Option Data MUST be 4-octet aligned.
 
-     Figure 2: IOAM Incremental Trace Option Format as a Geneve Tunnel
-                                  Option
+         Figure 2: IOAM Incremental Trace Option Format in Geneve
 
    The IOAM Trace header consists of 8 octets, as illustrated in
-   Figure 1 and Figure 2.  The first 4 octets are the Geneve Tunnel
-   Option header [I-D.ietf-nvo3-geneve].  The next 4 octets are the
-   trace option header; its format is defined in
-   [I-D.ietf-ippm-ioam-data], and is described here for the sake of
-   clarity.
+   Figure 1 and Figure 2.  The first 4 octets are the IOAM Shim header
+   for Geneve.  The next 4 octets are the trace option header; its
+   format is defined in [I-D.ietf-ippm-ioam-data], and is described here
+   for the sake of clarity.
 
 
 
@@ -285,26 +285,25 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Option Class = IOAM_Trace    |      Type     |R|R|R| Length  |
+   |      Type     |  IOAM HDR len |         Next Protocol         |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                  Figure 3: Geneve Tunnel Option for IOAM
+                   Figure 3: IOAM Shim Header for Geneve
 
-   The fields of the Geneve tunnel option are as follows:
+   The fields are defined as follows:
 
-   Option Class:  16-bit unsigned integer that determines the IOAM
-      option class.  The value is from the IANA registry setup for
-      Geneve option classes as defined in [I-D.ietf-nvo3-geneve].
+   Geneve Protocol Type  TBD value for IOAM.
 
-   Type:  8-bit unsigned integer defining IOAM header type.  Two values
-      are defined here: IOAM_TRACE_Preallocated and
-      IOAM_Trace_Incremental.
+   Type:  8-bit unsigned integer defining IOAM header type.  Four values
+      are defined here: IOAM_Trace_Preallocated, IOAM_Trace_Incremental,
+      IOAM_POT, and IOAM_E2E.
 
-   R (3 bits):  Option control flags reserved for future use.  MUST be
-      zero on transmission and ignored on receipt.
+   IOAM HDR len:  8-bit unsigned integer.  Length of the IOAM HDR in
+      4-octet units.
 
-   Length:  5-bit unsigned integer.  Length of the IOAM HDR in 4-octet
-      units.
+   Next Protocol:  16-bit unsigned integer that determines the type of
+      the protocol data unit appearing after the IOAM trace option
+      header.  This follows the EtherType [ETYPES] convention.
 
    The fields of the trace option header [I-D.ietf-ippm-ioam-data] are
    as follows:
@@ -326,9 +325,10 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    Node data List [n]:  Variable-length field as defined in
       [I-D.ietf-ippm-ioam-data].
 
+3.2.  IOAM POT in Geneve
 
-
-
+   IOAM proof of transit (POT, see also
+   [I-D.brockners-proof-of-transit]) offers a means to verify that a
 
 
 
@@ -338,52 +338,52 @@ Brockners, et al.          Expires May 2, 2018                  [Page 6]
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-3.2.  IOAM POT in Geneve
-
-   IOAM proof of transit (POT, see also
-   [I-D.brockners-proof-of-transit]) offers a means to verify that a
    packet has traversed a defined set of nodes.  IOAM POT data fields
    are encapsulated in Geneve as follows:
 
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-  |Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
-  |        Virtual Network Identifier (VNI)       |    Reserved   |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-  |     Option Class = IOAM_POT   |     Type    |P|R|R|R| Length  |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
-  |                           Random                              |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
-  |                        Random(contd.)                         |  O
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
-  |                         Cumulative                            |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-  |                    Cumulative (contd.)                        |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Ver|  Opt Len  |O|C|    Rsvd.  |      Protocol Type = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Geneve
+|        Virtual Network Identifier (VNI)       |    Reserved   | tunnel +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ options
+|                      Variable length options                  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
+|                           Random                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+|                        Random(contd.)                         |  O
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+|                         Cumulative                            |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                    Cumulative (contd.)                        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
-     Figure 4: IOAM POT Header Following using a Geneve Tunnel Option
+                    Figure 4: IOAM POT Header in Geneve
 
-   The first 4 octets of the IOAM POT are the Geneve tunnel option
-   header (Figure 5), which includes the following fields:
+   The first 4 octets of the IOAM POT are the IOAM Shim header for
+   Geneve (Figure 5), which includes the following fields:
 
-   Option Class:  16-bit unsigned integer that determines the IOAM_POT
-      option class.The value is from the IANA registry setup for Geneve
-      option classes as defined in [I-D.ietf-nvo3-geneve].
+   Type:  8-bit unsigned integer defining IOAM header type.  Four values
+      are defined here: IOAM_Trace_Preallocated, IOAM_Trace_Incremental,
+      IOAM_POT, and IOAM_E2E.
 
-   Type:  7-bit identifier of a particular POT variant that specifies
-      the POT data that is to be included as defined in
-      [I-D.ietf-ippm-ioam-data].
+   IOAM HDR len:  8-bit unsigned integer.  Length of the IOAM HDR in
+      4-octet units.
 
-   Profile to use (P):  1-bit as defined in [I-D.ietf-ippm-ioam-data]
-      IOAM POT Option.
+   Next Protocol:  16-bit unsigned integer that determines the type of
+      the protocol data unit appearing after the IOAM trace option
+      header.  This follows the EtherType [ETYPES] convention.
 
-   R (3 bits):  Option control flags reserved for future use.  MUST be
-      zero on transmission and ignored on receipt.
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      Type     |  IOAM HDR len |         Next Protocol         |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   Length:  5-bit unsigned integer.  Length of the IOAM HDR in 4-octet
-      units.
+                   Figure 5: IOAM Shim Header for Geneve
 
 
 
@@ -393,14 +393,6 @@ Brockners, et al.          Expires May 2, 2018                  [Page 7]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |     Option Class = IOAM_POT   |     Type    |P|R|R|R| Length  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-                Figure 5: Geneve Tunnel Option for IOAM POT
 
    The rest of the fields in the POT option [I-D.ietf-ippm-ioam-data]
    are as follows:
@@ -417,31 +409,39 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    node.  IOAM specific fields to encapsulate IOAM Edge-to-Edge data
    fields are defined as follows:
 
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-  |Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
-  |        Virtual Network Identifier (VNI)       |    Reserved   |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-  |      Option Class = IOAM_E2E  |    Type       |R|R|R| Length  |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
-  |      E2E Option data field determined by IOAM-E2E-Type        |  |
-  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Ver|  Opt Len  |O|C|    Rsvd.  |      Protocol Type = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Geneve
+|        Virtual Network Identifier (VNI)       |    Reserved   | tunnel +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ options
+|                      Variable length options                  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
+|      E2E Option data field determined by IOAM-E2E-Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
 
-         Figure 6: IOAM Edge-to-Edge using a Geneve Tunnel Option
+                   Figure 6: IOAM Edge-to-Edge in Geneve
 
-   The first 4 octets of the IOAM E2E option are the Geneve tunnel
-   option header (Figure 5), which includes the following fields:
+   The first 4 octets of the IOAM E2E option are the IOAM Shim header
+   for Geneve (Figure 7), which includes the following fields:
 
-   Option Class  16-bit unsigned integer that determines the IOAM_E2E
-      option class.The value is from the IANA registry setup for Geneve
-      option classes as defined in [I-D.ietf-nvo3-geneve].
+   Type:  8-bit unsigned integer defining IOAM header type.  Four values
+      are defined here: IOAM_Trace_Preallocated, IOAM_Trace_Incremental,
+      IOAM_POT, and IOAM_E2E.
 
-   Type:  8-bit identifier of a particular E2E variant that specifies
-      the E2E data that is included as defined in
-      [I-D.ietf-ippm-ioam-data].
+   IOAM HDR len:  8-bit unsigned integer.  Length of the IOAM HDR in
+      4-octet units.
+
+   Next Protocol:  16-bit unsigned integer that determines the type of
+      the protocol data unit appearing after the IOAM trace option
+      header.  This follows the EtherType [ETYPES] convention.
+
+
+
 
 
 
@@ -450,19 +450,13 @@ Brockners, et al.          Expires May 2, 2018                  [Page 8]
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-   R (3 bits):  Option control flags reserved for future use.  MUST be
-      zero on transmission and ignored on receipt.
-
-   Length:  5-bit unsigned integer.  Length of the IOAM HDR in 4-octet
-      units.
-
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |      Option Class = IOAM_E2E  |    Type       |R|R|R| Length  |
+   |      Type     |  IOAM HDR len |         Next Protocol         |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-                Figure 7: Geneve Tunnel Option for IOAM E2E
+                   Figure 7: IOAM Shim Header for Geneve
 
    The rest of the E2E option [I-D.ietf-ippm-ioam-data] consists of:
 
@@ -471,17 +465,20 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 4.  IANA Considerations
 
-   IANA is requested to allocate a Geneve "option class" numbers for the
-   following IOAM types:
+   IANA is requested to allocate numbers for the following IOAM types:
 
-                 +---------------+-------------+---------------+
-                 | Option Class  | Description | Reference     |
-                 +---------------+-------------+---------------+
-                 | x             | IOAM_Trace  | This Document |
-                 | y             | IOAM_POT    | This Document |
-                 | z             | IOAM_E2E    | This Document |
-                 +---------------+-------------+---------------+
+              +---------------+--------------------------+---------------+
+              | IOAM Type     | Description              | Reference     |
+              +---------------+--------------------------+---------------+
+              | w             | IOAM_Trace_Preallocated  | This Document |
+              | x             | IOAM_Trace_Incremental   | This Document |
+              | y             | IOAM_POT                 | This Document |
+              | z             | IOAM_E2E                 | This Document |
+              +---------------+-------------+----------------------------+
 
+
+   An Ethertype codepoint needs to be obtained for IOAM.  However, this
+   needs to be obtained from IEEE rather than IANA.
 
 5.  Security Considerations
 
@@ -495,9 +492,12 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    domain to avoid malicious configuration and use, which could include
    injecting malicious IOAM packets into a domain.
 
+6.  Acknowledgements
 
-
-
+   The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+   Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+   Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
+   and Andrew Yourtchenko for the comments and advice.
 
 
 
@@ -506,20 +506,12 @@ Brockners, et al.          Expires May 2, 2018                  [Page 9]
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-6.  Acknowledgements
-
-   The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
-   Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-   Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
-   and Andrew Yourtchenko for the comments and advice.
-
 7.  References
 
 7.1.  Normative References
 
-   [ETYPES]   "IANA Ethernet Numbers",
-              <https://www.iana.org/assignments/ethernet-numbers/
-              ethernet-numbers.xhtml>.
+   [ETYPES]   "IANA 802 Numbers", <https://www.iana.org/assignments/
+              ieee-802-numbers/ieee-802-numbers.xhtml>.
 
    [I-D.brockners-inband-oam-requirements]
               Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
@@ -542,17 +534,25 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
 
    [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
               Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
-              DOI 10.17487/RFC2784, March 2000,
-              <https://www.rfc-editor.org/info/rfc2784>.
+              DOI 10.17487/RFC2784, March 2000, <https://www.rfc-
+              editor.org/info/rfc2784>.
 
    [RFC3232]  Reynolds, J., Ed., "Assigned Numbers: RFC 1700 is Replaced
               by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
               January 2002, <https://www.rfc-editor.org/info/rfc3232>.
+
+7.2.  Informative References
+
+   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
+
+
+
+
 
 
 
@@ -562,10 +562,6 @@ Brockners, et al.          Expires May 2, 2018                 [Page 10]
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-7.2.  Informative References
-
-   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
-
    [I-D.brockners-proof-of-transit]
               Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
               Leddy, J., Youell, S., Mozes, D., and T. Mizrahi, "Proof
@@ -574,8 +570,8 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
               Chaining (SFC) Architecture", RFC 7665,
-              DOI 10.17487/RFC7665, October 2015,
-              <https://www.rfc-editor.org/info/rfc7665>.
+              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
+              editor.org/info/rfc7665>.
 
 Authors' Addresses
 
@@ -610,6 +606,10 @@ Authors' Addresses
    United States
 
    Email: cpignata@cisco.com
+
+
+
+
 
 
 
@@ -676,18 +676,18 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
    Remy Chang
    Barefoot Networks
-   2185 Park Boulevard
-   Palo Alto, CA  94306
+   4750 Patrick Henry Dr
+   Santa Clara, CA  95054
    US
 
 
+   Mickey Spiegel
+   Barefoot Networks
+   4750 Patrick Henry Dr
+   Santa Clara, CA  95054
+   US
 
-
-
-
-
-
-
+   Email: mspiegel@barefootnetworks.com
 
 
 

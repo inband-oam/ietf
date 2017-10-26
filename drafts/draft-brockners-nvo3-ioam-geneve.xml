@@ -244,16 +244,34 @@
 
       <address>
         <postal>
-          <street>2185 Park Boulevard</street>
+          <street>4750 Patrick Henry Dr</street>
 
-          <city>Palo Alto, CA</city>
+          <city>Santa Clara, CA</city>
 
-          <code>94306</code>
+          <code>95054</code>
 
           <country>US</country>
         </postal>
 
         <email/>
+      </address>
+    </author>
+
+    <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
+      <organization abbrev="">Barefoot Networks</organization>
+
+      <address>
+        <postal>
+          <street>4750 Patrick Henry Dr</street>
+
+          <city>Santa Clara, CA</city>
+
+          <code>95054</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>mspiegel@barefootnetworks.com</email>
       </address>
     </author>
 
@@ -333,17 +351,10 @@
     </section>
 
     <section title="IOAM Data Field Encapsulation in Geneve">
-      <t>For encapsulating IOAM data fields into Geneve <xref
-      target="I-D.ietf-nvo3-geneve"/> the different IOAM data fields are
-      included in the Geneve header using tunnel options. IOAM data fields use
-      a tunnel option class which includes the different types of IOAM data, 
-      including trace data, proof-of-transit data, and edge-to-edge data. In
-      an administrative domain where IOAM is used, insertion of the IOAM
-      tunnel option(s) in Geneve is enabled at the Geneve tunnel endpoints
-      which also serve as IOAM encapsulating/decapsulating nodes by means of
-      configuration. The Geneve header is defined in <xref
-      target="I-D.ietf-nvo3-geneve"/>. IOAM specific fields for Geneve are
-      defined in this document.</t>
+      <t>IOAM data fields are carried within Geneve <xref
+      target="I-D.ietf-nvo3-geneve"/> packets following the Geneve tunnel
+      header and the Geneve variable length options.  The Protocol Type
+      value indicates whether IOAM data fields are present.</t>
 
       <section title="IOAM trace data in Geneve">
         <t>IOAM tracing data represents data that is inserted at nodes that a
@@ -357,16 +368,18 @@
         IOAM trace when encapsulated in Geneve are defined as below.</t>
 
         <figure align="center" anchor="PreAllocHeader" title="IOAM Pre-allocated 
-		Trace Option Format as a Geneve Tunnel Option">
+		Trace Option Format in Geneve">
             <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
-|        Virtual Network Identifier (VNI)       |    Reserved   |  |
+|Ver|  Opt Len  |O|C|    Rsvd.  |      Protocol Type = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Geneve
+|        Virtual Network Identifier (VNI)       |    Reserved   | tunnel +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ options
+|                      Variable length options                  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|  Option Class = IOAM_Trace    |Type (prealloc)|R|R|R| Length  |  |
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
 |         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left | Trace
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
@@ -400,16 +413,18 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned.
           </figure>
 
         <figure align="center" anchor="Incremental" title="IOAM Incremental 
-		Trace Option Format as a Geneve Tunnel Option">
+		Trace Option Format in Geneve">
             <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
-|        Virtual Network Identifier (VNI)       |    Reserved   |  |
+|Ver|  Opt Len  |O|C|    Rsvd.  |      Protocol Type = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Geneve
+|        Virtual Network Identifier (VNI)       |    Reserved   | tunnel +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ options
+|                      Variable length options                  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|  Option Class = IOAM_Trace    |  Type (incr.) |R|R|R| Length  |  |
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
 |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  | Trace
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
@@ -444,39 +459,39 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
 		  
 		    <t>The IOAM Trace header consists of 8 octets, as illustrated in 
 			<xref target="PreAllocHeader"/> and <xref target="Incremental"/>.
-			The first 4 octets are the Geneve Tunnel Option header 
-			<xref target="I-D.ietf-nvo3-geneve"/>. The next 4 octets are
-			the trace option header; its format is defined in 
-			<xref target="I-D.ietf-ippm-ioam-data"/>, and is described here for 
-			the sake of clarity.</t>
+			The first 4 octets are the IOAM Shim header for Geneve.
+                        The next 4 octets are the trace option header; its
+                        format is defined in
+                        <xref target="I-D.ietf-ippm-ioam-data"/>, and is
+                        described here for the sake of clarity.</t>
 
-        <figure align="center" anchor="GeneveTraceOpt" title="Geneve Tunnel 
-		Option for IOAM">
+        <figure align="center" anchor="IOAMShim" title="IOAM Shim Header
+                for Geneve">
             <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Option Class = IOAM_Trace    |      Type     |R|R|R| Length  |
+|      Type     |  IOAM HDR len |         Next Protocol         |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
           </figure> 
 			
-		  <t>The fields of the Geneve tunnel option are as follows: 
+		  <t>The fields are defined as follows:
 
 		  <list style="hanging">
-            <t hangText="Option Class:">16-bit unsigned integer that
-            determines the IOAM option class. The value is from the IANA
-            registry setup for Geneve option classes as defined in <xref
-            target="I-D.ietf-nvo3-geneve"/>.</t>
+            <t hangText="Geneve Protocol Type">TBD value for IOAM.</t>
 
             <t hangText="Type:">8-bit unsigned integer defining IOAM header
-            type. Two values are defined here: IOAM_TRACE_Preallocated and IOAM_Trace_Incremental.</t>
+            type. Four values are defined here: IOAM_Trace_Preallocated,
+            IOAM_Trace_Incremental, IOAM_POT, and IOAM_E2E.</t>
 
-            <t hangText="R (3 bits):">Option control flags reserved for future
-            use. MUST be zero on transmission and ignored on receipt.</t>
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            IOAM HDR in 4-octet units.</t>
 
-            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
-            HDR in 4-octet units.</t>
+            <t hangText="Next Protocol:">16-bit unsigned integer that
+            determines the type of the protocol data unit appearing after
+            the IOAM trace option header. This follows the EtherType
+            <xref target="ETYPES"/> convention.</t>
 
           </list></t>
 
@@ -512,16 +527,18 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
         fields are encapsulated in Geneve as follows:</t>
 
         <figure align="center" anchor="PotEncap" title="IOAM POT Header 
-		Following using a Geneve Tunnel Option">
+		in Geneve">
             <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
-|        Virtual Network Identifier (VNI)       |    Reserved   |  |
+|Ver|  Opt Len  |O|C|    Rsvd.  |      Protocol Type = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Geneve
+|        Virtual Network Identifier (VNI)       |    Reserved   | tunnel +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ options
+|                      Variable length options                  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|     Option Class = IOAM_POT   |     Type    |P|R|R|R| Length  |  |
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -533,38 +550,32 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
           </figure>
 
-		  <t>The first 4 octets of the IOAM POT are the Geneve tunnel option
-		  header (<xref target="GenevePotOpt"/>), which includes 
-		  the following fields:</t>
+		  <t>The first 4 octets of the IOAM POT are the IOAM Shim
+		  header for Geneve (<xref target="IOAMShimGeneve"/>), which
+                  includes the following fields:</t>
 		  
 		  <t><list style="hanging">
-            <t hangText="Option Class:">16-bit unsigned integer that
-            determines the IOAM_POT option class.The value is from the IANA
-            registry setup for Geneve option classes as defined in <xref
-            target="I-D.ietf-nvo3-geneve"/>.</t>
+            <t hangText="Type:">8-bit unsigned integer defining IOAM header
+            type. Four values are defined here: IOAM_Trace_Preallocated,
+            IOAM_Trace_Incremental, IOAM_POT, and IOAM_E2E.</t>
 
-            <t hangText="Type:">7-bit identifier of a particular POT variant
-            that specifies the POT data that is to be included as defined in
-            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            IOAM HDR in 4-octet units.</t>
 
-            <t hangText="Profile to use (P):">1-bit as defined in <xref
-            target="I-D.ietf-ippm-ioam-data"/> IOAM POT Option.</t>
-
-            <t hangText="R (3 bits):">Option control flags reserved for future
-            use. MUST be zero on transmission and ignored on receipt.</t>
-
-            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
-            HDR in 4-octet units.</t>
+            <t hangText="Next Protocol:">16-bit unsigned integer that
+            determines the type of the protocol data unit appearing after
+            the IOAM trace option header. This follows the EtherType
+            <xref target="ETYPES"/> convention.</t>
 
           </list></t>
 
-        <figure align="center" anchor="GenevePotOpt" title="Geneve Tunnel
-		Option for IOAM POT">
+        <figure align="center" anchor="IOAMShimGeneve" title="IOAM Shim
+		Header for Geneve">
             <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|     Option Class = IOAM_POT   |     Type    |P|R|R|R| Length  |
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
           </figure>
@@ -588,16 +599,18 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
 		
 		
         <figure align="center" anchor="GeneveE2e" title="IOAM 
-		Edge-to-Edge using a Geneve Tunnel Option"> 
+		Edge-to-Edge in Geneve">
             <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
-|        Virtual Network Identifier (VNI)       |    Reserved   |  |
+|Ver|  Opt Len  |O|C|    Rsvd.  |      Protocol Type = IOAM     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Geneve
+|        Virtual Network Identifier (VNI)       |    Reserved   | tunnel +
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ options
+|                      Variable length options                  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|      Option Class = IOAM_E2E  |    Type       |R|R|R| Length  |  |
+|      Type     |  IOAM HDR len |         Next Protocol         |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
 |      E2E Option data field determined by IOAM-E2E-Type        |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
@@ -605,35 +618,32 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
 ]]></artwork>
           </figure>
 		  
-		  <t>The first 4 octets of the IOAM E2E option are the Geneve tunnel 
-		  option header (<xref target="GenevePotOpt"/>), which includes 
-		  the following fields:</t>
+		  <t>The first 4 octets of the IOAM E2E option are the IOAM
+                  Shim header for Geneve (<xref target="IOAMShimG"/>), which
+                  includes the following fields:</t>
 
 		  <t><list style="hanging">
-            <t hangText="Option Class">16-bit unsigned integer that determines
-            the IOAM_E2E option class.The value is from the IANA registry
-            setup for Geneve option classes as defined in <xref
-            target="I-D.ietf-nvo3-geneve"/>.</t>
+            <t hangText="Type:">8-bit unsigned integer defining IOAM header
+            type. Four values are defined here: IOAM_Trace_Preallocated,
+            IOAM_Trace_Incremental, IOAM_POT, and IOAM_E2E.</t>
 
-            <t hangText="Type:">8-bit identifier of a particular E2E variant
-            that specifies the E2E data that is included as defined in <xref
-            target="I-D.ietf-ippm-ioam-data"/>.</t>
+            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+            IOAM HDR in 4-octet units.</t>
 
-            <t hangText="R (3 bits):">Option control flags reserved for future
-            use. MUST be zero on transmission and ignored on receipt.</t>
-
-            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
-            HDR in 4-octet units.</t>
+            <t hangText="Next Protocol:">16-bit unsigned integer that
+            determines the type of the protocol data unit appearing after
+            the IOAM trace option header. This follows the EtherType
+            <xref target="ETYPES"/> convention.</t>
 
           </list></t>
 
-        <figure align="center" anchor="GeneveE2eOpt" title="Geneve Tunnel
-		Option for IOAM E2E">
+        <figure align="center" anchor="IOAMShimG" title="IOAM Shim Header
+		for Geneve">
             <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      Option Class = IOAM_E2E  |    Type       |R|R|R| Length  | 
+|      Type     |  IOAM HDR len |         Next Protocol         |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
           </figure>
@@ -650,20 +660,23 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to allocate a Geneve "option class" numbers for the
-      following IOAM types:</t>
+      <t>IANA is requested to allocate numbers for the following IOAM types:</t>
 
       <t><figure>
-          <artwork><![CDATA[              +---------------+-------------+---------------+
-              | Option Class  | Description | Reference     |
-              +---------------+-------------+---------------+
-              | x             | IOAM_Trace  | This Document |
-              | y             | IOAM_POT    | This Document |
-              | z             | IOAM_E2E    | This Document |
-              +---------------+-------------+---------------+
+          <artwork><![CDATA[              +---------------+--------------------------+---------------+
+              | IOAM Type     | Description              | Reference     |
+              +---------------+--------------------------+---------------+
+              | w             | IOAM_Trace_Preallocated  | This Document |
+              | x             | IOAM_Trace_Incremental   | This Document |
+              | y             | IOAM_POT                 | This Document |
+              | z             | IOAM_E2E                 | This Document |
+              +---------------+-------------+----------------------------+
 
 ]]></artwork>
         </figure></t>
+
+      <t>An Ethertype codepoint needs to be obtained for IOAM. However, this
+      needs to be obtained from IEEE rather than IANA.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -718,9 +731,9 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
       &RFC3232;
 
       <reference anchor="ETYPES"
-                 target="https://www.iana.org/assignments/ethernet-numbers/ethernet-numbers.xhtml">
+                 target="https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml">
         <front>
-          <title>IANA Ethernet Numbers</title>
+          <title>IANA 802 Numbers</title>
 
           <author/>
 
