@@ -236,11 +236,11 @@
 
       <address>
         <postal>
-          <street>2185 Park Boulevard</street>
+          <street>4750 Patrick Henry Drive</street>
 
-          <city>Palo Alto, CA</city>
+          <city>Santa Clara, CA</city>
 
-          <code>94306</code>
+          <code>95054</code>
 
           <country>US</country>
         </postal>
@@ -584,7 +584,7 @@ Pre-allocated trace option header:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left |
+|         IOAM-Trace-Type       | NodeLen | Flags | Octets-left |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 Pre-allocated Trace Option Data MUST be 4-octet aligned:
@@ -670,14 +670,27 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
               the IOAM-Trace-Type can be restricted by configuration
               knobs.</t>
 
-              <t hangText="NodeLen:">4-bit unsigned integer. This
-              field specifies the length of data added by each node in
-              multiples of 4-octets. For example, if 3 IOAM-Trace-Type bits
-              are set and none of them is wide, then the NodeLen
-              would be 3. If 3 IOAM-Trace-Type bits are set and 2 of them are
-              wide, then the NodeLen would be 5. </t>
+              <t hangText="NodeLen:">5-bit unsigned integer. This field
+              specifies the length of data added by each node in multiples of
+              4-octets, excluding the length of the "Opaque State Snapshot"
+              field.
+              <vspace blankLines="1" />
+              If IOAM-Trace-Type bit 7 is not set, then NodeLen specifies the
+              actual length added by each node. If IOAM-Trace-Type bit 7 is
+              set, then the actual length added by a node would be (NodeLen +
+              Opaque Data Length).
+              <vspace blankLines="1" />
+              For example, if 3 IOAM-Trace-Type bits are set and none of them
+              are wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are
+              set and 2 of them are wide, then NodeLen would be 5.
+              <vspace blankLines="1" />
+              An IOAM encapsulating node must set NodeLen.
+              <vspace blankLines="1" />
+              A node receiving an IOAM Pre-allocated Trace Option may rely on
+              the NodeLen value, or it may ignore the NodeLen value and
+              calculate the node length from the IOAM-Trace-Type bits.</t>
 
-              <t anchor="TraceFlags" hangText="Flags">5-bit field. Following
+              <t anchor="TraceFlags" hangText="Flags">4-bit field. Following
               flags are defined:<list style="hanging">
                   <t hangText="Bit 0">"Overflow" (O-bit) (most significant
                   bit). This bit is set by the network element if there is not
@@ -709,7 +722,7 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
                   boundary IOAM decapsulation occurs as with any other packet
                   containing IOAM information.</t>
 
-                  <t hangText="Bit 2-4">Reserved: Must be zero.</t>
+                  <t hangText="Bit 2-3">Reserved: Must be zero.</t>
                 </list></t>
 
               <t hangText="Octets-left:">7-bit unsigned integer. It is the
@@ -739,7 +752,7 @@ In-situ OAM incremental trace option Header:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |
+|        IOAM-Trace-Type        | NodeLen | Flags | Max Length  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 IOAM Incremental Trace Option Data MUST be 4-octet aligned: 
@@ -822,14 +835,27 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               <t hangText=" "><xref target="trace-node-data-element"></xref>
               describes the IOAM data types and their formats.</t>
 
-              <t hangText="NodeLen:">4-bit unsigned integer. This
-              field specifies the length of data added by each node in
-              multiples of 4-octets. For example, if 3 IOAM-Trace-Type bits
-              are set and none of them is wide, then the NodeLen
-              would be 3. If 3 IOAM-Trace-Type bits are set and 2 of them are
-              wide, then the NodeLen would be 5.</t>
+              <t hangText="NodeLen:">5-bit unsigned integer. This field
+              specifies the length of data added by each node in multiples of
+              4-octets, excluding the length of the "Opaque State Snapshot"
+              field.
+              <vspace blankLines="1" />
+              If IOAM-Trace-Type bit 7 is not set, then NodeLen specifies the
+              actual length added by each node. If IOAM-Trace-Type bit 7 is
+              set, then the actual length added by a node would be (NodeLen +
+              Opaque Data Length).
+              <vspace blankLines="1" />
+              For example, if 3 IOAM-Trace-Type bits are set and none of them
+              are wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are
+              set and 2 of them are wide, then NodeLen would be 5.
+              <vspace blankLines="1" />
+              An IOAM encapsulating node must set NodeLen.
+              <vspace blankLines="1" />
+              A node receiving an IOAM Incremental Trace Option may rely on
+              the NodeLen value, or it may ignore the NodeLen value and
+              calculate the node length from the IOAM-Trace-Type bits.</t>
 
-              <t anchor="IOAMTraceFlags" hangText="Flags">5-bit field.
+              <t anchor="IOAMTraceFlags" hangText="Flags">4-bit field.
               Following flags are defined:<list style="hanging">
                   <t hangText="Bit 0">"Overflow" (O-bit) (least significant
                   bit). This bit is set by the network element if there is not
@@ -845,7 +871,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                   the destination. The L-bit MUST be cleared in the copy of
                   the packet before sending it.</t>
 
-                  <t hangText="Bit 2-4">Reserved. Must be zero.</t>
+                  <t hangText="Bit 2-3">Reserved. Must be zero.</t>
                 </list></t>
 
               <t hangText="Maximum Length:">7-bit unsigned integer. This field
@@ -1020,8 +1046,8 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure><list style="hanging">
                   <t hangText="Length:">1-octet unsigned integer. It is the
-                  length in octets of the Opaque data field that follows
-                  Schema Id. It MUST always be a multiple of 4.</t>
+                  length in multiples of 4-octets of the Opaque data field
+                  that follows Schema Id.</t>
 
                   <t hangText="Schema ID:">3-octet unsigned integer
                   identifying the schema of Opaque data.</t>
@@ -1385,12 +1411,12 @@ IOAM proof of transit option data MUST be 4-octet aligned:
       </section>
 
       <section title="IOAM Trace Flags Registry">
-        <t>This registry defines code point for each bit in the 5 bit flags
+        <t>This registry defines code point for each bit in the 4 bit flags
         for Pre-allocated trace option and Incremental trace option defined in
         <xref target="IOAM_tracing_option"></xref>. The meaning of Bit 0 - 1
         for trace flags are defined in this document in <xref
         target="TraceFlags"></xref> of <xref target="TraceOptionDef"></xref>.
-        The meaning for Bit 2 - 4 are available for assignment via RFC
+        The meaning for Bit 2 - 3 are available for assignment via RFC
         Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
