@@ -330,6 +330,8 @@
           <t hangText="POT:">Proof of Transit</t>
 
           <t hangText="SFC:">Service Function Chain</t>
+
+          <t hangText="TLV:">Type, Length, Value</t>
         </list></t>
     </section>
 
@@ -337,7 +339,7 @@
       <t>IOAM data fields are carried within the NSH header following NSH MDx
       metadata TLVs.</t>
 
-      <section title="IOAM trace data in NSH">
+      <section title="IOAM Trace Data in NSH">
         <t>IOAM tracing data represents data that is inserted at nodes that a
         packet traverses. To allow for optimal implementations in both
         software as well as hardware forwarders, two different ways to
@@ -491,7 +493,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
           </list></t>
       </section>
 
-      <section title="IOAM POT in NSH">
+      <section title="IOAM POT Data in NSH">
         <t>IOAM proof of transit (POT, see <xref
         target="I-D.brockners-proof-of-transit"/>) offers a means to verify
         that a packet has traversed a defined set of nodes. In an
@@ -551,7 +553,7 @@ IOAM POT header following NSH MDx header:
           </list></t>
       </section>
 
-      <section title="IOAM Edge-to-Edge in NSH">
+      <section title="IOAM Edge-to-Edge Data in NSH">
         <t>The IOAM edge-to-edge option is to carry data that is added by the
         IOAM encapsulating node and interpreted by the IOAM decapsulating
         node. The "Edge-to-Edge" capabilities (see <xref
@@ -604,6 +606,60 @@ IOAM E2E header following NSH MDx header:
             Option.</t>
           </list></t>
       </section>
+    </section>
+
+    <section title="Discussion of the encapsulation approach">
+      <t>This section is to support the working group discussion in selecting
+      the most appropriate approach for encapsulating IOAM data fields in
+      NSH.</t>
+
+      <t>An encapsulation of IOAM data fields in NSH should be friendly to an
+      implementation in both hardware as well as software forwarders and
+      support a wide range of deployment cases, including large networks that
+      desire to leverage multiple IOAM data fields at the same time. </t>
+
+      <t><list style="empty">
+          <t>Hardware and software friendly implementation: Hardware
+          forwarders benefit from an encapsulation that minimizes iterative
+          look-ups of fields within the packet. This means that flat TLV
+          structures are to be preferred over nested TLV structures. IOAM data
+          fields are grouped into three option categories: Trace,
+          proof-of-transit, and edge-to-edge. Each of these three options
+          defines a TLV structure. A hardware-friendly encapsulation approach
+          avoids grouping these three option categories into yet another TLV
+          structure, but would rather carry the options as a serial
+          sequence.</t>
+
+          <t>Total length of the IOAM data fields: The total length of IOAM
+          data can grow quite large in case multiple different IOAM data
+          fields are used and large path-lengths need to be considered. If for
+          example an operator would consider using the IOAM trace option and
+          capture node-id, app_data, egress/ingress interface-id, timestamp
+          seconds, timestamps nanoseconds at every hop, then a total of 20
+          octets would be added to the packet at every hop. In case this
+          particular deployment would have a maximum path length of 15 hops in
+          the IOAM domain, then a maximum of 300 octets of IOAM data were to
+          be encapsulated in the packet.</t>
+        </list>Two approaches for encapsulating IOAM data fields in NSH could
+      be considered:</t>
+
+      <t><list style="numbers">
+          <t>Encapsulation of IOAM data fields as "NSH MD Type 2" (see <xref
+          target="I-D.ietf-sfc-nsh"/>, section 2.5). Each IOAM data field
+          option (trace, proof-of-transit, and edge-to-edge) would be
+          specified by a type, with the different IOAM data fields being TLVs
+          within this the particular option type. NSH MD Type 2 offers support
+          for variable length meta-data. The length field is 6-bits, resulting
+          in a maximum of 256 (2^6 x 4) octets. </t>
+
+          <t>Encapsulation of IOAM data fields using the "Next Protocol"
+          field. Each IOAM data field option (trace, proof-of-transit, and
+          edge-to-edge) would be specified by its own "next protocol". </t>
+        </list>The second option has been chosen here, because it avoids the
+      additional layer of TLV nesting that the use of NSH MD Type 2 would
+      result in. In addition, the second option does not constrain IOAM data
+      to a maximum of 256 octets, thus allowing support for very large
+      deployments.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">

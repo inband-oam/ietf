@@ -42,7 +42,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
@@ -65,7 +65,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -80,16 +80,17 @@ Table of Contents
      2.1.  Requirement Language  . . . . . . . . . . . . . . . . . .   3
      2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
    3.  IOAM Data Field Encapsulation in Geneve . . . . . . . . . . .   3
-     3.1.  IOAM trace data in Geneve . . . . . . . . . . . . . . . .   3
-     3.2.  IOAM POT in Geneve  . . . . . . . . . . . . . . . . . . .   7
-     3.3.  IOAM Edge-to-Edge in Geneve . . . . . . . . . . . . . . .   8
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  10
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .  11
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+     3.1.  IOAM Trace Data in Geneve . . . . . . . . . . . . . . . .   3
+     3.2.  IOAM POT Data in Geneve . . . . . . . . . . . . . . . . .   7
+     3.3.  IOAM Edge-to-Edge Data in Geneve  . . . . . . . . . . . .   8
+   4.  Discussion of the encapsulation approach  . . . . . . . . . .   9
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  12
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -101,7 +102,6 @@ Table of Contents
    transported as part of the Geneve [I-D.ietf-nvo3-geneve]
    encapsulation.  The IOAM data fields are defined in
    [I-D.ietf-ippm-ioam-data].
-
 
 
 
@@ -150,7 +150,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    [I-D.ietf-nvo3-geneve].  IOAM specific fields for Geneve are defined
    in this document.
 
-3.1.  IOAM trace data in Geneve
+3.1.  IOAM Trace Data in Geneve
 
    IOAM tracing data represents data that is inserted at nodes that a
    packet traverses.  To allow for optimal implementations in both
@@ -338,7 +338,7 @@ Brockners, et al.          Expires May 2, 2018                  [Page 6]
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-3.2.  IOAM POT in Geneve
+3.2.  IOAM POT Data in Geneve
 
    IOAM proof of transit (POT, see also
    [I-D.brockners-proof-of-transit]) offers a means to verify that a
@@ -410,7 +410,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    Cumulative:  64-bit Cumulative value that is updated by the Service
       Functions.
 
-3.3.  IOAM Edge-to-Edge in Geneve
+3.3.  IOAM Edge-to-Edge Data in Geneve
 
    The IOAM edge-to-edge option is to carry data that is added by the
    IOAM encapsulating node and interpreted by the IOAM decapsulating
@@ -469,7 +469,66 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    E2E Option data field:  Variable length field as defined in
       [I-D.ietf-ippm-ioam-data] IOAM E2E Option.
 
-4.  IANA Considerations
+4.  Discussion of the encapsulation approach
+
+   This section is to support the working group discussion in selecting
+   the most appropriate approach for encapsulating IOAM data fields in
+   Geneve.
+
+   An encapsulation of IOAM data fields in Geneve should be friendly to
+   an implementation in both hardware as well as software forwarders and
+   support a wide range of deployment cases, including large networks
+   that desire to leverage multiple IOAM data fields at the same time.
+
+      Hardware and software friendly implementation: Hardware forwarders
+      benefit from an encapsulation that minimizes iterative look-ups of
+      fields within the packet.  This means that flat TLV structures are
+      to be preferred over nested TLV structures.  IOAM data fields are
+      grouped into three option categories: Trace, proof-of-transit, and
+      edge-to-edge.  Each of these three options defines a TLV
+      structure.  A hardware-friendly encapsulation approach avoids
+      grouping these three option categories into yet another TLV
+      structure, but would rather carry the options as a serial
+      sequence.
+
+      Total length of the IOAM data fields: The total length of IOAM
+      data can grow quite large in case multiple different IOAM data
+      fields are used and large path-lengths need to be considered.  If
+      for example an operator would consider using the IOAM trace option
+      and capture node-id, app_data, egress/ingress interface-id,
+      timestamp seconds, timestamps nanoseconds at every hop, then a
+      total of 20 octets would be added to the packet at every hop.  In
+
+
+
+Brockners, et al.          Expires May 2, 2018                  [Page 9]
+
+Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
+
+
+      case this particular deployment would have a maximum path length
+      of 15 hops in the IOAM domain, then a maximum of 300 octets of
+      IOAM data were to be encapsulated in the packet.
+
+   Concerns with the current encapsulation approach:
+
+      Hardware support: Using Geneve tunnel options to encapsulate IOAM
+      data fields leads to a nested TLV structure.  Each IOAM data field
+      option (trace, proof-of-transit, and edge-to-edge) represents a
+      type, with the different IOAM data fields being TLVs within this
+      the particular option type.  Nested TLVs require iterative look-
+      ups, a fact that creates potential challenges for implementations
+      in hardware.  It would be desirable to offer a way to encapsulate
+      IOAM in a way that keeps TLV nesting to a minimum.
+
+      Length: Geneve tunnel option length is a 5-bit field in the
+      current specification [I-D.ietf-nvo3-geneve] resulting in a
+      maximum option length of 128 (2^5 x 4) octets which constrains the
+      use of IOAM to either small domains or a few IOAM data fields
+      only.  Support for large domains with a variety of IOAM data
+      fields would be desirable.
+
+5.  IANA Considerations
 
    IANA is requested to allocate a Geneve "option class" numbers for the
    following IOAM types:
@@ -483,7 +542,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
                  +---------------+-------------+---------------+
 
 
-5.  Security Considerations
+6.  Security Considerations
 
    The security considerations of Geneve are discussed in
    [I-D.ietf-nvo3-geneve], and the security considerations of IOAM in
@@ -498,24 +557,21 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-
-
-
-Brockners, et al.          Expires May 2, 2018                  [Page 9]
+Brockners, et al.          Expires May 2, 2018                 [Page 10]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-6.  Acknowledgements
+7.  Acknowledgements
 
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
    Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
    and Andrew Yourtchenko for the comments and advice.
 
-7.  References
+8.  References
 
-7.1.  Normative References
+8.1.  Normative References
 
    [ETYPES]   "IANA Ethernet Numbers",
               <https://www.iana.org/assignments/ethernet-numbers/
@@ -542,13 +598,13 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
 
    [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
               Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
-              DOI 10.17487/RFC2784, March 2000,
-              <https://www.rfc-editor.org/info/rfc2784>.
+              DOI 10.17487/RFC2784, March 2000, <https://www.rfc-
+              editor.org/info/rfc2784>.
 
    [RFC3232]  Reynolds, J., Ed., "Assigned Numbers: RFC 1700 is Replaced
               by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
@@ -557,12 +613,12 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 10]
+Brockners, et al.          Expires May 2, 2018                 [Page 11]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
-7.2.  Informative References
+8.2.  Informative References
 
    [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
 
@@ -574,8 +630,8 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
               Chaining (SFC) Architecture", RFC 7665,
-              DOI 10.17487/RFC7665, October 2015,
-              <https://www.rfc-editor.org/info/rfc7665>.
+              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
+              editor.org/info/rfc7665>.
 
 Authors' Addresses
 
@@ -613,7 +669,7 @@ Authors' Addresses
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 11]
+Brockners, et al.          Expires May 2, 2018                 [Page 12]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -669,7 +725,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 12]
+Brockners, et al.          Expires May 2, 2018                 [Page 13]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -725,4 +781,4 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 13]
+Brockners, et al.          Expires May 2, 2018                 [Page 14]
