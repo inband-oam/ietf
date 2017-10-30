@@ -492,7 +492,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
       fields in each node data element follows the bit order of the
       IOAM-Trace-Type field, as follows:
 
-      Bit 0    (Least significant bit) When set indicates presence of
+      Bit 0    (Most significant bit) When set indicates presence of
                Hop_Lim and node_id in the node data.
 
       Bit 1    When set indicates presence of ingress_if_id and
@@ -551,9 +551,9 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
 
    Flags  5-bit field.  Following flags are defined:
 
-      Bit 0  "Overflow" (O-bit) (least significant bit).  This bit is
-         set by the network element if there is not enough number of
-         octets left to record node data, no field is added and the
+      Bit 0  "Overflow" (O-bit) (most significant bit).  This bit is set
+         by the network element if there is not enough number of octets
+         left to record node data, no field is added and the overflow
 
 
 
@@ -562,9 +562,8 @@ Brockners, et al.         Expires March 8, 2018                [Page 10]
 Internet-Draft           In-situ OAM Data Fields          September 2017
 
 
-         overflow "O-bit" must be set to "1" in the header.  This is
-         useful for transit nodes to ignore further processing of the
-         option.
+         "O-bit" must be set to "1" in the header.  This is useful for
+         transit nodes to ignore further processing of the option.
 
       Bit 1  "Loopback" (L-bit).  Loopback mode is used to send a copy
          of a packet back towards the source.  Loopback mode assumes
@@ -606,6 +605,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
       active node data to be populated.
 
 4.1.2.  Incremental Trace Option
+
 
 
 
@@ -661,7 +661,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
       fields in each node data element follows the bit order of the
       IOAM-Trace-Type field, as follows:
 
-      Bit 0    (Least significant bit) When set indicates presence of
+      Bit 0    (Most significant bit) When set indicates presence of
                Hop_Lim and node_id in the node data.
 
       Bit 1    When set indicates presence of ingress_if_id and
@@ -715,12 +715,12 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
 
    Flags  5-bit field.  Following flags are defined:
 
-      Bit 0  "Overflow" (O-bit) (least significant bit).  This bit is
-         set by the network element if there is not enough number of
-         octets left to record node data, no field is added and the
-         overflow "O-bit" must be set to "1" in the header.  This is
-         useful for transit nodes to ignore further processing of the
-         option.
+      Bit 0  "Overflow" (O-bit) (most significant bit).  This bit is set
+         by the network element if there is not enough number of octets
+         left to record node data, no field is added and the overflow
+         "O-bit" must be set to "1" in the header.  This is useful for
+         transit nodes to ignore further processing of the option.
+
 
 
 
@@ -1035,7 +1035,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
    section defines different types that an entry in "node data list" can
    take.
 
-   0x002B:  IOAM-Trace-Type is 0x2B then the format of node data is:
+   0xD400:  IOAM-Trace-Type is 0xD400 then the format of node data is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1049,7 +1049,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x0003:  IOAM-Trace-Type is 0x0003 then the format is:
+   0xC000:  IOAM-Trace-Type is 0xC000 then the format is:
 
 
 
@@ -1075,7 +1075,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
 
 
 
-   0x0009:  IOAM-Trace-Type is 0x0009 then the format is:
+   0x9000:  IOAM-Trace-Type is 0x9000 then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1085,7 +1085,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x0021:  IOAM-Trace-Type is 0x0021 then the format is:
+   0x8400:  IOAM-Trace-Type is 0x8400 then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1095,7 +1095,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x0029:  IOAM-Trace-Type is 0x0029 then the format is:
+   0x9400:  IOAM-Trace-Type is 0x9400 then the format is:
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1107,7 +1107,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   0x018C:  IOAM-Trace-Type is 0x104D then the format is:
+   0x3180:  IOAM-Trace-Type is 0x3180 then the format is:
 
 
 
