@@ -622,7 +622,7 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
               the data fields in each node data element follows the bit order
               of the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
-                  <t hangText="Bit 0">(Most significant bit) When set
+                  <t hangText="Bit 0">(Least significant bit) When set
                   indicates presence of Hop_Lim and node_id in the node
                   data.</t>
 
@@ -679,7 +679,7 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
 
               <t anchor="TraceFlags" hangText="Flags">5-bit field. Following
               flags are defined:<list style="hanging">
-                  <t hangText="Bit 0">"Overflow" (O-bit) (most significant
+                  <t hangText="Bit 0">"Overflow" (O-bit) (least significant
                   bit). This bit is set by the network element if there is not
                   enough number of octets left to record node data, no field
                   is added and the overflow "O-bit" must be set to "1" in the
@@ -777,7 +777,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               the data fields in each node data element follows the bit order
               of the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
-                  <t hangText="Bit 0">(Most significant bit) When set
+                  <t hangText="Bit 0">(Least significant bit) When set
                   indicates presence of Hop_Lim and node_id in the node
                   data.</t>
 
@@ -959,11 +959,12 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                 </figure></t>
 
               <t hangText="transit delay:">4-octet unsigned integer in the
-              range 0 to 2^30-1. It is the time in nanoseconds the packet
+              range 0 to 2^31-1. It is the time in nanoseconds the packet
               spent in the transit node. This can serve as an indication of
               the queuing delay at the node. If the transit delay exceeds
-              2^30-1 nanoseconds then the top bit 'O' is set to indicate
-              overflow. When this field is part of the data field but a node
+              2^31-1 nanoseconds then the top bit 'O' is set to indicate
+              overflow and value set to 0x80000000.
+	      When this field is part of the data field but a node
               populating the field is not able to fill it, the field position
               in the field must be filled with value 0xFFFFFFFF to mean not
               populated.<figure>
