@@ -257,7 +257,7 @@
       </address>
     </author>
 
-    <date day="29" month="October" year="2017"/>
+    <date day="30" month="October" year="2017"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -665,6 +665,48 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
       </section>
     </section>
 
+    <section title="Discussion of the encapsulation approach">
+      <t>This section is to support the working group discussion in selecting
+      the most appropriate approach for encapsulating IOAM data fields in
+      VXLAN-GPE.</t>
+
+      <t>An encapsulation of IOAM data fields in VXLAN-GPE should be friendly
+      to an implementation in both hardware as well as software forwarders.
+      Hardware forwarders benefit from an encapsulation that minimizes
+      iterative look-ups of fields within the packet: Any operation which
+      looks up the value of a field within the packet, based on which another
+      lookup is performed, consumes additional gates and time in an
+      implementation - both of which are desired to be kept to a minimum. This
+      means that flat TLV structures are to be preferred over nested TLV
+      structures. IOAM data fields are grouped into three option categories:
+      Trace, proof-of-transit, and edge-to-edge. Each of these three options
+      defines a TLV structure. A hardware-friendly encapsulation approach
+      avoids grouping these three option categories into yet another TLV
+      structure, but would rather carry the options as a serial sequence.</t>
+
+      <t>Two approaches for encapsulating IOAM data fields in VXLAN-GPE could
+      be considered:</t>
+
+      <t><list style="numbers">
+          <t>Use a single GPE protocol type for all IOAM types: IOAM would
+          receive a single GPE protocol type code point. A "sub-type" (e.g. 4
+          bit wide) would then specify what IOAM options type(s) (trace,
+          proof-of-transit, edge-to-edge) are carried. In case there is a need
+          for additional IOAM options, changes would be contained within the
+          single GPE protocol type for IOAM.</t>
+
+          <t>Use one GPE protocol type per IOAM options type: Each IOAM data
+          field option (trace, proof-of-transit, and edge-to-edge) would be
+          specified by its own "next protocol", i.e. each IOAM options type
+          becomes its own GPE protocol type with a dedicated code point. This
+          implies that in case additional IOAM option types would be added in
+          the future, additional GPE protocol type code points would need to
+          be allocated.</t>
+        </list>The second option has been chosen here, because it avoids the
+      additional layer of TLV nesting that the use of a single GPE protocol
+      type for all IOAM option types would result in.</t>
+    </section>
+
     <section anchor="IANA" title="IANA Considerations">
       <t>IANA is requested to allocate protocol numbers for the following
       VXLAN-GPE "Next Protocols" related to IOAM:</t>
@@ -673,9 +715,9 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
           <artwork><![CDATA[              +---------------+-------------+---------------+
               | Next Protocol | Description | Reference     |
               +---------------+-------------+---------------+
-              | x             | IOAM_Trace  | This Document |
-              | y             | IOAM_POT    | This Document |
-              | z             | IOAM_E2E    | This Document |
+              | x             | IOAM_Trace  | This document |
+              | y             | IOAM_POT    | This document |
+              | z             | IOAM_E2E    | This document |
               +---------------+-------------+---------------+
 
 ]]></artwork>

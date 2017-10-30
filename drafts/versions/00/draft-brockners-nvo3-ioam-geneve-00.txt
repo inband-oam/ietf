@@ -5,7 +5,7 @@
 Network Working Group                                       F. Brockners
 Internet-Draft                                               S. Bhandari
 Intended status: Standards Track                             V. Govindan
-Expires: May 2, 2018                                        C. Pignataro
+Expires: May 3, 2018                                        C. Pignataro
                                                                    Cisco
                                                               H. Gredler
                                                             RtBrick Inc.
@@ -21,7 +21,7 @@ Expires: May 2, 2018                                        C. Pignataro
                                                                 Facebook
                                                                 R. Chang
                                                        Barefoot Networks
-                                                        October 29, 2017
+                                                        October 30, 2017
 
 
                Geneve encapsulation for In-situ OAM Data
@@ -49,11 +49,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 2, 2018.
+   This Internet-Draft will expire on May 3, 2018.
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 1]
+Brockners, et al.          Expires May 3, 2018                  [Page 1]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 2]
+Brockners, et al.          Expires May 3, 2018                  [Page 2]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -165,7 +165,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 3]
+Brockners, et al.          Expires May 3, 2018                  [Page 3]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -221,7 +221,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 4]
+Brockners, et al.          Expires May 3, 2018                  [Page 4]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -277,7 +277,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 5]
+Brockners, et al.          Expires May 3, 2018                  [Page 5]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -333,7 +333,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 6]
+Brockners, et al.          Expires May 3, 2018                  [Page 6]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -389,7 +389,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 7]
+Brockners, et al.          Expires May 3, 2018                  [Page 7]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -445,7 +445,7 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 8]
+Brockners, et al.          Expires May 3, 2018                  [Page 8]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
@@ -482,30 +482,33 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
       Hardware and software friendly implementation: Hardware forwarders
       benefit from an encapsulation that minimizes iterative look-ups of
-      fields within the packet.  This means that flat TLV structures are
-      to be preferred over nested TLV structures.  IOAM data fields are
-      grouped into three option categories: Trace, proof-of-transit, and
-      edge-to-edge.  Each of these three options defines a TLV
-      structure.  A hardware-friendly encapsulation approach avoids
-      grouping these three option categories into yet another TLV
-      structure, but would rather carry the options as a serial
-      sequence.
+      fields within the packet: Any operation which looks up the value
+      of a field within the packet, based on which another lookup is
+      performed, consumes additional gates and time in an implementation
+      - both of which are desired to be kept to a minimum.  This means
+      that flat TLV structures are to be preferred over nested TLV
+      structures.  IOAM data fields are grouped into three option
+      categories: Trace, proof-of-transit, and edge-to-edge.  Each of
+      these three options defines a TLV structure.  A hardware-friendly
+      encapsulation approach avoids grouping these three option
+      categories into yet another TLV structure, but would rather carry
+      the options as a serial sequence.
 
       Total length of the IOAM data fields: The total length of IOAM
       data can grow quite large in case multiple different IOAM data
       fields are used and large path-lengths need to be considered.  If
       for example an operator would consider using the IOAM trace option
-      and capture node-id, app_data, egress/ingress interface-id,
-      timestamp seconds, timestamps nanoseconds at every hop, then a
-      total of 20 octets would be added to the packet at every hop.  In
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 9]
+Brockners, et al.          Expires May 3, 2018                  [Page 9]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
+      and capture node-id, app_data, egress/ingress interface-id,
+      timestamp seconds, timestamps nanoseconds at every hop, then a
+      total of 20 octets would be added to the packet at every hop.  In
       case this particular deployment would have a maximum path length
       of 15 hops in the IOAM domain, then a maximum of 300 octets of
       IOAM data were to be encapsulated in the packet.
@@ -536,9 +539,9 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
                  +---------------+-------------+---------------+
                  | Option Class  | Description | Reference     |
                  +---------------+-------------+---------------+
-                 | x             | IOAM_Trace  | This Document |
-                 | y             | IOAM_POT    | This Document |
-                 | z             | IOAM_E2E    | This Document |
+                 | x             | IOAM_Trace  | This document |
+                 | y             | IOAM_POT    | This document |
+                 | z             | IOAM_E2E    | This document |
                  +---------------+-------------+---------------+
 
 
@@ -551,16 +554,16 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    IOAM is considered a "per domain" feature, where one or several
    operators decide on leveraging and configuring IOAM according to
    their needs.  Still, operators need to properly secure the IOAM
-   domain to avoid malicious configuration and use, which could include
-   injecting malicious IOAM packets into a domain.
 
 
 
-
-Brockners, et al.          Expires May 2, 2018                 [Page 10]
+Brockners, et al.          Expires May 3, 2018                 [Page 10]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
+
+   domain to avoid malicious configuration and use, which could include
+   injecting malicious IOAM packets into a domain.
 
 7.  Acknowledgements
 
@@ -606,17 +609,18 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
               DOI 10.17487/RFC2784, March 2000, <https://www.rfc-
               editor.org/info/rfc2784>.
 
-   [RFC3232]  Reynolds, J., Ed., "Assigned Numbers: RFC 1700 is Replaced
-              by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
-              January 2002, <https://www.rfc-editor.org/info/rfc3232>.
 
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 11]
+Brockners, et al.          Expires May 3, 2018                 [Page 11]
 
 Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
+
+   [RFC3232]  Reynolds, J., Ed., "Assigned Numbers: RFC 1700 is Replaced
+              by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
+              January 2002, <https://www.rfc-editor.org/info/rfc3232>.
 
 8.2.  Informative References
 
@@ -659,6 +663,17 @@ Authors' Addresses
    Email: venggovi@cisco.com
 
 
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 12]
+
+Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
+
+
    Carlos Pignataro
    Cisco Systems, Inc.
    7200-11 Kit Creek Road
@@ -666,12 +681,6 @@ Authors' Addresses
    United States
 
    Email: cpignata@cisco.com
-
-
-
-Brockners, et al.          Expires May 2, 2018                 [Page 12]
-
-Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
    Hannes Gredler
@@ -710,6 +719,17 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    Email: davidm@mellanox.com
 
 
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 13]
+
+Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
+
+
    Petr Lapukhov
    Facebook
    1 Hacker Way
@@ -717,17 +737,6 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
    US
 
    Email: petr@fb.com
-
-
-
-
-
-
-
-
-Brockners, et al.          Expires May 2, 2018                 [Page 13]
-
-Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
    Remy Chang
@@ -772,13 +781,4 @@ Internet-Draft      In-situ OAM Geneve encapsulation        October 2017
 
 
 
-
-
-
-
-
-
-
-
-
-Brockners, et al.          Expires May 2, 2018                 [Page 14]
+Brockners, et al.          Expires May 3, 2018                 [Page 14]

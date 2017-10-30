@@ -5,7 +5,7 @@
 sfc                                                         F. Brockners
 Internet-Draft                                               S. Bhandari
 Intended status: Standards Track                             V. Govindan
-Expires: May 2, 2018                                        C. Pignataro
+Expires: May 3, 2018                                        C. Pignataro
                                                                    Cisco
                                                               H. Gredler
                                                             RtBrick Inc.
@@ -21,7 +21,7 @@ Expires: May 2, 2018                                        C. Pignataro
                                                                 Facebook
                                                                 R. Chang
                                                        Barefoot Networks
-                                                        October 29, 2017
+                                                        October 30, 2017
 
 
                  NSH Encapsulation for In-situ OAM Data
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 1]
+Brockners, et al.          Expires May 3, 2018                  [Page 1]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
-   This Internet-Draft will expire on May 2, 2018.
+   This Internet-Draft will expire on May 3, 2018.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 2]
+Brockners, et al.          Expires May 3, 2018                  [Page 2]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -165,7 +165,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 3]
+Brockners, et al.          Expires May 3, 2018                  [Page 3]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -221,7 +221,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 4]
+Brockners, et al.          Expires May 3, 2018                  [Page 4]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -277,7 +277,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 5]
+Brockners, et al.          Expires May 3, 2018                  [Page 5]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -333,7 +333,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 6]
+Brockners, et al.          Expires May 3, 2018                  [Page 6]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -389,7 +389,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 7]
+Brockners, et al.          Expires May 3, 2018                  [Page 7]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -445,7 +445,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 8]
+Brockners, et al.          Expires May 3, 2018                  [Page 8]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -463,14 +463,17 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
       Hardware and software friendly implementation: Hardware forwarders
       benefit from an encapsulation that minimizes iterative look-ups of
-      fields within the packet.  This means that flat TLV structures are
-      to be preferred over nested TLV structures.  IOAM data fields are
-      grouped into three option categories: Trace, proof-of-transit, and
-      edge-to-edge.  Each of these three options defines a TLV
-      structure.  A hardware-friendly encapsulation approach avoids
-      grouping these three option categories into yet another TLV
-      structure, but would rather carry the options as a serial
-      sequence.
+      fields within the packet: Any operation which looks up the value
+      of a field within the packet, based on which another lookup is
+      performed, consumes additional gates and time in an implementation
+      - both of which are desired to be kept to a minimum.  This means
+      that flat TLV structures are to be preferred over nested TLV
+      structures.  IOAM data fields are grouped into three option
+      categories: Trace, proof-of-transit, and edge-to-edge.  Each of
+      these three options defines a TLV structure.  A hardware-friendly
+      encapsulation approach avoids grouping these three option
+      categories into yet another TLV structure, but would rather carry
+      the options as a serial sequence.
 
       Total length of the IOAM data fields: The total length of IOAM
       data can grow quite large in case multiple different IOAM data
@@ -494,17 +497,18 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
        for variable length meta-data.  The length field is 6-bits,
        resulting in a maximum of 256 (2^6 x 4) octets.
 
-   2.  Encapsulation of IOAM data fields using the "Next Protocol"
-       field.  Each IOAM data field option (trace, proof-of-transit, and
-       edge-to-edge) would be specified by its own "next protocol".
 
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 9]
+Brockners, et al.          Expires May 3, 2018                  [Page 9]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
+
+   2.  Encapsulation of IOAM data fields using the "Next Protocol"
+       field.  Each IOAM data field option (trace, proof-of-transit, and
+       edge-to-edge) would be specified by its own "next protocol".
 
    The second option has been chosen here, because it avoids the
    additional layer of TLV nesting that the use of NSH MD Type 2 would
@@ -520,9 +524,9 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
                  +---------------+-------------+---------------+
                  | Next Protocol | Description | Reference     |
                  +---------------+-------------+---------------+
-                 | x             | IOAM_Trace  | This Document |
-                 | y             | IOAM_POT    | This Document |
-                 | z             | IOAM_E2E    | This Document |
+                 | x             | IOAM_Trace  | This document |
+                 | y             | IOAM_POT    | This document |
+                 | z             | IOAM_E2E    | This document |
                  +---------------+-------------+---------------+
 
 
@@ -553,11 +557,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-
-
-
-
-Brockners, et al.          Expires May 2, 2018                 [Page 10]
+Brockners, et al.          Expires May 3, 2018                 [Page 10]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -613,7 +613,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 11]
+Brockners, et al.          Expires May 3, 2018                 [Page 11]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -669,7 +669,7 @@ Authors' Addresses
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 12]
+Brockners, et al.          Expires May 3, 2018                 [Page 12]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -725,7 +725,7 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 13]
+Brockners, et al.          Expires May 3, 2018                 [Page 13]
 
 Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
@@ -781,4 +781,4 @@ Internet-Draft        In-situ OAM NSH encapsulation         October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 14]
+Brockners, et al.          Expires May 3, 2018                 [Page 14]

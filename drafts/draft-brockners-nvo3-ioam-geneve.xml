@@ -257,7 +257,7 @@
       </address>
     </author>
 
-    <date day="29" month="October" year="2017"/>
+    <date day="30" month="October" year="2017"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -653,14 +653,17 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
       <t><list style="empty">
           <t>Hardware and software friendly implementation: Hardware
           forwarders benefit from an encapsulation that minimizes iterative
-          look-ups of fields within the packet. This means that flat TLV
-          structures are to be preferred over nested TLV structures. IOAM data
-          fields are grouped into three option categories: Trace,
-          proof-of-transit, and edge-to-edge. Each of these three options
-          defines a TLV structure. A hardware-friendly encapsulation approach
-          avoids grouping these three option categories into yet another TLV
-          structure, but would rather carry the options as a serial
-          sequence.</t>
+          look-ups of fields within the packet: Any operation which looks up
+          the value of a field within the packet, based on which another
+          lookup is performed, consumes additional gates and time in an
+          implementation - both of which are desired to be kept to a minimum.
+          This means that flat TLV structures are to be preferred over nested
+          TLV structures. IOAM data fields are grouped into three option
+          categories: Trace, proof-of-transit, and edge-to-edge. Each of these
+          three options defines a TLV structure. A hardware-friendly
+          encapsulation approach avoids grouping these three option categories
+          into yet another TLV structure, but would rather carry the options
+          as a serial sequence.</t>
 
           <t>Total length of the IOAM data fields: The total length of IOAM
           data can grow quite large in case multiple different IOAM data
@@ -703,9 +706,9 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
           <artwork><![CDATA[              +---------------+-------------+---------------+
               | Option Class  | Description | Reference     |
               +---------------+-------------+---------------+
-              | x             | IOAM_Trace  | This Document |
-              | y             | IOAM_POT    | This Document |
-              | z             | IOAM_E2E    | This Document |
+              | x             | IOAM_Trace  | This document |
+              | y             | IOAM_POT    | This document |
+              | z             | IOAM_E2E    | This document |
               +---------------+-------------+---------------+
 
 ]]></artwork>

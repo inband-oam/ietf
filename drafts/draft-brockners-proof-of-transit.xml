@@ -63,7 +63,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-brockners-proof-of-transit-03"
+<rfc category="exp" docName="draft-brockners-proof-of-transit-04"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -250,7 +250,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </address>
     </author>
 
-    <date day="13" month="March" year="2017"/>
+    <date day="30" month="October" year="2017"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -276,23 +276,24 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>Several technologies such as Traffic Engineering (TE), Service Function
-      Chaining (SFC), and policy based routing are used to steer traffic through a
-      specific, user-defined path. This document defines mechanisms to
-      securely prove that traffic transited said defined path. These mechanisms
-      allow to securely verify whether, within a given path, all packets traversed all the nodes
-      that they are supposed to visit.</t>
+      <t>Several technologies such as Traffic Engineering (TE), Service
+      Function Chaining (SFC), and policy based routing are used to steer
+      traffic through a specific, user-defined path. This document defines
+      mechanisms to securely prove that traffic transited said defined path.
+      These mechanisms allow to securely verify whether, within a given path,
+      all packets traversed all the nodes that they are supposed to visit.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction">
       <t>Several deployments use Traffic Engineering, policy routing, Segment
-      Routing (SR), and Service Function Chaining (SFC) <xref target="RFC7665"/> to
-      steer packets through a specific set of nodes. In certain cases,
-      regulatory obligations or a compliance policy require operators to prove
-      that all packets that are supposed to follow a specific path are indeed
-      being forwarded across and exact set of pre-determined nodes.</t>
+      Routing (SR), and Service Function Chaining (SFC) <xref
+      target="RFC7665"/> to steer packets through a specific set of nodes. In
+      certain cases, regulatory obligations or a compliance policy require
+      operators to prove that all packets that are supposed to follow a
+      specific path are indeed being forwarded across and exact set of
+      pre-determined nodes.</t>
 
       <t>If a packet flow is supposed to go through a series of service
       functions or network nodes, it has to be proven that indeed all packets
@@ -312,15 +313,14 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       then trusted upon. The evolution to Network Function Virtualization
       (NFV) and modern service chaining concepts (using technologies such as
       Locator/ID Separation Protocol (LISP), Network Service Header (NSH),
-      Segment Routing (SR), etc.) blurs the line between the
-      different trust domains, because the hand-off-points are no longer
-      clearly defined physical interfaces, but are virtual interfaces. As a
-      consequence, different trust layers should not to be mixed in the same
-      device. For an NFV scenario a different type of proof is required.
-      Offering a proof that a packet indeed traversed a specific set of
-      service functions or nodes allows operators to evolve from the above
-      described indirect methods of proving that packets visit a predetermined
-      set of nodes.</t>
+      Segment Routing (SR), etc.) blurs the line between the different trust
+      domains, because the hand-off-points are no longer clearly defined
+      physical interfaces, but are virtual interfaces. As a consequence,
+      different trust layers should not to be mixed in the same device. For an
+      NFV scenario a different type of proof is required. Offering a proof
+      that a packet indeed traversed a specific set of service functions or
+      nodes allows operators to evolve from the above described indirect
+      methods of proving that packets visit a predetermined set of nodes.</t>
 
       <t>The solution approach presented in this document is based on a small
       portion of operational data added to every packet. This "in-situ"
@@ -350,13 +350,13 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       <t>Abbreviations used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
-		  <t hangText="HMAC:">Hash based Message Authentication Code. For example,
-            HMAC-SHA256 generates 256 bits of MAC</t>
-			
-	  <t hangText="IOAM:">In-situ Operations, Administration, and
+          <t hangText="HMAC:">Hash based Message Authentication Code. For
+          example, HMAC-SHA256 generates 256 bits of MAC</t>
+
+          <t hangText="IOAM:">In-situ Operations, Administration, and
           Maintenance</t>
 
-     	  <t hangText="LISP:">Locator/ID Separation Protocol</t>
+          <t hangText="LISP:">Locator/ID Separation Protocol</t>
 
           <t hangText="LPC:">Lagrange Polynomial Constants</t>
 
@@ -370,14 +370,20 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
           <t hangText="POT-profile:">Proof of Transit Profile that has the
           necessary data for nodes to participate in proof of transit</t>
-		  
-		  <t hangText="RND:">Random Bits generated per packet. Packet fields that donot change during the traversal are given as input to HMAC-256 algorithm. A minimum of 32 bits (left most) need to be used from the output if RND is used to verify the packet integrity. This is a standard recommendation by NIST.  </t>
 
-		  <t hangText="SEQ_NO:">Sequence number initialized to a predefined constant. This is used in concatenation with RND bits to mitigate different attacks discussed later. </t>
+          <t hangText="RND:">Random Bits generated per packet. Packet fields
+          that donot change during the traversal are given as input to
+          HMAC-256 algorithm. A minimum of 32 bits (left most) need to be used
+          from the output if RND is used to verify the packet integrity. This
+          is a standard recommendation by NIST.</t>
+
+          <t hangText="SEQ_NO:">Sequence number initialized to a predefined
+          constant. This is used in concatenation with RND bits to mitigate
+          different attacks discussed later.</t>
+
           <t hangText="SFC:">Service Function Chain</t>
 
           <t hangText="SR:">Segment Routing</t>
-
         </list></t>
     </section>
 
@@ -392,9 +398,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       <t>The methods how traffic is identified and associated to a specific
       path is outside the scope of this document. Identification could be done
       using a filter (e.g., 5-tuple classifier), or an identifier which is
-      already present in the packet (e.g., path or service identifier,
-      NSH Service Path Identifier (SPI),
-      flow-label, etc.)</t>
+      already present in the packet (e.g., path or service identifier, NSH
+      Service Path Identifier (SPI), flow-label, etc.)</t>
 
       <t>The solution approach is detailed in two steps. Initially the concept
       of the approach is explained. This concept is then further refined to
@@ -532,15 +537,16 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             secret.</t>
 
             <t><list style="empty">
-                <t>l0(x) = (((x-x1) / (x0-x1)) * ((x-x2)/x0-x2))) mod 53 = <vspace
-                blankLines="0"/>(((x-4) / (2-4)) * ((x-5)/2-5))) mod 53 = <vspace
-                blankLines="0"/>(10/3 - 3x/2 + (1/6)x^2) mod 53</t>
+                <t>l0(x) = (((x-x1) / (x0-x1)) * ((x-x2)/x0-x2))) mod 53 =
+                <vspace blankLines="0"/>(((x-4) / (2-4)) * ((x-5)/2-5))) mod
+                53 = <vspace blankLines="0"/>(10/3 - 3x/2 + (1/6)x^2) mod
+                53</t>
 
-                <t>l1(x) = (((x-x0) / (x1-x0)) * ((x-x2)/x1-x2))) mod 53 = <vspace
-                blankLines="0"/>(-5 + 7x/2 - (1/2)x^2) mod 53</t>
+                <t>l1(x) = (((x-x0) / (x1-x0)) * ((x-x2)/x1-x2))) mod 53 =
+                <vspace blankLines="0"/>(-5 + 7x/2 - (1/2)x^2) mod 53</t>
 
-                <t>l2(x) = (((x-x0) / (x2-x0)) * ((x-x1)/x2-x1))) mod 53 = <vspace
-                blankLines="0"/>(8/3 - 2 + (1/3)x^2) mod 53</t>
+                <t>l2(x) = (((x-x0) / (x2-x0)) * ((x-x1)/x2-x1))) mod 53 =
+                <vspace blankLines="0"/>(8/3 - 2 + (1/3)x^2) mod 53</t>
               </list></t>
           </section>
 
@@ -619,26 +625,25 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             reconstruction is enhanced as below. At every node, CML is updated
             as</t>
 
-            <t>CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod
-            Prime</t>
+            <t>CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod Prime</t>
 
             <t>Let us observe the packet level transformations in detail. For
             the example packet here, let the value RND be 45. Thus POLY-2
             would be (45 + 7x + 10x^2).</t>
 
-            <t>The shares that could be generated are (2, 46), (4, 21),
-            (5, 12).</t>
+            <t>The shares that could be generated are (2, 46), (4, 21), (5,
+            12).</t>
 
             <t><list style="empty">
                 <t>At ingress: The fields RND = 45. CML = 0.</t>
 
-                <t>At node-1 (x0): Respective share of POLY-2 is generated i.e.,
-                (2, 46) because share index of node-1 is 2.</t>
+                <t>At node-1 (x0): Respective share of POLY-2 is generated
+                i.e., (2, 46) because share index of node-1 is 2.</t>
 
                 <t>CML = 0 + ((28 + 46)* 21) mod 53 = 17</t>
 
-                <t>At node-2 (x1): Respective share of POLY-2 is generated i.e.,
-                (4, 21) because share index of node-2 is 4.</t>
+                <t>At node-2 (x1): Respective share of POLY-2 is generated
+                i.e., (4, 21) because share index of node-2 is 4.</t>
 
                 <t>CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39</t>
 
@@ -658,17 +663,20 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
             <t>VERIFY = (SECRET + RND) mod Prime, with Prime = 53 here</t>
 
-            <t>VERIFY = (RND-1 + RND-2) mod Prime = ( 10 + 45 ) mod 53 =
-            2</t>
+            <t>VERIFY = (RND-1 + RND-2) mod Prime = ( 10 + 45 ) mod 53 = 2</t>
 
             <t>Since VERIFY = CML the packet is proven to have gone through
             nodes 1, 2, and 3.</t>
           </section>
         </section>
-		<section title="Final Version">
-			<t> The enhanced version of the protocol is still prone to replay and preplay attacks. 
-				An attacker	could reuse the POT metadata for bypassing the verification. So additional measures using packet integrity checks (HMAC) and sequence numbers (SEQ_NO) are discussed later "Security Considerations" section.  </t>
-		</section>
+
+        <section title="Final Version">
+          <t>The enhanced version of the protocol is still prone to replay and
+          preplay attacks. An attacker could reuse the POT metadata for
+          bypassing the verification. So additional measures using packet
+          integrity checks (HMAC) and sequence numbers (SEQ_NO) are discussed
+          later "Security Considerations" section.</t>
+        </section>
       </section>
 
       <section title="Operational Aspects">
@@ -723,8 +731,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
               <t>The controller provisions all the nodes with their respective
               secret keys.</t>
 
-              <t>The controller provisions the verifier with all the secret keys
-              of the nodes.</t>
+              <t>The controller provisions the verifier with all the secret
+              keys of the nodes.</t>
 
               <t>For each packet, the ingress node generates a random number
               RND and encrypts it with its secret key to generate CML
@@ -1076,10 +1084,10 @@ module ietf-pot-profile {
       </section>
 
       <section title="Cryptanalysis">
-        <t>A passive attacker could try to harvest the POT data (i.e., CML, RND
-        values) in order to determine the configured secrets. Subsequently two
-        types of differential analysis for guessing the secrets could be done.
-        <list style="symbols">
+        <t>A passive attacker could try to harvest the POT data (i.e., CML,
+        RND values) in order to determine the configured secrets. Subsequently
+        two types of differential analysis for guessing the secrets could be
+        done. <list style="symbols">
             <t>Inter-Node: A passive attacker observing CML values across
             nodes (i.e., as the packets entering and leaving), cannot perform
             differential analysis to construct the points on POLY-1. This is
@@ -1114,9 +1122,9 @@ module ietf-pot-profile {
         <t>For all practical purposes in the rest of the document RND means
         SEQ_NO + RND to keep it simple.</t>
 
-	<t>The solution discussed in this memo does not currently mitigate 
-	replay attacks. An anti-replay mechanism may be included in future 
-	versions of the solution.</t>
+        <t>The solution discussed in this memo does not currently mitigate
+        replay attacks. An anti-replay mechanism may be included in future
+        versions of the solution.</t>
       </section>
 
       <section title="Anti-Preplay">
@@ -1126,9 +1134,9 @@ module ietf-pot-profile {
         values reaching the verifier. If the PKT-1 reaches the verifier, then
         this attack is same as Replay attacks discussed before.</t>
 
-        <t>Preplay attacks are possible since the POT metadata is not dependent
-        on the packet fields. Below steps are recommended for remediation:<list
-            style="symbols">
+        <t>Preplay attacks are possible since the POT metadata is not
+        dependent on the packet fields. Below steps are recommended for
+        remediation:<list style="symbols">
             <t>Ingress node and Verifier are configured with common pre shared
             key</t>
 
@@ -1147,9 +1155,9 @@ module ietf-pot-profile {
         <t>If an HMAC is used, an active attacker lacks the knowledge of the
         pre-shared key, and thus cannot launch preplay attacks.</t>
 
-	<t>The solution discussed in this memo does not currently mitigate 
-	prereplay attacks. A mitigation mechanism may be included in future 
-	versions of the solution.</t>
+        <t>The solution discussed in this memo does not currently mitigate
+        prereplay attacks. A mitigation mechanism may be included in future
+        versions of the solution.</t>
       </section>
 
       <section title="Anti-Tampering">

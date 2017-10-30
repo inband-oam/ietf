@@ -257,7 +257,7 @@
       </address>
     </author>
 
-    <date day="29" month="October" year="2017"/>
+    <date day="30" month="October" year="2017"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -616,19 +616,22 @@ IOAM E2E header following NSH MDx header:
       <t>An encapsulation of IOAM data fields in NSH should be friendly to an
       implementation in both hardware as well as software forwarders and
       support a wide range of deployment cases, including large networks that
-      desire to leverage multiple IOAM data fields at the same time. </t>
+      desire to leverage multiple IOAM data fields at the same time.</t>
 
       <t><list style="empty">
           <t>Hardware and software friendly implementation: Hardware
           forwarders benefit from an encapsulation that minimizes iterative
-          look-ups of fields within the packet. This means that flat TLV
-          structures are to be preferred over nested TLV structures. IOAM data
-          fields are grouped into three option categories: Trace,
-          proof-of-transit, and edge-to-edge. Each of these three options
-          defines a TLV structure. A hardware-friendly encapsulation approach
-          avoids grouping these three option categories into yet another TLV
-          structure, but would rather carry the options as a serial
-          sequence.</t>
+          look-ups of fields within the packet: Any operation which looks up
+          the value of a field within the packet, based on which another
+          lookup is performed, consumes additional gates and time in an
+          implementation - both of which are desired to be kept to a minimum.
+          This means that flat TLV structures are to be preferred over nested
+          TLV structures. IOAM data fields are grouped into three option
+          categories: Trace, proof-of-transit, and edge-to-edge. Each of these
+          three options defines a TLV structure. A hardware-friendly
+          encapsulation approach avoids grouping these three option categories
+          into yet another TLV structure, but would rather carry the options
+          as a serial sequence.</t>
 
           <t>Total length of the IOAM data fields: The total length of IOAM
           data can grow quite large in case multiple different IOAM data
@@ -650,11 +653,11 @@ IOAM E2E header following NSH MDx header:
           specified by a type, with the different IOAM data fields being TLVs
           within this the particular option type. NSH MD Type 2 offers support
           for variable length meta-data. The length field is 6-bits, resulting
-          in a maximum of 256 (2^6 x 4) octets. </t>
+          in a maximum of 256 (2^6 x 4) octets.</t>
 
           <t>Encapsulation of IOAM data fields using the "Next Protocol"
           field. Each IOAM data field option (trace, proof-of-transit, and
-          edge-to-edge) would be specified by its own "next protocol". </t>
+          edge-to-edge) would be specified by its own "next protocol".</t>
         </list>The second option has been chosen here, because it avoids the
       additional layer of TLV nesting that the use of NSH MD Type 2 would
       result in. In addition, the second option does not constrain IOAM data
@@ -670,9 +673,9 @@ IOAM E2E header following NSH MDx header:
           <artwork><![CDATA[              +---------------+-------------+---------------+
               | Next Protocol | Description | Reference     |
               +---------------+-------------+---------------+
-              | x             | IOAM_Trace  | This Document |
-              | y             | IOAM_POT    | This Document |
-              | z             | IOAM_E2E    | This Document |
+              | x             | IOAM_Trace  | This document |
+              | y             | IOAM_POT    | This document |
+              | z             | IOAM_E2E    | This document |
               +---------------+-------------+---------------+
 
 ]]></artwork>
