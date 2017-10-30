@@ -47,7 +47,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
 
 
@@ -72,7 +72,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -492,7 +492,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
       fields in each node data element follows the bit order of the
       IOAM-Trace-Type field, as follows:
 
-      Bit 0    (Most significant bit) When set indicates presence of
+      Bit 0    (Least significant bit) When set indicates presence of
                Hop_Lim and node_id in the node data.
 
       Bit 1    When set indicates presence of ingress_if_id and
@@ -551,9 +551,9 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
 
    Flags  5-bit field.  Following flags are defined:
 
-      Bit 0  "Overflow" (O-bit) (most significant bit).  This bit is set
-         by the network element if there is not enough number of octets
-         left to record node data, no field is added and the overflow
+      Bit 0  "Overflow" (O-bit) (least significant bit).  This bit is
+         set by the network element if there is not enough number of
+         octets left to record node data, no field is added and the
 
 
 
@@ -562,8 +562,9 @@ Brockners, et al.         Expires March 8, 2018                [Page 10]
 Internet-Draft           In-situ OAM Data Fields          September 2017
 
 
-         "O-bit" must be set to "1" in the header.  This is useful for
-         transit nodes to ignore further processing of the option.
+         overflow "O-bit" must be set to "1" in the header.  This is
+         useful for transit nodes to ignore further processing of the
+         option.
 
       Bit 1  "Loopback" (L-bit).  Loopback mode is used to send a copy
          of a packet back towards the source.  Loopback mode assumes
@@ -605,7 +606,6 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
       active node data to be populated.
 
 4.1.2.  Incremental Trace Option
-
 
 
 
@@ -661,7 +661,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
       fields in each node data element follows the bit order of the
       IOAM-Trace-Type field, as follows:
 
-      Bit 0    (Most significant bit) When set indicates presence of
+      Bit 0    (Least significant bit) When set indicates presence of
                Hop_Lim and node_id in the node data.
 
       Bit 1    When set indicates presence of ingress_if_id and
@@ -853,14 +853,15 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
    |                       timestamp nanoseconds                   |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   transit delay:  4-octet unsigned integer in the range 0 to 2^30-1.
+   transit delay:  4-octet unsigned integer in the range 0 to 2^31-1.
       It is the time in nanoseconds the packet spent in the transit
       node.  This can serve as an indication of the queuing delay at the
-      node.  If the transit delay exceeds 2^30-1 nanoseconds then the
-      top bit 'O' is set to indicate overflow.  When this field is part
-      of the data field but a node populating the field is not able to
-      fill it, the field position in the field must be filled with value
-      0xFFFFFFFF to mean not populated.
+      node.  If the transit delay exceeds 2^31-1 nanoseconds then the
+      top bit 'O' is set to indicate overflow and value set to
+      0x80000000.  When this field is part of the data field but a node
+      populating the field is not able to fill it, the field position in
+      the field must be filled with value 0xFFFFFFFF to mean not
+      populated.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -886,7 +887,6 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
       node populating the field is not able to fill it, the field
       position in the field must be filled with value 0xFFFFFFFF to mean
       not populated.
-
 
 
 
@@ -1406,14 +1406,14 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
               Institute of Electrical and Electronics Engineers,
               "1588-2008 - IEEE Standard for a Precision Clock
               Synchronization Protocol for Networked Measurement and
-              Control Systems",  IEEE Std 1588-2008, 2008,
+              Control Systems", IEEE Std 1588-2008, 2008,
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
+              RFC2119, March 1997, <https://www.rfc-editor.org/info/
+              rfc2119>.
 
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
@@ -1474,9 +1474,9 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
               dataplane-probe-01 (work in progress), June 2016.
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665,
-              DOI 10.17487/RFC7665, October 2015,
-              <https://www.rfc-editor.org/info/rfc7665>.
+              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
+              RFC7665, October 2015, <https://www.rfc-editor.org/info/
+              rfc7665>.
 
    [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
               Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
@@ -1484,9 +1484,9 @@ Internet-Draft           In-situ OAM Data Fields          September 2017
 
    [RFC7820]  Mizrahi, T., "UDP Checksum Complement in the One-Way
               Active Measurement Protocol (OWAMP) and Two-Way Active
-              Measurement Protocol (TWAMP)", RFC 7820,
-              DOI 10.17487/RFC7820, March 2016,
-              <https://www.rfc-editor.org/info/rfc7820>.
+              Measurement Protocol (TWAMP)", RFC 7820, DOI 10.17487/
+              RFC7820, March 2016, <https://www.rfc-editor.org/info/
+              rfc7820>.
 
    [RFC7821]  Mizrahi, T., "UDP Checksum Complement in the Network Time
               Protocol (NTP)", RFC 7821, DOI 10.17487/RFC7821, March
