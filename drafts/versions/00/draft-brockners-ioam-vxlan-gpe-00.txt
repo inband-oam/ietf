@@ -83,13 +83,14 @@ Table of Contents
      3.1.  IOAM Trace Data in VXLAN-GPE  . . . . . . . . . . . . . .   3
      3.2.  IOAM POT Data in VXLAN-GPE  . . . . . . . . . . . . . . .   7
      3.3.  IOAM Edge-to-Edge Data in VXLAN-GPE . . . . . . . . . . .   8
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
-   6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  10
-   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-     7.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .  11
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+   4.  Discussion of the encapsulation approach  . . . . . . . . . .   9
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -103,7 +104,6 @@ Table of Contents
    implementation of IOAM which leverages VXLAN-GPE to carry the IOAM
    data is available from the FD.io open source software project
    [FD.io].
-
 
 
 
@@ -480,22 +480,22 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
    E2E Option data field:  Variable length field as defined in
       [I-D.ietf-ippm-ioam-data] IOAM E2E Option.
 
-4.  IANA Considerations
+4.  Discussion of the encapsulation approach
 
-   IANA is requested to allocate protocol numbers for the following
-   VXLAN-GPE "Next Protocols" related to IOAM:
+   This section is to support the working group discussion in selecting
+   the most appropriate approach for encapsulating IOAM data fields in
+   VXLAN-GPE.
 
-                 +---------------+-------------+---------------+
-                 | Next Protocol | Description | Reference     |
-                 +---------------+-------------+---------------+
-                 | x             | IOAM_Trace  | This Document |
-                 | y             | IOAM_POT    | This Document |
-                 | z             | IOAM_E2E    | This Document |
-                 +---------------+-------------+---------------+
-
-
-
-
+   An encapsulation of IOAM data fields in VXLAN-GPE should be friendly
+   to an implementation in both hardware as well as software forwarders.
+   Hardware forwarders benefit from an encapsulation that minimizes
+   iterative look-ups of fields within the packet.  This means that flat
+   TLV structures are to be preferred over nested TLV structures.  IOAM
+   data fields are grouped into three option categories: Trace, proof-
+   of-transit, and edge-to-edge.  Each of these three options defines a
+   TLV structure.  A hardware-friendly encapsulation approach avoids
+   grouping these three option categories into yet another TLV
+   structure, but would rather carry the options as a serial sequence.
 
 
 
@@ -506,7 +506,43 @@ Brockners, et al.          Expires May 2, 2018                  [Page 9]
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
-5.  Security Considerations
+   Two approaches for encapsulating IOAM data fields in VXLAN-GPE could
+   be considered:
+
+   1.  Use a single GPE protocol type for all IOAM types: IOAM would
+       receive a single GPE protocol type code point.  A "sub-type"
+       (e.g. 4 bit wide) would then specify what IOAM options type(s)
+       (trace, proof-of-transit, edge-to-edge) are carried.  In case
+       there is a need for additional IOAM options, changes would be
+       contained within the single GPE protocol type for IOAM.
+
+   2.  Use one GPE protocol type per IOAM options type: Each IOAM data
+       field option (trace, proof-of-transit, and edge-to-edge) would be
+       specified by its own "next protocol", i.e. each IOAM options type
+       becomes its own GPE protocol type with a dedicated code point.
+       This implies that in case additional IOAM option types would be
+       added in the future, additional GPE protocol type code points
+       would need to be allocated.
+
+   The second option has been chosen here, because it avoids the
+   additional layer of TLV nesting that the use of a single GPE protocol
+   type for all IOAM option types would result in.
+
+5.  IANA Considerations
+
+   IANA is requested to allocate protocol numbers for the following
+   VXLAN-GPE "Next Protocols" related to IOAM:
+
+                 +---------------+-------------+---------------+
+                 | Next Protocol | Description | Reference     |
+                 +---------------+-------------+---------------+
+                 | x             | IOAM_Trace  | This document |
+                 | y             | IOAM_POT    | This document |
+                 | z             | IOAM_E2E    | This document |
+                 +---------------+-------------+---------------+
+
+
+6.  Security Considerations
 
    The security considerations of VXLAN-GPE are discussed in
    [I-D.ietf-nvo3-vxlan-gpe], and the security considerations of IOAM in
@@ -518,16 +554,24 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
    domain to avoid malicious configuration and use, which could include
    injecting malicious IOAM packets into a domain.
 
-6.  Acknowledgements
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 10]
+
+Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
+
+
+7.  Acknowledgements
 
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
    Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
    and Andrew Yourtchenko for the comments and advice.
 
-7.  References
+8.  References
 
-7.1.  Normative References
+8.1.  Normative References
 
    [ETYPES]   "IANA Ethernet Numbers",
               <https://www.iana.org/assignments/ethernet-numbers/
@@ -555,20 +599,24 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
               DOI 10.17487/RFC2784, March 2000, <https://www.rfc-
               editor.org/info/rfc2784>.
 
-
-
-Brockners, et al.          Expires May 2, 2018                 [Page 10]
-
-Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
-
-
    [RFC3232]  Reynolds, J., Ed., "Assigned Numbers: RFC 1700 is Replaced
               by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
               January 2002, <https://www.rfc-editor.org/info/rfc3232>.
 
-7.2.  Informative References
+8.2.  Informative References
 
    [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 11]
+
+Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
+
 
    [I-D.brockners-proof-of-transit]
               Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
@@ -607,17 +655,6 @@ Authors' Addresses
    Email: venggovi@cisco.com
 
 
-
-
-
-
-
-
-Brockners, et al.          Expires May 2, 2018                 [Page 11]
-
-Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
-
-
    Carlos Pignataro
    Cisco Systems, Inc.
    7200-11 Kit Creek Road
@@ -625,6 +662,16 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
    United States
 
    Email: cpignata@cisco.com
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 12]
+
+Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
    Hannes Gredler
@@ -663,17 +710,6 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
    Email: davidm@mellanox.com
 
 
-
-
-
-
-
-
-Brockners, et al.          Expires May 2, 2018                 [Page 12]
-
-Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
-
-
    Petr Lapukhov
    Facebook
    1 Hacker Way
@@ -681,6 +717,17 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
    US
 
    Email: petr@fb.com
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 13]
+
+Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
    Remy Chang
@@ -725,4 +772,13 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 13]
+
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 2, 2018                 [Page 14]
