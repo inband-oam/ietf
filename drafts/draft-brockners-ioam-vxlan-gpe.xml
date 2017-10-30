@@ -257,7 +257,7 @@
       </address>
     </author>
 
-    <date day="29" month="October" year="2017"/>
+    <date day="30" month="October" year="2017"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -673,13 +673,16 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
       <t>An encapsulation of IOAM data fields in VXLAN-GPE should be friendly
       to an implementation in both hardware as well as software forwarders.
       Hardware forwarders benefit from an encapsulation that minimizes
-      iterative look-ups of fields within the packet. This means that flat TLV
-      structures are to be preferred over nested TLV structures. IOAM data
-      fields are grouped into three option categories: Trace,
-      proof-of-transit, and edge-to-edge. Each of these three options defines
-      a TLV structure. A hardware-friendly encapsulation approach avoids
-      grouping these three option categories into yet another TLV structure,
-      but would rather carry the options as a serial sequence.</t>
+      iterative look-ups of fields within the packet: Any operation which
+      looks up the value of a field within the packet, based on which another
+      lookup is performed, consumes additional gates and time in an
+      implementation - both of which are desired to be kept to a minimum. This
+      means that flat TLV structures are to be preferred over nested TLV
+      structures. IOAM data fields are grouped into three option categories:
+      Trace, proof-of-transit, and edge-to-edge. Each of these three options
+      defines a TLV structure. A hardware-friendly encapsulation approach
+      avoids grouping these three option categories into yet another TLV
+      structure, but would rather carry the options as a serial sequence.</t>
 
       <t>Two approaches for encapsulating IOAM data fields in VXLAN-GPE could
       be considered:</t>
@@ -701,7 +704,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned.
           be allocated.</t>
         </list>The second option has been chosen here, because it avoids the
       additional layer of TLV nesting that the use of a single GPE protocol
-      type for all IOAM option types would result in. </t>
+      type for all IOAM option types would result in.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">

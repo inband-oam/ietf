@@ -5,7 +5,7 @@
 Network Working Group                                       F. Brockners
 Internet-Draft                                               S. Bhandari
 Intended status: Standards Track                             V. Govindan
-Expires: May 2, 2018                                        C. Pignataro
+Expires: May 3, 2018                                        C. Pignataro
                                                                    Cisco
                                                               H. Gredler
                                                             RtBrick Inc.
@@ -21,7 +21,7 @@ Expires: May 2, 2018                                        C. Pignataro
                                                                 Facebook
                                                                 R. Chang
                                                        Barefoot Networks
-                                                        October 29, 2017
+                                                        October 30, 2017
 
 
               VXLAN-GPE Encapsulation for In-situ OAM Data
@@ -49,11 +49,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 2, 2018.
+   This Internet-Draft will expire on May 3, 2018.
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 1]
+Brockners, et al.          Expires May 3, 2018                  [Page 1]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -89,7 +89,7 @@ Table of Contents
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  11
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  12
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 2]
+Brockners, et al.          Expires May 3, 2018                  [Page 2]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -165,7 +165,7 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 3]
+Brockners, et al.          Expires May 3, 2018                  [Page 3]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -221,7 +221,7 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 4]
+Brockners, et al.          Expires May 3, 2018                  [Page 4]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -277,7 +277,7 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 5]
+Brockners, et al.          Expires May 3, 2018                  [Page 5]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -333,7 +333,7 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 6]
+Brockners, et al.          Expires May 3, 2018                  [Page 6]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -389,7 +389,7 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 7]
+Brockners, et al.          Expires May 3, 2018                  [Page 7]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -445,7 +445,7 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                  [Page 8]
+Brockners, et al.          Expires May 3, 2018                  [Page 8]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -489,22 +489,25 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
    An encapsulation of IOAM data fields in VXLAN-GPE should be friendly
    to an implementation in both hardware as well as software forwarders.
    Hardware forwarders benefit from an encapsulation that minimizes
-   iterative look-ups of fields within the packet.  This means that flat
-   TLV structures are to be preferred over nested TLV structures.  IOAM
-   data fields are grouped into three option categories: Trace, proof-
-   of-transit, and edge-to-edge.  Each of these three options defines a
-   TLV structure.  A hardware-friendly encapsulation approach avoids
-   grouping these three option categories into yet another TLV
-   structure, but would rather carry the options as a serial sequence.
+   iterative look-ups of fields within the packet: Any operation which
+   looks up the value of a field within the packet, based on which
+   another lookup is performed, consumes additional gates and time in an
+   implementation - both of which are desired to be kept to a minimum.
+   This means that flat TLV structures are to be preferred over nested
+   TLV structures.  IOAM data fields are grouped into three option
+   categories: Trace, proof-of-transit, and edge-to-edge.  Each of these
+   three options defines a TLV structure.  A hardware-friendly
+   encapsulation approach avoids grouping these three option categories
 
 
 
-
-
-Brockners, et al.          Expires May 2, 2018                  [Page 9]
+Brockners, et al.          Expires May 3, 2018                  [Page 9]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
+
+   into yet another TLV structure, but would rather carry the options as
+   a serial sequence.
 
    Two approaches for encapsulating IOAM data fields in VXLAN-GPE could
    be considered:
@@ -551,16 +554,16 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
    IOAM is considered a "per domain" feature, where one or several
    operators decide on leveraging and configuring IOAM according to
    their needs.  Still, operators need to properly secure the IOAM
-   domain to avoid malicious configuration and use, which could include
-   injecting malicious IOAM packets into a domain.
 
 
 
-
-Brockners, et al.          Expires May 2, 2018                 [Page 10]
+Brockners, et al.          Expires May 3, 2018                 [Page 10]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
+
+   domain to avoid malicious configuration and use, which could include
+   injecting malicious IOAM packets into a domain.
 
 7.  Acknowledgements
 
@@ -603,9 +606,6 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
               by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
               January 2002, <https://www.rfc-editor.org/info/rfc3232>.
 
-8.2.  Informative References
-
-   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
 
 
 
@@ -613,10 +613,14 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 11]
+Brockners, et al.          Expires May 3, 2018                 [Page 11]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
+
+8.2.  Informative References
+
+   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
 
    [I-D.brockners-proof-of-transit]
               Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
@@ -665,11 +669,7 @@ Authors' Addresses
 
 
 
-
-
-
-
-Brockners, et al.          Expires May 2, 2018                 [Page 12]
+Brockners, et al.          Expires May 3, 2018                 [Page 12]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -725,7 +725,7 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 13]
+Brockners, et al.          Expires May 3, 2018                 [Page 13]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
@@ -781,4 +781,4 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation      October 2017
 
 
 
-Brockners, et al.          Expires May 2, 2018                 [Page 14]
+Brockners, et al.          Expires May 3, 2018                 [Page 14]
