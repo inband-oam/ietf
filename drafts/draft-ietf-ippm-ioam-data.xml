@@ -693,20 +693,16 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
               <t hangText="NodeLen:">5-bit unsigned integer. This field
               specifies the length of data added by each node in multiples of
               4-octets, excluding the length of the "Opaque State Snapshot"
-              field.
-              <vspace blankLines="1" />
-              If IOAM-Trace-Type bit 7 is not set, then NodeLen specifies the
-              actual length added by each node. If IOAM-Trace-Type bit 7 is
-              set, then the actual length added by a node would be (NodeLen +
-              Opaque Data Length).
-              <vspace blankLines="1" />
-              For example, if 3 IOAM-Trace-Type bits are set and none of them
-              are wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are
-              set and 2 of them are wide, then NodeLen would be 5.
-              <vspace blankLines="1" />
-              An IOAM encapsulating node must set NodeLen.
-              <vspace blankLines="1" />
-              A node receiving an IOAM Pre-allocated Trace Option may rely on
+              field. <vspace blankLines="1"/> If IOAM-Trace-Type bit 7 is not
+              set, then NodeLen specifies the actual length added by each
+              node. If IOAM-Trace-Type bit 7 is set, then the actual length
+              added by a node would be (NodeLen + Opaque Data Length). <vspace
+              blankLines="1"/> For example, if 3 IOAM-Trace-Type bits are set
+              and none of them are wide, then NodeLen would be 3. If 3
+              IOAM-Trace-Type bits are set and 2 of them are wide, then
+              NodeLen would be 5. <vspace blankLines="1"/> An IOAM
+              encapsulating node must set NodeLen. <vspace blankLines="1"/> A
+              node receiving an IOAM Pre-allocated Trace Option may rely on
               the NodeLen value, or it may ignore the NodeLen value and
               calculate the node length from the IOAM-Trace-Type bits.</t>
 
@@ -858,22 +854,18 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               <t hangText="NodeLen:">5-bit unsigned integer. This field
               specifies the length of data added by each node in multiples of
               4-octets, excluding the length of the "Opaque State Snapshot"
-              field.
-              <vspace blankLines="1" />
-              If IOAM-Trace-Type bit 7 is not set, then NodeLen specifies the
-              actual length added by each node. If IOAM-Trace-Type bit 7 is
-              set, then the actual length added by a node would be (NodeLen +
-              Opaque Data Length).
-              <vspace blankLines="1" />
-              For example, if 3 IOAM-Trace-Type bits are set and none of them
-              are wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are
-              set and 2 of them are wide, then NodeLen would be 5.
-              <vspace blankLines="1" />
-              An IOAM encapsulating node must set NodeLen.
-              <vspace blankLines="1" />
-              A node receiving an IOAM Incremental Trace Option may rely on
-              the NodeLen value, or it may ignore the NodeLen value and
-              calculate the node length from the IOAM-Trace-Type bits.</t>
+              field. <vspace blankLines="1"/> If IOAM-Trace-Type bit 7 is not
+              set, then NodeLen specifies the actual length added by each
+              node. If IOAM-Trace-Type bit 7 is set, then the actual length
+              added by a node would be (NodeLen + Opaque Data Length). <vspace
+              blankLines="1"/> For example, if 3 IOAM-Trace-Type bits are set
+              and none of them are wide, then NodeLen would be 3. If 3
+              IOAM-Trace-Type bits are set and 2 of them are wide, then
+              NodeLen would be 5. <vspace blankLines="1"/> An IOAM
+              encapsulating node must set NodeLen. <vspace blankLines="1"/> A
+              node receiving an IOAM Incremental Trace Option may rely on the
+              NodeLen value, or it may ignore the NodeLen value and calculate
+              the node length from the IOAM-Trace-Type bits.</t>
 
               <t anchor="IOAMTraceFlags" hangText="Flags">4-bit field.
               Following flags are defined:<list style="hanging">
@@ -974,19 +966,22 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               <t hangText="timestamp seconds:">4-octet unsigned integer.
               Absolute timestamp in seconds that specifies the time at which
               the packet was received by the node. The structure of this field
-              is defined according to either <xref target="IEEE1588v2"/>
-              or to <xref target="RFC5905"/>. For <xref target="IEEE1588v2"/>,
-              it is identical to the most significant 32 bits of the 64 least
-              significant bits of the <xref target="IEEE1588v2"/> timestamp.
-              This truncated field consists of a 32-bit seconds field. As
-              defined in <xref target="IEEE1588v2"/>, the timestamp specifies
-              the number of seconds elapsed since 1 January 1970 00:00:00
-              according to the International Atomic Time (TAI). For <xref
-              target="RFC5905"/>, it is identical to the seconds portion of
-              the <xref target="RFC5905"/> timestamp. As defined in <xref
-              target="RFC5905"/>, the timestamp specifies
-              the number of seconds elapsed since 1 January 1900 00:00:00.
-              <figure>
+              is defined according to either <xref target="IEEE1588v2"/>, or
+              to <xref target="RFC5905"/>, or to <xref target="POSIX"/>. For
+              <xref target="IEEE1588v2"/>, it is identical to the most
+              significant 32 bits of the 64 least significant bits of the
+              <xref target="IEEE1588v2"/> timestamp. This truncated field
+              consists of a 32-bit seconds field. As defined in <xref
+              target="IEEE1588v2"/>, the timestamp specifies the number of
+              seconds elapsed since 1 January 1970 00:00:00 according to the
+              International Atomic Time (TAI). For <xref target="RFC5905"/>,
+              it is identical to the seconds portion of the <xref
+              target="RFC5905"/> timestamp. As defined in <xref
+              target="RFC5905"/>, the timestamp specifies the number of
+              seconds elapsed since 1 January 1900 00:00:00. The same applies
+              to <xref target="POSIX"/> for which the timestamp also specifies
+              the number of seconds elapsed since 1 January 1900 00:00:00
+              UTC.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       timestamp seconds                       |
@@ -994,20 +989,24 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                 </figure></t>
 
               <t hangText="timestamp subseconds:">4-octet unsigned integer.
-              Absolute timestamp in subseconds that specifies the time at which
-              the packet was received by the node. The structure of this field
-              is defined according to either <xref target="IEEE1588v2"/>
-              or to <xref target="RFC5905"/>. For <xref target="IEEE1588v2"/>,
-              this timestamp specifies the fractional part of the wall clock
-              time, in the range 0 to 10^9-1, at which the packet was received
-              by the node, in units of nanoseconds. This field is identical to
-              the 32 least significant bits of the <xref target="IEEE1588v2"/>
-              timestamp. For <xref target="RFC5905"/>, this timestamp
-              specifies the fractional part of the wall clock time at which the
-              packet was received, in fractions of a second. This format is
-              identical to the 32 least significant bits of the <xref
-              target="RFC5905"/> timestamp.
-              This fields allows for delay computation between any
+              Absolute timestamp in subseconds that specifies the time at
+              which the packet was received by the node. The structure of this
+              field is defined according to either <xref target="IEEE1588v2"/>
+              or to <xref target="RFC5905"/>, or to <xref target="POSIX"/>.
+              For <xref target="IEEE1588v2"/>, this timestamp specifies the
+              fractional part of the wall clock time, in the range 0 to
+              10^9-1, at which the packet was received by the node, in units
+              of nanoseconds. This field is identical to the 32 least
+              significant bits of the <xref target="IEEE1588v2"/> timestamp.
+              For <xref target="POSIX"/>, this timestamp specifies the
+              fractional part of the wall clock time at which the packet was
+              received in microseconds. This field is identical to the 32
+              least significant bits of the <xref target="POSIX"/> timestamp.
+              For <xref target="RFC5905"/>, this timestamp specifies the
+              fractional part of the wall clock time at which the packet was
+              received, in fractions of a second. This format is identical to
+              the 32 least significant bits of the <xref target="RFC5905"/>
+              timestamp. This fields allows for delay computation between any
               two nodes in the network when the nodes are time synchronized.
               When this field is part of the data field but a node populating
               the field is not able to fill it, the field position in the
@@ -1389,32 +1388,34 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 ]]></artwork>
           </figure><list style="hanging">
             <t hangText="IOAM-E2E-Type:">8-bit identifier of a particular in
-            situ OAM E2E variant.<list hangIndent="9"
-            style="hanging">
-              <t hangText="Bit 0">(Most significant bit) When set indicates
-              presence of a 64-bit sequence number added to a specific tube
-              which is used to identify packet loss and reordering for that
-              tube.</t>
+            situ OAM E2E variant.<list hangIndent="9" style="hanging">
+                <t hangText="Bit 0">(Most significant bit) When set indicates
+                presence of a 64-bit sequence number added to a specific tube
+                which is used to identify packet loss and reordering for that
+                tube.</t>
 
-              <t hangText="Bit 1">When set indicates presence of a 32-bit
-              sequence number added to a specific tube which is used to identify
-              packet loss and reordering for that tube.</t>
+                <t hangText="Bit 1">When set indicates presence of a 32-bit
+                sequence number added to a specific tube which is used to
+                identify packet loss and reordering for that tube.</t>
 
-              <t hangText="Bit 2">When set indicates presence of timestamp
-              seconds for the transmission of the frame. This specifies either
-              the number of seconds elapsed since 1 January 1970 00:00:00,
-              as defined in <xref target="IEEE1588v2"/>, or the number
-              of seconds elapsed since 1 January 1900 00:00:00, as defined in
-              <xref target="RFC5905"/>.</t>
+                <t hangText="Bit 2">When set indicates presence of timestamp
+                seconds for the transmission of the frame. This specifies
+                either the number of seconds elapsed since 1 January 1970
+                00:00:00 UTC, as defined in <xref target="IEEE1588v2"/> or
+                <xref target="POSIX"/>, or the number of seconds elapsed since
+                1 January 1900 00:00:00, as defined in <xref
+                target="RFC5905"/>.</t>
 
-              <t hangText="Bit 3">When set indicates presence of timestamp
-              subseconds for the transmission of the frame. This specifies
-              either the nanoseconds portion of the timestamp for the
-              transmission of the frame, as defined in <xref
-              target="IEEE1588v2"/>, or the fractional seconds portion of
-              the timestamp for the transmission of the frame, as defined in
-              <xref target="RFC5905"/>.</t>
-            </list></t>
+                <t hangText="Bit 3">When set indicates presence of timestamp
+                subseconds for the transmission of the frame. This specifies
+                either the nanoseconds portion of the timestamp for the
+                transmission of the frame, as defined in <xref
+                target="IEEE1588v2"/>, or microseconds portion of the
+                timestamp for the transmission of the frame, as defined in
+                <xref target="POSIX"/>, or the fractional seconds portion of
+                the timestamp for the transmission of the frame, as defined in
+                <xref target="RFC5905"/>.</t>
+              </list></t>
           </list></t>
       </section>
     </section>
@@ -1486,10 +1487,10 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
       <section title="IOAM E2E Type Registry">
         <t>This registry defines 256 code points to define IOAM-E2E-Type for
-        IOAM E2E option <xref target="IOAM_edge_to_edge_opt"/>.
-        The meaning of Bit 0 - 3 are defined in this document. The meaning of
-        Bit 4 - 7 are available for assignments via RFC Required process as per
-        <xref target="RFC8126"/>.</t>
+        IOAM E2E option <xref target="IOAM_edge_to_edge_opt"/>. The meaning of
+        Bit 0 - 3 are defined in this document. The meaning of Bit 4 - 7 are
+        available for assignments via RFC Required process as per <xref
+        target="RFC8126"/>.</t>
       </section>
     </section>
 
@@ -1545,10 +1546,28 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
       &RFC8126;
 
+      <reference anchor="POSIX"
+                 target="https://standards.ieee.org/findstds/standard/1003.1-2008.html">
+        <front>
+          <title>IEEE Std 1003.1-2008 (Revision of IEEE Std 1003.1-2004) -
+          IEEE Standard for Information Technology - Portable Operating System
+          Interface (POSIX(R))</title>
+
+          <author>
+            <organization>Institute of Electrical and Electronics
+            Engineers</organization>
+          </author>
+
+          <date year="2008"/>
+        </front>
+
+        <seriesInfo name="" value="IEEE Std 1003.1-2008"/>
+      </reference>
+
       <reference anchor="IEEE1588v2"
                  target="http://standards.ieee.org/findstds/standard/1588-2008.html">
         <front>
-          <title>1588-2008 - IEEE Standard for a Precision Clock
+          <title>IEEE Std 1588-2008 - IEEE Standard for a Precision Clock
           Synchronization Protocol for Networked Measurement and Control
           Systems</title>
 
