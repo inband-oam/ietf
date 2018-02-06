@@ -535,17 +535,18 @@
             <t hangText="Incremental Trace Option:">This trace option is
             defined as a container of node data fields where each node
             allocates and pushes its node data immediately following the
-            option header. The maximum length of the node data list is written
-            into the option header. This type of trace recording is useful for
-            some of the hardware implementations as this eliminates the need
-            for the transit network elements to read the full array in the
-            option and allows for arbitrarily long packets as the MTU allows.
-            The in-situ OAM encapsulating node allocates the option header.
-            The in-situ OAM encapsulating node based on operational state and
-            configuration sets the fields in the header to control how large
-            the node data list can grow. IOAM transit nodes push their node
-            data to the node data list and increment the number of node data
-            fields in the header.</t>
+            option header. This type of trace recording is useful for some of
+            the hardware implementations as this eliminates the need for the
+            transit network elements to read the full array in the option and
+            allows for arbitrarily long packets as the MTU allows. The in-situ
+            OAM encapsulating node allocates the option header. The in-situ
+            OAM encapsulating node based on operational state and
+            configuration sets the fields in the header that control what node
+            data fields should be collected, and how large the node data list
+            can grow. The in-situ OAM transit nodes push their node data to
+            the node data list, decrease the remaining length available to
+            subsequent nodes, and adjust the lengths and possibly checksums in
+            outer headers.</t>
           </list></t>
 
         <t>Every node data entry is to hold information for a particular IOAM
@@ -772,7 +773,7 @@ In-situ OAM incremental trace option Header:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|        IOAM-Trace-Type        | NodeLen | Flags | Max Length  |
+|        IOAM-Trace-Type        | NodeLen | Flags |RemainingLen |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 IOAM Incremental Trace Option Data MUST be 4-octet aligned: 
@@ -894,13 +895,19 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                   <t hangText="Bit 2-3">Reserved. Must be zero.</t>
                 </list></t>
 
-              <t hangText="Maximum Length:">7-bit unsigned integer. This field
-              specifies the maximum length of the node data list in multiples
-              of 4-octets. Given that the sender knows the minimum path MTU,
-              the sender can set the maximum length according to the number of
-              node data bytes allowed before exceeding the MTU. Thus, a simple
-              comparison between "NodeLen" and "Max Length" allows to decide
-              whether or not data could be added.</t>
+              <t hangText="RemainingLen:">7-bit unsigned integer. This field
+              specifies the data space in multiples of 4-octets remaining for
+              recording the node data, before the node data list is considered
+              to have overflowed. When RemainingLen reaches 0, nodes are no
+              longer allowed to add node data. Given that the sender knows the
+              minimum path MTU, the sender MAY set the initial value of
+              RemainingLen according to the number of node data bytes allowed
+              before exceeding the MTU. Subsequent nodes can carry out a
+              simple comparison between RemainingLen and NodeLen, along with
+              the length of the "Opaque State Snapshot" if applicable, to
+              determine whether or not data can be added by this node. When
+              node data is added, the node MUST decrease RemainingLen by the
+              amount of data added.</t>
 
               <t hangText="Node data List [n]:">Variable-length field. The
               type of which is determined by the OAM Type representing the
