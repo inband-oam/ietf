@@ -681,7 +681,19 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
                   <t hangText="Bit 11">When set indicates presence of the
                   Checksum Complement node data.</t>
 
-                  <t hangText="Bit 12-15">Undefined in this draft.</t>
+                  <t hangText="Bit 12-15">Undefined. An IOAM encapsulating node
+                  must set the value of each of these bits to 0. If an IOAM
+                  transit node receives a packet with one or more of these bits
+                  set to 1, it must either:
+                  <list style="numbers">
+                    <t>Add corresponding node data filled with the reserved
+                    value 0xFFFFFFFF, after the node data fields for the
+                    IOAM-Trace-Type bits defined above, such that the total
+                    node data added by this node in units of 4-octets is equal
+                    to NodeLen, or</t>
+                    <t>Not add any node data fields to the packet, even for the
+                    IOAM-Trace-Type bits defined above.</t>
+                  </list></t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-node-data-element"/>
@@ -837,7 +849,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                   length Opaque State Snapshot field.</t>
 
                   <t hangText="Bit 8">When set indicates presence of Hop_Lim
-                  and node_id wide in the node data.</t>
+                  and node_id in wide format in the node data.</t>
 
                   <t hangText="Bit 9">When set indicates presence of
                   ingress_if_id and egress_if_id in wide format in the node
@@ -849,11 +861,26 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                   <t hangText="Bit 11">When set indicates presence of the
                   Checksum Complement node data.</t>
 
-                  <t hangText="Bit 12-15">Undefined in this draft.</t>
+                  <t hangText="Bit 12-15">Undefined. An IOAM encapsulating node
+                  must set the value of each of these bits to 0. If an IOAM
+                  transit node receives a packet with one or more of these bits
+                  set to 1, it must either:
+                  <list style="numbers">
+                    <t>Add corresponding node data filled with the reserved
+                    value 0xFFFFFFFF, after the node data fields for the
+                    IOAM-Trace-Type bits defined above, such that the total
+                    node data added by this node in units of 4-octets is equal
+                    to NodeLen, or</t>
+                    <t>Not add any node data fields to the packet, even for the
+                    IOAM-Trace-Type bits defined above.</t>
+                  </list></t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-node-data-element"/>
-              describes the IOAM data types and their formats.</t>
+              describes the IOAM data types and their formats. Within an
+              in-situ OAM domain possible combinations of these bits making
+              the IOAM-Trace-Type can be restricted by configuration
+              knobs.</t>
 
               <t hangText="NodeLen:">5-bit unsigned integer. This field
               specifies the length of data added by each node in multiples of
