@@ -595,20 +595,25 @@
         last entry of the array, i.e., "node data list [n]" is the first entry
         to be populated, "node data list [n-1]" is the second one, etc.</t>
 
-        <section anchor="TraceOptionDef" title="Pre-allocated Trace Option">
+        <section anchor="TraceOptionDef"
+                 title="Pre-allocated and Incremental Trace Options">
+          <t>The in-situ OAM pre-allocated trace option and the in-situ OAM
+          incremental trace option have similar formats. Except where noted
+          below, the internal formats and fields of the two trace options are
+          identical.</t>
+
           <t><figure>
               <artwork><![CDATA[ 
-In-situ OAM pre-allocated trace option: 
-
-Pre-allocated trace option header:
+Pre-allocated and incremental trace option headers:
 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|         IOAM-Trace-Type       | NodeLen | Flags | Octets-left |
+|        IOAM-Trace-Type        | NodeLen | Flags |RemainingLen |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-Pre-allocated Trace Option Data MUST be 4-octet aligned:
+The trace option data MUST be 4-octet aligned:
+
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
 |                        node data list [0]                     |  |
@@ -652,7 +657,7 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
                   data.</t>
 
                   <t hangText="Bit 2">When set indicates presence of timestamp
-                  seconds in the node data</t>
+                  seconds in the node data.</t>
 
                   <t hangText="Bit 3">When set indicates presence of timestamp
                   subseconds in the node data.</t>
@@ -707,9 +712,10 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
               <vspace blankLines="1" />
               An IOAM encapsulating node must set NodeLen.
               <vspace blankLines="1" />
-              A node receiving an IOAM Pre-allocated Trace Option may rely on
-              the NodeLen value, or it may ignore the NodeLen value and
-              calculate the node length from the IOAM-Trace-Type bits.</t>
+              A node receiving an IOAM Pre-allocated or Incremental Trace
+              Option may rely on the NodeLen value, or it may ignore the
+              NodeLen value and calculate the node length from the
+              IOAM-Trace-Type bits.</t>
 
               <t anchor="TraceFlags" hangText="Flags">4-bit field. Following
               flags are defined:<list style="hanging">
@@ -736,7 +742,7 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
                   of the original packet is used as destination address in the
                   copied packet. The address of the node performing the copy
                   operation is used as the source address. The L-bit MUST be
-                  cleared in the copy of the packet a nodes sends it back
+                  cleared in the copy of the packet that a node sends back
                   towards the source. On its way back towards the source, the
                   packet is processed like a regular packet with IOAM
                   information. Once the return packet reaches the IOAM domain
@@ -744,155 +750,6 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
                   containing IOAM information.</t>
 
                   <t hangText="Bit 2-3">Reserved: Must be zero.</t>
-                </list></t>
-
-              <t hangText="Octets-left:">7-bit unsigned integer. It is the
-              data space in multiples of 4-octets remaining for recording the
-              node data. This is used as an offset in data space to record the
-              node data element.</t>
-
-              <t hangText="Node data List [n]:">Variable-length field. The
-              type of which is determined by the IOAM-Trace-Type representing
-              the n-th node data in the node data list. The node data list is
-              encoded starting from the last node data of the path. The first
-              element of the node data list (node data list [0]) contains the
-              last node of the path while the last node data of the node data
-              list (node data list[n]) contains the first node data of the
-              path traced. The index contained in "Octets-left" identifies the
-              offset for current active node data to be populated.</t>
-            </list></t>
-        </section>
-
-        <section title="Incremental Trace Option">
-          <t><figure>
-              <artwork><![CDATA[ 
-In-situ OAM incremental trace option: 
-
-In-situ OAM incremental trace option Header:
-
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|        IOAM-Trace-Type        | NodeLen | Flags |RemainingLen |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-IOAM Incremental Trace Option Data MUST be 4-octet aligned: 
-
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                               |
-|                        node data list [0]                     |
-|                                                               | 
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                               |
-|                        node data list [1]                     |
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  
-~                             ...                               ~ 
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                               |
-|                        node data list [n-1]                   |
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                                                               |
-|                        node data list [n]                     |
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-
-]]></artwork>
-            </figure><list style="hanging">
-              <t hangText="IOAM-trace-type:">A 16-bit identifier which
-              specifies which data types are used in this node data list.</t>
-
-              <t hangText=" ">The IOAM-Trace-Type value is a bit field. The
-              following bit fields are defined in this document, with details
-              on each field described in the <xref
-              target="trace-node-data-element"/>. The order of packing the
-              data fields in each node data element follows the bit order of
-              the IOAM-Trace-Type field, as follows:<list hangIndent="9"
-                  style="hanging">
-                  <t hangText="Bit 0">(Most significant bit) When set
-                  indicates presence of Hop_Lim and node_id in the node
-                  data.</t>
-
-                  <t hangText="Bit 1">When set indicates presence of
-                  ingress_if_id and egress_if_id (short format) in the node
-                  data.</t>
-
-                  <t hangText="Bit 2">When set indicates presence of timestamp
-                  seconds in the node data.</t>
-
-                  <t hangText="Bit 3">When set indicates presence of timestamp
-                  subseconds in the node data.</t>
-
-                  <t hangText="Bit 4">When set indicates presence of transit
-                  delay in the node data.</t>
-
-                  <t hangText="Bit 5">When set indicates presence of app_data
-                  in the node data.</t>
-
-                  <t hangText="Bit 6">When set indicates presence of queue
-                  depth in the node data.</t>
-
-                  <t hangText="Bit 7">When set indicates presence of variable
-                  length Opaque State Snapshot field.</t>
-
-                  <t hangText="Bit 8">When set indicates presence of Hop_Lim
-                  and node_id wide in the node data.</t>
-
-                  <t hangText="Bit 9">When set indicates presence of
-                  ingress_if_id and egress_if_id in wide format in the node
-                  data.</t>
-
-                  <t hangText="Bit 10">When set indicates presence of app_data
-                  wide in the node data.</t>
-
-                  <t hangText="Bit 11">When set indicates presence of the
-                  Checksum Complement node data.</t>
-
-                  <t hangText="Bit 12-15">Undefined in this draft.</t>
-                </list></t>
-
-              <t hangText=" "><xref target="trace-node-data-element"/>
-              describes the IOAM data types and their formats.</t>
-
-              <t hangText="NodeLen:">5-bit unsigned integer. This field
-              specifies the length of data added by each node in multiples of
-              4-octets, excluding the length of the "Opaque State Snapshot"
-              field.
-              <vspace blankLines="1" />
-              If IOAM-Trace-Type bit 7 is not set, then NodeLen specifies the
-              actual length added by each node. If IOAM-Trace-Type bit 7 is
-              set, then the actual length added by a node would be (NodeLen +
-              Opaque Data Length).
-              <vspace blankLines="1" />
-              For example, if 3 IOAM-Trace-Type bits are set and none of them
-              are wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are
-              set and 2 of them are wide, then NodeLen would be 5.
-              <vspace blankLines="1" />
-              An IOAM encapsulating node must set NodeLen.
-              <vspace blankLines="1" />
-              A node receiving an IOAM Incremental Trace Option may rely on
-              the NodeLen value, or it may ignore the NodeLen value and
-              calculate the node length from the IOAM-Trace-Type bits.</t>
-
-              <t anchor="IOAMTraceFlags" hangText="Flags">4-bit field.
-              Following flags are defined:<list style="hanging">
-                  <t hangText="Bit 0">"Overflow" (O-bit) (most significant
-                  bit). This bit is set by the network element if there is not
-                  enough number of octets left to record node data, no field
-                  is added and the overflow "O-bit" must be set to "1" in the
-                  header. This is useful for transit nodes to ignore further
-                  processing of the option.</t>
-
-                  <t hangText="Bit 1">"Loopback" (L-bit). This bit when set
-                  indicates to the transit nodes processing this option to
-                  send a copy of the packet back to the source of the packet
-                  while it continues to forward the original packet towards
-                  the destination. The L-bit MUST be cleared in the copy of
-                  the packet before sending it.</t>
-
-                  <t hangText="Bit 2-3">Reserved. Must be zero.</t>
                 </list></t>
 
               <t hangText="RemainingLen:">7-bit unsigned integer. This field
@@ -907,16 +764,20 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               the length of the "Opaque State Snapshot" if applicable, to
               determine whether or not data can be added by this node. When
               node data is added, the node MUST decrease RemainingLen by the
-              amount of data added.</t>
+              amount of data added. In the pre-allocated trace option, this is
+              used as an offset in data space to record the node data
+              element.</t>
 
               <t hangText="Node data List [n]:">Variable-length field. The
-              type of which is determined by the OAM Type representing the
-              n-th node data in the node data list. The node data list is
-              encoded starting from the last node data of the path. The first
-              element of the node data list (node data list [0]) contains the
-              last node of the path while the last node data of the node data
-              list (node data list[n]) contains the first node data of the
-              path traced.</t>
+              type of which is determined by the IOAM-Trace-Type bit
+              representing the n-th node data in the node data list. The node
+              data list is encoded starting from the last node data of the
+              path. The first element of the node data list (node data list
+              [0]) contains the last node of the path while the last node data
+              of the node data list (node data list[n]) contains the first
+              node data of the path traced. In the pre-allocated trace option,
+              the index contained in RemainingLen identifies the offset for
+              current active node data to be populated.</t>
             </list></t>
         </section>
 
