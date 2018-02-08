@@ -287,7 +287,7 @@
       </address>
     </author>
 
-    <date day="16" month="January" year="2018"/>
+    <date day="5" month="February" year="2018"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -1152,20 +1152,30 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
 
               <t hangText="Checksum Complement:">4-octet node data which
               contains a two-octet Checksum Complement field, and a 2-octet
-              reserved field. The Checksum Complement can be used when IOAM is
+              reserved field. The Checksum Complement is useful when IOAM is
               transported over encapsulations that make use of a UDP
-              transport, such as VXLAN-GPE or Geneve. In this case,
-              incorporating the IOAM node data requires the UDP Checksum field
-              to be updated. Rather than to recompute the Chekcsum field, a
-              node can use the Checksum Complement to make a checksum-neutral
-              update in the UDP payload; the Checksum Complement is assigned a
-              value that complements the rest of the node data fields that
-              were added by the current node, causing the existing UDP
-              Checksum field to remain correct. Checksum Complement fields are
-              used in a similar manner in <xref target="RFC7820"/> and <xref
-              target="RFC7821"/>.<figure>
-                  <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
-8 9 0 1 2 3 4 5 6 7 8 9 0 1
+              transport, such as VXLAN-GPE or Geneve. Without the Checksum
+              Complement, nodes adding IOAM node data must update the UDP
+              Checksum field. When the Checksum Complement is present, an IOAM
+              encapsulating node or IOAM transit node adding node data MUST
+              carry out one of the following two alternatives in order to
+              maintain the correctness of the UDP Checksum value:
+              <list style="numbers">
+                <t>Recompute the UDP Checksum field.</t>
+                <t>Use the Checksum Complement to make a checksum-neutral
+                update in the UDP payload; the Checksum Complement is assigned
+                a value that complements the rest of the node data fields that
+                were added by the current node, causing the existing UDP
+                Checksum field to remain correct.</t>
+              </list>
+              IOAM decapsulating nodes MUST recompute the UDP Checksum field,
+              since they do not know whether previous hops modified the UDP
+              Checksum field or the Checksum Complement field.
+              <vspace blankLines="1" />
+              Checksum Complement fields are used in a similar manner in
+              <xref target="RFC7820"/> and <xref target="RFC7821"/>.
+              <figure>
+                  <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |      Checksum Complement      |           Reserved            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
