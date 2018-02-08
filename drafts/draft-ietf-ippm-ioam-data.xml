@@ -1158,7 +1158,8 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               transport, such as VXLAN-GPE or Geneve. Without the Checksum
               Complement, nodes adding IOAM node data must update the UDP
               Checksum field. When the Checksum Complement is present, an IOAM
-              encapsulating node or IOAM transit node has two alternatives to
+              encapsulating node or IOAM transit node adding node data MUST
+              carry out one of the following two alternatives in order to
               maintain the correctness of the UDP Checksum value:
               <list style="numbers">
                 <t>Recompute the UDP Checksum field.</t>
@@ -1168,9 +1169,9 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                 were added by the current node, causing the existing UDP
                 Checksum field to remain correct.</t>
               </list>
-              Note that IOAM decapsulating nodes must recompute the UDP
-              Checksum field, since they do not know whether previous hops
-              modified the UDP Checksum field or the Checksum Complement field.
+              IOAM decapsulating nodes MUST recompute the UDP Checksum field,
+              since they do not know whether previous hops modified the UDP
+              Checksum field or the Checksum Complement field.
               <vspace blankLines="1" />
               Checksum Complement fields are used in a similar manner in
               <xref target="RFC7820"/> and <xref target="RFC7821"/>.
