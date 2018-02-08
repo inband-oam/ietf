@@ -681,7 +681,19 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
                   <t hangText="Bit 11">When set indicates presence of the
                   Checksum Complement node data.</t>
 
-                  <t hangText="Bit 12-15">Undefined in this draft.</t>
+                  <t hangText="Bit 12-15">Undefined. An IOAM encapsulating node
+                  must set the value of each of these bits to 0. If an IOAM
+                  transit node receives a packet with one or more of these bits
+                  set to 1, it must either:
+                  <list style="numbers">
+                    <t>Add corresponding node data filled with the reserved
+                    value 0xFFFFFFFF, after the node data fields for the
+                    IOAM-Trace-Type bits defined above, such that the total
+                    node data added by this node in units of 4-octets is equal
+                    to NodeLen, or</t>
+                    <t>Not add any node data fields to the packet, even for the
+                    IOAM-Trace-Type bits defined above.</t>
+                  </list></t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-node-data-element"/>
@@ -833,7 +845,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                   length Opaque State Snapshot field.</t>
 
                   <t hangText="Bit 8">When set indicates presence of Hop_Lim
-                  and node_id wide in the node data.</t>
+                  and node_id in wide format in the node data.</t>
 
                   <t hangText="Bit 9">When set indicates presence of
                   ingress_if_id and egress_if_id in wide format in the node
@@ -845,11 +857,26 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                   <t hangText="Bit 11">When set indicates presence of the
                   Checksum Complement node data.</t>
 
-                  <t hangText="Bit 12-15">Undefined in this draft.</t>
+                  <t hangText="Bit 12-15">Undefined. An IOAM encapsulating node
+                  must set the value of each of these bits to 0. If an IOAM
+                  transit node receives a packet with one or more of these bits
+                  set to 1, it must either:
+                  <list style="numbers">
+                    <t>Add corresponding node data filled with the reserved
+                    value 0xFFFFFFFF, after the node data fields for the
+                    IOAM-Trace-Type bits defined above, such that the total
+                    node data added by this node in units of 4-octets is equal
+                    to NodeLen, or</t>
+                    <t>Not add any node data fields to the packet, even for the
+                    IOAM-Trace-Type bits defined above.</t>
+                  </list></t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-node-data-element"/>
-              describes the IOAM data types and their formats.</t>
+              describes the IOAM data types and their formats. Within an
+              in-situ OAM domain possible combinations of these bits making
+              the IOAM-Trace-Type can be restricted by configuration
+              knobs.</t>
 
               <t hangText="NodeLen:">5-bit unsigned integer. This field
               specifies the length of data added by each node in multiples of
@@ -907,14 +934,12 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
 
         <section anchor="trace-node-data-element"
                  title="IOAM node data fields and associated formats">
-          <t>All the data fields MUST be 4-octet aligned. The IOAM
-          encapsulating node MUST initialize data fields that it adds to the
-          packet to zero. If a node which is supposed to update an IOAM data
-          field is not capable of populating the value of a field set in the
-          IOAM-Trace-Type, the field value MUST be left unaltered except when
-          explicitly specified in the field description below. In the
-          description of data below if zero is valid value then a non-zero
-          value to mean not populated is specified.</t>
+          <t>All the data fields MUST be 4-octet aligned. If a node which is
+          supposed to update an IOAM data field is not capable of populating
+          the value of a field set in the IOAM-Trace-Type, the field value MUST
+          be set to 0xFFFFFFFF for 4-octet fields or 0xFFFFFFFFFFFFFFFF for
+          8-octet fields, indicating that the value is not populated, except
+          when explicitly specified in the field description below.</t>
 
           <t>Data field and associated data type for each of the data field is
           shown below:</t>
@@ -945,10 +970,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                 </list></t>
 
               <t hangText="ingress_if_id and egress_if_id:">4-octet field
-              defined as follows: When this field is part of the data field
-              but a node populating the field is not able to fill it, the
-              position in the field must be filled with value 0xFFFFFFFF to
-              mean not populated.<figure>
+              defined as follows: <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |     ingress_if_id             |         egress_if_id          |
@@ -1008,10 +1030,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               the 32 least significant bits of the <xref target="RFC5905"/>
               timestamp. This fields allows for delay computation between any
               two nodes in the network when the nodes are time synchronized.
-              When this field is part of the data field but a node populating
-              the field is not able to fill it, the field position in the
-              field must be filled with value 0xFFFFFFFF to mean not
-              populated.<figure>
+              <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       timestamp subseconds                    |
@@ -1048,10 +1067,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               of the interface from where the packet is forwarded out. The
               queue depth is expressed as the current number of memory buffers
               used by the queue (a packet may consume one or more memory
-              buffers, depending on its size). When this field is part of the
-              data field but a node populating the field is not able to fill
-              it, the field position in the field must be filled with value
-              0xFFFFFFFF to mean not populated.<figure>
+              buffers, depending on its size). <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       queue depth                             |
@@ -1089,7 +1105,12 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                   <t hangText="Opaque data:">Variable length field. This field
                   is interpreted as specified by the schema identified by the
                   Schema ID.</t>
-                </list></t>
+                </list>
+
+                When this field is part of the data field but a node populating
+                the field has no opaque state data to report, the Length must
+                be set to 0 and the Schema ID must be set to 0xFFFFFF to mean
+                no schema.</t>
 
               <t hangText="Hop_Lim and node_id wide:">8-octet field defined as
               follows: <figure>
@@ -1117,10 +1138,7 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
                 </list></t>
 
               <t hangText="ingress_if_id and egress_if_id wide:">8-octet field
-              defined as follows: When this field is part of the data field
-              but a node populating the field is not able to fill it, the
-              field position in the field must be filled with value
-              0xFFFFFFFFFFFFFFFF to mean not populated.<figure>
+              defined as follows: <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       ingress_if_id                           |
