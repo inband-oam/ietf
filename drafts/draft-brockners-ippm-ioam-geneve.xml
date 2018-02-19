@@ -29,7 +29,7 @@
 <!ENTITY I-D.hildebrand-spud-prototype SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY I-D.ietf-sfc-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-nsh.xml">
 <!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
-<!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.ietf-nvo3-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-geneve.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
 <!ENTITY I-D.SPUD SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
@@ -59,7 +59,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-brockners-sfc-ioam-nsh-01"
+<rfc category="std" docName="draft-brockners-ippm-ioam-geneve-00"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -74,7 +74,7 @@
     <!-- The abbreviated title is used in the page header - it is only necessary if the
          full title is longer than 39 characters -->
 
-    <title abbrev="In-situ OAM NSH encapsulation">NSH Encapsulation for
+    <title abbrev="In-situ OAM Geneve encapsulation">Geneve encapsulation for
     In-situ OAM Data</title>
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
@@ -203,24 +203,6 @@
       </address>
     </author>
 
-    <author fullname="David Mozes" initials="D." surname="Mozes">
-      <organization abbrev="">Mellanox Technologies Ltd.</organization>
-
-      <address>
-        <postal>
-          <street/>
-
-          <city/>
-
-          <code/>
-
-          <country/>
-        </postal>
-
-        <email>davidm@mellanox.com</email>
-      </address>
-    </author>
-
     <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
       <organization abbrev="">Facebook</organization>
 
@@ -239,7 +221,25 @@
       </address>
     </author>
 
-    <author fullname="Remy Chang" initials="R." surname="Chang">
+    <author fullname="Aviv Kfir" initials="A." surname="Kfir">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>avivk@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
       <organization abbrev="">Barefoot Networks</organization>
 
       <address>
@@ -253,7 +253,7 @@
           <country>US</country>
         </postal>
 
-        <email/>
+        <email>mspiegel@barefootnetworks.com</email>
       </address>
     </author>
 
@@ -268,9 +268,9 @@
 
     <!-- Meta-data Declarations -->
 
-    <area>rtg</area>
+    <area>tsv</area>
 
-    <workgroup>sfc</workgroup>
+    <workgroup>ippm</workgroup>
 
     <!-- WG name at the upperleft corner of the doc,
          IETF is fine for individual submissions.
@@ -287,11 +287,10 @@
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>In-situ Operations, Administration, and Maintenance (OAM) records
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
-      outlines how IOAM data fields are encapsulated in the Network Service
-      Header (NSH).</t>
+      outlines how IOAM data fields are encapsulated in Geneve.</t>
     </abstract>
   </front>
 
@@ -299,47 +298,55 @@
     <section title="Introduction" toc="default">
       <t>In-situ OAM (IOAM) records OAM information within the packet while
       the packet traverses a particular network domain. The term "in-situ"
-      refers to the fact that the OAM data is added to the data packets rather
-      than is being sent within packets specifically dedicated to OAM. This
-      document defines how IOAM data fields are transported as part of the
-      Network Service Header (NSH) <xref target="I-D.ietf-sfc-nsh"/>)
-      encapsulation. The IOAM data fields are defined in <xref
-      target="I-D.ietf-ippm-ioam-data"/>. An implementation of IOAM which
-      leverages NSH to carry the IOAM data is available from the FD.io open
-      source software project <xref target="FD.io"/>.</t>
+      refers to the fact that the IOAM data fields are added to the data
+      packets rather than is being sent within packets specifically dedicated
+      to OAM. This document defines how IOAM data fields are transported as
+      part of the Geneve <xref target="I-D.ietf-nvo3-geneve"/> encapsulation.
+      The IOAM data fields are defined in <xref
+      target="I-D.ietf-ippm-ioam-data"/>.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref
-      target="RFC2119"/>.</t>
+      <section title="Requirement Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in <xref
+        target="RFC2119"/>.</t>
+      </section>
 
-      <t>Abbreviations used in this document:</t>
+      <section title="Abbreviations">
+        <t>Abbreviations used in this document:</t>
 
-      <t><list hangIndent="11" style="hanging">
-          <t hangText="IOAM:">In-situ Operations, Administration, and
-          Maintenance</t>
+        <t><list hangIndent="11" style="hanging">
+            <t hangText="IOAM:">In-situ Operations, Administration, and
+            Maintenance</t>
 
-          <t hangText="MTU:">Maximum Transmit Unit</t>
+            <t hangText="MTU:">Maximum Transmit Unit</t>
 
-          <t hangText="NSH:">Network Service Header</t>
+            <t hangText="OAM:">Operations, Administration, and Maintenance</t>
 
-          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+            <t hangText="POT:">Proof of Transit</t>
 
-          <t hangText="POT:">Proof of Transit</t>
-
-          <t hangText="SFC:">Service Function Chain</t>
-
-          <t hangText="TLV:">Type, Length, Value</t>
-        </list></t>
+            <t hangText="Geneve:">Generic Network Virtualization
+            Encapsulation</t>
+          </list></t>
+      </section>
     </section>
 
-    <section title="IOAM data fields encapsulation in NSH">
-      <t>IOAM data fields are carried within the NSH header following NSH MDx
-      metadata TLVs.</t>
+    <section title="IOAM Data Field Encapsulation in Geneve">
+      <t>For encapsulating IOAM data fields into Geneve <xref
+      target="I-D.ietf-nvo3-geneve"/> the different IOAM data fields are
+      included in the Geneve header using tunnel options. IOAM data fields use
+      a tunnel option class which includes the different types of IOAM data,
+      including trace data, proof-of-transit data, and edge-to-edge data. In
+      an administrative domain where IOAM is used, insertion of the IOAM
+      tunnel option(s) in Geneve is enabled at the Geneve tunnel endpoints
+      which also serve as IOAM encapsulating/decapsulating nodes by means of
+      configuration. The Geneve header is defined in <xref
+      target="I-D.ietf-nvo3-geneve"/>. IOAM specific fields for Geneve are
+      defined in this document.</t>
 
-      <section title="IOAM Trace Data in NSH">
+      <section title="IOAM Trace Data in Geneve">
         <t>IOAM tracing data represents data that is inserted at nodes that a
         packet traverses. To allow for optimal implementations in both
         software as well as hardware forwarders, two different ways to
@@ -348,33 +355,19 @@
         tracing and the pre-allocated and incremental IOAM trace options.</t>
 
         <t>The packet formats of the pre-allocated IOAM trace and incremental
-        IOAM trace when transported in NSH are defined as below.</t>
+        IOAM trace when encapsulated in Geneve are defined as below.</t>
 
-        <t>Note that in Service Function Chaining (SFC) <xref
-        target="RFC7665"/>, the Network Service Header (NSH) <xref
-        target="I-D.ietf-sfc-nsh"/> already includes path tracing capabilities
-        <xref target="I-D.penno-sfc-trace"/>. IOAM data fields for tracing
-        complement the capabilities in NSH, in that IOAM data fields carry
-        information complementary to information in NSH and benefit from the
-        fact, that IOAM data fields use their own namespace. This allows
-        intermediate nodes, which are not NSH hops to also process and update
-        the IOAM data fields if configured to do so.</t>
-
-        <t><figure>
-            <artwork><![CDATA[
-IOAM Trace header following NSH MDx header
-(Pre-allocated IOAM trace):
-
+        <figure align="center" anchor="PreAllocHeader"
+                title="IOAM Pre-allocated Trace Option Format as a Geneve Tunnel Option">
+          <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
-|          Service Path Identifer               | Service Index |  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
-|                            ...                                |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
+|        Virtual Network Identifier (VNI)       |    Reserved   |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|  Option Class = IOAM_Trace    |Type (prealloc)|R|R|R| Length  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
 |         IOAM-Trace-Type       |NodeLen|  Flags  | RemainingLen|Trce
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
@@ -403,27 +396,21 @@ IOAM Trace header following NSH MDx header
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-IOAM Pre-allocated Trace Option Data MUST be 4-octet aligned:
-
+Pre-allocated Trace Option Data MUST be 4-octet aligned.
 ]]></artwork>
-          </figure></t>
+        </figure>
 
-        <t><figure>
-            <artwork><![CDATA[
-IOAM Trace header following NSH MDx header
-(Incremental IOAM trace):
-
+        <figure align="center" anchor="Incremental"
+                title="IOAM Incremental Trace Option Format as a Geneve Tunnel Option">
+          <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  N
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
-|          Service Path Identifer               | Service Index |  H
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                            ...                                |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|      Type     |  IOAM HDR len |    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
+|        Virtual Network Identifier (VNI)       |    Reserved   |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|  Option Class = IOAM_Trace    |  Type (incr.) |R|R|R| Length  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
 |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |Trce
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
@@ -452,26 +439,50 @@ IOAM Trace header following NSH MDx header
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-
-IOAM Incremental Trace Option Data MUST be 4-octet aligned:
+IOAM Incremental Trace Option Data MUST be 4-octet aligned.
 ]]></artwork>
-          </figure> <list style="hanging">
-            <t hangText="Next Protocol of NSH:">TBD value for IOAM_Trace.</t>
+        </figure>
+
+        <t>The IOAM Trace header consists of 8 octets, as illustrated in <xref
+        target="PreAllocHeader"/> and <xref target="Incremental"/>. The first
+        4 octets are the Geneve Tunnel Option header <xref
+        target="I-D.ietf-nvo3-geneve"/>. The next 4 octets are the trace
+        option header; its format is defined in <xref
+        target="I-D.ietf-ippm-ioam-data"/>, and is described here for the sake
+        of clarity.</t>
+
+        <figure align="center" anchor="GeneveTraceOpt"
+                title="Geneve Tunnel    Option for IOAM">
+          <artwork><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Option Class = IOAM_Trace    |      Type     |R|R|R| Length  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+        </figure>
+
+        <t>The fields of the Geneve tunnel option are as follows: <list
+            style="hanging">
+            <t hangText="Option Class:">16-bit unsigned integer that
+            determines the IOAM option class. The value is from the IANA
+            registry setup for Geneve option classes as defined in <xref
+            target="I-D.ietf-nvo3-geneve"/>.</t>
 
             <t hangText="Type:">8-bit unsigned integer defining IOAM header
-            type IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
-            here.</t>
+            type. Two values are defined here: IOAM_TRACE_Preallocated and
+            IOAM_Trace_Incremental.</t>
 
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
+            <t hangText="R (3 bits):">Option control flags reserved for future
+            use. MUST be zero on transmission and ignored on receipt.</t>
 
-            <t hangText="Reserved bits and R bits:">Reserved bits are present
-            for future use. The reserved bits MUST be set to 0x0.</t>
+            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
+            HDR in 4-octet units.</t>
+          </list></t>
 
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol.</t>
-
+        <t>The fields of the trace option header <xref
+        target="I-D.ietf-ippm-ioam-data"/> are as follows: <list
+            style="hanging">
             <t hangText="IOAM-Trace-Type:">16-bit identifier of IOAM Trace
             Type as defined in <xref target="I-D.ietf-ippm-ioam-data"/>
             IOAM-Trace-Types.</t>
@@ -493,32 +504,24 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
           </list></t>
       </section>
 
-      <section title="IOAM POT Data in NSH">
-        <t>IOAM proof of transit (POT, see <xref
+      <section title="IOAM POT Data in Geneve">
+        <t>IOAM proof of transit (POT, see also <xref
         target="I-D.brockners-proof-of-transit"/>) offers a means to verify
-        that a packet has traversed a defined set of nodes. In an
-        administrative domain where IOAM is used, insertion of the IOAM data
-        into the NSH header is enabled at the required nodes (i.e. at the IOAM
-        encapsulating/decapsulating nodes) by means of configuration.</t>
+        that a packet has traversed a defined set of nodes. IOAM POT data
+        fields are encapsulated in Geneve as follows:</t>
 
-        <t>IOAM POT data fields are added as a TLV following NSH MDx
-        metadata:</t>
-
-        <t><figure>
-            <artwork><![CDATA[
-IOAM POT header following NSH MDx header:
-
+        <figure align="center" anchor="PotEncap"
+                title="IOAM POT Header Following using a Geneve Tunnel Option">
+          <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = IOAM_POT |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
-|          Service Path Identifer               | Service Index |  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
-|                            ...                                |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|IOAM_POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
+|        Virtual Network Identifier (VNI)       |    Reserved   |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|     Option Class = IOAM_POT   |     Type    |P|R|R|R| Length  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
 |                        Random(contd.)                         |  O
@@ -527,25 +530,46 @@ IOAM POT header following NSH MDx header:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
 |                    Cumulative (contd.)                        |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
-          </figure><list style="hanging">
-            <t hangText="Next Protocol of NSH:">TBD value for IOAM_POT.</t>
+        </figure>
 
-            <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
-            variant that specifies the POT data that is to be included as
-            defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+        <t>The first 4 octets of the IOAM POT are the Geneve tunnel option
+        header (<xref target="GenevePotOpt"/>), which includes the following
+        fields:</t>
+
+        <t><list style="hanging">
+            <t hangText="Option Class:">16-bit unsigned integer that
+            determines the IOAM_POT option class.The value is from the IANA
+            registry setup for Geneve option classes as defined in <xref
+            target="I-D.ietf-nvo3-geneve"/>.</t>
+
+            <t hangText="Type:">7-bit identifier of a particular POT variant
+            that specifies the POT data that is to be included as defined in
+            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
 
             <t hangText="Profile to use (P):">1-bit as defined in <xref
             target="I-D.ietf-ippm-ioam-data"/> IOAM POT Option.</t>
 
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
+            <t hangText="R (3 bits):">Option control flags reserved for future
+            use. MUST be zero on transmission and ignored on receipt.</t>
 
-            <t hangText="Reserved bits and R bits:">Reserved bits are present
-            for future use. The reserved bits MUST be set to 0x0.</t>
+            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
+            HDR in 4-octet units.</t>
+          </list></t>
 
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol.</t>
+        <figure align="center" anchor="GenevePotOpt"
+                title="Geneve Tunnel   Option for IOAM POT">
+          <artwork><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|     Option Class = IOAM_POT   |     Type    |P|R|R|R| Length  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+        </figure>
 
+        <t>The rest of the fields in the POT option <xref
+        target="I-D.ietf-ippm-ioam-data"/> are as follows: <list
+            style="hanging">
             <t hangText="Random:">64-bit Per-packet random number.</t>
 
             <t hangText="Cumulative:">64-bit Cumulative value that is updated
@@ -553,54 +577,64 @@ IOAM POT header following NSH MDx header:
           </list></t>
       </section>
 
-      <section title="IOAM Edge-to-Edge Data in NSH">
+      <section title="IOAM Edge-to-Edge Data in Geneve">
         <t>The IOAM edge-to-edge option is to carry data that is added by the
         IOAM encapsulating node and interpreted by the IOAM decapsulating
-        node. The "Edge-to-Edge" capabilities (see <xref
-        target="I-D.brockners-inband-oam-requirements"/>) of IOAM can be
-        leveraged within NSH. In an administrative domain where IOAM is used,
-        insertion of the IOAM data into the NSH header is enabled at the
-        required nodes (i.e. at the IOAM encapsulating/decapsulating nodes) by
-        means of configuration.</t>
+        node. IOAM specific fields to encapsulate IOAM Edge-to-Edge data
+        fields are defined as follows:</t>
 
-        <t>IOAM Edge-to-Edge data fields are added as a TLV following NSH MDx
-        metadata:</t>
-
-        <t><figure>
-            <artwork><![CDATA[
-IOAM E2E header following NSH MDx header:
-
+        <figure align="center" anchor="GeneveE2e"
+                title="IOAM Edge-to-Edge using a Geneve Tunnel Option">
+          <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = IOAM_E2E |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
-|          Service Path Identifer               | Service Index |  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
-|                            ...                                |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|IOAM_E2E_Type  |   IOAM HDR len|    Reserved   | Next Protocol |IOAM
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ E2E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
+|        Virtual Network Identifier (VNI)       |    Reserved   |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+|      Option Class = IOAM_E2E  |    Type       |R|R|R| Length  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
 |      E2E Option data field determined by IOAM-E2E-Type        |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
 ]]></artwork>
-          </figure><list style="hanging">
-            <t hangText="Next Protocol of NSH:">TBD value for IOAM_E2E.</t>
+        </figure>
 
-            <t hangText="IOAM E2E Type:">8-bit identifier of a particular E2E
-            variant that specifies the IOAM E2E data that is to be included as
-            defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+        <t>The first 4 octets of the IOAM E2E option are the Geneve tunnel
+        option header (<xref target="GenevePotOpt"/>), which includes the
+        following fields:</t>
 
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
+        <t><list style="hanging">
+            <t hangText="Option Class">16-bit unsigned integer that determines
+            the IOAM_E2E option class.The value is from the IANA registry
+            setup for Geneve option classes as defined in <xref
+            target="I-D.ietf-nvo3-geneve"/>.</t>
 
-            <t hangText="Reserved bits and R bits:">Reserved bits are present
-            for future use. The reserved bits MUST be set to 0x0.</t>
+            <t hangText="Type:">8-bit identifier of a particular E2E variant
+            that specifies the E2E data that is included as defined in <xref
+            target="I-D.ietf-ippm-ioam-data"/>.</t>
 
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol.</t>
+            <t hangText="R (3 bits):">Option control flags reserved for future
+            use. MUST be zero on transmission and ignored on receipt.</t>
 
+            <t hangText="Length:">5-bit unsigned integer. Length of the IOAM
+            HDR in 4-octet units.</t>
+          </list></t>
+
+        <figure align="center" anchor="GeneveE2eOpt"
+                title="Geneve Tunnel   Option for IOAM E2E">
+          <artwork><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|      Option Class = IOAM_E2E  |    Type       |R|R|R| Length  | 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+        </figure>
+
+        <t>The rest of the E2E option <xref target="I-D.ietf-ippm-ioam-data"/>
+        consists of: <list style="hanging">
             <t hangText="E2E Option data field:">Variable length field as
             defined in <xref target="I-D.ietf-ippm-ioam-data"/> IOAM E2E
             Option.</t>
@@ -611,10 +645,10 @@ IOAM E2E header following NSH MDx header:
     <section title="Discussion of the encapsulation approach">
       <t>This section is to support the working group discussion in selecting
       the most appropriate approach for encapsulating IOAM data fields in
-      NSH.</t>
+      Geneve.</t>
 
-      <t>An encapsulation of IOAM data fields in NSH should be friendly to an
-      implementation in both hardware as well as software forwarders and
+      <t>An encapsulation of IOAM data fields in Geneve should be friendly to
+      an implementation in both hardware as well as software forwarders and
       support a wide range of deployment cases, including large networks that
       desire to leverage multiple IOAM data fields at the same time.</t>
 
@@ -643,35 +677,36 @@ IOAM E2E header following NSH MDx header:
           particular deployment would have a maximum path length of 15 hops in
           the IOAM domain, then a maximum of 300 octets of IOAM data were to
           be encapsulated in the packet.</t>
-        </list>Two approaches for encapsulating IOAM data fields in NSH could
-      be considered:</t>
+        </list></t>
 
-      <t><list style="numbers">
-          <t>Encapsulation of IOAM data fields as "NSH MD Type 2" (see <xref
-          target="I-D.ietf-sfc-nsh"/>, section 2.5). Each IOAM data field
-          option (trace, proof-of-transit, and edge-to-edge) would be
-          specified by a type, with the different IOAM data fields being TLVs
-          within this the particular option type. NSH MD Type 2 offers support
-          for variable length meta-data. The length field is 6-bits, resulting
-          in a maximum of 256 (2^6 x 4) octets.</t>
+      <t>Concerns with the current encapsulation approach:</t>
 
-          <t>Encapsulation of IOAM data fields using the "Next Protocol"
-          field. Each IOAM data field option (trace, proof-of-transit, and
-          edge-to-edge) would be specified by its own "next protocol".</t>
-        </list>The second option has been chosen here, because it avoids the
-      additional layer of TLV nesting that the use of NSH MD Type 2 would
-      result in. In addition, the second option does not constrain IOAM data
-      to a maximum of 256 octets, thus allowing support for very large
-      deployments.</t>
+      <t><list style="empty">
+          <t>Hardware support: Using Geneve tunnel options to encapsulate IOAM
+          data fields leads to a nested TLV structure. Each IOAM data field
+          option (trace, proof-of-transit, and edge-to-edge) represents a
+          type, with the different IOAM data fields being TLVs within this the
+          particular option type. Nested TLVs require iterative look-ups, a
+          fact that creates potential challenges for implementations in
+          hardware. It would be desirable to offer a way to encapsulate IOAM
+          in a way that keeps TLV nesting to a minimum.</t>
+
+          <t>Length: Geneve tunnel option length is a 5-bit field in the
+          current specification <xref target="I-D.ietf-nvo3-geneve"/>
+          resulting in a maximum option length of 128 (2^5 x 4) octets which
+          constrains the use of IOAM to either small domains or a few IOAM
+          data fields only. Support for large domains with a variety of IOAM
+          data fields would be desirable.</t>
+        </list></t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to allocate protocol numbers for the following NSH
-      "Next Protocols" related to IOAM:</t>
+      <t>IANA is requested to allocate a Geneve "option class" numbers for the
+      following IOAM types:</t>
 
       <t><figure>
           <artwork><![CDATA[              +---------------+-------------+---------------+
-              | Next Protocol | Description | Reference     |
+              | Option Class  | Description | Reference     |
               +---------------+-------------+---------------+
               | x             | IOAM_Trace  | This document |
               | y             | IOAM_POT    | This document |
@@ -683,6 +718,11 @@ IOAM E2E header following NSH MDx header:
     </section>
 
     <section anchor="Security" title="Security Considerations">
+      <t>The security considerations of Geneve are discussed in <xref
+      target="I-D.ietf-nvo3-geneve"/>, and the security considerations of IOAM
+      in general are discussed in <xref
+      target="I-D.ietf-ippm-ioam-data"/>.</t>
+
       <t>IOAM is considered a "per domain" feature, where one or several
       operators decide on leveraging and configuring IOAM according to their
       needs. Still, operators need to properly secure the IOAM domain to avoid
@@ -721,9 +761,7 @@ IOAM E2E header following NSH MDx header:
 
       &I-D.ietf-ippm-ioam-data;
 
-      &I-D.ietf-nvo3-vxlan-gpe;
-
-      &I-D.ietf-sfc-nsh;
+      &I-D.ietf-nvo3-geneve;
 
       &RFC2784;
 
@@ -744,28 +782,7 @@ IOAM E2E header following NSH MDx header:
     <references title="Informative References">
       &RFC7665;
 
-      &I-D.ietf-spring-segment-routing;
-
-      <reference anchor="I-D.kitamura-ipv6-record-route">
-        <front>
-          <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
-          Extension</title>
-
-          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
-
-          <date month="November" year="2000"/>
-        </front>
-
-        <seriesInfo name="Internet-Draft"
-                    value="draft-kitamura-ipv6-record-route-00"/>
-
-        <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
-                type="TXT"/>
-      </reference>
-
       &I-D.brockners-proof-of-transit;
-
-      &I-D.ietf-ippm-6man-pdm-option;
 
       <reference anchor="FD.io" target="https://fd.io/">
         <front>
@@ -776,8 +793,6 @@ IOAM E2E header following NSH MDx header:
           <date/>
         </front>
       </reference>
-
-      &I-D.penno-sfc-trace;
     </references>
   </back>
 </rfc>
