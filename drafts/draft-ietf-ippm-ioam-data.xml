@@ -287,7 +287,7 @@
       </address>
     </author>
 
-    <date day="5" month="February" year="2018"/>
+    <date day="20" month="February" year="2018"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -598,15 +598,12 @@
           <t><figure>
               <artwork><![CDATA[ 
 In-situ OAM pre-allocated trace option: 
-
 Pre-allocated trace option header:
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |         IOAM-Trace-Type       | NodeLen | Flags | Octets-left |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 Pre-allocated Trace Option Data MUST be 4-octet aligned:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
@@ -627,8 +624,6 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
 |                        node data list [n]                     |  |
 |                                                               |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-
-
 ]]></artwork>
             </figure> <list style="hanging">
               <t anchor="IOAMTraceType" hangText="IOAM-Trace-Type:">A 16-bit
@@ -774,17 +769,13 @@ Pre-allocated Trace Option Data MUST be 4-octet aligned:
           <t><figure>
               <artwork><![CDATA[ 
 In-situ OAM incremental trace option: 
-
 In-situ OAM incremental trace option Header:
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |        IOAM-Trace-Type        | NodeLen | Flags | Max Length  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 IOAM Incremental Trace Option Data MUST be 4-octet aligned: 
-
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                                                               |
 |                        node data list [0]                     |
@@ -804,8 +795,6 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
 |                        node data list [n]                     |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-
 ]]></artwork>
             </figure><list style="hanging">
               <t hangText="IOAM-trace-type:">A 16-bit identifier which
@@ -1003,7 +992,9 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               seconds elapsed since 1 January 1900 00:00:00. The same applies
               to <xref target="POSIX"/>, for which the timestamp also specifies
               the number of seconds elapsed since 1 January 1900 00:00:00
-              UTC.<figure>
+              UTC. When this field is part of the data field but a node populating
+              the field is not able to fill it, the field position in the field
+              must be filled with value 0xFFFFFFFF to mean not populated.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       timestamp seconds                       |
@@ -1030,6 +1021,9 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
               the 32 least significant bits of the <xref target="RFC5905"/>
               timestamp. This fields allows for delay computation between any
               two nodes in the network when the nodes are time synchronized.
+              When this field is part of the data field but a node populating
+              the field is not able to fill it, the field position in the field
+              must be filled with value 0xFFFFFFFF to mean not populated.
               <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1223,8 +1217,6 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                            app_data                           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-
 ]]></artwork>
                 </figure></t>
 
@@ -1248,7 +1240,6 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                   timestamp subseconds                        |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 ]]></artwork>
                 </figure></t>
 
@@ -1260,7 +1251,6 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                            app_data                           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 ]]></artwork>
                 </figure></t>
 
@@ -1274,7 +1264,6 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                            app_data                           |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 ]]></artwork>
                 </figure></t>
 
@@ -1299,7 +1288,6 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                         node_id(contd)                        |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 ]]></artwork>
                 </figure></t>
             </list></t>
@@ -1331,16 +1319,13 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
         <t><figure>
             <artwork><![CDATA[ 
 IOAM proof of transit option:
-
 IOAM proof of transit option header:
  
  0 1 2 3 4 5 6 7 
 +-+-+-+-+-+-+-+-+
 |IOAM POT Type|P|  
 +-+-+-+-+-+-+-+-+
-
 IOAM proof of transit option data MUST be 4-octet aligned:
-
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
@@ -1352,8 +1337,6 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
 |                         Cumulative (contd)                    |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-
-
 ]]></artwork>
           </figure><list style="hanging">
             <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
@@ -1397,22 +1380,18 @@ IOAM proof of transit option data MUST be 4-octet aligned:
         <t><figure>
             <artwork><![CDATA[
   IOAM edge-to-edge option:
-
    IOAM edge-to-edge option header:
    
     0 1 2 3 4 5 6 7 
    +-+-+-+-+-+-+-+-+
    | IOAM-E2E-Type |
    +-+-+-+-+-+-+-+-+
-
    IOAM edge-to-edge option data MUST be 4-octet aligned:
-
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |       E2E Option data field determined by IOAM-E2E-Type       |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
 ]]></artwork>
           </figure><list style="hanging">
             <t hangText="IOAM-E2E-Type:">8-bit identifier of a particular in
@@ -1426,16 +1405,18 @@ IOAM proof of transit option data MUST be 4-octet aligned:
                 sequence number added to a specific tube which is used to
                 identify packet loss and reordering for that tube.</t>
 
-                <t hangText="Bit 2">When set indicates presence of timestamp
-                seconds for the transmission of the frame. This specifies
+                <t hangText="Bit 2">When set indicates presence of a 32-bit
+                timestamp in seconds that specifies the time at which
+                the packet was transmitted by the node. This specifies
                 either the number of seconds elapsed since 1 January 1970
                 00:00:00 UTC, as defined in <xref target="IEEE1588v2"/> or
                 <xref target="POSIX"/>, or the number of seconds elapsed since
                 1 January 1900 00:00:00, as defined in <xref
                 target="RFC5905"/>.</t>
 
-                <t hangText="Bit 3">When set indicates presence of timestamp
-                subseconds for the transmission of the frame. This specifies
+                <t hangText="Bit 3">When set indicates presence of a 32-bit
+                timestamp in subseconds that specifies the time at which
+                the packet was transmitted by the node. This specifies
                 either the nanoseconds portion of the timestamp for the
                 transmission of the frame, as defined in <xref
                 target="IEEE1588v2"/>, or microseconds portion of the
@@ -1560,7 +1541,6 @@ IOAM proof of transit option data MUST be 4-octet aligned:
      1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
      2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
         (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
-
      Both are cited textually in the same manner: by using xref elements.
      If you use the PI option, xml2rfc will, by default, try to find included files in the same
      directory as the including file. You can also define the XML_LIBRARY environment variable
