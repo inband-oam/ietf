@@ -995,7 +995,12 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
 			  <xref target="TimestampSec"/>. In all three cases, the Timestamp 
 			  Seconds field contains the 32 most significant bits of the 
 			  timestamp format that is specified in 
-			  <xref target="TimestampSec"/>.</t>
+			  <xref target="TimestampSec"/>. If a node is not capable of 
+			  populating this field, it assigns the value 0xFFFFFFFF. Note that
+			  this is a legitimate value that is valid for 1 second in 
+			  approximately 136 years; the analyzer should correlate several
+			  packets or compare the timestamp value to its own time-of-day 
+			  in order to detect the error indication.</t>
 
               <t hangText="timestamp subseconds:">4-octet unsigned integer.
               Absolute timestamp in subseconds that specifies the time at
@@ -1006,7 +1011,12 @@ IOAM Incremental Trace Option Data MUST be 4-octet aligned:
 			  <xref target="TimestampSec"/>. In all three cases, the Timestamp 
 			  Subseconds field contains the 32 least significant bits of the 
 			  timestamp format that is specified in 
-			  <xref target="TimestampSec"/>.</t>
+			  <xref target="TimestampSec"/>. If a node is not capable of 
+			  populating this field, it assigns the value 0xFFFFFFFF. Note that
+			  this is a legitimate value in the NTP format, valid for 
+			  approximately 233 picoseconds in every second. If the NTP format 
+			  is used the analyzer should correlate several packets in order to 
+			  detect the error indication.</t>
 
               <t hangText="transit delay:">4-octet unsigned integer in the
               range 0 to 2^31-1. It is the time in nanoseconds the packet
@@ -1398,35 +1408,55 @@ IOAM proof of transit option data MUST be 4-octet aligned:
                 identify packet loss and reordering for that tube.</t>
 
                 <t hangText="Bit 2">When set indicates presence of timestamp
-                seconds for the transmission of the frame. This specifies
-                either the number of seconds elapsed since 1 January 1970
-                00:00:00 UTC, as defined in <xref target="IEEE1588v2"/> or
-                <xref target="POSIX"/>, or the number of seconds elapsed since
-                1 January 1900 00:00:00, as defined in <xref
-                target="RFC5905"/>.</t>
+                seconds for the transmission of the frame. This 4-octet field 
+				has three possible formats; based on either PTP 
+				<xref target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>, or 
+				POSIX <xref target="POSIX"/>. The three timestamp formats are 
+				specified in <xref target="TimestampSec"/>. In all three cases, 
+				the Timestamp Seconds field contains the 32 most significant 
+				bits of the timestamp format that is specified in
+				<xref target="TimestampSec"/>. If a node is not capable of
+				populating this field, it assigns the value 0xFFFFFFFF. Note that
+				this is a legitimate value that is valid for 1 second in
+				approximately 136 years; the analyzer should correlate several
+				packets or compare the timestamp value to its own time-of-day 
+				in order to detect the error indication.</t>
 
                 <t hangText="Bit 3">When set indicates presence of timestamp
-                subseconds for the transmission of the frame. This specifies
-                either the nanoseconds portion of the timestamp for the
-                transmission of the frame, as defined in <xref
-                target="IEEE1588v2"/>, or microseconds portion of the
-                timestamp for the transmission of the frame, as defined in
-                <xref target="POSIX"/>, or the fractional seconds portion of
-                the timestamp for the transmission of the frame, as defined in
-                <xref target="RFC5905"/>.</t>
+                subseconds for the transmission of the frame. This 4-octet field 
+				has three possible formats; based on either PTP 
+				<xref target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>, or 
+				POSIX <xref target="POSIX"/>. The three timestamp formats are 
+				specified in <xref target="TimestampSec"/>. In all three cases, 
+				the Timestamp Subseconds field contains the 32 least significant 
+				bits of the timestamp format that is specified in 
+				<xref target="TimestampSec"/>. If a node is not capable of 
+				populating this field, it assigns the value 0xFFFFFFFF. Note 
+				that this is a legitimate value in the NTP format, valid for
+				approximately 233 picoseconds in every second. If the NTP format
+				is used the analyzer should correlate several packets in order 
+				to detect the error indication.</t>
               </list></t>
           </list></t>
       </section>
     </section>
 
 	<section anchor="TimestampSec" title="Timestamp Formats">
-	<t>The IOAM data fields include a timestamp field which is represented in one of three possible timestamp formats. It is assumed that the management plane is responsible for determining which timestamp format is used.</t>
+	<t>The IOAM data fields include a timestamp field which is represented in 
+	one of three possible timestamp formats. It is assumed that the management 
+	plane is responsible for determining which timestamp format is used.</t>
 	
 	<section anchor="PTPFromatSec" title="PTP Truncated Timestamp Format">
 
-	 <t>The Precision Time Protocol (PTP) <xref target="IEEE1588v2"></xref> uses an 80-bit timestamp format. The truncated timestamp format is a 64-bit field, which is the 64 least significant bits of the 80-bit PTP timestamp. The PTP truncated format is specified in Section 4.3 of <xref target="I-D.ietf-ntp-packet-timestamps"/>, and the details are presented below for the sake of completeness.</t>
+	 <t>The Precision Time Protocol (PTP) <xref target="IEEE1588v2"></xref> uses 
+	 an 80-bit timestamp format. The truncated timestamp format is a 64-bit 
+	 field, which is the 64 least significant bits of the 80-bit PTP timestamp. 
+	 The PTP truncated format is specified in Section 4.3 of 
+	 <xref target="I-D.ietf-ntp-packet-timestamps"/>, and the details are 
+	 presented below for the sake of completeness.</t>
 	 
-     <figure align="center" anchor="PTPFormat" title="PTP [IEEE1588] Truncated Timestamp Format">
+     <figure align="center" anchor="PTPFormat" 
+	 title="PTP [IEEE1588] Truncated Timestamp Format">
 
        <artwork align="left">
          <![CDATA[
@@ -1444,17 +1474,21 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
      <t>Timestamp field format: <list
          hangIndent="10" style="empty">
-         <t>Seconds: specifies the integer portion of the number of seconds since the epoch.</t>
+         <t>Seconds: specifies the integer portion of the number of seconds 
+		 since the epoch.</t>
 		 <t>+ Size: 32 bits.</t>
 		 <t>+ Units: seconds.</t>
-         <t>Nanoseconds: specifies the fractional portion of the number of seconds since the epoch.</t>
+         <t>Nanoseconds: specifies the fractional portion of the number of 
+		 seconds since the epoch.</t>
 		 <t>+ Size: 32 bits.</t>
-		 <t>+ Units: nanoseconds. The value of this field is in the range 0 to (10^9)-1.</t>
+		 <t>+ Units: nanoseconds. The value of this field is in the range 0 to 
+		 (10^9)-1.</t>
        </list></t>
 
      <t>Epoch: <list
          hangIndent="10" style="empty">
-         <t>The PTP <xref target="IEEE1588v2"></xref> epoch is 1 January 1970 00:00:00 TAI, which is 31 December 1969 23:59:51.999918 UTC.</t>
+         <t>The PTP <xref target="IEEE1588v2"></xref> epoch is 1 January 1970 
+		 00:00:00 TAI, which is 31 December 1969 23:59:51.999918 UTC.</t>
        </list></t>
 
      <t>Resolution: <list
@@ -1464,22 +1498,33 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
      <t>Wraparound: <list
          hangIndent="10" style="empty">
-         <t>This time format wraps around every 2^32 seconds, which is roughly 136 years. The next wraparound will occur in the year 2106.</t>
+         <t>This time format wraps around every 2^32 seconds, which is roughly 
+		 136 years. The next wraparound will occur in the year 2106.</t>
        </list></t>
 
      <t>Synchronization Aspects: <list
          hangIndent="10" style="empty">
-		<t>It is assumed that nodes that run this protocol are synchronized among themselves. Nodes may be synchronized to a global reference time. Note that if PTP <xref target="IEEE1588v2"></xref> is used for synchronization, the timestamp may be derived from the PTP-synchronized clock, allowing the timestamp to be measured with respect to the clock of an PTP Grandmaster clock.</t>
-		 <t>The PTP truncated timestamp format is not affected by leap seconds.</t>
+		<t>It is assumed that nodes that run this protocol are synchronized 
+		among themselves. Nodes may be synchronized to a global reference time. 
+		Note that if PTP <xref target="IEEE1588v2"></xref> is used for 
+		synchronization, the timestamp may be derived from the PTP-synchronized 
+		clock, allowing the timestamp to be measured with respect to the clock 
+		of an PTP Grandmaster clock.</t>
+		 <t>The PTP truncated timestamp format is not affected by leap seconds.
+		 </t>
        </list></t>
 
 	</section>
 
 	<section anchor="NTPFormatSec" title="NTP 64-bit Timestamp Format">
 
-	 <t>The Network Time Protocol (NTP) <xref target="RFC5905"></xref> timestamp format is 64 bits long. This format is specified in Section 4.2.1 of <xref target="I-D.ietf-ntp-packet-timestamps"/>, and the details are presented below for the sake of completeness.</t>
+	 <t>The Network Time Protocol (NTP) <xref target="RFC5905"></xref> timestamp 
+	 format is 64 bits long. This format is specified in Section 4.2.1 of 
+	 <xref target="I-D.ietf-ntp-packet-timestamps"/>, and the details are 
+	 presented below for the sake of completeness.</t>
 	 
-     <figure align="center" anchor="NTPFormat" title="NTP [RFC5905] 64-bit Timestamp Format">
+     <figure align="center" anchor="NTPFormat" 
+	 title="NTP [RFC5905] 64-bit Timestamp Format">
 
        <artwork align="left">
          <![CDATA[
@@ -1497,12 +1542,15 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
      <t>Timestamp field format: <list
          hangIndent="10" style="empty">
-         <t>Seconds: specifies the integer portion of the number of seconds since the epoch.</t>
+         <t>Seconds: specifies the integer portion of the number of seconds 
+		 since the epoch.</t>
 		 <t>+ Size: 32 bits.</t>
 		 <t>+ Units: seconds.</t>
-         <t>Fraction: specifies the fractional portion of the number of seconds since the epoch.</t>
+         <t>Fraction: specifies the fractional portion of the number of seconds 
+		 since the epoch.</t>
 		 <t>+ Size: 32 bits.</t>
-		 <t>+ Units: the unit is 2^(-32) seconds, which is roughly equal to 233 picoseconds.</t>
+		 <t>+ Units: the unit is 2^(-32) seconds, which is roughly equal to 233 
+		 picoseconds.</t>
        </list></t>
 
      <t>Epoch: <list
@@ -1517,13 +1565,20 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 	   
      <t>Wraparound: <list
          hangIndent="10" style="empty">
-         <t>This time format wraps around every 2^32 seconds, which is roughly 136 years. The next wraparound will occur in the year 2036.</t>
+         <t>This time format wraps around every 2^32 seconds, which is roughly 
+		 136 years. The next wraparound will occur in the year 2036.</t>
        </list></t>
 
      <t>Synchronization Aspects: <list
          hangIndent="10" style="empty">
-         <t>Nodes that use this timestamp format will typically be synchronized to UTC using NTP <xref target="RFC5905"></xref>. Thus, the timestamp may be derived from the NTP-synchronized clock, allowing the timestamp to be measured with respect to the clock of an NTP server.</t> 
-		 <t>The NTP timestamp format is affected by leap seconds; it represents the number of seconds since the epoch minus the number of leap seconds that have occurred since the epoch. The value of a timestamp during or slightly after a leap second may be temporarily inaccurate.</t>
+         <t>Nodes that use this timestamp format will typically be synchronized 
+		 to UTC using NTP <xref target="RFC5905"></xref>. Thus, the timestamp 
+		 may be derived from the NTP-synchronized clock, allowing the timestamp 
+		 to be measured with respect to the clock of an NTP server.</t> 
+		 <t>The NTP timestamp format is affected by leap seconds; it represents 
+		 the number of seconds since the epoch minus the number of leap seconds 
+		 that have occurred since the epoch. The value of a timestamp during or 
+		 slightly after a leap second may be temporarily inaccurate.</t>
        </list></t>
 	   
 	</section>
@@ -1532,9 +1587,12 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
 	<section anchor="POSIXFormatSec" title="POSIX-based Timestamp Format">
 
-	 <t>This timestamp format is based on the POSIX time format <xref target="POSIX"></xref>. The detailed specification of the timestamp format used in this document is presented below.</t>
+	 <t>This timestamp format is based on the POSIX time format 
+	 <xref target="POSIX"></xref>. The detailed specification of the timestamp 
+	 format used in this document is presented below.</t>
 	 
-     <figure align="center" anchor="POSIXFormat" title="POSIX-based Timestamp Format">
+     <figure align="center" anchor="POSIXFormat" 
+	 title="POSIX-based Timestamp Format">
 
        <artwork align="left">
          <![CDATA[
@@ -1552,17 +1610,21 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
      <t>Timestamp field format: <list
          hangIndent="10" style="empty">
-         <t>Seconds: specifies the integer portion of the number of seconds since the epoch.</t>
+         <t>Seconds: specifies the integer portion of the number of seconds 
+		 since the epoch.</t>
 		 <t>+ Size: 32 bits.</t>
 		 <t>+ Units: seconds.</t>
-         <t>Microseconds: specifies the fractional portion of the number of seconds since the epoch.</t>
+         <t>Microseconds: specifies the fractional portion of the number of 
+		 seconds since the epoch.</t>
 		 <t>+ Size: 32 bits.</t>
-		 <t>+ Units: the unit is microseconds. The value of this field is in the range 0 to (10^6)-1.</t>
+		 <t>+ Units: the unit is microseconds. The value of this field is in 
+		 the range 0 to (10^6)-1.</t>
        </list></t>
 
      <t>Epoch: <list
          hangIndent="10" style="empty">
-         <t>The epoch is 1 January 1970 00:00:00 TAI, which is 31 December 1969 23:59:51.999918 UTC.</t>
+         <t>The epoch is 1 January 1970 00:00:00 TAI, which is 31 December 1969 
+		 23:59:51.999918 UTC.</t>
        </list></t>
 
      <t>Resolution: <list
@@ -1572,13 +1634,24 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 	   
      <t>Wraparound: <list
          hangIndent="10" style="empty">
-         <t>This time format wraps around every 2^32 seconds, which is roughly 136 years. The next wraparound will occur in the year 2106.</t>
+         <t>This time format wraps around every 2^32 seconds, which is roughly 
+		 136 years. The next wraparound will occur in the year 2106.</t>
        </list></t>
 
      <t>Synchronization Aspects: <list
          hangIndent="10" style="empty">
-         <t>It is assumed that nodes that use this timestamp format run Linux operating system, and hence use the POSIX time. In some cases nodes may be synchronized to UTC using a synchronization mechanism that is outside the scope of this document, such as NTP <xref target="RFC5905"></xref>. Thus, the timestamp may be derived from the NTP-synchronized clock, allowing the timestamp to be measured with respect to the clock of an NTP server.</t> 
-		 <t>The POSIX-based timestamp format is affected by leap seconds; it represents the number of seconds since the epoch minus the number of leap seconds that have occurred since the epoch. The value of a timestamp during or slightly after a leap second may be temporarily inaccurate.</t>
+         <t>It is assumed that nodes that use this timestamp format run Linux 
+		 operating system, and hence use the POSIX time. In some cases nodes 
+		 may be synchronized to UTC using a synchronization mechanism that is 
+		 outside the scope of this document, such as NTP 
+		 <xref target="RFC5905"></xref>. Thus, the timestamp may be derived 
+		 from the NTP-synchronized clock, allowing the timestamp to be measured 
+		 with respect to the clock of an NTP server.</t> 
+		 <t>The POSIX-based timestamp format is affected by leap seconds; it 
+		 represents the number of seconds since the epoch minus the number of 
+		 leap seconds that have occurred since the epoch. The value of a 
+		 timestamp during or slightly after a leap second may be temporarily 
+		 inaccurate.</t>
        </list></t>
 	   
 	</section>
