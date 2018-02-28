@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Fred Baker (private) -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced.
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
+<!ENTITY RFC4303 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4303.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
+<!ENTITY I-D.draft-ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-ippm-ioam-data-01.xml">
+]>
+<?rfc toc="yes"?>
+<?rfc tocompact="no"?>
+<?rfc tocdepth="3"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<rfc category="std" docName="draft-weis-ippm-ioam-gre-00" ipr="trust200902">
+  <front>
+    <title abbrev="In-situ OAM GRE encapsulation">GRE Encapsulation for In-situ OAM Data</title>
+
+    <author fullname="Brian Weis" initials="B.W." surname="Weis">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>170 W. Tasman Drive</street>
+
+          <city>San Jose</city>
+
+          <code>95134-1706</code>
+
+          <region>California</region>
+
+          <country>USA</country>
+        </postal>
+
+        <phone>+1-408-526-4796</phone>
+
+        <email>bew@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Craig Hill" initials="C." surname="Hill">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>13600 Dulles Technology Drive</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>Herndon</city>
+
+          <region>Virginia</region>
+
+          <code>20171</code>
+
+          <country>United States</country>
+        </postal>
+
+        <email>crhill@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Vengada Prasad Govindan" initials="V."
+            surname="Govindan">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <email>venggovi@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>7200-11 Kit Creek Road</street>
+
+          <city>Research Triangle Park</city>
+
+          <region>NC</region>
+
+          <code>27709</code>
+
+          <country>United States</country>
+        </postal>
+
+        <email>cpignata@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+      <organization>RtBrick Inc.</organization>
+
+      <address>
+        <email>hannes@rtbrick.com</email>
+      </address>
+    </author>
+
+    <author fullname="John Leddy" initials="J." surname="Leddy">
+      <organization abbrev="Comcast">Comcast</organization>
+
+      <address>
+        <email>John_Leddy@cable.comcast.com</email>
+      </address>
+    </author>
+
+    <author fullname="Stephen Youell" initials="S." surname="Youell">
+      <organization abbrev="JMPC">JP Morgan Chase</organization>
+
+      <address>
+        <postal>
+          <street>25 Bank Street</street>
+
+          <city>London</city>
+
+          <code>E14 5JP</code>
+
+          <country>United Kingdom</country>
+        </postal>
+
+        <email>stephen.youell@jpmorgan.com</email>
+      </address>
+    </author>
+
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
+      <organization abbrev="">Marvell</organization>
+
+      <address>
+        <postal>
+          <street>6 Hamada St.</street>
+
+          <city>Yokneam</city>
+
+          <code>20692</code>
+
+          <country>Israel</country>
+        </postal>
+
+        <email>talmi@marvell.com</email>
+      </address>
+    </author>
+
+    <author fullname="Aviv Kfir" initials="A." surname="Kfir">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA </city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>avivk@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
+      <organization abbrev="">Facebook</organization>
+
+      <address>
+        <postal>
+          <street>1 Hacker Way</street>
+
+          <city>Menlo Park, CA</city>
+
+          <code>94025</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>petr@fb.com</email>
+      </address>
+    </author>
+
+    <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
+      <organization abbrev="">Barefoot Networks</organization>
+
+      <address>
+        <postal>
+          <street>2185 Park Boulevard</street>
+
+          <city>Palo Alto, CA</city>
+
+          <code>94306</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>mspiegel@barefootnetworks.com</email>
+      </address>
+    </author>
+
+    <date day="03" month="March" year="2018"/>
+
+    <area>Transport Area</area>
+
+    <workgroup>ippm</workgroup>
+
+    <abstract>
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      outlines how IOAM data fields are encapsulated in GRE.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      outlines how IOAM data fields are encapsulated in the Generic Routing
+      Encapsulation (GRE) <xref target="RFC2784"/>.</t>
+    </section>
+
+    <section title="Conventions">
+      <section title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described in BCP
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only
+        when, they appear in all capitals, as shown here.</t>
+      </section>
+
+      <section title="Abbreviations">
+        <t>Abbreviations used in this document:</t>
+
+        <t><list hangIndent="11" style="hanging">
+            <t hangText="E2E:">Edge-to-Edge</t>
+
+            <t hangText="GRE:">Generic Routing Encapsulation</t>
+
+            <t hangText="IOAM:">In-situ Operations, Administration, and
+            Maintenance</t>
+
+            <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+            <t hangText="POT:">Proof of Transit</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section title="In-situ OAM Metadata Transport in GRE">
+      <t>GRE encapsulation is defined in <xref target="RFC2784"/>. IOAM
+      encapsulation in GRE is defined as a "set of Protocol Types"
+      TBD_IANA_ETHERNET_NUMBER_IOAM_* and follows the GRE header. These
+      Protocol Types are defined in <xref target="ETYPES"/>.</t>
+
+      <t>The different IOAM data fields defined in <xref
+      target="I-D.ietf-ippm-ioam-data"/> are added as TLVs following the GRE
+      header. In an administrative domain where IOAM is used, insertion of the
+      IOAM protocol header in GRE is enabled at the GRE tunnel endpoints which
+      also serve as IOAM encapsulating/decapsulating nodes by means of
+      configuration.</t>
+
+      <t><figure>
+          <artwork><![CDATA[
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |C|       Reserved0       | Ver | Protocol Type = <IOAM Proto>  |  G
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+ |      Checksum (optional)      |       Reserved1 (Optional)    |  E
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |     Type      |   IOAM HDR len|        Next Protocol          |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+ !                                                               |  I
+ !                                                               |  O
+ ~                 IOAM Option and Data Space                    ~  A
+ |                                                               |  M
+ |                                                               |  |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+ |                                                               |
+ |             Payload + Padding (L2/L3/ESP/...)                 |
+ |                                                               |
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+        </figure></t>
+
+      <t>The GRE header and fields are defined in <xref target="RFC2784"/>.
+      For IOAM, the following new GRE Protocol Type values are requested:</t>
+
+      <t><list style="numbers">
+          <t>IOAM_Trace_Preallocated:
+          TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE_PREALLOCATED</t>
+
+          <t>IOAM_Trace_Incremental:
+          TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE_INCREMENTAL</t>
+
+          <t>IOAM_POT: TBD_IANA_ETHERNET_NUMBER_IOAM_POT</t>
+
+          <t>IOAM_E2E: TBD_IANA_ETHERNET_NUMBER_IOAM_E2E</t>
+        </list></t>
+
+      <t>The IOAM header is defined as follows. <list style="hanging">
+          <t hangText="Type:">8-bit field defining the IOAM Option type, as
+          defined later in this document.</t>
+
+          <t hangText="IOAM HDR Len:">8 bits Length field contains the length
+          of the variable IOAM data octets in 4-octet units.</t>
+
+          <t hangText="Next Protocol:">16 bits Next Protocol Type field
+          contains the protocol type of the packet following IOAM protocol
+          header. When the most significant octet is 0x00, the Protocol Type
+          is taken to be an IP Protocol Number as defined in <xref
+          target="IP-PROT"/>. Otherwise, the Protocol Type is defined to be an
+          EtherType value from <xref target="ETYPES"/>. An implementation
+          receiving a packet containing a Protocol Type which is not listed in
+          one of those registries SHOULD discard the packet.</t>
+        </list></t>
+
+      <section title="In-situ OAM Tracing in GRE">
+        <t>The packet formats of the pre-allocated IOAM trace and incremental
+        IOAM trace when transported using GRE are defined in Section 4.1 of
+        <xref target="I-D.ietf-ippm-ioam-data"/>. The Type field is set to
+        zero, and the the Type (e.g., IOAM_Trace_Preallocated or
+        IOAM_Trace_Incremental) is defined within the IOAM Option space as
+        defined by <xref target="I-D.ietf-ippm-ioam-data"/>. Note that the GRE
+        Protocol Type will indicate whether the IOAM Option space will contain
+        a Preallocated Incremental IOAM trace option data.</t>
+      </section>
+
+      <section title="In-situ OAM POT in GRE">
+        <t>The packet formats of the proof of transport fields when
+        transported using GRE are defined in Section 4.2 of <xref
+        target="I-D.ietf-ippm-ioam-data"/>. The Type field is formatted as the
+        IOAM proof of transit option header in Section 4.2 of <xref
+        target="I-D.ietf-ippm-ioam-data"/>.</t>
+      </section>
+
+      <section title="In-situ OAM E2E in GRE">
+        <t>The packet formats of the E2E fields when transported using GRE are
+        defined in Section 4.3 of <xref target="I-D.ietf-ippm-ioam-data"/>.
+        The Type field includes values from the "IOAM E2E Type Registry"
+        defined in Section 6.5 of <xref
+        target="I-D.ietf-ippm-ioam-data"/>.</t>
+      </section>
+    </section>
+
+    <section title="Security Considerations">
+      <t>This document describes the encapsulation of IOAM data fields in GRE.
+      Security considerations of the specific IOAM data fields for each case
+      (i.e., Trace, Proof of Transit, and E2E) are described in defined in
+      <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+      <t>As this document describes new protocol fields within the existing
+      GRE encapsulation, these are similar to the security considerations of
+      <xref target="RFC2784"/>.</t>
+
+      <t>IOAM data transported in an OAM E2E header SHOULD be integrity
+      protected (e.g., with IPsec ESP <xref target="RFC4303"/>) to detect
+      changes made by a device between the sending and receiving OAM
+      endpoints.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>Several new EtherType values TBD_IANA_ETHERNET_NUMBER_* are to be
+      requested from the IEEE RAC.</t>
+    </section>
+
+    <!-- <section anchor="Acknowledgements" title="Acknowledgements"> -->
+
+    <!-- </section> -->
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      &RFC2119;
+
+      &RFC8174;
+
+      &RFC2784;
+
+      &I-D.draft-ietf-ippm-ioam-data;
+
+      <reference anchor="ETYPES"
+                 target="https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml">
+        <front>
+          <title>IANA Ethernet Numbers</title>
+
+          <author/>
+
+          <date/>
+        </front>
+      </reference>
+
+      <reference anchor="IP-PROT"
+                 target="https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml">
+        <front>
+          <title>IANA Protocol Numbers</title>
+
+          <author/>
+
+          <date/>
+        </front>
+      </reference>
+    </references>
+
+    <references title="Informative References">
+      &RFC4303;
+    </references>
+
+    <section title="Example GRE-IOAM Payloads">
+      <section title="Example GRE-IOAM Tracing Payloads">
+        <t><figure>
+            <artwork><![CDATA[
+        In-situ OAM Trace header following GRE header
+                (Preallocated IOAM trace):
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|C|       Reserved0       | Ver | Protocol Type = IOAM_Trace    |  G
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+|      Checksum (optional)      |       Reserved1 (Optional)    |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|     Type      |   IOAM HDR len|        Next Protocol          |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|         IOAM-Trace-Type       |NodeLen|  Flags  | RemainingLen|Trc
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     |IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Pre-allocated Trace Option Data MUST be 4-octet aligned:
+]]></artwork>
+          </figure></t>
+
+        <t><figure>
+            <artwork><![CDATA[
+        In-situ OAM Trace header following GRE header
+                (Incremental IOAM trace):
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|C|       Reserved0       | Ver |Protocol Type = IOAM_Trace     |  G
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+|      Checksum (optional)      |       Reserved1 (Optional)    |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|     Type      |   IOAM HDR len|        Next Protocol          |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |Trc
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |  |
+|                        node data list [0]                     |IOAM
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+|                                                               |  a
+|                        node data list [1]                     |  t
+|                                                               |  a
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+~                             ...                               ~  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+|                                                               |  a
+|                        node data list [n-1]                   |  c
+|                                                               |  e
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                                                               |  |
+|                        node data list [n]                     |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+In-situ OAM Incremental Trace Option Data MUST be 4-octet aligned:
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="Example GRE-IOAM POT Payloads">
+        <t><figure>
+            <artwork><![CDATA[
+In-situ OAM POT header following GRE header:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|C|       Reserved0       | Ver | Protocol Type = IOAM_POT      |  G
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+|      Checksum (optional)      |       Reserved1 (Optional)    |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|IOAM POT Type|P|   IOAM HDR len|     Next Protocol             |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|                           Random                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+|                        Random(contd.)                         |  O
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+|                         Cumulative                            |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                    Cumulative (contd.)                        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="Example GRE-IOAM E2E Payloads">
+        <t><figure>
+            <artwork><![CDATA[
+In-situ OAM E2E header following GRE header:
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|C|       Reserved0       | Ver | Protocol Type = IOAM_E2E      |  G
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+|      Checksum (optional)      |       Reserved1 (Optional)    |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|IOAM_E2E_Type  |   IOAM HDR len|     Next Protocol             |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
+|      E2E Option data field determined by IOAM-E2E-Type        |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |
+|                     Payload + Padding (L2/L3/ESP/...)         |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+          </figure></t>
+      </section>
+    </section>
+  </back>
+</rfc>
