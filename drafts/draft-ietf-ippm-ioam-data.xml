@@ -1229,7 +1229,7 @@ IOAM proof of transit option of IOAM POT Type 0:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|IOAM POT Type=0|P|IOAM POTFlags|           Reserved            | 
+|IOAM POT Type=0|P|R R R R R R R|           Reserved            | 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -1247,18 +1247,16 @@ IOAM proof of transit option of IOAM POT Type 0:
               POT variant that dictates the POT data that is included, to be
               set to 0 for the POT defined in this section.</t>
 
-              <t hangText="IOAM POT flags:">8-bit. Following flags are
-              defined:<list style="hanging">
-                  <t hangText="Bit 0">"Profile-to-use" (P-bit) (most
-                  significant bit). Indicates which POT-profile is used to
-                  generate the Cumulative. Any node participating in POT will
-                  have a maximum of 2 profiles configured that drive the
-                  computation of cumulative. The two profiles are numbered 0,
-                  1. This bit conveys whether profile 0 or profile 1 is used
-                  to compute the Cumulative. </t>
+              <t hangText="P bit:">1-bit. "Profile-to-use" (P-bit) (most
+              significant bit). Indicates which POT-profile is used to
+              generate the Cumulative. Any node participating in POT will have
+              a maximum of 2 profiles configured that drive the computation of
+              cumulative. The two profiles are numbered 0, 1. This bit conveys
+              whether profile 0 or profile 1 is used to compute the
+              Cumulative.</t>
 
-                  <t hangText="Bit 1-7">Reserved: Must be zero.</t>
-                </list></t>
+              <t hangText="R (7 bits):">7-bit IOAM POT flags for future use.
+              MUST be zero on transmission and ignored on receipt. </t>
 
               <t hangText="Reserved:">16-bit Reserved bits are present for
               future use. The reserved bits MUST be set to 0x0.</t>
@@ -1357,7 +1355,7 @@ IOAM proof of transit option of IOAM POT Type 0:
                 in order to detect the error indication.</t>
 
                 <t hangText="Bit 4-15">Undefined. An IOAM encapsulating node
-                must set the value of each of these bits to 0. </t>
+                must set the value of each of these bits to 0.</t>
               </list></t>
 
             <t hangText="Reserved:">16-bits Reserved bits are present for
