@@ -1185,13 +1185,51 @@ IOAM proof of transit option header:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|IOAM POT Type|P|             Reserved                          | 
+|IOAM POT Type  | IOAM POT flags|           Reserved            | 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-IOAM proof of transit option data MUST be 4-octet aligned:
+IOAM proof of transit option data MUST be 4-octet aligned.:
+    
+  0                   1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ |       POT Option data field determined by IOAM-POT-Type       ~
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
+
+]]></artwork>
+          </figure><list style="hanging">
+            <t hangText="IOAM POT Type:">8-bit identifier of a particular POT
+            variant that dictates the POT data that is included. This document
+            defines POT Type 0:<list style="hanging">
+                <t hangText="0:">POT data is a 16 Octet field as described
+                below.</t>
+              </list></t>
+
+            <t hangText="IOAM POT flags:">8-bit. Following flags are
+            defined:<list style="hanging">
+                <t hangText="Bit 0">"Profile-to-use" (P-bit) (most significant
+                bit). Indicates which POT-profile is used by POT Type 0.</t>
+
+                <t hangText="Bit 1-7">Reserved: Must be zero.</t>
+              </list></t>
+
+            <t hangText="Reserved:">16-bit Reserved bits are present for
+            future use. The reserved bits MUST be set to 0x0.</t>
+
+            <t hangText="POT Option data:">Variable-length field. The type of
+            which is determined by the IOAM-POT-Type.</t>
+          </list></t>
+
+        <section title="IOAM Proof of Transit Type 0">
+          <t><figure>
+              <artwork><![CDATA[ 
+IOAM proof of transit option of IOAM POT Type 0:
+ 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|IOAM POT Type=0|P|IOAM POTFlags|           Reserved            | 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                           Random                              |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -1204,34 +1242,38 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
 
 ]]></artwork>
-          </figure><list style="hanging">
-            <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
-            variant that dictates the POT data that is included. This document
-            defines POT Type 0:<list style="hanging">
-                <t hangText="0:">POT data is a 16 Octet field as described
-                below.</t>
-              </list></t>
+            </figure><list style="hanging">
+              <t hangText="IOAM POT Type:">8-bit identifier of a particular
+              POT variant that dictates the POT data that is included, to be
+              set to 0 for the POT defined in this section.</t>
 
-            <t hangText="Reserved:">24-bit Reserved bits are present for
-            future use. The reserved bits MUST be set to 0x0.</t>
+              <t hangText="IOAM POT flags:">8-bit. Following flags are
+              defined:<list style="hanging">
+                  <t hangText="Bit 0">"Profile-to-use" (P-bit) (most
+                  significant bit). Indicates which POT-profile is used to
+                  generate the Cumulative. Any node participating in POT will
+                  have a maximum of 2 profiles configured that drive the
+                  computation of cumulative. The two profiles are numbered 0,
+                  1. This bit conveys whether profile 0 or profile 1 is used
+                  to compute the Cumulative. </t>
 
-            <t hangText="Profile to use (P):">1-bit. Indicates which
-            POT-profile is used to generate the Cumulative. Any node
-            participating in POT will have a maximum of 2 profiles configured
-            that drive the computation of cumulative. The two profiles are
-            numbered 0, 1. This bit conveys whether profile 0 or profile 1 is
-            used to compute the Cumulative.</t>
+                  <t hangText="Bit 1-7">Reserved: Must be zero.</t>
+                </list></t>
 
-            <t hangText="Random:">64-bit Per packet Random number.</t>
+              <t hangText="Reserved:">16-bit Reserved bits are present for
+              future use. The reserved bits MUST be set to 0x0.</t>
 
-            <t hangText="Cumulative:">64-bit Cumulative that is updated at
-            specific nodes by processing per packet Random number field and
-            configured parameters.</t>
-          </list>Note: Larger or smaller sizes of "Random" and "Cumulative"
-        data are feasible and could be required for certain deployments (e.g.
-        in case of space constraints in the transport protocol used). Future
-        versions of this document will address different sizes of data for
-        "proof of transit".</t>
+              <t hangText="Random:">64-bit Per packet Random number.</t>
+
+              <t hangText="Cumulative:">64-bit Cumulative that is updated at
+              specific nodes by processing per packet Random number field and
+              configured parameters.</t>
+            </list>Note: Larger or smaller sizes of "Random" and "Cumulative"
+          data are feasible and could be required for certain deployments
+          (e.g. in case of space constraints in the transport protocol used).
+          Future versions of this document will address different sizes of
+          data for "proof of transit".</t>
+        </section>
       </section>
 
       <section anchor="IOAM_edge_to_edge_opt" title="IOAM Edge-to-Edge Option">
@@ -1320,6 +1362,9 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
             <t hangText="Reserved:">16-bits Reserved bits are present for
             future use. The reserved bits MUST be set to 0x0.</t>
+
+            <t hangText="E2E Option data:">Variable-length field. The type of
+            which is determined by the IOAM-E2E-Type.</t>
           </list></t>
       </section>
     </section>
@@ -1444,8 +1489,8 @@ IOAM proof of transit option data MUST be 4-octet aligned:
             <t>The resolution is 2^(-32) seconds.</t>
           </list></t>
 
-          <t>Wraparound: <list hangIndent="10" style="empty">
-	    <t>This time format wraps around every 2^32 seconds, which is
+        <t>Wraparound: <list hangIndent="10" style="empty">
+            <t>This time format wraps around every 2^32 seconds, which is
             roughly 136 years. The next wraparound will occur in the year
             2036.</t>
           </list></t>
@@ -1563,6 +1608,8 @@ IOAM proof of transit option data MUST be 4-octet aligned:
 
             <t>IOAM POT Type</t>
 
+            <t>IOAM POT flags</t>
+
             <t>IOAM E2E Type</t>
           </list>will contain the current set of possibilities defined in this
         document. New registries in this name space are created via RFC
@@ -1573,7 +1620,7 @@ IOAM proof of transit option data MUST be 4-octet aligned:
       </section>
 
       <section title="IOAM Type Registry">
-        <t>This registry defines 256 code points to define IOAM-Type field for
+        <t>This registry defines 128 code points to define IOAM-Type field for
         identifying IOAM options as explained in <xref
         target="IOAM_option_format"></xref>. The following code points are
         defined in this draft:</t>
@@ -1586,7 +1633,7 @@ IOAM proof of transit option data MUST be 4-octet aligned:
             <t hangText="2">IOAM POT Option Type</t>
 
             <t hangText="3">IOAM E2E Option Type</t>
-          </list>4 - 255 are available for assignment via RFC Required process
+          </list>4 - 127 are available for assignment via RFC Required process
         as per <xref target="RFC8126"></xref>.</t>
       </section>
 
@@ -1612,11 +1659,21 @@ IOAM proof of transit option data MUST be 4-octet aligned:
       </section>
 
       <section title="IOAM POT Type Registry">
-        <t>This registry defines 128 code points to define IOAM POT Type for
+        <t>This registry defines 256 code points to define IOAM POT Type for
         IOAM proof of transit option <xref
         target="IOAM_proof_of_transit_option"></xref>. The code point value 0
-        is defined in this document, 1 - 127 are available for assignment via
+        is defined in this document, 1 - 255 are available for assignment via
         RFC Required process as per <xref target="RFC8126"></xref>.</t>
+      </section>
+
+      <section title="IOAM POT Flags Registry">
+        <t>This registry defines code point for each bit in the 8 bit flags
+        for IOAM POT option defined in <xref
+        target="IOAM_proof_of_transit_option"></xref>. The meaning of Bit 0
+        for IOAM POT flags is defined in this document in <xref
+        target="IOAM_proof_of_transit_option"></xref>. The meaning for Bit 1 -
+        7 are available for assignment via RFC Required process as per <xref
+        target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM E2E Type Registry">
