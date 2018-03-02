@@ -16,6 +16,7 @@
 <!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
 <!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
 <!ENTITY RFC3232 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3232.xml">
+<!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
 <!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
@@ -27,7 +28,6 @@
 <!ENTITY I-D.gont-v6ops-ipv6-ehs-in-real-world SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.gont-v6ops-ipv6-ehs-in-real-world.xml">
 <!ENTITY I-D.brockners-lisp-sr SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-lisp-sr.xml">
 <!ENTITY I-D.hildebrand-spud-prototype SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
-<!ENTITY I-D.ietf-sfc-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-nsh.xml">
 <!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
 <!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
@@ -257,7 +257,7 @@
       </address>
     </author>
 
-    <date day="19" month="February" year="2018"/>
+    <date day="3" month="March" year="2018"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -302,8 +302,8 @@
       refers to the fact that the OAM data is added to the data packets rather
       than is being sent within packets specifically dedicated to OAM. This
       document defines how IOAM data fields are transported as part of the
-      Network Service Header (NSH) <xref target="I-D.ietf-sfc-nsh"/>)
-      encapsulation. The IOAM data fields are defined in <xref
+      Network Service Header (NSH) <xref target="RFC8300"/> encapsulation. The
+      IOAM data fields are defined in <xref
       target="I-D.ietf-ippm-ioam-data"/>. An implementation of IOAM which
       leverages NSH to carry the IOAM data is available from the FD.io open
       source software project <xref target="FD.io"/>.</t>
@@ -321,361 +321,164 @@
           <t hangText="IOAM:">In-situ Operations, Administration, and
           Maintenance</t>
 
-          <t hangText="MTU:">Maximum Transmit Unit</t>
-
           <t hangText="NSH:">Network Service Header</t>
 
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
-
-          <t hangText="POT:">Proof of Transit</t>
-
-          <t hangText="SFC:">Service Function Chain</t>
 
           <t hangText="TLV:">Type, Length, Value</t>
         </list></t>
     </section>
 
     <section title="IOAM data fields encapsulation in NSH">
-      <t>IOAM data fields are carried within the NSH header following NSH MDx
-      metadata TLVs.</t>
+      <t>NSH is defined in <xref target="RFC8300"/>. IOAM data fields are
+      carried in NSH using a next protocol header which follows the NSH MDx
+      metadata TLVs. The different IOAM data fields defined in <xref
+      target="I-D.ietf-ippm-ioam-data"/> are added as TLVs. In an
+      administrative domain where IOAM is used, insertion of the IOAM protocol
+      header in NSH is enabled at the NSH tunnel endpoints which also serve as
+      IOAM encapsulating/decapsulating nodes by means of configuration.</t>
 
-      <section title="IOAM Trace Data in NSH">
-        <t>IOAM tracing data represents data that is inserted at nodes that a
-        packet traverses. To allow for optimal implementations in both
-        software as well as hardware forwarders, two different ways to
-        encapsulate IOAM data are defined: "Pre-allocated" and "incremental".
-        See <xref target="I-D.ietf-ippm-ioam-data"/> for details on IOAM
-        tracing and the pre-allocated and incremental IOAM trace options.</t>
-
-        <t>The packet formats of the pre-allocated IOAM trace and incremental
-        IOAM trace when transported in NSH are defined as below.</t>
-
-        <t>Note that in Service Function Chaining (SFC) <xref
-        target="RFC7665"/>, the Network Service Header (NSH) <xref
-        target="I-D.ietf-sfc-nsh"/> already includes path tracing capabilities
-        <xref target="I-D.penno-sfc-trace"/>. IOAM data fields for tracing
-        complement the capabilities in NSH, in that IOAM data fields carry
-        information complementary to information in NSH and benefit from the
-        fact, that IOAM data fields use their own namespace. This allows
-        intermediate nodes, which are not NSH hops to also process and update
-        the IOAM data fields if configured to do so.</t>
-
-        <t><figure>
-            <artwork><![CDATA[
-IOAM Trace header following NSH MDx header
-(Pre-allocated IOAM trace):
-
- 0                   1                   2                   3
+      <t><figure>
+          <artwork><![CDATA[ 0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  |
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = TBD_IOAM |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
 |          Service Path Identifer               | Service Index |  S
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
 |                            ...                                |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-|         IOAM-Trace-Type       |NodeLen|  Flags  | RemainingLen|Trce
+|  IOAM-Type    | IOAM HDR len  |    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
+!                                                               |  O
+!                                                               |  A
+~                 IOAM Option and Data Space                    ~  M
+|                                                               |  |
+|                                                               |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|                                                               |  |
-|                        node data list [0]                     |IOAM
-|                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
-|                                                               |  a
-|                        node data list [1]                     |  t
-|                                                               |  a
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~                             ...                               ~  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
-|                                                               |  a
-|                        node data list [n-1]                   |  c
-|                                                               |  e
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                                                               |  |
-|                        node data list [n]                     |  |
-|                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
 |                                                               |
 |                                                               |
-|                     Payload + Padding (L2/L3/ESP/...)         |
+|                 Payload + Padding (L2/L3/ESP/...)             |
 |                                                               |
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-IOAM Pre-allocated Trace Option Data MUST be 4-octet aligned:
-
 ]]></artwork>
-          </figure></t>
+        </figure></t>
 
-        <t><figure>
-            <artwork><![CDATA[
-IOAM Trace header following NSH MDx header
-(Incremental IOAM trace):
+      <t>The NSH header and fields are defined in <xref target="RFC8300"/>.
+      The "NSH Next Protocol" value (referred to as "NP" in the diagram above)
+      is TBD_IOAM.</t>
 
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP=IOAM_Trace |  N
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  S
-|          Service Path Identifer               | Service Index |  H
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                            ...                                |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|      Type     |  IOAM HDR len |    Reserved   | Next Protocol |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-|        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |Trce
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|                                                               |  |
-|                        node data list [0]                     |IOAM
-|                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
-|                                                               |  a
-|                        node data list [1]                     |  t
-|                                                               |  a
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~                             ...                               ~  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
-|                                                               |  a
-|                        node data list [n-1]                   |  c
-|                                                               |  e
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                                                               |  |
-|                        node data list [n]                     |  |
-|                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
-|                                                               |
-|                                                               |
-|                     Payload + Padding (L2/L3/ESP/...)         |
-|                                                               |
-|                                                               |
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      <t>The IOAM related fields in NSH are defined as follows:</t>
 
+      <t><list style="hanging">
+          <t hangText="IOAM-Type:">8-bit field defining the IOAM Option type,
+          as defined in Section 7.2 of <xref
+          target="I-D.ietf-ippm-ioam-data"/>.</t>
 
-IOAM Incremental Trace Option Data MUST be 4-octet aligned:
-]]></artwork>
-          </figure> <list style="hanging">
-            <t hangText="Next Protocol of NSH:">TBD value for IOAM_Trace.</t>
+          <t hangText="IOAM HDR Len:">8 bits Length field contains the length
+          of the variable IOAM data octets in 4-octet units.</t>
 
-            <t hangText="Type:">8-bit unsigned integer defining IOAM header
-            type IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
-            here.</t>
+          <t hangText="Reserved bits:">Reserved bits are present for future
+          use. The reserved bits MUST be set to 0x0.</t>
 
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
+          <t hangText="Next Protocol:">8-bit unsigned integer that determines
+          the type of header following IOAM protocol.</t>
 
-            <t hangText="Reserved bits and R bits:">Reserved bits are present
-            for future use. The reserved bits MUST be set to 0x0.</t>
-
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol.</t>
-
-            <t hangText="IOAM-Trace-Type:">16-bit identifier of IOAM Trace
-            Type as defined in <xref target="I-D.ietf-ippm-ioam-data"/>
-            IOAM-Trace-Types.</t>
-
-            <t hangText="Node Data Length:">4-bit unsigned integer as defined
-            in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Flags:">5-bit field as defined in <xref
-            target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Octets-left:">7-bit unsigned integer as defined in
-            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Maximum-length:">7-bit unsigned integer as defined in
-            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Node data List [n]:">Variable-length field as defined
-            in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-          </list></t>
-      </section>
-
-      <section title="IOAM POT Data in NSH">
-        <t>IOAM proof of transit (POT, see <xref
-        target="I-D.brockners-proof-of-transit"/>) offers a means to verify
-        that a packet has traversed a defined set of nodes. In an
-        administrative domain where IOAM is used, insertion of the IOAM data
-        into the NSH header is enabled at the required nodes (i.e. at the IOAM
-        encapsulating/decapsulating nodes) by means of configuration.</t>
-
-        <t>IOAM POT data fields are added as a TLV following NSH MDx
-        metadata:</t>
-
-        <t><figure>
-            <artwork><![CDATA[
-IOAM POT header following NSH MDx header:
-
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = IOAM_POT |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
-|          Service Path Identifer               | Service Index |  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
-|                            ...                                |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|IOAM_POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                           Random                              |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
-|                        Random(contd.)                         |  O
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
-|                         Cumulative                            |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                    Cumulative (contd.)                        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
-          </figure><list style="hanging">
-            <t hangText="Next Protocol of NSH:">TBD value for IOAM_POT.</t>
-
-            <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
-            variant that specifies the POT data that is to be included as
-            defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Profile to use (P):">1-bit as defined in <xref
-            target="I-D.ietf-ippm-ioam-data"/> IOAM POT Option.</t>
-
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
-
-            <t hangText="Reserved bits and R bits:">Reserved bits are present
-            for future use. The reserved bits MUST be set to 0x0.</t>
-
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol.</t>
-
-            <t hangText="Random:">64-bit Per-packet random number.</t>
-
-            <t hangText="Cumulative:">64-bit Cumulative value that is updated
-            by the Service Functions.</t>
-          </list></t>
-      </section>
-
-      <section title="IOAM Edge-to-Edge Data in NSH">
-        <t>The IOAM edge-to-edge option is to carry data that is added by the
-        IOAM encapsulating node and interpreted by the IOAM decapsulating
-        node. The "Edge-to-Edge" capabilities (see <xref
-        target="I-D.brockners-inband-oam-requirements"/>) of IOAM can be
-        leveraged within NSH. In an administrative domain where IOAM is used,
-        insertion of the IOAM data into the NSH header is enabled at the
-        required nodes (i.e. at the IOAM encapsulating/decapsulating nodes) by
-        means of configuration.</t>
-
-        <t>IOAM Edge-to-Edge data fields are added as a TLV following NSH MDx
-        metadata:</t>
-
-        <t><figure>
-            <artwork><![CDATA[
-IOAM E2E header following NSH MDx header:
-
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = IOAM_E2E |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
-|          Service Path Identifer               | Service Index |  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
-|                            ...                                |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|IOAM_E2E_Type  |   IOAM HDR len|    Reserved   | Next Protocol |IOAM
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ E2E
-|      E2E Option data field determined by IOAM-E2E-Type        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-
-]]></artwork>
-          </figure><list style="hanging">
-            <t hangText="Next Protocol of NSH:">TBD value for IOAM_E2E.</t>
-
-            <t hangText="IOAM E2E Type:">8-bit identifier of a particular E2E
-            variant that specifies the IOAM E2E data that is to be included as
-            defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
-
-            <t hangText="Reserved bits and R bits:">Reserved bits are present
-            for future use. The reserved bits MUST be set to 0x0.</t>
-
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol.</t>
-
-            <t hangText="E2E Option data field:">Variable length field as
-            defined in <xref target="I-D.ietf-ippm-ioam-data"/> IOAM E2E
-            Option.</t>
-          </list></t>
-      </section>
+          <t hangText="IOAM Option and Data Space:">IOAM option header and
+          data is present as defined by the IOAM-Type field, and is defined in
+          Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+        </list>Multiple IOAM options MAY be included within the NSH
+      encapsulation. For example, if a NSH encapsulation contains two IOAM
+      options before a data payload, the Next Protocol field of the first IOAM
+      option will contain the value of TBD_IOAM, while the Next Protocol field
+      of the second IOAM option will contain the "NSH Next Protocol" number
+      indicating the type of the data payload.</t>
     </section>
 
-    <section title="Discussion of the encapsulation approach">
-      <t>This section is to support the working group discussion in selecting
-      the most appropriate approach for encapsulating IOAM data fields in
-      NSH.</t>
+    <section title="Considerations">
+      <t>This section summarizes a set of considerations on the overall
+      approach taken for IOAM data encapsulation in NSH, as well as deployment
+      considerations.</t>
 
-      <t>An encapsulation of IOAM data fields in NSH should be friendly to an
-      implementation in both hardware as well as software forwarders and
-      support a wide range of deployment cases, including large networks that
-      desire to leverage multiple IOAM data fields at the same time.</t>
+      <section title="Discussion of the encapsulation approach">
+        <t>This section is to support the working group discussion in
+        selecting the most appropriate approach for encapsulating IOAM data
+        fields in NSH.</t>
 
-      <t><list style="empty">
-          <t>Hardware and software friendly implementation: Hardware
-          forwarders benefit from an encapsulation that minimizes iterative
-          look-ups of fields within the packet: Any operation which looks up
-          the value of a field within the packet, based on which another
-          lookup is performed, consumes additional gates and time in an
-          implementation - both of which are desired to be kept to a minimum.
-          This means that flat TLV structures are to be preferred over nested
-          TLV structures. IOAM data fields are grouped into three option
-          categories: Trace, proof-of-transit, and edge-to-edge. Each of these
-          three options defines a TLV structure. A hardware-friendly
-          encapsulation approach avoids grouping these three option categories
-          into yet another TLV structure, but would rather carry the options
-          as a serial sequence.</t>
+        <t>An encapsulation of IOAM data fields in NSH should be friendly to
+        an implementation in both hardware as well as software forwarders and
+        support a wide range of deployment cases, including large networks
+        that desire to leverage multiple IOAM data fields at the same
+        time.</t>
 
-          <t>Total length of the IOAM data fields: The total length of IOAM
-          data can grow quite large in case multiple different IOAM data
-          fields are used and large path-lengths need to be considered. If for
-          example an operator would consider using the IOAM trace option and
-          capture node-id, app_data, egress/ingress interface-id, timestamp
-          seconds, timestamps nanoseconds at every hop, then a total of 20
-          octets would be added to the packet at every hop. In case this
-          particular deployment would have a maximum path length of 15 hops in
-          the IOAM domain, then a maximum of 300 octets of IOAM data were to
-          be encapsulated in the packet.</t>
-        </list>Two approaches for encapsulating IOAM data fields in NSH could
-      be considered:</t>
+        <t><list style="empty">
+            <t>Hardware and software friendly implementation: Hardware
+            forwarders benefit from an encapsulation that minimizes iterative
+            look-ups of fields within the packet: Any operation which looks up
+            the value of a field within the packet, based on which another
+            lookup is performed, consumes additional gates and time in an
+            implementation - both of which are desired to be kept to a
+            minimum. This means that flat TLV structures are to be preferred
+            over nested TLV structures. IOAM data fields are grouped into
+            three option categories: Trace, proof-of-transit, and
+            edge-to-edge. Each of these three options defines a TLV structure.
+            A hardware-friendly encapsulation approach avoids grouping these
+            three option categories into yet another TLV structure, but would
+            rather carry the options as a serial sequence.</t>
 
-      <t><list style="numbers">
-          <t>Encapsulation of IOAM data fields as "NSH MD Type 2" (see <xref
-          target="I-D.ietf-sfc-nsh"/>, section 2.5). Each IOAM data field
-          option (trace, proof-of-transit, and edge-to-edge) would be
-          specified by a type, with the different IOAM data fields being TLVs
-          within this the particular option type. NSH MD Type 2 offers support
-          for variable length meta-data. The length field is 6-bits, resulting
-          in a maximum of 256 (2^6 x 4) octets.</t>
+            <t>Total length of the IOAM data fields: The total length of IOAM
+            data can grow quite large in case multiple different IOAM data
+            fields are used and large path-lengths need to be considered. If
+            for example an operator would consider using the IOAM trace option
+            and capture node-id, app_data, egress/ingress interface-id,
+            timestamp seconds, timestamps nanoseconds at every hop, then a
+            total of 20 octets would be added to the packet at every hop. In
+            case this particular deployment would have a maximum path length
+            of 15 hops in the IOAM domain, then a maximum of 300 octets of
+            IOAM data were to be encapsulated in the packet.</t>
+          </list>Two approaches for encapsulating IOAM data fields in NSH
+        could be considered:</t>
 
-          <t>Encapsulation of IOAM data fields using the "Next Protocol"
-          field. Each IOAM data field option (trace, proof-of-transit, and
-          edge-to-edge) would be specified by its own "next protocol".</t>
-        </list>The second option has been chosen here, because it avoids the
-      additional layer of TLV nesting that the use of NSH MD Type 2 would
-      result in. In addition, the second option does not constrain IOAM data
-      to a maximum of 256 octets, thus allowing support for very large
-      deployments.</t>
+        <t><list style="numbers">
+            <t>Encapsulation of IOAM data fields as "NSH MD Type 2" (see <xref
+            target="RFC8300"/>, section 2.5). Each IOAM data field option
+            (trace, proof-of-transit, and edge-to-edge) would be specified by
+            a type, with the different IOAM data fields being TLVs within this
+            the particular option type. NSH MD Type 2 offers support for
+            variable length meta-data. The length field is 6-bits, resulting
+            in a maximum of 256 (2^6 x 4) octets.</t>
+
+            <t>Encapsulation of IOAM data fields using the "Next Protocol"
+            field. Each IOAM data field option (trace, proof-of-transit, and
+            edge-to-edge) would be specified by its own "next protocol".</t>
+          </list>The second option has been chosen here, because it avoids the
+        additional layer of TLV nesting that the use of NSH MD Type 2 would
+        result in. In addition, the second option does not constrain IOAM data
+        to a maximum of 256 octets, thus allowing support for very large
+        deployments.</t>
+      </section>
+
+      <section title="IOAM and the use of the NSH O-bit">
+        <t><xref target="RFC8300"/> defines an "O bit" for OAM packets. Per
+        <xref target="RFC8300"/> the O bit must be set for OAM packets and
+        must not be set for non-OAM packets. Packets with IOAM data included
+        MUST follow this definition, i.e. the O bit MUST NOT be set for
+        regular customer traffic which also carries IOAM data and the O bit
+        MUST be set for OAM packets which carry IOAM data .</t>
+      </section>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to allocate protocol numbers for the following NSH
-      "Next Protocols" related to IOAM:</t>
+      <t>IANA is requested to allocate protocol numbers for the following "NSH
+      Next Protocol" related to IOAM:</t>
 
       <t><figure>
           <artwork><![CDATA[              +---------------+-------------+---------------+
               | Next Protocol | Description | Reference     |
               +---------------+-------------+---------------+
-              | x             | IOAM_Trace  | This document |
-              | y             | IOAM_POT    | This document |
-              | z             | IOAM_E2E    | This document |
+              | x             | TBD_IOAM    | This document |
               +---------------+-------------+---------------+
 
 ]]></artwork>
@@ -717,55 +520,17 @@ IOAM E2E header following NSH MDx header:
     <references title="Normative References">
       &RFC2119;
 
-      &I-D.brockners-inband-oam-requirements;
-
       &I-D.ietf-ippm-ioam-data;
 
-      &I-D.ietf-nvo3-vxlan-gpe;
-
-      &I-D.ietf-sfc-nsh;
+      &RFC8300;
 
       &RFC2784;
 
       &RFC3232;
-
-      <reference anchor="ETYPES"
-                 target="https://www.iana.org/assignments/ethernet-numbers/ethernet-numbers.xhtml">
-        <front>
-          <title>IANA Ethernet Numbers</title>
-
-          <author/>
-
-          <date/>
-        </front>
-      </reference>
     </references>
 
     <references title="Informative References">
       &RFC7665;
-
-      &I-D.ietf-spring-segment-routing;
-
-      <reference anchor="I-D.kitamura-ipv6-record-route">
-        <front>
-          <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
-          Extension</title>
-
-          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
-
-          <date month="November" year="2000"/>
-        </front>
-
-        <seriesInfo name="Internet-Draft"
-                    value="draft-kitamura-ipv6-record-route-00"/>
-
-        <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
-                type="TXT"/>
-      </reference>
-
-      &I-D.brockners-proof-of-transit;
-
-      &I-D.ietf-ippm-6man-pdm-option;
 
       <reference anchor="FD.io" target="https://fd.io/">
         <front>
@@ -776,8 +541,6 @@ IOAM E2E header following NSH MDx header:
           <date/>
         </front>
       </reference>
-
-      &I-D.penno-sfc-trace;
     </references>
   </back>
 </rfc>

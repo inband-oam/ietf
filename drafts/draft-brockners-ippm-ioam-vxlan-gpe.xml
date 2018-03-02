@@ -221,6 +221,24 @@
       </address>
     </author>
 
+    <author fullname="Barak Gafni" initials="B." surname="Gafni">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>gbarak@mellanox.com</email>
+      </address>
+    </author>
+
     <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
       <organization abbrev="">Facebook</organization>
 
@@ -257,7 +275,7 @@
       </address>
     </author>
 
-    <date day="19" month="February" year="2018"/>
+    <date day="3" month="March" year="2018"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -323,13 +341,7 @@
             <t hangText="IOAM:">In-situ Operations, Administration, and
             Maintenance</t>
 
-            <t hangText="MTU:">Maximum Transmit Unit</t>
-
             <t hangText="OAM:">Operations, Administration, and Maintenance</t>
-
-            <t hangText="POT:">Proof of Transit</t>
-
-            <t hangText="SFC:">Service Function Chain</t>
 
             <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
             Generic Protocol Extension</t>
@@ -338,29 +350,19 @@
     </section>
 
     <section title="IOAM Data Field Encapsulation in VXLAN-GPE">
-      <t>For encapsulating IOAM data fields into VXLAN-GPE <xref
-      target="I-D.ietf-nvo3-vxlan-gpe"/> the different IOAM data fields are
-      added as options within new IOAM protocol headers in VXLAN-GPE. In an
+      <t>VXLAN-GPE is defined in <xref target="I-D.ietf-nvo3-vxlan-gpe"/>.
+      IOAM data fields are carried in VXLAN-GPE using a next protocol header
+      of TBD_IOAM. The different IOAM data fields defined in <xref
+      target="I-D.ietf-ippm-ioam-data"/> are added as TLVs. In an
       administrative domain where IOAM is used, insertion of the IOAM protocol
-      header(s) in VXLAN GPE is enabled at the VXLAN-GPE tunnel endpoints
-      which also serve as IOAM encapsulating/decapsulating nodes by means of
-      configuration. The VXLAN-GPE header is defined in <xref
-      target="I-D.ietf-nvo3-vxlan-gpe"/>. IOAM specific fields for VXLAN-GPE
-      are defined in this document.</t>
+      header in VXLAN-GPE is enabled at the VXLAN-GPE tunnel endpoints which
+      also serve as IOAM encapsulating/decapsulating nodes by means of
+      configuration.</t>
 
-      <section title="IOAM Trace Data in VXLAN-GPE">
-        <t>IOAM tracing data represents data that is inserted at nodes that a
-        packet traverses. To allow for optimal implementations in both
-        software as well as hardware forwarders, two different ways to
-        encapsulate IOAM data are defined: "Pre-allocated" and "Incremental".
-        See <xref target="I-D.ietf-ippm-ioam-data"/> for details on IOAM
-        tracing and the pre-allocated and incremental IOAM trace options.</t>
+      <t/>
 
-        <t>The packet formats of the pre-allocated IOAM trace and incremental
-        IOAM trace when encapsulated in VXLAN-GPE are defined as below.</t>
-
-        <figure align="center" anchor="PreAllocHeader"
-                title="IOAM Pre-allocated    Trace Option Format over VXLAN-GPE">
+      <t><figure align="center" anchor="IOAMinVXLANGPE"
+          title="IOAM data encapsulation in VXLAN-GPE">
           <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -371,32 +373,18 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       Outer UDP Header                        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|R|R|Ver|I|P|R|O|          Reserved             |NP=IOAM_Trace  |  |
+|R|R|Ver|I|P|R|O|          Reserved             |  NP=TBD_IOAM  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
 |     Virtual Network Identifier (VNI)          | Reserved      |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
-|         IOAM-Trace-Type       |NodeLen|  Flags  | RemainingLen| Trace
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+| IOAM-Type     | IOAM HDR len  |    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
+!                                                               |  O
+!                                                               |  A
+~                 IOAM Option and Data Space                    ~  M
 |                                                               |  |
-|                        node data list [0]                     | IOAM
 |                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
-|                                                               |  a
-|                        node data list [1]                     |  t
-|                                                               |  a
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~                             ...                               ~  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
-|                                                               |  a
-|                        node data list [n-1]                   |  c
-|                                                               |  e
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                                                               |  |
-|                        node data list [n]                     |  |
-|                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |
 |                                                               |
 |                     Payload + Padding (L2/L3/ESP/...)         |
@@ -404,322 +392,110 @@
 |                                                               |
 |                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-Pre-allocated Trace Option Data MUST be 4-octet aligned.
 ]]></artwork>
-        </figure>
+        </figure></t>
 
-        <figure align="center" anchor="Incremental"
-                title="IOAM Incremental Trace    Option Format over VXLAN-GPE">
-          <artwork><![CDATA[
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                    Outer Ethernet Header                      |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Outer IP Header                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       Outer UDP Header                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|R|R|Ver|I|P|R|O|          Reserved             | NP=IOAM_Trace |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
-|     Virtual Network Identifier (VNI)          | Reserved      |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
-|        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  | Trace
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|                                                               |  |
-|                        node data list [0]                     | IOAM
-|                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
-|                                                               |  a
-|                        node data list [1]                     |  t
-|                                                               |  a
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~                             ...                               ~  S
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
-|                                                               |  a
-|                        node data list [n-1]                   |  c
-|                                                               |  e
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                                                               |  |
-|                        node data list [n]                     |  |
-|                                                               |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-<--+
-|                                                               |
-|                                                               |
-|                     Payload + Padding (L2/L3/ESP/...)         |
-|                                                               |
-|                                                               |
-|                                                               |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-IOAM Incremental Trace Option Data MUST be 4-octet aligned.
-]]></artwork>
-        </figure>
+      <t>The VXLAN-GPE header and fields are defined in <xref
+      target="I-D.ietf-nvo3-vxlan-gpe"/>. The VXLAN Next Protocol value for
+      IOAM is TBD_IOAM.</t>
 
-        <t>The IOAM Trace header consists of 8 octets, as illustrated in <xref
-        target="PreAllocHeader"/> and <xref target="Incremental"/>. The format
-        of the first 4 octets (<xref target="VXLANGPETraceShim"/>) is specific
-        to VXLAN-GPE, and is defined in this document. The format of the next
-        4 octets (trace option header) is defined in <xref
-        target="I-D.ietf-ippm-ioam-data"/>, and is described here for the sake
-        of clarity.</t>
+      <t>The IOAM related fields in VXLAN-GPE are defined as follows:</t>
 
-        <figure align="center" anchor="VXLANGPETraceShim"
-                title="Trace Shim    Header for VXLAN-GPE">
-          <artwork><![CDATA[
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|      Type     |   IOAM HDR len|    Reserved   | Next Protocol |  
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-]]></artwork>
-        </figure>
+      <t><list style="hanging">
+          <t hangText="IOAM-Type:">8-bit field defining the IOAM Option type,
+          as defined in Section 7.2 of <xref
+          target="I-D.ietf-ippm-ioam-data"/>.</t>
 
-        <t>The fields of the trace shim header are as follows: <list
-            style="hanging">
-            <t hangText="Type:">8-bit unsigned integer defining IOAM header
-            type IOAM_TRACE_Preallocated or IOAM_Trace_Incremental are defined
-            here.</t>
+          <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
+          IOAM HDR in 4-octet units.</t>
 
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
+          <t hangText="Reserved:">8-bit reserved field MUST be set to
+          zero.</t>
 
-            <t hangText="Reserved:">8-bit reserved field MUST be set to
-            zero.</t>
+          <t hangText="Next Protocol:">8-bit unsigned integer that determines
+          the type of header following IOAM protocol. The value is from the
+          IANA registry setup for VXLAN GPE Next Protocol defined in <xref
+          target="I-D.ietf-nvo3-vxlan-gpe"/>.</t>
 
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol. The value
-            is from the IANA registry setup for VXLAN GPE Next Protocol
-            defined in <xref target="I-D.ietf-nvo3-vxlan-gpe"/>.</t>
-          </list></t>
-
-        <t>The fields of the trace option header <xref
-        target="I-D.ietf-ippm-ioam-data"/> are as follows: <list
-            style="hanging">
-            <t hangText="IOAM-Trace-Type:">16-bit identifier of IOAM Trace
-            Type as defined in <xref target="I-D.ietf-ippm-ioam-data"/>
-            IOAM-Trace-Types.</t>
-
-            <t hangText="Node Data Length:">4-bit unsigned integer as defined
-            in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Flags:">5-bit field as defined in <xref
-            target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Octets-left:">7-bit unsigned integer as defined in
-            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Maximum-length:">7-bit unsigned integer as defined in
-            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Node data List [n]:">Variable-length field as defined
-            in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-          </list></t>
-      </section>
-
-      <section title="IOAM POT Data in VXLAN-GPE">
-        <t>IOAM proof of transit (POT, see also <xref
-        target="I-D.brockners-proof-of-transit"/>) offers a means to verify
-        that a packet has traversed a defined set of nodes. IOAM POT data
-        fields are encapsulated in VXLAN-GPE using a dedicated VXLAN-GPE
-        protocol header:</t>
-
-        <figure align="center" anchor="PotEncap"
-                title="IOAM POT Header    Following the VXLAN-GPE Header">
-          <artwork><![CDATA[
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                    Outer Ethernet Header                      |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Outer IP Header                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       Outer UDP Header                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|R|R|Ver|I|P|R|O|          Reserved(MBZ)        |NP = IOAM_POT  |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
-|     Virtual Network Identifier (VNI)          | Reserved      |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|IOAM POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ IOAM
-|                           Random                              |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
-|                        Random(contd.)                         |  O
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
-|                         Cumulative                            |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-|                    Cumulative (contd.)                        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+]]></artwork>
-        </figure>
-
-        <t>The IOAM POT Shim Header (<xref target="VXLANGPEPotShim"/>), which
-        is defined in this document, is a 4-octet header, that includes the
-        following fields:</t>
-
-        <t><list style="hanging">
-            <t hangText="IOAM POT Type:">7-bit identifier of a particular POT
-            variant that specifies the POT data that is to be included as
-            defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="Profile to use (P):">1-bit as defined in <xref
-            target="I-D.ietf-ippm-ioam-data"/> IOAM POT Option.</t>
-
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
-
-            <t hangText="Reserved:">8-bit reserved field MUST be set to
-            zero.</t>
-
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol. The value
-            is from the IANA registry setup for VXLAN GPE Next Protocol
-            defined in <xref target="I-D.ietf-nvo3-vxlan-gpe"/>.</t>
-          </list></t>
-
-        <figure align="center" anchor="VXLANGPEPotShim"
-                title="POT Shim    Header for VXLAN-GPE">
-          <artwork><![CDATA[
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|IOAM POT Type|P|   IOAM HDR len|    Reserved   | Next Protocol |  
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-]]></artwork>
-        </figure>
-
-        <t>The rest of the fields in the POT option <xref
-        target="I-D.ietf-ippm-ioam-data"/> are as follows: <list
-            style="hanging">
-            <t hangText="Random:">64-bit Per-packet random number.</t>
-
-            <t hangText="Cumulative:">64-bit Cumulative value that is updated
-            by the Service Functions.</t>
-          </list></t>
-      </section>
-
-      <section title="IOAM Edge-to-Edge Data in VXLAN-GPE">
-        <t>The IOAM edge-to-edge option is to carry data that is added by the
-        IOAM encapsulating node and interpreted by the IOAM decapsulating
-        node. IOAM specific fields to encapsulate IOAM Edge-to-Edge data
-        fields are defined as follows:</t>
-
-        <figure align="center" anchor="VXLANGPEE2e"
-                title="IOAM    Edge-to-Edge over a VXLAN-GPE Header">
-          <artwork><![CDATA[
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                    Outer Ethernet Header                      |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Outer IP Header                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       Outer UDP Header                        |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|R|R|Ver|I|P|R|O|          Reserved             |NP = IOAM_E2E  |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
-|     Virtual Network Identifier (VNI)          | Reserved      |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|Type=IOAM_E2E  |   IOAM HDR len  |  Reserved   | Next Protocol |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-|      E2E Option data field determined by IOAM-E2E-Type        |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-]]></artwork>
-        </figure>
-
-        <t>The IOAM E2E Shim Header, which is defined in this document, is a
-        4-octet header, that includes the following fields:</t>
-
-        <t><list style="hanging">
-            <t hangText="Type:">8-bit identifier of a particular E2E variant
-            that specifies the E2E data that is to be included as defined in
-            <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-            <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-            IOAM HDR in 4-octet units.</t>
-
-            <t hangText="Reserved:">8-bit reserved field MUST be set to
-            zero.</t>
-
-            <t hangText="Next Protocol:">8-bit unsigned integer that
-            determines the type of header following IOAM protocol. The value
-            is from the IANA registry setup for VXLAN GPE Next Protocol
-            defined in <xref target="I-D.ietf-nvo3-vxlan-gpe"/>.</t>
-          </list></t>
-
-        <figure align="center" anchor="VXLANGPEE2eShim"
-                title="E2E Shim    Header for VXLAN-GPE">
-          <artwork><![CDATA[
- 0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Type=IOAM_E2E  |   IOAM HDR len  |  Reserved   | Next Protocol | 
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-]]></artwork>
-        </figure>
-
-        <t>The rest of the E2E option <xref target="I-D.ietf-ippm-ioam-data"/>
-        consists of: <list style="hanging">
-            <t hangText="E2E Option data field:">Variable length field as
-            defined in <xref target="I-D.ietf-ippm-ioam-data"/> IOAM E2E
-            Option.</t>
-          </list></t>
-      </section>
+          <t hangText="IOAM Option and Data Space:">IOAM option header and
+          data is present as defined by the IOAM-Type field, and is defined in
+          Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+        </list>Multiple IOAM options MAY be included within the VXLAN-GPE
+      encapsulation. For example, if a VXLAN-GPE encapsulation contains two
+      IOAM options before a data payload, the Next Protocol field of the first
+      IOAM option will contain the value of TBD_IOAM, while the Next Protocol
+      field of the second IOAM option will contain the VXLAN "Next Protocol"
+      number indicating the type of the data payload.</t>
     </section>
 
-    <section title="Discussion of the encapsulation approach">
-      <t>This section is to support the working group discussion in selecting
-      the most appropriate approach for encapsulating IOAM data fields in
-      VXLAN-GPE.</t>
+    <section title="Considerations">
+      <t>This section summarizes a set of considerations on the overall
+      approach taken for IOAM data encapsulation in VXLAN-GPE, as well as
+      deployment considerations.</t>
 
-      <t>An encapsulation of IOAM data fields in VXLAN-GPE should be friendly
-      to an implementation in both hardware as well as software forwarders.
-      Hardware forwarders benefit from an encapsulation that minimizes
-      iterative look-ups of fields within the packet: Any operation which
-      looks up the value of a field within the packet, based on which another
-      lookup is performed, consumes additional gates and time in an
-      implementation - both of which are desired to be kept to a minimum. This
-      means that flat TLV structures are to be preferred over nested TLV
-      structures. IOAM data fields are grouped into three option categories:
-      Trace, proof-of-transit, and edge-to-edge. Each of these three options
-      defines a TLV structure. A hardware-friendly encapsulation approach
-      avoids grouping these three option categories into yet another TLV
-      structure, but would rather carry the options as a serial sequence.</t>
+      <section title="Discussion of the encapsulation approach">
+        <t>This section is to support the working group discussion in
+        selecting the most appropriate approach for encapsulating IOAM data
+        fields in VXLAN-GPE.</t>
 
-      <t>Two approaches for encapsulating IOAM data fields in VXLAN-GPE could
-      be considered:</t>
+        <t>An encapsulation of IOAM data fields in VXLAN-GPE should be
+        friendly to an implementation in both hardware as well as software
+        forwarders. Hardware forwarders benefit from an encapsulation that
+        minimizes iterative look-ups of fields within the packet: Any
+        operation which looks up the value of a field within the packet, based
+        on which another lookup is performed, consumes additional gates and
+        time in an implementation - both of which are desired to be kept to a
+        minimum. This means that flat TLV structures are to be preferred over
+        nested TLV structures. IOAM data fields are grouped into three option
+        categories: Trace, proof-of-transit, and edge-to-edge. Each of these
+        three options defines a TLV structure. A hardware-friendly
+        encapsulation approach avoids grouping these three option categories
+        into yet another TLV structure, but would rather carry the options as
+        a serial sequence.</t>
 
-      <t><list style="numbers">
-          <t>Use a single GPE protocol type for all IOAM types: IOAM would
-          receive a single GPE protocol type code point. A "sub-type" (e.g. 4
-          bit wide) would then specify what IOAM options type(s) (trace,
-          proof-of-transit, edge-to-edge) are carried. In case there is a need
-          for additional IOAM options, changes would be contained within the
-          single GPE protocol type for IOAM.</t>
+        <t>Two approaches for encapsulating IOAM data fields in VXLAN-GPE
+        could be considered:</t>
 
-          <t>Use one GPE protocol type per IOAM options type: Each IOAM data
-          field option (trace, proof-of-transit, and edge-to-edge) would be
-          specified by its own "next protocol", i.e. each IOAM options type
-          becomes its own GPE protocol type with a dedicated code point. This
-          implies that in case additional IOAM option types would be added in
-          the future, additional GPE protocol type code points would need to
-          be allocated.</t>
-        </list>The second option has been chosen here, because it avoids the
-      additional layer of TLV nesting that the use of a single GPE protocol
-      type for all IOAM option types would result in.</t>
+        <t><list style="numbers">
+            <t>Use a single GPE protocol type for all IOAM types: IOAM would
+            receive a single GPE protocol type code point. A "sub-type" (e.g.
+            4 bit wide) would then specify what IOAM options type(s) (trace,
+            proof-of-transit, edge-to-edge) are carried. In case there is a
+            need for additional IOAM options, changes would be contained
+            within the single GPE protocol type for IOAM.</t>
+
+            <t>Use one GPE protocol type per IOAM options type: Each IOAM data
+            field option (trace, proof-of-transit, and edge-to-edge) would be
+            specified by its own "next protocol", i.e. each IOAM options type
+            becomes its own GPE protocol type with a dedicated code point.
+            This implies that in case additional IOAM option types would be
+            added in the future, additional GPE protocol type code points
+            would need to be allocated.</t>
+          </list>The second option has been chosen here, because it avoids the
+        additional layer of TLV nesting that the use of a single GPE protocol
+        type for all IOAM option types would result in.</t>
+      </section>
+
+      <section title="IOAM and the use of the VXLAN O-bit">
+        <t><xref target="I-D.ietf-nvo3-vxlan-gpe"/> defines an "O bit" for OAM
+        packets. Per <xref target="I-D.ietf-nvo3-vxlan-gpe"/> the O bit
+        indicates that the packet contains an OAM message instead of data
+        payload. Packets with IOAM data do not change the use of the O bit:
+        The O bit would be set of OAM packets which carry IOAM data fields and
+        would not be set of regular data payload / customer traffic which
+        carries IOAM data fields.</t>
+      </section>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to allocate protocol numbers for the following
+      <t>IANA is requested to allocate a protocol number for the following
       VXLAN-GPE "Next Protocols" related to IOAM:</t>
 
       <t><figure>
           <artwork><![CDATA[              +---------------+-------------+---------------+
               | Next Protocol | Description | Reference     |
               +---------------+-------------+---------------+
-              | x             | IOAM_Trace  | This document |
-              | y             | IOAM_POT    | This document |
-              | z             | IOAM_E2E    | This document |
+              | x             | TBD_IOAM    | This document |
               +---------------+-------------+---------------+
 
 ]]></artwork>

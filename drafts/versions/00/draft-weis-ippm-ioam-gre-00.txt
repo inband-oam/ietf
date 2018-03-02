@@ -18,6 +18,7 @@ Expires: September 4, 2018                                   S. Bhandari
                                                               T. Mizrahi
                                                                  Marvell
                                                                  A. Kfir
+                                                                B. Gafni
                                              Mellanox Technologies, Inc.
                                                              P. Lapukhov
                                                                 Facebook
@@ -48,8 +49,7 @@ Status of This Memo
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
-   time.  It is inappropriate to use Internet-Drafts as reference
-   material or to cite them other than as "work in progress."
+
 
 
 
@@ -57,6 +57,9 @@ Weis, et al.            Expires September 4, 2018               [Page 1]
 
 Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
+
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
 
    This Internet-Draft will expire on September 4, 2018.
 
@@ -78,15 +81,15 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   2
-     2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   2
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
      2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
    3.  In-situ OAM Metadata Transport in GRE . . . . . . . . . . . .   3
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .   5
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .   6
    Appendix A.  Example GRE-IOAM Payloads  . . . . . . . . . . . . .   6
      A.1.  Example GRE-IOAM Tracing Payloads . . . . . . . . . . . .   6
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
@@ -99,13 +102,10 @@ Table of Contents
    outlines how IOAM data fields are encapsulated in the Generic Routing
    Encapsulation (GRE) [RFC2784].
 
-2.  Conventions
 
-2.1.  Requirements Language
 
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in BCP
+
+
 
 
 
@@ -114,6 +114,13 @@ Weis, et al.            Expires September 4, 2018               [Page 2]
 Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
 
+2.  Conventions
+
+2.1.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
@@ -142,25 +149,18 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    GRE is enabled at the GRE tunnel endpoints which also serve as IOAM
    encapsulating/decapsulating nodes by means of configuration.
 
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-    |C|       Reserved0       | Ver | Protocol Type = <TBD_IOAM>  |    G
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
-    |      Checksum (optional)      |       Reserved1 (Optional)    |  E
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-    |   IOAM-Type   |   IOAM HDR len|        Next Protocol          |  |
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-    !                                                               |  I
-    !                                                               |  O
-    ~                 IOAM Option and Data Space                    ~  A
-    |                                                               |  M
-    |                                                               |  |
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-    |                                                               |
-    |             Payload + Padding (L2/L3/ESP/...)                 |
-    |                                                               |
-    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -169,6 +169,26 @@ Weis, et al.            Expires September 4, 2018               [Page 3]
 
 Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+    |C|       Reserved0       | Ver | Protocol Type = <TBD_IOAM>  |    G
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+    |      Checksum (optional)      |       Reserved1 (Optional)    |  E
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+    |   IOAM-Type   |   IOAM HDR len|        Next Protocol          |  |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
+    !                                                               |  O
+    !                                                               |  A
+    ~                 IOAM Option and Data Space                    ~  M
+    |                                                               |  |
+    |                                                               |  |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+    |                                                               |
+    |             Payload + Padding (L2/L3/ESP/...)                 |
+    |                                                               |
+    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    The GRE header and fields are defined in [RFC2784].  The GRE Protocol
    Type value is TBD_IOAM.
@@ -198,6 +218,14 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    For example, if a GRE encapsulation contains two IOAM options before
    a data packet, the Next Protocol field of the first IOAM option will
    contain the value of TBD_IOAM, while the Next Protocol field of the
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 4]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
+
+
    second IOAM option will contain the Ethertype or IP protocol Number
    indicating the type of the data packet.
 
@@ -215,16 +243,6 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    IOAM data transported in an OAM E2E header SHOULD be integrity
    protected (e.g., with IPsec ESP [RFC4303]) to detect changes made by
    a device between the sending and receiving OAM endpoints.
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 4]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
 
 5.  IANA Considerations
 
@@ -255,6 +273,15 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
               DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
               editor.org/info/rfc2119>.
 
+
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 5]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
+
+
    [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
               Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
               DOI 10.17487/RFC2784, March 2000, <https://www.rfc-
@@ -269,18 +296,6 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    [RFC4303]  Kent, S., "IP Encapsulating Security Payload (ESP)",
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <https://www.rfc-editor.org/info/rfc4303>.
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 5]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
 
 Appendix A.  Example GRE-IOAM Payloads
 
@@ -309,6 +324,20 @@ Authors' Addresses
    Email: fbrockne@cisco.com
 
 
+
+
+
+
+
+
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 6]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
+
+
    Craig Hill
    Cisco Systems, Inc.
    13600 Dulles Technology Drive
@@ -325,17 +354,6 @@ Authors' Addresses
    India
 
    Email: shwethab@cisco.com
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 6]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
 
    Vengada Prasad Govindan
@@ -365,6 +383,17 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    Email: John_Leddy@cable.comcast.com
 
 
+
+
+
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 7]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
+
+
    Stephen Youell
    JP Morgan Chase
    25 Bank Street
@@ -383,17 +412,6 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    Email: talmi@marvell.com
 
 
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 7]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
-
    Aviv Kfir
    Mellanox Technologies, Inc.
    350 Oakmead Parkway, Suite 100
@@ -403,6 +421,15 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    Email: avivk@mellanox.com
 
 
+   Barak Gafni
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: gbarak@mellanox.com
+
+
    Petr Lapukhov
    Facebook
    1 Hacker Way
@@ -410,6 +437,17 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    US
 
    Email: petr@fb.com
+
+
+
+
+
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 8]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
 
    Mickey Spiegel
@@ -445,4 +483,22 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
 
 
-Weis, et al.            Expires September 4, 2018               [Page 8]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 9]

@@ -206,6 +206,24 @@
       </address>
     </author>
 
+    <author fullname="Barak Gafni" initials="B." surname="Gafni">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>gbarak@mellanox.com</email>
+      </address>
+    </author>
+
     <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
       <organization abbrev="">Facebook</organization>
 
@@ -242,7 +260,7 @@
       </address>
     </author>
 
-    <date day="03" month="March" year="2018" />
+    <date day="03" month="March" year="2018"/>
 
     <area>Transport Area</area>
 
@@ -262,7 +280,7 @@
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
       outlines how IOAM data fields are encapsulated in the Generic Routing
-      Encapsulation (GRE) <xref target="RFC2784"></xref>.</t>
+      Encapsulation (GRE) <xref target="RFC2784"/>.</t>
     </section>
 
     <section title="Conventions">
@@ -270,8 +288,8 @@
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
         "OPTIONAL" in this document are to be interpreted as described in BCP
-        14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when,
-        and only when, they appear in all capitals, as shown here.</t>
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only
+        when, they appear in all capitals, as shown here.</t>
       </section>
 
       <section title="Abbreviations">
@@ -293,14 +311,14 @@
     </section>
 
     <section title="In-situ OAM Metadata Transport in GRE">
-      <t>GRE encapsulation is defined in <xref target="RFC2784"></xref>. IOAM
+      <t>GRE encapsulation is defined in <xref target="RFC2784"/>. IOAM
       encapsulation in GRE follows the GRE header.</t>
 
       <t>The different IOAM data fields defined in <xref
-      target="I-D.ietf-ippm-ioam-data"></xref> are added as TLVs following the
-      GRE header. In an administrative domain where IOAM is used, insertion of
-      the IOAM protocol header in GRE is enabled at the GRE tunnel endpoints
-      which also serve as IOAM encapsulating/decapsulating nodes by means of
+      target="I-D.ietf-ippm-ioam-data"/> are added as TLVs following the GRE
+      header. In an administrative domain where IOAM is used, insertion of the
+      IOAM protocol header in GRE is enabled at the GRE tunnel endpoints which
+      also serve as IOAM encapsulating/decapsulating nodes by means of
       configuration.</t>
 
       <t><figure>
@@ -313,11 +331,11 @@
  |      Checksum (optional)      |       Reserved1 (Optional)    |  E
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
  |   IOAM-Type   |   IOAM HDR len|        Next Protocol          |  |
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
- !                                                               |  I
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
  !                                                               |  O
- ~                 IOAM Option and Data Space                    ~  A
- |                                                               |  M
+ !                                                               |  A
+ ~                 IOAM Option and Data Space                    ~  M
+ |                                                               |  |
  |                                                               |  |
  +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
  |                                                               |
@@ -327,13 +345,13 @@
 ]]></artwork>
         </figure></t>
 
-      <t>The GRE header and fields are defined in <xref
-      target="RFC2784"></xref>. The GRE Protocol Type value is TBD_IOAM.</t>
+      <t>The GRE header and fields are defined in <xref target="RFC2784"/>.
+      The GRE Protocol Type value is TBD_IOAM.</t>
 
       <t>The IOAM header is defined as follows. <list style="hanging">
           <t hangText="IOAM Type:">8-bit field defining the IOAM Option type,
           as defined in Section 7.2 of <xref
-          target="I-D.ietf-ippm-ioam-data"></xref>.</t>
+          target="I-D.ietf-ippm-ioam-data"/>.</t>
 
           <t hangText="IOAM HDR Len:">8 bits Length field contains the length
           of the variable IOAM data octets in 4-octet units.</t>
@@ -342,15 +360,14 @@
           contains the protocol type of the packet following IOAM protocol
           header. When the most significant octet is 0x00, the Protocol Type
           is taken to be an IP Protocol Number as defined in <xref
-          target="IP-PROT"></xref>. Otherwise, the Protocol Type is defined to
-          be an EtherType value from <xref target="ETYPES"></xref>. An
-          implementation receiving a packet containing a Protocol Type which
-          is not listed in one of those registries SHOULD discard the
-          packet.</t>
+          target="IP-PROT"/>. Otherwise, the Protocol Type is defined to be an
+          EtherType value from <xref target="ETYPES"/>. An implementation
+          receiving a packet containing a Protocol Type which is not listed in
+          one of those registries SHOULD discard the packet.</t>
 
           <t hangText="IOAM Option and Data Space:">IOAM option header and
           data is present as defined by the IOAM-Type field, and is defined in
-          Section 4 of <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
+          Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
         </list></t>
 
       <t>Multiple IOAM options MAY be included within the GRE encapsulation.
@@ -365,22 +382,22 @@
       <t>This document describes the encapsulation of IOAM data fields in GRE.
       Security considerations of the specific IOAM data fields for each case
       (i.e., Trace, Proof of Transit, and E2E) are described in defined in
-      <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
+      <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
 
       <t>As this document describes new protocol fields within the existing
       GRE encapsulation, these are similar to the security considerations of
-      <xref target="RFC2784"></xref>.</t>
+      <xref target="RFC2784"/>.</t>
 
       <t>IOAM data transported in an OAM E2E header SHOULD be integrity
-      protected (e.g., with IPsec ESP <xref target="RFC4303"></xref>) to
-      detect changes made by a device between the sending and receiving OAM
+      protected (e.g., with IPsec ESP <xref target="RFC4303"/>) to detect
+      changes made by a device between the sending and receiving OAM
       endpoints.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
       <t>A new EtherType value is requested to be added to the <xref
-      target="ETYPES"></xref> IANA registry. The description should be
-      "In-situ OAM (IOAM)".</t>
+      target="ETYPES"/> IANA registry. The description should be "In-situ OAM
+      (IOAM)".</t>
     </section>
 
     <!-- <section anchor="Acknowledgements" title="Acknowledgements"> -->
@@ -403,9 +420,9 @@
         <front>
           <title>IANA Ethernet Numbers</title>
 
-          <author></author>
+          <author/>
 
-          <date />
+          <date/>
         </front>
       </reference>
 
@@ -414,9 +431,9 @@
         <front>
           <title>IANA Protocol Numbers</title>
 
-          <author></author>
+          <author/>
 
-          <date />
+          <date/>
         </front>
       </reference>
     </references>
