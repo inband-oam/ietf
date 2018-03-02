@@ -78,23 +78,18 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   2
+     2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   2
      2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
    3.  In-situ OAM Metadata Transport in GRE . . . . . . . . . . . .   3
-     3.1.  In-situ OAM Tracing in GRE  . . . . . . . . . . . . . . .   5
-     3.2.  In-situ OAM POT in GRE  . . . . . . . . . . . . . . . . .   5
-     3.3.  In-situ OAM E2E in GRE  . . . . . . . . . . . . . . . . .   5
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .   6
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .   5
    Appendix A.  Example GRE-IOAM Payloads  . . . . . . . . . . . . .   6
      A.1.  Example GRE-IOAM Tracing Payloads . . . . . . . . . . . .   6
-     A.2.  Example GRE-IOAM POT Payloads . . . . . . . . . . . . . .   8
-     A.3.  Example GRE-IOAM E2E Payloads . . . . . . . . . . . . . .   9
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction
 
@@ -104,8 +99,13 @@ Table of Contents
    outlines how IOAM data fields are encapsulated in the Generic Routing
    Encapsulation (GRE) [RFC2784].
 
+2.  Conventions
 
+2.1.  Requirements Language
 
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
 
 
 
@@ -114,13 +114,6 @@ Weis, et al.            Expires September 4, 2018               [Page 2]
 Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
 
-2.  Conventions
-
-2.1.  Requirements Language
-
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in BCP
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
@@ -141,9 +134,7 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 3.  In-situ OAM Metadata Transport in GRE
 
    GRE encapsulation is defined in [RFC2784].  IOAM encapsulation in GRE
-   is defined as a "set of Protocol Types"
-   TBD_IANA_ETHERNET_NUMBER_IOAM_* and follows the GRE header.  These
-   Protocol Types are defined in [ETYPES].
+   follows the GRE header.
 
    The different IOAM data fields defined in [I-D.ietf-ippm-ioam-data]
    are added as TLVs following the GRE header.  In an administrative
@@ -151,33 +142,14 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    GRE is enabled at the GRE tunnel endpoints which also serve as IOAM
    encapsulating/decapsulating nodes by means of configuration.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 3]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
-
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-    |C|       Reserved0       | Ver | Protocol Type = <IOAM Proto>  |  G
+    |C|       Reserved0       | Ver | Protocol Type = <TBD_IOAM>  |    G
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
     |      Checksum (optional)      |       Reserved1 (Optional)    |  E
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-    |     Type      |   IOAM HDR len|        Next Protocol          |  |
+    |   IOAM-Type   |   IOAM HDR len|        Next Protocol          |  |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
     !                                                               |  I
     !                                                               |  O
@@ -190,23 +162,21 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
     |                                                               |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   The GRE header and fields are defined in [RFC2784].  For IOAM, the
-   following new GRE Protocol Type values are requested:
 
-   1.  IOAM_Trace_Preallocated:
-       TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE_PREALLOCATED
 
-   2.  IOAM_Trace_Incremental:
-       TBD_IANA_ETHERNET_NUMBER_IOAM_TRACE_INCREMENTAL
 
-   3.  IOAM_POT: TBD_IANA_ETHERNET_NUMBER_IOAM_POT
+Weis, et al.            Expires September 4, 2018               [Page 3]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
-   4.  IOAM_E2E: TBD_IANA_ETHERNET_NUMBER_IOAM_E2E
+
+   The GRE header and fields are defined in [RFC2784].  The GRE Protocol
+   Type value is TBD_IOAM.
 
    The IOAM header is defined as follows.
 
-   Type:  8-bit field defining the IOAM Option type, as defined later in
-      this document.
+   IOAM Type:  8-bit field defining the IOAM Option type, as defined in
+      Section 7.2 of [I-D.ietf-ippm-ioam-data].
 
    IOAM HDR Len:  8 bits Length field contains the length of the
       variable IOAM data octets in 4-octet units.
@@ -217,42 +187,19 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
       be an IP Protocol Number as defined in [IP-PROT].  Otherwise, the
       Protocol Type is defined to be an EtherType value from [ETYPES].
       An implementation receiving a packet containing a Protocol Type
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 4]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
-
       which is not listed in one of those registries SHOULD discard the
       packet.
 
-3.1.  In-situ OAM Tracing in GRE
+   IOAM Option and Data Space:  IOAM option header and data is present
+      as defined by the IOAM-Type field, and is defined in Section 4 of
+      [I-D.ietf-ippm-ioam-data].
 
-   The packet formats of the pre-allocated IOAM trace and incremental
-   IOAM trace when transported using GRE are defined in Section 4.1 of
-   [I-D.ietf-ippm-ioam-data].  The Type field is set to zero, and the
-   the Type (e.g., IOAM_Trace_Preallocated or IOAM_Trace_Incremental) is
-   defined within the IOAM Option space as defined by
-   [I-D.ietf-ippm-ioam-data].  Note that the GRE Protocol Type will
-   indicate whether the IOAM Option space will contain a Preallocated
-   Incremental IOAM trace option data.
-
-3.2.  In-situ OAM POT in GRE
-
-   The packet formats of the proof of transport fields when transported
-   using GRE are defined in Section 4.2 of [I-D.ietf-ippm-ioam-data].
-   The Type field is formatted as the IOAM proof of transit option
-   header in Section 4.2 of [I-D.ietf-ippm-ioam-data].
-
-3.3.  In-situ OAM E2E in GRE
-
-   The packet formats of the E2E fields when transported using GRE are
-   defined in Section 4.3 of [I-D.ietf-ippm-ioam-data].  The Type field
-   includes values from the "IOAM E2E Type Registry" defined in
-   Section 6.5 of [I-D.ietf-ippm-ioam-data].
+   Multiple IOAM options MAY be included within the GRE encapsulation.
+   For example, if a GRE encapsulation contains two IOAM options before
+   a data packet, the Next Protocol field of the first IOAM option will
+   contain the value of TBD_IOAM, while the Next Protocol field of the
+   second IOAM option will contain the Ethertype or IP protocol Number
+   indicating the type of the data packet.
 
 4.  Security Considerations
 
@@ -269,18 +216,20 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    protected (e.g., with IPsec ESP [RFC4303]) to detect changes made by
    a device between the sending and receiving OAM endpoints.
 
-5.  IANA Considerations
-
-   Several new EtherType values TBD_IANA_ETHERNET_NUMBER_* are to be
-   requested from the IEEE RAC.
 
 
 
 
-Weis, et al.            Expires September 4, 2018               [Page 5]
+
+Weis, et al.            Expires September 4, 2018               [Page 4]
 
 Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
+
+5.  IANA Considerations
+
+   A new EtherType value is requested to be added to the [ETYPES] IANA
+   registry.  The description should be "In-situ OAM (IOAM)".
 
 6.  References
 
@@ -321,190 +270,23 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
               RFC 4303, DOI 10.17487/RFC4303, December 2005,
               <https://www.rfc-editor.org/info/rfc4303>.
 
+
+
+
+
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 5]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
+
+
 Appendix A.  Example GRE-IOAM Payloads
 
 A.1.  Example GRE-IOAM Tracing Payloads
 
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 6]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
-
-           In-situ OAM Trace header following GRE header
-                   (Preallocated IOAM trace):
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |C|       Reserved0       | Ver | Protocol Type = IOAM_Trace    |  G
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
-   |      Checksum (optional)      |       Reserved1 (Optional)    |  E
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |     Type      |   IOAM HDR len|        Next Protocol          |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-   |         IOAM-Trace-Type       |NodeLen|  Flags  | RemainingLen|Trc
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |                                                               |  |
-   |                        node data list [0]                     |IOAM
-   |                                                               |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
-   |                                                               |  a
-   |                        node data list [1]                     |  t
-   |                                                               |  a
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   ~                             ...                               ~  S
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
-   |                                                               |  a
-   |                        node data list [n-1]                   |  c
-   |                                                               |  e
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-   |                                                               |  |
-   |                        node data list [n]                     |  |
-   |                                                               |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |                                                               |
-   |                     Payload + Padding (L2/L3/ESP/...)         |
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-   Pre-allocated Trace Option Data MUST be 4-octet aligned:
-
-
-
-
-
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 7]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
-
-           In-situ OAM Trace header following GRE header
-                   (Incremental IOAM trace):
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |C|       Reserved0       | Ver |Protocol Type = IOAM_Trace     |  G
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
-   |      Checksum (optional)      |       Reserved1 (Optional)    |  E
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |     Type      |   IOAM HDR len|        Next Protocol          |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-   |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |Trc
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |                                                               |  |
-   |                        node data list [0]                     |IOAM
-   |                                                               |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
-   |                                                               |  a
-   |                        node data list [1]                     |  t
-   |                                                               |  a
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   ~                             ...                               ~  S
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
-   |                                                               |  a
-   |                        node data list [n-1]                   |  c
-   |                                                               |  e
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-   |                                                               |  |
-   |                        node data list [n]                     |  |
-   |                                                               |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |                                                               |
-   |                     Payload + Padding (L2/L3/ESP/...)         |
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-   In-situ OAM Incremental Trace Option Data MUST be 4-octet aligned:
-
-A.2.  Example GRE-IOAM POT Payloads
-
-
-
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 8]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
-
-   In-situ OAM POT header following GRE header:
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |C|       Reserved0       | Ver | Protocol Type = IOAM_POT      |  G
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
-   |      Checksum (optional)      |       Reserved1 (Optional)    |  E
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |IOAM POT Type|P|   IOAM HDR len|     Next Protocol             |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-   |                           Random                              |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
-   |                        Random(contd.)                         |  O
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
-   |                         Cumulative                            |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
-   |                    Cumulative (contd.)                        |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |                                                               |
-   |                     Payload + Padding (L2/L3/ESP/...)         |
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-A.3.  Example GRE-IOAM E2E Payloads
-
-   In-situ OAM E2E header following GRE header:
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |C|       Reserved0       | Ver | Protocol Type = IOAM_E2E      |  G
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
-   |      Checksum (optional)      |       Reserved1 (Optional)    |  E
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |IOAM_E2E_Type  |   IOAM HDR len|     Next Protocol             |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+IOAM
-   |      E2E Option data field determined by IOAM-E2E-Type        |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |                                                               |
-   |                     Payload + Padding (L2/L3/ESP/...)         |
-   |                                                               |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018               [Page 9]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
-
+   TBD
 
 Authors' Addresses
 
@@ -545,21 +327,21 @@ Authors' Addresses
    Email: shwethab@cisco.com
 
 
+
+
+
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 6]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
+
+
    Vengada Prasad Govindan
    Cisco Systems, Inc.
 
    Email: venggovi@cisco.com
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018              [Page 10]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
 
    Carlos Pignataro
@@ -601,21 +383,24 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
    Email: talmi@marvell.com
 
 
+
+
+
+
+
+
+Weis, et al.            Expires September 4, 2018               [Page 7]
+
+Internet-Draft        In-situ OAM GRE encapsulation           March 2018
+
+
    Aviv Kfir
    Mellanox Technologies, Inc.
    350 Oakmead Parkway, Suite 100
-   Sunnyvale, CA   94085
+   Sunnyvale, CA  94085
    U.S.A.
 
    Email: avivk@mellanox.com
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018              [Page 11]
-
-Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
 
    Petr Lapukhov
@@ -660,13 +445,4 @@ Internet-Draft        In-situ OAM GRE encapsulation           March 2018
 
 
 
-
-
-
-
-
-
-
-
-
-Weis, et al.            Expires September 4, 2018              [Page 12]
+Weis, et al.            Expires September 4, 2018               [Page 8]
