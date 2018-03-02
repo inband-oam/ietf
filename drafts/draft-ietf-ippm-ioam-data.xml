@@ -462,21 +462,23 @@
 
     <section anchor="IOAM_option_format" title="IOAM Data Types and Formats">
       <t>This section defines IOAM data types and data fields and associated
-      data types required for IOAM. The different uses of IOAM require the
-      definition of different types of data. The IOAM data fields for the data
-      being carried corresponds to the three main categories of IOAM data
-      defined in <xref target="I-D.brockners-inband-oam-requirements"></xref>,
-      which are: edge-to-edge, per node, and for selected nodes only.</t>
+      data types required for IOAM.</t>
+
+      <t>To accommodate the different uses of IOAM, three main categories of
+      IOAM data are defined in <xref
+      target="I-D.brockners-inband-oam-requirements"></xref>, which are:
+      edge-to-edge, per node, and for selected nodes only. Corresponding to
+      these categories, IOAM data fields are encoded in different IOAM
+      options, each with its own definition of data types and data fields. In
+      many cases, a bit field determines the set of IOAM data fields embedded
+      in that IOAM option in the packet. </t>
 
       <t>Encapsulation options for IOAM data are outside the scope of this
       memo, and are discussed in <xref
-      target="I-D.brockners-inband-oam-transport"></xref>. A bit field
-      determines the set of OAM data fields embedded in a packet. Depending on
-      the type of the encapsulation, a type and length field indicates type
-      and length of the data fields that are included in a particular packet.
-      For the encapsulations where IOAM uses its own name space to distinguish
-      between the various data type options defined in this section, IOAM-Type
-      registry is defined with the following code points to identify the IOAM
+      target="I-D.brockners-inband-oam-transport"></xref>. One exception is
+      for encapsulations where IOAM uses its own name space to distinguish
+      between the IOAM options. For these encapsulations, a common IOAM-Type
+      registry is defined, with the following code points to identify the IOAM
       options:</t>
 
       <t><list style="hanging">
@@ -1190,11 +1192,11 @@ IOAM proof of transit option header:
 
 IOAM proof of transit option data MUST be 4-octet aligned.:
     
-  0                   1                   2                   3
-  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
- |       POT Option data field determined by IOAM-POT-Type       ~
- +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       POT Option data field determined by IOAM-POT-Type       |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
 ]]></artwork>
@@ -1209,13 +1211,17 @@ IOAM proof of transit option data MUST be 4-octet aligned.:
             <t hangText="IOAM POT flags:">8-bit. Following flags are
             defined:<list style="hanging">
                 <t hangText="Bit 0">"Profile-to-use" (P-bit) (most significant
-                bit). Indicates which POT-profile is used by POT Type 0.</t>
+                bit). For IOAM POT types that use a maximum of two profiles to
+                drive computation, indicates which POT-profile is used. The
+                two profiles are numbered 0, 1. </t>
 
-                <t hangText="Bit 1-7">Reserved: Must be zero.</t>
+                <t hangText="Bit 1-7">Reserved: Must be set to zero upon
+                transmission and ignored upon receipt.</t>
               </list></t>
 
             <t hangText="Reserved:">16-bit Reserved bits are present for
-            future use. The reserved bits MUST be set to 0x0.</t>
+            future use. The reserved bits Must be set to zero upon
+            transmission and ignored upon receipt.</t>
 
             <t hangText="POT Option data:">Variable-length field. The type of
             which is determined by the IOAM-POT-Type.</t>
@@ -1244,8 +1250,9 @@ IOAM proof of transit option of IOAM POT Type 0:
 ]]></artwork>
             </figure><list style="hanging">
               <t hangText="IOAM POT Type:">8-bit identifier of a particular
-              POT variant that dictates the POT data that is included, to be
-              set to 0 for the POT defined in this section.</t>
+              POT variant that dictates the POT data that is included. This
+              section defines the POT data when the IOAM POT Type is set to
+              the value 0. </t>
 
               <t hangText="P bit:">1-bit. "Profile-to-use" (P-bit) (most
               significant bit). Indicates which POT-profile is used to
@@ -1256,10 +1263,12 @@ IOAM proof of transit option of IOAM POT Type 0:
               Cumulative.</t>
 
               <t hangText="R (7 bits):">7-bit IOAM POT flags for future use.
-              MUST be zero on transmission and ignored on receipt. </t>
+              MUST be set to zero upon transmission and ignored upon receipt.
+              </t>
 
               <t hangText="Reserved:">16-bit Reserved bits are present for
-              future use. The reserved bits MUST be set to 0x0.</t>
+              future use. The reserved bits Must be set to zero upon
+              transmission and ignored upon receipt.</t>
 
               <t hangText="Random:">64-bit Per packet Random number.</t>
 
@@ -1292,8 +1301,8 @@ IOAM proof of transit option of IOAM POT Type 0:
 
    IOAM edge-to-edge option header:
    
-   0                   1                   2                   3
-   0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |         IOAM-E2E-Type         |             Reserved          |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1308,10 +1317,12 @@ IOAM proof of transit option of IOAM POT Type 0:
 
 ]]></artwork>
           </figure><list style="hanging">
-            <t hangText="IOAM-E2E-Type:">16-bit identifier of a particular in
-            situ OAM E2E variant. The order of packing the E2E option data
-            field elements follows the bit order of the IOAM-E2E-Type field,
-            as follows:<list hangIndent="9" style="hanging">
+            <t hangText="IOAM-E2E-Type:">A 16-bit identifier which specifies
+            which data types are used in the E2E option data. The
+            IOAM-E2E-Type value is a bit field. The order of packing the E2E
+            option data field elements follows the bit order of the
+            IOAM-E2E-Type field, as follows:<list hangIndent="9"
+                style="hanging">
                 <t hangText="Bit 0">(Most significant bit) When set indicates
                 presence of a 64-bit sequence number added to a specific tube
                 which is used to identify packet loss and reordering for that
@@ -1355,11 +1366,13 @@ IOAM proof of transit option of IOAM POT Type 0:
                 in order to detect the error indication.</t>
 
                 <t hangText="Bit 4-15">Undefined. An IOAM encapsulating node
-                must set the value of each of these bits to 0.</t>
+                Must set the value of these bits to zero upon transmission and
+                ignore upon receipt.</t>
               </list></t>
 
             <t hangText="Reserved:">16-bits Reserved bits are present for
-            future use. The reserved bits MUST be set to 0x0.</t>
+            future use. The reserved bits Must be set to zero upon
+            transmission and ignored upon receipt.</t>
 
             <t hangText="E2E Option data:">Variable-length field. The type of
             which is determined by the IOAM-E2E-Type.</t>
@@ -1618,7 +1631,7 @@ IOAM proof of transit option of IOAM POT Type 0:
       </section>
 
       <section title="IOAM Type Registry">
-        <t>This registry defines 128 code points to define IOAM-Type field for
+        <t>This registry defines 128 code points for the IOAM-Type field for
         identifying IOAM options as explained in <xref
         target="IOAM_option_format"></xref>. The following code points are
         defined in this draft:</t>
