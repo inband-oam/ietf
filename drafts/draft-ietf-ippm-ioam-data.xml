@@ -1267,13 +1267,6 @@ IOAM proof of transit option of IOAM POT Type 0:
         IOAM encapsulating node and interpreted by IOAM decapsulating node.
         The IOAM transit nodes MAY process the data without modifying it.</t>
 
-        <t>Currently only sequence numbers use the IOAM edge-to-edge option.
-        In order to detect packet loss, packet reordering, or packet
-        duplication in an in-situ OAM-domain, sequence numbers can be added to
-        packets of a particular tube (see <xref
-        target="I-D.hildebrand-spud-prototype"/>). Each tube leverages a
-        dedicated namespace for its sequence numbers.</t>
-
         <t><figure>
             <artwork><![CDATA[
   IOAM edge-to-edge option:
@@ -1304,12 +1297,15 @@ IOAM proof of transit option of IOAM POT Type 0:
                 style="hanging">
                 <t hangText="Bit 0">(Most significant bit) When set indicates
                 presence of a 64-bit sequence number added to a specific tube
-                which is used to identify packet loss and reordering for that
-                tube.</t>
+                which is used to detect packet loss, packet reordering, or
+                packet duplication for that tube. Each tube leverages a
+                dedicated namespace for its sequence numbers.</t>
 
                 <t hangText="Bit 1">When set indicates presence of a 32-bit
                 sequence number added to a specific tube which is used to
-                identify packet loss and reordering for that tube.</t>
+                detect packet loss, packet reordering, or packet
+                duplication for that tube. Each tube leverages a
+                dedicated namespace for its sequence numbers.</t>
 
                 <t hangText="Bit 2">When set indicates presence of timestamp
                 seconds for the transmission of the frame. This 4-octet field
