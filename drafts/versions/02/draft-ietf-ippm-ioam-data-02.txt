@@ -91,13 +91,13 @@ Table of Contents
        4.1.2.  IOAM node data fields and associated formats  . . . .  12
        4.1.3.  Examples of IOAM node data  . . . . . . . . . . . . .  17
      4.2.  IOAM Proof of Transit Option  . . . . . . . . . . . . . .  19
-       4.2.1.  IOAM Proof of Transit Type 0  . . . . . . . . . . . .  21
+       4.2.1.  IOAM Proof of Transit Type 0  . . . . . . . . . . . .  20
      4.3.  IOAM Edge-to-Edge Option  . . . . . . . . . . . . . . . .  22
    5.  Timestamp Formats . . . . . . . . . . . . . . . . . . . . . .  23
-     5.1.  PTP Truncated Timestamp Format  . . . . . . . . . . . . .  24
+     5.1.  PTP Truncated Timestamp Format  . . . . . . . . . . . . .  23
      5.2.  NTP 64-bit Timestamp Format . . . . . . . . . . . . . . .  25
      5.3.  POSIX-based Timestamp Format  . . . . . . . . . . . . . .  26
-   6.  IOAM Data Export  . . . . . . . . . . . . . . . . . . . . . .  28
+   6.  IOAM Data Export  . . . . . . . . . . . . . . . . . . . . . .  27
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  28
      7.1.  Creation of a new In-Situ OAM  Protocol Parameters
            Registry (IOAM) Protocol Parameters IANA registry . . . .  28
@@ -115,7 +115,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
      7.7.  IOAM E2E Type Registry  . . . . . . . . . . . . . . . . .  29
-   8.  Manageability Considerations  . . . . . . . . . . . . . . . .  30
+   8.  Manageability Considerations  . . . . . . . . . . . . . . . .  29
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  30
    10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  30
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  30
@@ -130,9 +130,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    information within the packet while the packet traverses a particular
    network domain.  The term "in-situ" refers to the fact that the OAM
    data is added to the data packets rather than is being sent within
-   packets specifically dedicated to OAM.  A discussion of the
-   motivation and requirements for in-situ OAM can be found in
-   [I-D.brockners-inband-oam-requirements].  IOAM is to complement
+   packets specifically dedicated to OAM.  IOAM is to complement
    mechanisms such as Ping or Traceroute, or more recent active probing
    mechanisms as described in [I-D.lapukhov-dataplane-probe].  In terms
    of "active" or "passive" OAM, "in-situ" OAM can be considered a
@@ -163,14 +161,14 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    Geneve:    Generic Network Virtualization Encapsulation
               [I-D.ietf-nvo3-geneve]
 
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
 
 
 Brockners, et al.       Expires September 1, 2018               [Page 3]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-   IOAM:      In-situ Operations, Administration, and Maintenance
 
    MTU:       Maximum Transmit Unit
 
@@ -218,6 +216,8 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    ensure that the MTU of all links within a domain is sufficiently
    large to support the increased packet size due to IOAM) and ICMP
    message handling (i.e. in case of a native IPv6 transport, IOAM
+   support for ICMPv6 Echo Request/Reply could desired which would
+
 
 
 
@@ -226,7 +226,6 @@ Brockners, et al.       Expires September 1, 2018               [Page 4]
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
-   support for ICMPv6 Echo Request/Reply could desired which would
    translate into ICMPv6 extensions to enable IOAM data fields to be
    copied from an Echo Request message to an Echo Reply message).
 
@@ -268,12 +267,13 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    This section defines IOAM data types and data fields and associated
    data types required for IOAM.
 
-   To accommodate the different uses of IOAM, three main categories of
-   IOAM data are defined in [I-D.brockners-inband-oam-requirements],
-   which are: edge-to-edge, per node, and for selected nodes only.
-   Corresponding to these categories, IOAM data fields are encoded in
-   different IOAM options, each with its own definition of data types
-
+   To accommodate the different uses of IOAM, IOAM data fields fall into
+   different categories, e.g. edge-to-edge, per node tracing, or for
+   proof of transit.  In IOAM these categories are referred to as IOAM-
+   Types.  A common registry is maintained for IOAM-Types, see
+   Section 7.2 for details.  Corresponding to these IOAM-Types,
+   different IOAM data fields are defined.  IOAM data fields can be
+   encapsulated into a variety of protocols, such as NSH, Geneve, IPv6,
 
 
 
@@ -282,23 +282,8 @@ Brockners, et al.       Expires September 1, 2018               [Page 5]
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
-   and data fields.  In many cases, a bit field determines the set of
-   IOAM data fields embedded in that IOAM option in the packet.
-
-   Encapsulation options for IOAM data are outside the scope of this
-   memo, and are discussed in drafts specific to the encapsulation
-   protocol.  One exception is for encapsulations where IOAM uses its
-   own name space to distinguish between the IOAM options.  For these
-   encapsulations, a common IOAM-Type registry is defined, with the
-   following code points to identify the IOAM options:
-
-   0  IOAM Pre-allocated Trace Option Type
-
-   1  IOAM Incremental Trace Option Type
-
-   2  IOAM POT Option Type
-
-   3  IOAM E2E Option Type
+   etc.  The definition of how IOAM data fields are encapsulated into
+   other protocols is outside the scope of this document.
 
    IOAM is expected to be deployed in a specific domain rather than on
    the overall Internet.  The part of the network which employs IOAM is
@@ -330,14 +315,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    not all nodes within a domain are IOAM capable, IOAM tracing
    information will only be collected on those nodes which are IOAM
    capable.  Nodes which are not IOAM capable will forward the packet
-
-
-
-Brockners, et al.       Expires September 1, 2018               [Page 6]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
    without any changes to the IOAM data fields.  The maximum number of
    hops and the minimum path MTU of the IOAM domain is assumed to be
    known.
@@ -352,6 +329,14 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    operator knows which equipment is deployed in a particular IOAM, the
    operator will decide by means of configuration which type(s) of trace
    options will be enabled for a particular domain.
+
+
+
+
+Brockners, et al.       Expires September 1, 2018               [Page 6]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
 
    Pre-allocated Trace Option:  This trace option is defined as a
       container of node data fields with pre-allocated space for each
@@ -386,14 +371,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    Every node data entry is to hold information for a particular IOAM
    transit node that is traversed by a packet.  The in-situ OAM
    decapsulating node removes the IOAM data and processes and/or exports
-
-
-
-Brockners, et al.       Expires September 1, 2018               [Page 7]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
    the metadata.  IOAM data uses its own name-space for information such
    as node identifier or interface identifier.  This allows for a
    domain-specific definition and interpretation.  For example: In one
@@ -407,6 +384,15 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    o  Identification of the IOAM node.  An IOAM node identifier can
       match to a device identifier or a particular control point or
       subsystem within a device.
+
+
+
+
+
+Brockners, et al.       Expires September 1, 2018               [Page 7]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
 
    o  Identification of the interface that a packet was received on,
       i.e. ingress interface.
@@ -441,6 +427,20 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    The in-situ OAM pre-allocated trace option and the in-situ OAM
    incremental trace option have similar formats.  Except where noted
+   below, the internal formats and fields of the two trace options are
+   identical.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -449,9 +449,6 @@ Brockners, et al.       Expires September 1, 2018               [Page 8]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-   below, the internal formats and fields of the two trace options are
-   identical.
 
    Pre-allocated and incremental trace option headers:
 
@@ -497,6 +494,9 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
       Bit 0    (Most significant bit) When set indicates presence of
                Hop_Lim and node_id in the node data.
 
+      Bit 1    When set indicates presence of ingress_if_id and
+               egress_if_id (short format) in the node data.
+
 
 
 
@@ -505,9 +505,6 @@ Brockners, et al.       Expires September 1, 2018               [Page 9]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-      Bit 1    When set indicates presence of ingress_if_id and
-               egress_if_id (short format) in the node data.
 
       Bit 2    When set indicates presence of timestamp seconds in the
                node data.
@@ -553,7 +550,10 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
                2.  Not add any node data fields to the packet, even for
                    the IOAM-Trace-Type bits defined above.
 
-
+      Section 4.1.2 describes the IOAM data types and their formats.
+      Within an in-situ OAM domain possible combinations of these bits
+      making the IOAM-Trace-Type can be restricted by configuration
+      knobs.
 
 
 
@@ -561,11 +561,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 10]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-      Section 4.1.2 describes the IOAM data types and their formats.
-      Within an in-situ OAM domain possible combinations of these bits
-      making the IOAM-Trace-Type can be restricted by configuration
-      knobs.
 
    NodeLen:  5-bit unsigned integer.  This field specifies the length of
       data added by each node in multiples of 4-octets, excluding the
@@ -610,6 +605,11 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
          in the copied packet.  The address of the node performing the
          copy operation is used as the source address.  The L-bit MUST
          be cleared in the copy of the packet that a node sends back
+         towards the source.  On its way back towards the source, the
+         packet is processed like a regular packet with IOAM
+         information.  Once the return packet reaches the IOAM domain
+         boundary IOAM decapsulation occurs as with any other packet
+         containing IOAM information.
 
 
 
@@ -617,12 +617,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 11]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-         towards the source.  On its way back towards the source, the
-         packet is processed like a regular packet with IOAM
-         information.  Once the return packet reaches the IOAM domain
-         boundary IOAM decapsulation occurs as with any other packet
-         containing IOAM information.
 
       Bit 2-3  Reserved: Must be zero.
 
@@ -666,6 +660,12 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    Hop_Lim and node_id:  4-octet field defined as follows:
 
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   Hop_Lim     |              node_id                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
 
 
 
@@ -673,11 +673,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 12]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |   Hop_Lim     |              node_id                          |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
       Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
          value in the packet at the node that records this data.  Hop
@@ -722,6 +717,11 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
       value to its own time-of-day in order to detect the error
       indication.
 
+   timestamp subseconds:  4-octet unsigned integer.  Absolute timestamp
+      in subseconds that specifies the time at which the packet was
+      received by the node.  This field has three possible formats;
+      based on either PTP [IEEE1588v2], NTP [RFC5905], or POSIX [POSIX].
+      The three timestamp formats are specified in Section 5.  In all
 
 
 
@@ -730,11 +730,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 13]
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
-   timestamp subseconds:  4-octet unsigned integer.  Absolute timestamp
-      in subseconds that specifies the time at which the packet was
-      received by the node.  This field has three possible formats;
-      based on either PTP [IEEE1588v2], NTP [RFC5905], or POSIX [POSIX].
-      The three timestamp formats are specified in Section 5.  In all
       three cases, the Timestamp Subseconds field contains the 32 least
       significant bits of the timestamp format that is specified in
       Section 5.  If a node is not capable of populating this field, it
@@ -775,17 +770,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
       queue (a packet may consume one or more memory buffers, depending
       on its size).
 
-
-
-
-
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 14]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                       queue depth                             |
@@ -794,6 +778,14 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    Opaque State Snapshot:  Variable length field.  It allows the network
       element to store an arbitrary state in the node data field ,
       without a pre-defined schema.  The schema needs to be made known
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 14]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
+
       to the analyzer by some out-of-band mechanism.  The specification
       of this mechanism is beyond the scope of this document.  The
       24-bit "Schema Id" field in the field indicates which particular
@@ -829,19 +821,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    Hop_Lim and node_id wide:  8-octet field defined as follows:
 
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 15]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |   Hop_Lim     |              node_id                          ~
@@ -855,6 +834,14 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
          in the communication path.  This is copied from the lower layer
          for e.g.  TTL value in IPv4 header or hop limit field from IPv6
          header of the packet.  The semantics of the Hop_Lim field
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 15]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
+
          depend on the lower layer protocol that IOAM is encapsulated
          over, and therefore its specific semantics are outside the
          scope of this memo.
@@ -885,19 +872,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
       format" 8-octed bit field with its semantics defined by a specific
       deployment.
 
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 16]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                       app data                                ~
@@ -915,6 +889,14 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
       node adding node data MUST carry out one of the following two
       alternatives in order to maintain the correctness of the UDP
       Checksum value:
+
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 16]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
 
       1.  Recompute the UDP Checksum field.
 
@@ -947,13 +929,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    0xD400:  IOAM-Trace-Type is 0xD400 then the format of node data is:
 
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 17]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |   Hop_Lim     |              node_id                          |
@@ -968,6 +943,16 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
    0xC000:  IOAM-Trace-Type is 0xC000 then the format is:
+
+
+
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 17]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -999,17 +984,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    0x9400:  IOAM-Trace-Type is 0x9400 then the format is:
 
-
-
-
-
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 18]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |   Hop_Lim     |              node_id                          |
@@ -1021,6 +995,20 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
    0x3180:  IOAM-Trace-Type is 0x3180 then the format is:
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 18]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1057,6 +1045,18 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    Correspondingly, two pieces of information are added as IOAM data to
    the packet:
 
+   o  Random: Unique identifier for the packet (e.g., 64-bits allow for
+      the unique identification of 2^64 packets).
+
+   o  Cumulative: Information which is handed from node to node and
+      updated by every node according to a verification algorithm.
+
+
+
+
+
+
+
 
 
 
@@ -1065,12 +1065,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 19]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-   o  Random: Unique identifier for the packet (e.g., 64-bits allow for
-      the unique identification of 2^64 packets).
-
-   o  Cumulative: Information which is handed from node to node and
-      updated by every node according to a verification algorithm.
 
    IOAM proof of transit option:
 
@@ -1093,8 +1087,8 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
    IOAM POT Type:  8-bit identifier of a particular POT variant that
-      dictates the POT data that is included.  This document defines POT
-      Type 0:
+      specifies the POT data that is included.  This document defines
+      POT Type 0:
 
       0: POT data is a 16 Octet field as described below.
 
@@ -1115,14 +1109,18 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    POT Option data:  Variable-length field.  The type of which is
       determined by the IOAM-POT-Type.
 
+4.2.1.  IOAM Proof of Transit Type 0
+
+
+
+
+
 
 
 Brockners, et al.       Expires September 1, 2018              [Page 20]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-4.2.1.  IOAM Proof of Transit Type 0
 
    IOAM proof of transit option of IOAM POT Type 0:
 
@@ -1143,7 +1141,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
    IOAM POT Type:  8-bit identifier of a particular POT variant that
-      dictates the POT data that is included.  This section defines the
+      specifies the POT data that is included.  This section defines the
       POT data when the IOAM POT Type is set to the value 0.
 
    P bit:  1-bit.  "Profile-to-use" (P-bit) (most significant bit).
@@ -1169,6 +1167,8 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    Note: Larger or smaller sizes of "Random" and "Cumulative" data are
    feasible and could be required for certain deployments (e.g. in case
    of space constraints in the transport protocol used).  Future
+   versions of this document will address different sizes of data for
+   "proof of transit".
 
 
 
@@ -1177,9 +1177,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 21]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-   versions of this document will address different sizes of data for
-   "proof of transit".
 
 4.3.  IOAM Edge-to-Edge Option
 
@@ -1226,6 +1223,9 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
                added to a specific tube which is used to identify packet
                loss and reordering for that tube.
 
+      Bit 2    When set indicates presence of timestamp seconds for the
+               transmission of the frame.  This 4-octet field has three
+               possible formats; based on either PTP [IEEE1588v2], NTP
 
 
 
@@ -1234,9 +1234,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 22]
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
-      Bit 2    When set indicates presence of timestamp seconds for the
-               transmission of the frame.  This 4-octet field has three
-               possible formats; based on either PTP [IEEE1588v2], NTP
                [RFC5905], or POSIX [POSIX].  The three timestamp formats
                are specified in Section 5.  In all three cases, the
                Timestamp Seconds field contains the 32 most significant
@@ -1280,8 +1277,11 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    management plane is responsible for determining which timestamp
    format is used.
 
+5.1.  PTP Truncated Timestamp Format
 
-
+   The Precision Time Protocol (PTP) [IEEE1588v2] uses an 80-bit
+   timestamp format.  The truncated timestamp format is a 64-bit field,
+   which is the 64 least significant bits of the 80-bit PTP timestamp.
 
 
 
@@ -1290,11 +1290,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 23]
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
-5.1.  PTP Truncated Timestamp Format
-
-   The Precision Time Protocol (PTP) [IEEE1588v2] uses an 80-bit
-   timestamp format.  The truncated timestamp format is a 64-bit field,
-   which is the 64 least significant bits of the 80-bit PTP timestamp.
    The PTP truncated format is specified in Section 4.3 of
    [I-D.ietf-ntp-packet-timestamps], and the details are presented below
    for the sake of completeness.
@@ -1338,6 +1333,11 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    Wraparound:
 
+      This time format wraps around every 2^32 seconds, which is roughly
+      136 years.  The next wraparound will occur in the year 2106.
+
+   Synchronization Aspects:
+
 
 
 
@@ -1345,11 +1345,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 24]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-      This time format wraps around every 2^32 seconds, which is roughly
-      136 years.  The next wraparound will occur in the year 2106.
-
-   Synchronization Aspects:
 
       It is assumed that nodes that run this protocol are synchronized
       among themselves.  Nodes may be synchronized to a global reference
@@ -1393,7 +1388,12 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
       + Size: 32 bits.
 
+      + Units: the unit is 2^(-32) seconds, which is roughly equal to
+      233 picoseconds.
 
+   Epoch:
+
+      The epoch is 1 January 1900 at 00:00 UTC.
 
 
 
@@ -1401,13 +1401,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 25]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-      + Units: the unit is 2^(-32) seconds, which is roughly equal to
-      233 picoseconds.
-
-   Epoch:
-
-      The epoch is 1 January 1900 at 00:00 UTC.
 
    Resolution:
 
@@ -1450,6 +1443,13 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    Timestamp field format:
 
+      Seconds: specifies the integer portion of the number of seconds
+      since the epoch.
+
+      + Size: 32 bits.
+
+      + Units: seconds.
+
 
 
 
@@ -1457,13 +1457,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 26]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-      Seconds: specifies the integer portion of the number of seconds
-      since the epoch.
-
-      + Size: 32 bits.
-
-      + Units: seconds.
 
       Microseconds: specifies the fractional portion of the number of
       seconds since the epoch.
@@ -1503,17 +1496,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
       a timestamp during or slightly after a leap second may be
       temporarily inaccurate.
 
-
-
-
-
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 27]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
 6.  IOAM Data Export
 
    IOAM nodes collect information for packets traversing a domain that
@@ -1524,6 +1506,13 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    The discussion of IOAM data processing and export is left for a
    future version of this document.
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 27]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
 
 7.  IANA Considerations
 
@@ -1563,13 +1552,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    0  IOAM Pre-allocated Trace Option Type
 
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 28]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
    1  IOAM Incremental Trace Option Type
 
    2  IOAM POT Option Type
@@ -1578,6 +1560,15 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    4 - 127 are available for assignment via RFC Required process as per
    [RFC8126].
+
+
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 28]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
 
 7.3.  IOAM Trace Type Registry
 
@@ -1619,6 +1610,15 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    - 3 are defined in this document.  The meaning of Bit 4 - 15 are
    available for assignments via RFC Required process as per [RFC8126].
 
+8.  Manageability Considerations
+
+   Manageability considerations will be addressed in a later version of
+   this document..
+
+
+
+
+
 
 
 Brockners, et al.       Expires September 1, 2018              [Page 29]
@@ -1626,16 +1626,10 @@ Brockners, et al.       Expires September 1, 2018              [Page 29]
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
-8.  Manageability Considerations
-
-   Manageability considerations will be addressed in a later version of
-   this document..
-
 9.  Security Considerations
 
    Security considerations will be addressed in a later version of this
-   document.  For a discussion of security requirements of in-situ OAM,
-   please refer to [I-D.brockners-inband-oam-requirements].
+   document.
 
 10.  Acknowledgements
 
@@ -1661,16 +1655,22 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
               Institute of Electrical and Electronics Engineers, "IEEE
               Std 1588-2008 - IEEE Standard for a Precision Clock
               Synchronization Protocol for Networked Measurement and
-              Control Systems", IEEE Std 1588-2008, 2008,
+              Control Systems",  IEEE Std 1588-2008, 2008,
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
 
    [POSIX]    Institute of Electrical and Electronics Engineers, "IEEE
               Std 1003.1-2008 (Revision of IEEE Std 1003.1-2004) - IEEE
               Standard for Information Technology - Portable Operating
-              System Interface (POSIX(R))", IEEE Std 1003.1-2008, 2008,
+              System Interface (POSIX(R))",  IEEE Std 1003.1-2008, 2008,
               <https://standards.ieee.org/findstds/
               standard/1003.1-2008.html>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
+
 
 
 
@@ -1681,11 +1681,6 @@ Brockners, et al.       Expires September 1, 2018              [Page 30]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
 
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
-              RFC2119, March 1997, <https://www.rfc-editor.org/info/
-              rfc2119>.
 
    [RFC5905]  Mills, D., Martin, J., Ed., Burbank, J., and W. Kasch,
               "Network Time Protocol Version 4: Protocol and Algorithms
@@ -1698,13 +1693,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
               <https://www.rfc-editor.org/info/rfc8126>.
 
 11.2.  Informative References
-
-   [I-D.brockners-inband-oam-requirements]
-              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
-              Gredler, H., Leddy, J., Youell, S., Mozes, D., Mizrahi,
-              T., <>, P., and r. remy@barefootnetworks.com,
-              "Requirements for In-situ OAM", draft-brockners-inband-
-              oam-requirements-03 (work in progress), March 2017.
 
    [I-D.hildebrand-spud-prototype]
               Hildebrand, J. and B. Trammell, "Substrate Protocol for
@@ -1731,13 +1719,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
               Header (NSH)", draft-ietf-sfc-nsh-28 (work in progress),
               November 2017.
 
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 31]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
    [I-D.kitamura-ipv6-record-route]
               Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
               Option Extension", draft-kitamura-ipv6-record-route-00
@@ -1748,10 +1729,19 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
               probe for in-band telemetry collection", draft-lapukhov-
               dataplane-probe-01 (work in progress), June 2016.
 
+
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 31]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
+
+
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
-              RFC7665, October 2015, <https://www.rfc-editor.org/info/
-              rfc7665>.
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
+              editor.org/info/rfc7665>.
 
    [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
               Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
@@ -1759,9 +1749,9 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 
    [RFC7820]  Mizrahi, T., "UDP Checksum Complement in the One-Way
               Active Measurement Protocol (OWAMP) and Two-Way Active
-              Measurement Protocol (TWAMP)", RFC 7820, DOI 10.17487/
-              RFC7820, March 2016, <https://www.rfc-editor.org/info/
-              rfc7820>.
+              Measurement Protocol (TWAMP)", RFC 7820,
+              DOI 10.17487/RFC7820, March 2016, <https://www.rfc-
+              editor.org/info/rfc7820>.
 
    [RFC7821]  Mizrahi, T., "UDP Checksum Complement in the Network Time
               Protocol (NTP)", RFC 7821, DOI 10.17487/RFC7821, March
@@ -1787,13 +1777,6 @@ Authors' Addresses
    Email: shwethab@cisco.com
 
 
-
-
-Brockners, et al.       Expires September 1, 2018              [Page 32]
-
-Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
    Carlos Pignataro
    Cisco Systems, Inc.
    7200-11 Kit Creek Road
@@ -1801,6 +1784,14 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    United States
 
    Email: cpignata@cisco.com
+
+
+
+
+
+Brockners, et al.       Expires September 1, 2018              [Page 32]
+
+Internet-Draft           In-situ OAM Data Fields           February 2018
 
 
    Hannes Gredler
@@ -1839,6 +1830,15 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    Email: davidm@mellanox.com
 
 
+   Petr Lapukhov
+   Facebook
+   1 Hacker Way
+   Menlo Park, CA  94025
+   US
+
+   Email: petr@fb.com
+
+
 
 
 
@@ -1848,15 +1848,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
 Brockners, et al.       Expires September 1, 2018              [Page 33]
 
 Internet-Draft           In-situ OAM Data Fields           February 2018
-
-
-   Petr Lapukhov
-   Facebook
-   1 Hacker Way
-   Menlo Park, CA  94025
-   US
-
-   Email: petr@fb.com
 
 
    Remy Chang
@@ -1879,6 +1870,15 @@ Internet-Draft           In-situ OAM Data Fields           February 2018
    US
 
    Email: john.lemon@broadcom.com
+
+
+
+
+
+
+
+
+
 
 
 

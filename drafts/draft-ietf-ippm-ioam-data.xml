@@ -19,8 +19,6 @@
 <!ENTITY RFC7821 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7821.xml">
 <!ENTITY RFC8126 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
 <!ENTITY RFC5905 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
-<!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-inband-oam-requirements.xml">
-<!ENTITY I-D.brockners-inband-oam-transport SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-inband-oam-transport.xml">
 <!ENTITY I-D.brockners-proof-of-transit SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-proof-of-transit.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
@@ -201,13 +199,13 @@
 
       <address>
         <postal>
-          <street></street>
+          <street/>
 
-          <city></city>
+          <city/>
 
-          <code></code>
+          <code/>
 
-          <country></country>
+          <country/>
         </postal>
 
         <email>davidm@mellanox.com</email>
@@ -246,7 +244,7 @@
           <country>US</country>
         </postal>
 
-        <email></email>
+        <email/>
       </address>
     </author>
 
@@ -255,13 +253,13 @@
 
       <address>
         <postal>
-          <street></street>
+          <street/>
 
-          <city></city>
+          <city/>
 
-          <code></code>
+          <code/>
 
-          <country></country>
+          <country/>
         </postal>
 
         <email>daniel.bernier@bell.ca</email>
@@ -288,7 +286,7 @@
       </address>
     </author>
 
-    <date day="28" month="February" year="2018" />
+    <date day="28" month="February" year="2018"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -336,19 +334,17 @@
       information within the packet while the packet traverses a particular
       network domain. The term "in-situ" refers to the fact that the OAM data
       is added to the data packets rather than is being sent within packets
-      specifically dedicated to OAM. A discussion of the motivation and
-      requirements for in-situ OAM can be found in <xref
-      target="I-D.brockners-inband-oam-requirements"></xref>. IOAM is to
-      complement mechanisms such as Ping or Traceroute, or more recent active
-      probing mechanisms as described in <xref
-      target="I-D.lapukhov-dataplane-probe"></xref>. In terms of "active" or
+      specifically dedicated to OAM.  IOAM is to complement
+      mechanisms such as Ping or Traceroute, or more recent active probing
+      mechanisms as described in <xref
+      target="I-D.lapukhov-dataplane-probe"/>. In terms of "active" or
       "passive" OAM, "in-situ" OAM can be considered a hybrid OAM type. While
       no extra packets are sent, IOAM adds information to the packets
       therefore cannot be considered passive. In terms of the classification
-      given in <xref target="RFC7799"></xref> IOAM could be portrayed as
-      Hybrid Type 1. "In-situ" mechanisms do not require extra packets to be
-      sent and hence don't change the packet traffic mix within the network.
-      IOAM mechanisms can be leveraged where mechanisms using e.g. ICMP do not
+      given in <xref target="RFC7799"/> IOAM could be portrayed as Hybrid Type
+      1. "In-situ" mechanisms do not require extra packets to be sent and
+      hence don't change the packet traffic mix within the network. IOAM
+      mechanisms can be leveraged where mechanisms using e.g. ICMP do not
       apply or do not offer the desired results, such as proving that a
       certain traffic flow takes a pre-defined path, SLA verification for the
       live data traffic, detailed statistics on traffic distribution paths in
@@ -361,7 +357,7 @@
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
       document are to be interpreted as described in <xref
-      target="RFC2119"></xref>.</t>
+      target="RFC2119"/>.</t>
 
       <t>Abbreviations used in this document:</t>
 
@@ -369,7 +365,7 @@
           <t hangText="E2E">Edge to Edge</t>
 
           <t hangText="Geneve:">Generic Network Virtualization Encapsulation
-          <xref target="I-D.ietf-nvo3-geneve"></xref></t>
+          <xref target="I-D.ietf-nvo3-geneve"/></t>
 
           <t hangText="IOAM:">In-situ Operations, Administration, and
           Maintenance</t>
@@ -377,7 +373,7 @@
           <t hangText="MTU:">Maximum Transmit Unit</t>
 
           <t hangText="NSH:">Network Service Header <xref
-          target="I-D.ietf-sfc-nsh"></xref></t>
+          target="I-D.ietf-sfc-nsh"/></t>
 
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
 
@@ -391,7 +387,7 @@
 
           <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
           Generic Protocol Extension <xref
-          target="I-D.ietf-nvo3-vxlan-gpe"></xref></t>
+          target="I-D.ietf-nvo3-vxlan-gpe"/></t>
         </list></t>
     </section>
 
@@ -464,31 +460,15 @@
       <t>This section defines IOAM data types and data fields and associated
       data types required for IOAM.</t>
 
-      <t>To accommodate the different uses of IOAM, three main categories of
-      IOAM data are defined in <xref
-      target="I-D.brockners-inband-oam-requirements"></xref>, which are:
-      edge-to-edge, per node, and for selected nodes only. Corresponding to
-      these categories, IOAM data fields are encoded in different IOAM
-      options, each with its own definition of data types and data fields. In
-      many cases, a bit field determines the set of IOAM data fields embedded
-      in that IOAM option in the packet.</t>
-
-      <t>Encapsulation options for IOAM data are outside the scope of this
-      memo, and are discussed in drafts specific to the encapsulation
-      protocol. One exception is for encapsulations where IOAM uses its own
-      name space to distinguish between the IOAM options. For these
-      encapsulations, a common IOAM-Type registry is defined, with the
-      following code points to identify the IOAM options:</t>
-
-      <t><list style="hanging">
-          <t hangText="0">IOAM Pre-allocated Trace Option Type</t>
-
-          <t hangText="1">IOAM Incremental Trace Option Type</t>
-
-          <t hangText="2">IOAM POT Option Type</t>
-
-          <t hangText="3">IOAM E2E Option Type</t>
-        </list></t>
+      <t>To accommodate the different uses of IOAM, IOAM data fields fall into
+      different categories, e.g. edge-to-edge, per node tracing, or for proof
+      of transit. In IOAM these categories are referred to as IOAM-Types. A
+      common registry is maintained for IOAM-Types, see <xref
+      target="IOAM-type-registry"/> for details. Corresponding to these
+      IOAM-Types, different IOAM data fields are defined. IOAM data fields can
+      be encapsulated into a variety of protocols, such as NSH, Geneve, IPv6,
+      etc. The definition of how IOAM data fields are encapsulated into other
+      protocols is outside the scope of this document.</t>
 
       <t>IOAM is expected to be deployed in a specific domain rather than on
       the overall Internet. The part of the network which employs IOAM is
@@ -659,9 +639,9 @@ The trace option data MUST be 4-octet aligned:
               <t hangText=" ">The IOAM-Trace-Type value is a bit field. The
               following bit fields are defined in this document, with details
               on each field described in the <xref
-              target="trace-node-data-element"></xref>. The order of packing
-              the data fields in each node data element follows the bit order
-              of the IOAM-Trace-Type field, as follows:<list hangIndent="9"
+              target="trace-node-data-element"/>. The order of packing the
+              data fields in each node data element follows the bit order of
+              the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
                   <t hangText="Bit 0">(Most significant bit) When set
                   indicates presence of Hop_Lim and node_id in the node
@@ -717,7 +697,7 @@ The trace option data MUST be 4-octet aligned:
                     </list></t>
                 </list></t>
 
-              <t hangText=" "><xref target="trace-node-data-element"></xref>
+              <t hangText=" "><xref target="trace-node-data-element"/>
               describes the IOAM data types and their formats. Within an
               in-situ OAM domain possible combinations of these bits making
               the IOAM-Trace-Type can be restricted by configuration
@@ -726,15 +706,15 @@ The trace option data MUST be 4-octet aligned:
               <t hangText="NodeLen:">5-bit unsigned integer. This field
               specifies the length of data added by each node in multiples of
               4-octets, excluding the length of the "Opaque State Snapshot"
-              field. <vspace blankLines="1" /> If IOAM-Trace-Type bit 7 is not
+              field. <vspace blankLines="1"/> If IOAM-Trace-Type bit 7 is not
               set, then NodeLen specifies the actual length added by each
               node. If IOAM-Trace-Type bit 7 is set, then the actual length
               added by a node would be (NodeLen + Opaque Data Length). <vspace
-              blankLines="1" /> For example, if 3 IOAM-Trace-Type bits are set
+              blankLines="1"/> For example, if 3 IOAM-Trace-Type bits are set
               and none of them are wide, then NodeLen would be 3. If 3
               IOAM-Trace-Type bits are set and 2 of them are wide, then
-              NodeLen would be 5. <vspace blankLines="1" /> An IOAM
-              encapsulating node must set NodeLen. <vspace blankLines="1" /> A
+              NodeLen would be 5. <vspace blankLines="1"/> An IOAM
+              encapsulating node must set NodeLen. <vspace blankLines="1"/> A
               node receiving an IOAM Pre-allocated or Incremental Trace Option
               may rely on the NodeLen value, or it may ignore the NodeLen
               value and calculate the node length from the IOAM-Trace-Type
@@ -861,33 +841,33 @@ The trace option data MUST be 4-octet aligned:
               Absolute timestamp in seconds that specifies the time at which
               the packet was received by the node. This field has three
               possible formats; based on either PTP <xref
-              target="IEEE1588v2"></xref>, NTP <xref target="RFC5905"></xref>,
-              or POSIX <xref target="POSIX"></xref>. The three timestamp
-              formats are specified in <xref target="TimestampSec"></xref>. In
-              all three cases, the Timestamp Seconds field contains the 32
-              most significant bits of the timestamp format that is specified
-              in <xref target="TimestampSec"></xref>. If a node is not capable
-              of populating this field, it assigns the value 0xFFFFFFFF. Note
-              that this is a legitimate value that is valid for 1 second in
-              approximately 136 years; the analyzer should correlate several
-              packets or compare the timestamp value to its own time-of-day in
-              order to detect the error indication.</t>
+              target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>, or POSIX
+              <xref target="POSIX"/>. The three timestamp formats are
+              specified in <xref target="TimestampSec"/>. In all three cases,
+              the Timestamp Seconds field contains the 32 most significant
+              bits of the timestamp format that is specified in <xref
+              target="TimestampSec"/>. If a node is not capable of populating
+              this field, it assigns the value 0xFFFFFFFF. Note that this is a
+              legitimate value that is valid for 1 second in approximately 136
+              years; the analyzer should correlate several packets or compare
+              the timestamp value to its own time-of-day in order to detect
+              the error indication.</t>
 
               <t hangText="timestamp subseconds:">4-octet unsigned integer.
               Absolute timestamp in subseconds that specifies the time at
               which the packet was received by the node. This field has three
               possible formats; based on either PTP <xref
-              target="IEEE1588v2"></xref>, NTP <xref target="RFC5905"></xref>,
-              or POSIX <xref target="POSIX"></xref>. The three timestamp
-              formats are specified in <xref target="TimestampSec"></xref>. In
-              all three cases, the Timestamp Subseconds field contains the 32
-              least significant bits of the timestamp format that is specified
-              in <xref target="TimestampSec"></xref>. If a node is not capable
-              of populating this field, it assigns the value 0xFFFFFFFF. Note
-              that this is a legitimate value in the NTP format, valid for
-              approximately 233 picoseconds in every second. If the NTP format
-              is used the analyzer should correlate several packets in order
-              to detect the error indication.</t>
+              target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>, or POSIX
+              <xref target="POSIX"/>. The three timestamp formats are
+              specified in <xref target="TimestampSec"/>. In all three cases,
+              the Timestamp Subseconds field contains the 32 least significant
+              bits of the timestamp format that is specified in <xref
+              target="TimestampSec"/>. If a node is not capable of populating
+              this field, it assigns the value 0xFFFFFFFF. Note that this is a
+              legitimate value in the NTP format, valid for approximately 233
+              picoseconds in every second. If the NTP format is used the
+              analyzer should correlate several packets in order to detect the
+              error indication.</t>
 
               <t hangText="transit delay:">4-octet unsigned integer in the
               range 0 to 2^31-1. It is the time in nanoseconds the packet
@@ -1039,9 +1019,9 @@ The trace option data MUST be 4-octet aligned:
                 </list> IOAM decapsulating nodes MUST recompute the UDP
               Checksum field, since they do not know whether previous hops
               modified the UDP Checksum field or the Checksum Complement
-              field. <vspace blankLines="1" /> Checksum Complement fields are
-              used in a similar manner in <xref target="RFC7820"></xref> and
-              <xref target="RFC7821"></xref>. <figure>
+              field. <vspace blankLines="1"/> Checksum Complement fields are
+              used in a similar manner in <xref target="RFC7820"/> and <xref
+              target="RFC7821"/>. <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |      Checksum Complement      |           Reserved            |
@@ -1158,7 +1138,7 @@ The trace option data MUST be 4-octet aligned:
       <section anchor="IOAM_proof_of_transit_option"
                title="IOAM Proof of Transit Option">
         <t>IOAM Proof of Transit data is to support the path or service
-        function chain <xref target="RFC7665"></xref> verification use cases.
+        function chain <xref target="RFC7665"/> verification use cases.
         Proof-of-transit uses methods like nested hashing or nested encryption
         of the IOAM data or mechanisms such as Shamir's Secret Sharing Schema
         (SSSS). While details on how the IOAM data for the proof of transit
@@ -1201,8 +1181,8 @@ IOAM proof of transit option data MUST be 4-octet aligned.:
 ]]></artwork>
           </figure><list style="hanging">
             <t hangText="IOAM POT Type:">8-bit identifier of a particular POT
-            variant that dictates the POT data that is included. This document
-            defines POT Type 0:<list style="hanging">
+            variant that specifies the POT data that is included. This
+            document defines POT Type 0:<list style="hanging">
                 <t hangText="0:">POT data is a 16 Octet field as described
                 below.</t>
               </list></t>
@@ -1249,7 +1229,7 @@ IOAM proof of transit option of IOAM POT Type 0:
 ]]></artwork>
             </figure><list style="hanging">
               <t hangText="IOAM POT Type:">8-bit identifier of a particular
-              POT variant that dictates the POT data that is included. This
+              POT variant that specifies the POT data that is included. This
               section defines the POT data when the IOAM POT Type is set to
               the value 0.</t>
 
@@ -1291,7 +1271,7 @@ IOAM proof of transit option of IOAM POT Type 0:
         In order to detect packet loss, packet reordering, or packet
         duplication in an in-situ OAM-domain, sequence numbers can be added to
         packets of a particular tube (see <xref
-        target="I-D.hildebrand-spud-prototype"></xref>). Each tube leverages a
+        target="I-D.hildebrand-spud-prototype"/>). Each tube leverages a
         dedicated namespace for its sequence numbers.</t>
 
         <t><figure>
@@ -1334,33 +1314,30 @@ IOAM proof of transit option of IOAM POT Type 0:
                 <t hangText="Bit 2">When set indicates presence of timestamp
                 seconds for the transmission of the frame. This 4-octet field
                 has three possible formats; based on either PTP <xref
-                target="IEEE1588v2"></xref>, NTP <xref
-                target="RFC5905"></xref>, or POSIX <xref
-                target="POSIX"></xref>. The three timestamp formats are
-                specified in <xref target="TimestampSec"></xref>. In all three
+                target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>, or POSIX
+                <xref target="POSIX"/>. The three timestamp formats are
+                specified in <xref target="TimestampSec"/>. In all three
                 cases, the Timestamp Seconds field contains the 32 most
                 significant bits of the timestamp format that is specified in
-                <xref target="TimestampSec"></xref>. If a node is not capable
-                of populating this field, it assigns the value 0xFFFFFFFF.
-                Note that this is a legitimate value that is valid for 1
-                second in approximately 136 years; the analyzer should
-                correlate several packets or compare the timestamp value to
-                its own time-of-day in order to detect the error
-                indication.</t>
+                <xref target="TimestampSec"/>. If a node is not capable of
+                populating this field, it assigns the value 0xFFFFFFFF. Note
+                that this is a legitimate value that is valid for 1 second in
+                approximately 136 years; the analyzer should correlate several
+                packets or compare the timestamp value to its own time-of-day
+                in order to detect the error indication.</t>
 
                 <t hangText="Bit 3">When set indicates presence of timestamp
                 subseconds for the transmission of the frame. This 4-octet
                 field has three possible formats; based on either PTP <xref
-                target="IEEE1588v2"></xref>, NTP <xref
-                target="RFC5905"></xref>, or POSIX <xref
-                target="POSIX"></xref>. The three timestamp formats are
-                specified in <xref target="TimestampSec"></xref>. In all three
+                target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>, or POSIX
+                <xref target="POSIX"/>. The three timestamp formats are
+                specified in <xref target="TimestampSec"/>. In all three
                 cases, the Timestamp Subseconds field contains the 32 least
                 significant bits of the timestamp format that is specified in
-                <xref target="TimestampSec"></xref>. If a node is not capable
-                of populating this field, it assigns the value 0xFFFFFFFF.
-                Note that this is a legitimate value in the NTP format, valid
-                for approximately 233 picoseconds in every second. If the NTP
+                <xref target="TimestampSec"/>. If a node is not capable of
+                populating this field, it assigns the value 0xFFFFFFFF. Note
+                that this is a legitimate value in the NTP format, valid for
+                approximately 233 picoseconds in every second. If the NTP
                 format is used the analyzer should correlate several packets
                 in order to detect the error indication.</t>
 
@@ -1386,12 +1363,12 @@ IOAM proof of transit option of IOAM POT Type 0:
       is used.</t>
 
       <section anchor="PTPFromatSec" title="PTP Truncated Timestamp Format">
-        <t>The Precision Time Protocol (PTP) <xref target="IEEE1588v2"></xref>
-        uses an 80-bit timestamp format. The truncated timestamp format is a
-        64-bit field, which is the 64 least significant bits of the 80-bit PTP
+        <t>The Precision Time Protocol (PTP) <xref target="IEEE1588v2"/> uses
+        an 80-bit timestamp format. The truncated timestamp format is a 64-bit
+        field, which is the 64 least significant bits of the 80-bit PTP
         timestamp. The PTP truncated format is specified in Section 4.3 of
-        <xref target="I-D.ietf-ntp-packet-timestamps"></xref>, and the details
-        are presented below for the sake of completeness.</t>
+        <xref target="I-D.ietf-ntp-packet-timestamps"/>, and the details are
+        presented below for the sake of completeness.</t>
 
         <figure align="center" anchor="PTPFormat"
                 title="PTP [IEEE1588] Truncated Timestamp Format">
@@ -1425,9 +1402,8 @@ IOAM proof of transit option of IOAM POT Type 0:
           </list></t>
 
         <t>Epoch: <list hangIndent="10" style="empty">
-            <t>The PTP <xref target="IEEE1588v2"></xref> epoch is 1 January
-            1970 00:00:00 TAI, which is 31 December 1969 23:59:51.999918
-            UTC.</t>
+            <t>The PTP <xref target="IEEE1588v2"/> epoch is 1 January 1970
+            00:00:00 TAI, which is 31 December 1969 23:59:51.999918 UTC.</t>
           </list></t>
 
         <t>Resolution: <list hangIndent="10" style="empty">
@@ -1444,9 +1420,9 @@ IOAM proof of transit option of IOAM POT Type 0:
             <t>It is assumed that nodes that run this protocol are
             synchronized among themselves. Nodes may be synchronized to a
             global reference time. Note that if PTP <xref
-            target="IEEE1588v2"></xref> is used for synchronization, the
-            timestamp may be derived from the PTP-synchronized clock, allowing
-            the timestamp to be measured with respect to the clock of an PTP
+            target="IEEE1588v2"/> is used for synchronization, the timestamp
+            may be derived from the PTP-synchronized clock, allowing the
+            timestamp to be measured with respect to the clock of an PTP
             Grandmaster clock.</t>
 
             <t>The PTP truncated timestamp format is not affected by leap
@@ -1455,10 +1431,10 @@ IOAM proof of transit option of IOAM POT Type 0:
       </section>
 
       <section anchor="NTPFormatSec" title="NTP 64-bit Timestamp Format">
-        <t>The Network Time Protocol (NTP) <xref target="RFC5905"></xref>
-        timestamp format is 64 bits long. This format is specified in Section
-        4.2.1 of <xref target="I-D.ietf-ntp-packet-timestamps"></xref>, and
-        the details are presented below for the sake of completeness.</t>
+        <t>The Network Time Protocol (NTP) <xref target="RFC5905"/> timestamp
+        format is 64 bits long. This format is specified in Section 4.2.1 of
+        <xref target="I-D.ietf-ntp-packet-timestamps"/>, and the details are
+        presented below for the sake of completeness.</t>
 
         <figure align="center" anchor="NTPFormat"
                 title="NTP [RFC5905] 64-bit Timestamp Format">
@@ -1507,10 +1483,10 @@ IOAM proof of transit option of IOAM POT Type 0:
 
         <t>Synchronization Aspects: <list hangIndent="10" style="empty">
             <t>Nodes that use this timestamp format will typically be
-            synchronized to UTC using NTP <xref target="RFC5905"></xref>.
-            Thus, the timestamp may be derived from the NTP-synchronized
-            clock, allowing the timestamp to be measured with respect to the
-            clock of an NTP server.</t>
+            synchronized to UTC using NTP <xref target="RFC5905"/>. Thus, the
+            timestamp may be derived from the NTP-synchronized clock, allowing
+            the timestamp to be measured with respect to the clock of an NTP
+            server.</t>
 
             <t>The NTP timestamp format is affected by leap seconds; it
             represents the number of seconds since the epoch minus the number
@@ -1522,8 +1498,8 @@ IOAM proof of transit option of IOAM POT Type 0:
 
       <section anchor="POSIXFormatSec" title="POSIX-based Timestamp Format">
         <t>This timestamp format is based on the POSIX time format <xref
-        target="POSIX"></xref>. The detailed specification of the timestamp
-        format used in this document is presented below.</t>
+        target="POSIX"/>. The detailed specification of the timestamp format
+        used in this document is presented below.</t>
 
         <figure align="center" anchor="POSIXFormat"
                 title="POSIX-based Timestamp Format">
@@ -1576,9 +1552,9 @@ IOAM proof of transit option of IOAM POT Type 0:
             Linux operating system, and hence use the POSIX time. In some
             cases nodes may be synchronized to UTC using a synchronization
             mechanism that is outside the scope of this document, such as NTP
-            <xref target="RFC5905"></xref>. Thus, the timestamp may be derived
-            from the NTP-synchronized clock, allowing the timestamp to be
-            measured with respect to the clock of an NTP server.</t>
+            <xref target="RFC5905"/>. Thus, the timestamp may be derived from
+            the NTP-synchronized clock, allowing the timestamp to be measured
+            with respect to the clock of an NTP server.</t>
 
             <t>The POSIX-based timestamp format is affected by leap seconds;
             it represents the number of seconds since the epoch minus the
@@ -1623,17 +1599,17 @@ IOAM proof of transit option of IOAM POT Type 0:
             <t>IOAM E2E Type</t>
           </list>will contain the current set of possibilities defined in this
         document. New registries in this name space are created via RFC
-        Required process as per <xref target="RFC8126"></xref>.</t>
+        Required process as per <xref target="RFC8126"/>.</t>
 
         <t>The subsequent sub-sections detail the registries herein
         contained.</t>
       </section>
 
-      <section title="IOAM Type Registry">
+      <section anchor="IOAM-type-registry" title="IOAM Type Registry">
         <t>This registry defines 128 code points for the IOAM-Type field for
         identifying IOAM options as explained in <xref
-        target="IOAM_option_format"></xref>. The following code points are
-        defined in this draft:</t>
+        target="IOAM_option_format"/>. The following code points are defined
+        in this draft:</t>
 
         <t><list style="hanging">
             <t hangText="0">IOAM Pre-allocated Trace Option Type</t>
@@ -1644,55 +1620,55 @@ IOAM proof of transit option of IOAM POT Type 0:
 
             <t hangText="3">IOAM E2E Option Type</t>
           </list>4 - 127 are available for assignment via RFC Required process
-        as per <xref target="RFC8126"></xref>.</t>
+        as per <xref target="RFC8126"/>.</t>
       </section>
 
       <section title="IOAM Trace Type Registry">
         <t>This registry defines code point for each bit in the 16-bit
         IOAM-Trace-Type field for Pre-allocated trace option and Incremental
-        trace option defined in <xref target="IOAM_tracing_option"></xref>.
-        The meaning of Bit 0 - 11 for trace type are defined in this document
-        in <xref target="IOAMTraceType"></xref> <xref
+        trace option defined in <xref target="IOAM_tracing_option"/>. The
+        meaning of Bit 0 - 11 for trace type are defined in this document in
+        <xref target="IOAMTraceType"/> <xref
         target="TraceOptionDef">of</xref>. The meaning for Bit 12 - 15 are
         available for assignment via RFC Required process as per <xref
-        target="RFC8126"></xref>.</t>
+        target="RFC8126"/>.</t>
       </section>
 
       <section title="IOAM Trace Flags Registry">
         <t>This registry defines code point for each bit in the 4 bit flags
         for Pre-allocated trace option and Incremental trace option defined in
-        <xref target="IOAM_tracing_option"></xref>. The meaning of Bit 0 - 1
-        for trace flags are defined in this document in <xref
-        target="TraceFlags"></xref> of <xref target="TraceOptionDef"></xref>.
-        The meaning for Bit 2 - 3 are available for assignment via RFC
-        Required process as per <xref target="RFC8126"></xref>.</t>
+        <xref target="IOAM_tracing_option"/>. The meaning of Bit 0 - 1 for
+        trace flags are defined in this document in <xref
+        target="TraceFlags"/> of <xref target="TraceOptionDef"/>. The meaning
+        for Bit 2 - 3 are available for assignment via RFC Required process as
+        per <xref target="RFC8126"/>.</t>
       </section>
 
       <section title="IOAM POT Type Registry">
         <t>This registry defines 256 code points to define IOAM POT Type for
         IOAM proof of transit option <xref
-        target="IOAM_proof_of_transit_option"></xref>. The code point value 0
-        is defined in this document, 1 - 255 are available for assignment via
-        RFC Required process as per <xref target="RFC8126"></xref>.</t>
+        target="IOAM_proof_of_transit_option"/>. The code point value 0 is
+        defined in this document, 1 - 255 are available for assignment via RFC
+        Required process as per <xref target="RFC8126"/>.</t>
       </section>
 
       <section title="IOAM POT Flags Registry">
         <t>This registry defines code point for each bit in the 8 bit flags
         for IOAM POT option defined in <xref
-        target="IOAM_proof_of_transit_option"></xref>. The meaning of Bit 0
-        for IOAM POT flags is defined in this document in <xref
-        target="IOAM_proof_of_transit_option"></xref>. The meaning for Bit 1 -
-        7 are available for assignment via RFC Required process as per <xref
-        target="RFC8126"></xref>.</t>
+        target="IOAM_proof_of_transit_option"/>. The meaning of Bit 0 for IOAM
+        POT flags is defined in this document in <xref
+        target="IOAM_proof_of_transit_option"/>. The meaning for Bit 1 - 7 are
+        available for assignment via RFC Required process as per <xref
+        target="RFC8126"/>.</t>
       </section>
 
       <section title="IOAM E2E Type Registry">
         <t>This registry defines code points for each bit in the 16 bit
         IOAM-E2E-Type field for IOAM E2E option <xref
-        target="IOAM_edge_to_edge_opt"></xref>. The meaning of Bit 0 - 3 are
-        defined in this document. The meaning of Bit 4 - 15 are available for
+        target="IOAM_edge_to_edge_opt"/>. The meaning of Bit 0 - 3 are defined
+        in this document. The meaning of Bit 4 - 15 are available for
         assignments via RFC Required process as per <xref
-        target="RFC8126"></xref>.</t>
+        target="RFC8126"/>.</t>
       </section>
     </section>
 
@@ -1703,9 +1679,7 @@ IOAM proof of transit option of IOAM POT Type 0:
 
     <section anchor="Security" title="Security Considerations">
       <t>Security considerations will be addressed &iacute;n a later version
-      of this document. For a discussion of security requirements of in-situ
-      OAM, please refer to <xref
-      target="I-D.brockners-inband-oam-requirements"></xref>.</t>
+      of this document. </t>
     </section>
 
     <section title="Acknowledgements">
@@ -1715,7 +1689,7 @@ IOAM proof of transit option of IOAM POT Type 0:
       Yourtchenko for the comments and advice.</t>
 
       <t>This document leverages and builds on top of several concepts
-      described in <xref target="I-D.kitamura-ipv6-record-route"></xref>. The
+      described in <xref target="I-D.kitamura-ipv6-record-route"/>. The
       authors would like to acknowledge the work done by the author Hiroshi
       Kitamura and people involved in writing it.</t>
 
@@ -1760,10 +1734,10 @@ IOAM proof of transit option of IOAM POT Type 0:
             Engineers</organization>
           </author>
 
-          <date year="2008" />
+          <date year="2008"/>
         </front>
 
-        <seriesInfo name="" value="IEEE Std 1003.1-2008" />
+        <seriesInfo name="" value="IEEE Std 1003.1-2008"/>
       </reference>
 
       <reference anchor="IEEE1588v2"
@@ -1778,10 +1752,10 @@ IOAM proof of transit option of IOAM POT Type 0:
             Engineers</organization>
           </author>
 
-          <date year="2008" />
+          <date year="2008"/>
         </front>
 
-        <seriesInfo name="" value="IEEE Std 1588-2008" />
+        <seriesInfo name="" value="IEEE Std 1588-2008"/>
       </reference>
     </references>
 
@@ -1789,8 +1763,6 @@ IOAM proof of transit option of IOAM POT Type 0:
       &RFC7665;
 
       &RFC7799;
-
-      &I-D.brockners-inband-oam-requirements;
 
       &RFC7820;
 
@@ -1803,16 +1775,16 @@ IOAM proof of transit option of IOAM POT Type 0:
           <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
           Extension</title>
 
-          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"></author>
+          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
 
-          <date month="November" year="2000" />
+          <date month="November" year="2000"/>
         </front>
 
         <seriesInfo name="Internet-Draft"
-                    value="draft-kitamura-ipv6-record-route-00" />
+                    value="draft-kitamura-ipv6-record-route-00"/>
 
         <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
-                type="TXT" />
+                type="TXT"/>
       </reference>
 
       &I-D.SPUD;
