@@ -332,11 +332,11 @@
     <section title="IOAM data fields encapsulation in NSH">
       <t>NSH is defined in <xref target="RFC8300"/>. IOAM data fields are
       carried in NSH using a next protocol header which follows the NSH MDx
-      metadata TLVs. The different IOAM data fields defined in <xref
-      target="I-D.ietf-ippm-ioam-data"/> are added as TLVs. In an
-      administrative domain where IOAM is used, insertion of the IOAM protocol
-      header in NSH is enabled at the NSH tunnel endpoints which also serve as
-      IOAM encapsulating/decapsulating nodes by means of configuration.</t>
+      metadata TLVs. An IOAM header is added containing the different IOAM data
+      fields defined in <xref target="I-D.ietf-ippm-ioam-data"/>. In an
+      administrative domain where IOAM is used, insertion of the IOAM header in
+      NSH is enabled at the NSH tunnel endpoints, which also serve as IOAM
+      encapsulating/decapsulating nodes by means of configuration.</t>
 
       <t><figure>
           <artwork><![CDATA[ 0                   1                   2                   3
@@ -377,18 +377,19 @@
           as defined in Section 7.2 of <xref
           target="I-D.ietf-ippm-ioam-data"/>.</t>
 
-          <t hangText="IOAM HDR Len:">8 bits Length field contains the length
-          of the variable IOAM data octets in 4-octet units.</t>
+          <t hangText="IOAM HDR Len:">8 bit Length field contains the length
+          of the IOAM header in 4-octet units.</t>
 
           <t hangText="Reserved bits:">Reserved bits are present for future
-          use. The reserved bits MUST be set to 0x0.</t>
+          use. The reserved bits MUST be set to 0x0 upon transmission and
+          ignored upon receipt.</t>
 
           <t hangText="Next Protocol:">8-bit unsigned integer that determines
           the type of header following IOAM protocol.</t>
 
           <t hangText="IOAM Option and Data Space:">IOAM option header and
-          data is present as defined by the IOAM-Type field, and is defined in
-          Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+          data is present as specified by the IOAM-Type field, and is defined
+          in Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
         </list>Multiple IOAM options MAY be included within the NSH
       encapsulation. For example, if a NSH encapsulation contains two IOAM
       options before a data payload, the Next Protocol field of the first IOAM
@@ -438,7 +439,7 @@
             case this particular deployment would have a maximum path length
             of 15 hops in the IOAM domain, then a maximum of 300 octets of
             IOAM data were to be encapsulated in the packet.</t>
-          </list>Two approaches for encapsulating IOAM data fields in NSH
+          </list>Different approaches for encapsulating IOAM data fields in NSH
         could be considered:</t>
 
         <t><list style="numbers">
@@ -453,10 +454,16 @@
             <t>Encapsulation of IOAM data fields using the "Next Protocol"
             field. Each IOAM data field option (trace, proof-of-transit, and
             edge-to-edge) would be specified by its own "next protocol".</t>
-          </list>The second option has been chosen here, because it avoids the
+
+            <t>Encapsulation of IOAM data fields using the "Next Protocol"
+            field. A single NSH protocol type code point would be allocated for
+            IOAM. A "sub-type" field would then specify what IOAM options type
+            (trace, proof-of-transit, edge-to-edge) is carried.</t>
+
+          </list>The third option has been chosen here. This option avoids the
         additional layer of TLV nesting that the use of NSH MD Type 2 would
-        result in. In addition, the second option does not constrain IOAM data
-        to a maximum of 256 octets, thus allowing support for very large
+        result in. In addition, this option does not constrain IOAM data to a
+        maximum of 256 octets, thus allowing support for very large
         deployments.</t>
       </section>
 
@@ -466,7 +473,8 @@
         must not be set for non-OAM packets. Packets with IOAM data included
         MUST follow this definition, i.e. the O bit MUST NOT be set for
         regular customer traffic which also carries IOAM data and the O bit
-        MUST be set for OAM packets which carry IOAM data .</t>
+        MUST be set for OAM packets which carry only IOAM data without any
+        regular data payload.</t>
       </section>
     </section>
 

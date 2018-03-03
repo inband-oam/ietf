@@ -351,13 +351,12 @@
 
     <section title="IOAM Data Field Encapsulation in VXLAN-GPE">
       <t>VXLAN-GPE is defined in <xref target="I-D.ietf-nvo3-vxlan-gpe"/>.
-      IOAM data fields are carried in VXLAN-GPE using a next protocol header
-      of TBD_IOAM. The different IOAM data fields defined in <xref
-      target="I-D.ietf-ippm-ioam-data"/> are added as TLVs. In an
-      administrative domain where IOAM is used, insertion of the IOAM protocol
-      header in VXLAN-GPE is enabled at the VXLAN-GPE tunnel endpoints which
-      also serve as IOAM encapsulating/decapsulating nodes by means of
-      configuration.</t>
+      IOAM data fields are carried in VXLAN-GPE using a next protocol value
+      of TBD_IOAM. An IOAM header is added containing the different IOAM data
+      fields defined in <xref target="I-D.ietf-ippm-ioam-data"/>. In an
+      administrative domain where IOAM is used, insertion of the IOAM header in
+      VXLAN-GPE is enabled at the VXLAN-GPE tunnel endpoints, which also serve
+      as IOAM encapsulating/decapsulating nodes by means of configuration.</t>
 
       <t/>
 
@@ -410,7 +409,7 @@
           IOAM HDR in 4-octet units.</t>
 
           <t hangText="Reserved:">8-bit reserved field MUST be set to
-          zero.</t>
+          zero upon transmission and ignored upon receipt.</t>
 
           <t hangText="Next Protocol:">8-bit unsigned integer that determines
           the type of header following IOAM protocol. The value is from the
@@ -418,8 +417,8 @@
           target="I-D.ietf-nvo3-vxlan-gpe"/>.</t>
 
           <t hangText="IOAM Option and Data Space:">IOAM option header and
-          data is present as defined by the IOAM-Type field, and is defined in
-          Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+          data is present as specified by the IOAM-Type field, and is defined
+          in Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
         </list>Multiple IOAM options MAY be included within the VXLAN-GPE
       encapsulation. For example, if a VXLAN-GPE encapsulation contains two
       IOAM options before a data payload, the Next Protocol field of the first
@@ -458,11 +457,9 @@
 
         <t><list style="numbers">
             <t>Use a single GPE protocol type for all IOAM types: IOAM would
-            receive a single GPE protocol type code point. A "sub-type" (e.g.
-            4 bit wide) would then specify what IOAM options type(s) (trace,
-            proof-of-transit, edge-to-edge) are carried. In case there is a
-            need for additional IOAM options, changes would be contained
-            within the single GPE protocol type for IOAM.</t>
+            receive a single GPE protocol type code point. A "sub-type" field
+            would then specify what IOAM options type (trace, proof-of-transit,
+            edge-to-edge) is carried.</t>
 
             <t>Use one GPE protocol type per IOAM options type: Each IOAM data
             field option (trace, proof-of-transit, and edge-to-edge) would be
@@ -471,19 +468,19 @@
             This implies that in case additional IOAM option types would be
             added in the future, additional GPE protocol type code points
             would need to be allocated.</t>
-          </list>The second option has been chosen here, because it avoids the
-        additional layer of TLV nesting that the use of a single GPE protocol
-        type for all IOAM option types would result in.</t>
+          </list>The first option has been chosen here. Multiple back-to-back
+        IOAM options can be encoded as a succession of IOAM headers, with the
+        same single GPE protocol type appearing as the next protocol before
+        each IOAM header, but different sub-types within each IOAM header.</t>
       </section>
 
       <section title="IOAM and the use of the VXLAN O-bit">
         <t><xref target="I-D.ietf-nvo3-vxlan-gpe"/> defines an "O bit" for OAM
         packets. Per <xref target="I-D.ietf-nvo3-vxlan-gpe"/> the O bit
         indicates that the packet contains an OAM message instead of data
-        payload. Packets with IOAM data do not change the use of the O bit:
-        The O bit would be set of OAM packets which carry IOAM data fields and
-        would not be set of regular data payload / customer traffic which
-        carries IOAM data fields.</t>
+        payload. Packets that carry IOAM data fields in addition to regular
+        data payload / customer traffic must not set the O bit. Packets that
+        carry only IOAM data fields without any payload must set the O bit.</t>
       </section>
     </section>
 
