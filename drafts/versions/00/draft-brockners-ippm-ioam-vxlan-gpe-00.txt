@@ -136,12 +136,12 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
 3.  IOAM Data Field Encapsulation in VXLAN-GPE
 
    VXLAN-GPE is defined in [I-D.ietf-nvo3-vxlan-gpe].  IOAM data fields
-   are carried in VXLAN-GPE using a next protocol header of TBD_IOAM.
-   The different IOAM data fields defined in [I-D.ietf-ippm-ioam-data]
-   are added as TLVs.  In an administrative domain where IOAM is used,
-   insertion of the IOAM protocol header in VXLAN-GPE is enabled at the
-   VXLAN-GPE tunnel endpoints which also serve as IOAM encapsulating/
-   decapsulating nodes by means of configuration.
+   are carried in VXLAN-GPE using a next protocol value of TBD_IOAM.  An
+   IOAM header is added containing the different IOAM data fields
+   defined in [I-D.ietf-ippm-ioam-data].  In an administrative domain
+   where IOAM is used, insertion of the IOAM header in VXLAN-GPE is
+   enabled at the VXLAN-GPE tunnel endpoints, which also serve as IOAM
+   encapsulating/decapsulating nodes by means of configuration.
 
 
 
@@ -213,11 +213,11 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
    IOAM HDR len:  8-bit unsigned integer.  Length of the IOAM HDR in
       4-octet units.
 
-   Reserved:  8-bit reserved field MUST be set to zero.
+   Reserved:  8-bit reserved field MUST be set to zero upon transmission
+      and ignored upon receipt.
 
    Next Protocol:  8-bit unsigned integer that determines the type of
       header following IOAM protocol.  The value is from the IANA
-
 
 
 
@@ -230,8 +230,8 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
       [I-D.ietf-nvo3-vxlan-gpe].
 
    IOAM Option and Data Space:  IOAM option header and data is present
-      as defined by the IOAM-Type field, and is defined in Section 4 of
-      [I-D.ietf-ippm-ioam-data].
+      as specified by the IOAM-Type field, and is defined in Section 4
+      of [I-D.ietf-ippm-ioam-data].
 
    Multiple IOAM options MAY be included within the VXLAN-GPE
    encapsulation.  For example, if a VXLAN-GPE encapsulation contains
@@ -272,8 +272,8 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
 
    1.  Use a single GPE protocol type for all IOAM types: IOAM would
        receive a single GPE protocol type code point.  A "sub-type"
-       (e.g.  4 bit wide) would then specify what IOAM options type(s)
-       (trace, proof-of-transit, edge-to-edge) are carried.  In case
+       field would then specify what IOAM options type (trace, proof-of-
+       transit, edge-to-edge) is carried.
 
 
 
@@ -281,9 +281,6 @@ Brockners, et al.       Expires September 4, 2018               [Page 5]
 
 Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
 
-
-       there is a need for additional IOAM options, changes would be
-       contained within the single GPE protocol type for IOAM.
 
    2.  Use one GPE protocol type per IOAM options type: Each IOAM data
        field option (trace, proof-of-transit, and edge-to-edge) would be
@@ -293,19 +290,19 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
        added in the future, additional GPE protocol type code points
        would need to be allocated.
 
-   The second option has been chosen here, because it avoids the
-   additional layer of TLV nesting that the use of a single GPE protocol
-   type for all IOAM option types would result in.
+   The first option has been chosen here.  Multiple back-to-back IOAM
+   options can be encoded as a succession of IOAM headers, with the same
+   single GPE protocol type appearing as the next protocol before each
+   IOAM header, but different sub-types within each IOAM header.
 
 4.2.  IOAM and the use of the VXLAN O-bit
 
    [I-D.ietf-nvo3-vxlan-gpe] defines an "O bit" for OAM packets.  Per
    [I-D.ietf-nvo3-vxlan-gpe] the O bit indicates that the packet
-   contains an OAM message instead of data payload.  Packets with IOAM
-   data do not change the use of the O bit: The O bit would be set of
-   OAM packets which carry IOAM data fields and would not be set of
-   regular data payload / customer traffic which carries IOAM data
-   fields.
+   contains an OAM message instead of data payload.  Packets that carry
+   IOAM data fields in addition to regular data payload / customer
+   traffic must not set the O bit.  Packets that carry only IOAM data
+   fields without any payload must set the O bit.
 
 5.  IANA Considerations
 
@@ -330,6 +327,9 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
    their needs.  Still, operators need to properly secure the IOAM
    domain to avoid malicious configuration and use, which could include
    injecting malicious IOAM packets into a domain.
+
+
+
 
 
 
@@ -366,9 +366,9 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
               in progress), October 2017.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
-              editor.org/info/rfc2119>.
+              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
+              RFC2119, March 1997, <https://www.rfc-editor.org/info/
+              rfc2119>.
 
    [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
               Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
@@ -401,9 +401,9 @@ Internet-Draft     In-situ OAM VXLAN-GPE encapsulation        March 2018
               progress), October 2017.
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665,
-              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
-              editor.org/info/rfc7665>.
+              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
+              RFC7665, October 2015, <https://www.rfc-editor.org/info/
+              rfc7665>.
 
 Authors' Addresses
 

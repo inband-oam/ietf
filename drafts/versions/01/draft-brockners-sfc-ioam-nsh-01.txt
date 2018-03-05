@@ -84,11 +84,11 @@ Table of Contents
      4.1.  Discussion of the encapsulation approach  . . . . . . . .   5
      4.2.  IOAM and the use of the NSH O-bit . . . . . . . . . . . .   6
    5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .   7
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
@@ -134,11 +134,11 @@ Internet-Draft        In-situ OAM NSH encapsulation           March 2018
 
    NSH is defined in [RFC8300].  IOAM data fields are carried in NSH
    using a next protocol header which follows the NSH MDx metadata TLVs.
-   The different IOAM data fields defined in [I-D.ietf-ippm-ioam-data]
-   are added as TLVs.  In an administrative domain where IOAM is used,
-   insertion of the IOAM protocol header in NSH is enabled at the NSH
-   tunnel endpoints which also serve as IOAM encapsulating/decapsulating
-   nodes by means of configuration.
+   An IOAM header is added containing the different IOAM data fields
+   defined in [I-D.ietf-ippm-ioam-data].  In an administrative domain
+   where IOAM is used, insertion of the IOAM header in NSH is enabled at
+   the NSH tunnel endpoints, which also serve as IOAM encapsulating/
+   decapsulating nodes by means of configuration.
 
 
 
@@ -204,19 +204,19 @@ Internet-Draft        In-situ OAM NSH encapsulation           March 2018
    IOAM-Type:  8-bit field defining the IOAM Option type, as defined in
       Section 7.2 of [I-D.ietf-ippm-ioam-data].
 
-   IOAM HDR Len:  8 bits Length field contains the length of the
-      variable IOAM data octets in 4-octet units.
+   IOAM HDR Len:  8 bit Length field contains the length of the IOAM
+      header in 4-octet units.
 
    Reserved bits:  Reserved bits are present for future use.  The
-      reserved bits MUST be set to 0x0.
+      reserved bits MUST be set to 0x0 upon transmission and ignored
+      upon receipt.
 
    Next Protocol:  8-bit unsigned integer that determines the type of
       header following IOAM protocol.
 
    IOAM Option and Data Space:  IOAM option header and data is present
-      as defined by the IOAM-Type field, and is defined in Section 4 of
-      [I-D.ietf-ippm-ioam-data].
-
+      as specified by the IOAM-Type field, and is defined in Section 4
+      of [I-D.ietf-ippm-ioam-data].
 
 
 
@@ -282,8 +282,8 @@ Brockners, et al.       Expires September 4, 2018               [Page 5]
 Internet-Draft        In-situ OAM NSH encapsulation           March 2018
 
 
-   Two approaches for encapsulating IOAM data fields in NSH could be
-   considered:
+   Different approaches for encapsulating IOAM data fields in NSH could
+   be considered:
 
    1.  Encapsulation of IOAM data fields as "NSH MD Type 2" (see
        [RFC8300], section 2.5).  Each IOAM data field option (trace,
@@ -297,10 +297,15 @@ Internet-Draft        In-situ OAM NSH encapsulation           March 2018
        field.  Each IOAM data field option (trace, proof-of-transit, and
        edge-to-edge) would be specified by its own "next protocol".
 
-   The second option has been chosen here, because it avoids the
+   3.  Encapsulation of IOAM data fields using the "Next Protocol"
+       field.  A single NSH protocol type code point would be allocated
+       for IOAM.  A "sub-type" field would then specify what IOAM
+       options type (trace, proof-of-transit, edge-to-edge) is carried.
+
+   The third option has been chosen here.  This option avoids the
    additional layer of TLV nesting that the use of NSH MD Type 2 would
-   result in.  In addition, the second option does not constrain IOAM
-   data to a maximum of 256 octets, thus allowing support for very large
+   result in.  In addition, this option does not constrain IOAM data to
+   a maximum of 256 octets, thus allowing support for very large
    deployments.
 
 4.2.  IOAM and the use of the NSH O-bit
@@ -310,7 +315,8 @@ Internet-Draft        In-situ OAM NSH encapsulation           March 2018
    packets.  Packets with IOAM data included MUST follow this
    definition, i.e. the O bit MUST NOT be set for regular customer
    traffic which also carries IOAM data and the O bit MUST be set for
-   OAM packets which carry IOAM data .
+   OAM packets which carry only IOAM data without any regular data
+   payload.
 
 5.  IANA Considerations
 
@@ -324,12 +330,6 @@ Internet-Draft        In-situ OAM NSH encapsulation           March 2018
                  +---------------+-------------+---------------+
 
 
-6.  Security Considerations
-
-   IOAM is considered a "per domain" feature, where one or several
-   operators decide on leveraging and configuring IOAM according to
-   their needs.  Still, operators need to properly secure the IOAM
-
 
 
 
@@ -338,6 +338,11 @@ Brockners, et al.       Expires September 4, 2018               [Page 6]
 Internet-Draft        In-situ OAM NSH encapsulation           March 2018
 
 
+6.  Security Considerations
+
+   IOAM is considered a "per domain" feature, where one or several
+   operators decide on leveraging and configuring IOAM according to
+   their needs.  Still, operators need to properly secure the IOAM
    domain to avoid malicious configuration and use, which could include
    injecting malicious IOAM packets into a domain.
 
@@ -360,9 +365,9 @@ Internet-Draft        In-situ OAM NSH encapsulation           March 2018
               progress), October 2017.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
-              editor.org/info/rfc2119>.
+              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
+              RFC2119, March 1997, <https://www.rfc-editor.org/info/
+              rfc2119>.
 
    [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
               Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
@@ -374,18 +379,13 @@ Internet-Draft        In-situ OAM NSH encapsulation           March 2018
               January 2002, <https://www.rfc-editor.org/info/rfc3232>.
 
    [RFC8300]  Quinn, P., Ed., Elzur, U., Ed., and C. Pignataro, Ed.,
-              "Network Service Header (NSH)", RFC 8300,
-              DOI 10.17487/RFC8300, January 2018, <https://www.rfc-
-              editor.org/info/rfc8300>.
+              "Network Service Header (NSH)", RFC 8300, DOI 10.17487/
+              RFC8300, January 2018, <https://www.rfc-editor.org/info/
+              rfc8300>.
 
-8.2.  Informative References
 
-   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
 
-   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665,
-              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
-              editor.org/info/rfc7665>.
+
 
 
 
@@ -393,6 +393,15 @@ Brockners, et al.       Expires September 4, 2018               [Page 7]
 
 Internet-Draft        In-situ OAM NSH encapsulation           March 2018
 
+
+8.2.  Informative References
+
+   [FD.io]    "Fast Data Project: FD.io", <https://fd.io/>.
+
+   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
+              RFC7665, October 2015, <https://www.rfc-editor.org/info/
+              rfc7665>.
 
 Authors' Addresses
 
@@ -435,19 +444,16 @@ Authors' Addresses
    Email: hannes@rtbrick.com
 
 
-   John Leddy
-   Comcast
-
-   Email: John_Leddy@cable.comcast.com
-
-
-
-
-
 
 Brockners, et al.       Expires September 4, 2018               [Page 8]
 
 Internet-Draft        In-situ OAM NSH encapsulation           March 2018
+
+
+   John Leddy
+   Comcast
+
+   Email: John_Leddy@cable.comcast.com
 
 
    Stephen Youell
@@ -488,12 +494,6 @@ Internet-Draft        In-situ OAM NSH encapsulation           March 2018
    2185 Park Boulevard
    Palo Alto, CA  94306
    US
-
-
-
-
-
-
 
 
 
