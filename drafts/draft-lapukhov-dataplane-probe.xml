@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced.
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC6830 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
+<!ENTITY RFC6833 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6833.xml">
+<!ENTITY RFC2460 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2460.xml">
+<!ENTITY RFC7276 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7276.xml">
+<!ENTITY RFC7112 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7112.xml">
+<!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY I-D.brockners-inband-oam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-data.xml">
+<!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
+<!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
+<!ENTITY I-D.brockners-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-proof-of-transit.xml">
+<!ENTITY I-D.penno-sfc-trace SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.penno-sfc-trace.xml">
+<!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
+<!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
+<!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-6man-pdm-option.xml">
+<!ENTITY I-D.gont-v6ops-ipv6-ehs-in-real-world SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.gont-v6ops-ipv6-ehs-in-real-world.xml">
+<!ENTITY I-D.brockners-lisp-sr SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-lisp-sr.xml">
+<!ENTITY I-D.hildebrand-spud-prototype SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY I-D.ietf-sfc-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-nsh.xml">
+<!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
+<!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.SPUD SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+]>
+<?rfc toc="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<?rfc symrefs="yes" ?>
+<rfc category="std" docName="draft-lapukhov-dataplane-probe-02"
+     ipr="trust200902" obsoletes="" submissionType="IETF" updates=""
+     xml:lang="en">
+  <front>
+    <title abbrev="draft-lapukhov-dataplane-probe">Data-plane probe for
+    in-band telemetry collection</title>
+
+    <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
+      <organization>Facebook</organization>
+
+      <address>
+        <postal>
+          <street>1 Hacker Way</street>
+
+          <city>Menlo Park</city>
+
+          <region>CA</region>
+
+          <code>94025</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>petr@fb.com</email>
+      </address>
+    </author>
+
+    <author fullname="Remy Chang" initials="R." surname="Chang">
+      <organization>Barefoot Networks</organization>
+
+      <address>
+        <postal>
+          <street>2185 Park Boulevard</street>
+
+          <city>Palo Alto</city>
+
+          <region>CA</region>
+
+          <code>94306</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>remy@barefootnetworks.com</email>
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <date day="16" month="March" year="2018"/>
+
+    <area>ops</area>
+
+    <workgroup>opsawg</workgroup>
+
+    <keyword>Internet Draft</keyword>
+
+    <keyword>ping</keyword>
+
+    <keyword>traceroute</keyword>
+
+    <keyword>inband</keyword>
+
+    <keyword>telemetry</keyword>
+
+    <abstract>
+      <t>Detecting and isolating network faults in IP networks has
+      traditionally been done using tools like ping and traceroute (see <xref
+      target="RFC7276"/>) or more complex systems built on similar concepts of
+      active probing and path tracing. While using active synthetic probes is
+      proven to be helpful in detecting data-plane faults, isolating fault
+      location is a much harder problem, especially in diverse networks with
+      multiple active forwarding planes (e.g. IP and MPLS). Moreover, existing
+      end-to-end tools do not generally support functionality beyond dealing
+      with packet loss - for example, they are hardly useful for detecting and
+      reporting transient (i.e. milli- or even micro-second) network
+      congestion.</t>
+
+      <t>Modern network forwarding hardware can allow for more sophisticated
+      data-plane functionality that provides substantial improvement to the
+      isolation and identification capabilities of network elements. For
+      example, it has become possible to encode a snapshot of a network
+      element's state within the packet payload as it transits the device. One
+      example of such state would be queue depth on the egress port taken by
+      that specific packet. When combined with a unique device identifier
+      embedded in the same packet, this could allow for precise time and
+      topological identification of the the congested location within the
+      network.</t>
+
+      <t>This document proposes a mechanism for requesting and embedding
+      telemetry information in active probes, i.e. packet designated for
+      actively testing the network while not carrying application traffic.
+      These active probes could be conveyed over multiple protocols (ICMP,
+      UDP, TCP, etc.) and the document does not prescribe any particular
+      transport. In addition, this document provides recommendations on
+      handling the active probes by devices that do not support the required
+      data-plane functionality.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="intro" title="Introduction" toc="default">
+      <t>Detecting and isolating faults in IP networks may involve multiple
+      tools and approaches, but by far the two most popular utilities used by
+      operators are ping and traceroute. The ping utility provides the basic
+      end-to-end connectivity check by sending a special ICMP packet. There
+      are other variants of ping that work using TCP or UDP probes, but may
+      require a special responder application (for UDP) on the other end of
+      the probed connection.</t>
+
+      <t>This type of active probing approach has its limitations. First, it
+      operates end-to-end and thus it is impossible to tell where in the path
+      the fault has happened from simply observing the packet loss ratios.
+      Secondly, in multipath (ECMP) scenarios it can be difficult to fully
+      and/or deterministically exercise all the possible paths connecting two
+      end-points.</t>
+
+      <t>The traceroute utility has multiple variants as well - UDP, ICMP and
+      TCP based, for instance, and special variant for MPLS LSP testing.
+      Practically all variants follow the same model of operations: varying
+      TTL field setting in outgoing probes and analyzing the returned ICMP
+      unreachable messages. This does allow isolating the fault down to the IP
+      hop that is losing packets, but has its own limitations. As with the
+      ping utility, it becomes complicated to explore all possible ECMP paths
+      in the network. This is especially problematic in large Clos fabric
+      topologies that are very common in large data-center networks. Next,
+      many network devices limit the rate of outgoing ICMP messages as well as
+      the rate of "exception" packets "punted" to the control plane processor.
+      This puts a functional limit on the packet rate that the traceroute can
+      probe a given hop with, and hence impacts the resolution and time to
+      isolate a fault. Lastly, the treatment for these control packets is
+      often different from the packets that take regular forwarding path: the
+      latter are normally not redirected to the control plane processor and
+      handled purely in the data-plane hardware.</t>
+
+      <t>Modern network processing elements (both hardware and software based)
+      are capable of packet handling beyond basic forwarding and simple header
+      modifications. Of special interest is the ability to capture and embed
+      instantaneous state from the network element and encode this state
+      directly into the transit packet. One example would be to record the
+      transit device's name, ingress and egress port identifiers, queueing
+      delays, timestamps and so on. By collecting this state along each
+      network device in the path, it becomes trivial to trace a probe's path
+      through the network as well as record transit device characteristics.
+      Extending this model, one could build a tool that combines the useful
+      properties of ping and traceroute using a single packet flight through
+      the network, without the constraints of control plane (aka "slow path")
+      processing. To aid in the development of such tooling, this document
+      defines a format for requesting and embedding telemetry information in
+      the body of active probing packets.</t>
+    </section>
+
+    <section title="Data plane probe">
+      <t>This section defines the structure of the active data-plane
+      probe.</t>
+
+      <section title="Probe transport" toc="default">
+        <t>This document does not prescribe any specific encapsulation for the
+        data-plane probe. For example, the probe could be embedded inside a
+        UDP packet, or within an IPv6 extension header or as TCP option.</t>
+      </section>
+
+      <section title="Probe structure" toc="default">
+        <t>The probe consists of a fixed-size "Probe-Message" and
+        variable-length "Telemetry Data Frames". Probe-Message and Telemetry
+        Data Frames are independent and can be embedded inside any layer of
+        transport. Telemetry Data Frames are typically updated at each hop,
+        are of variable length, and each frame, in turn, consists of multiple
+        "Telemetry Record" fields.</t>
+      </section>
+
+      <section title="Probe Message Format" toc="default">
+        <t>The probe message is of fixed-size. It identifies the packet as a
+        data-plane probe packet, type of the probe packet, context for
+        matching probe request and response.</t>
+
+        <figure anchor="header_format" title="Header Format">
+          <artwork><![CDATA[  
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Probe Marker (1)                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+    
+|                         Probe Marker (2)                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Version     | Message Type  |        Sender's Handle        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+]]></artwork>
+        </figure>
+
+        <t><list style="format (%d)">
+            <t>The "Probe Marker" fields are arbitrary 32-bit values generally
+            used by the probe initiator and responders to identify the packet
+            as a probe packet. These fields should be interpreted as unsigned
+            integer values, stored in network byte order. For example, a
+            network element may be configured to recognize a UDP packet
+            destined to port 31337 and having 0xDEAD 0xBEEF as the values in
+            "Probe Marker" field as an active probe, and treat it
+            respectively.</t>
+
+            <t>"Version Number" is currently set to 1.</t>
+
+            <t>The "Message Type" field value could be either "1" - "Probe" or
+            "2" - "Probe Reply"</t>
+
+            <t>The "Sender's Handle" field is set by the sender to allow the
+            receiver to identify a particular originator of probe packets.</t>
+          </list></t>
+      </section>
+
+      <section title="Use of Telemetry Data for Data Plane Probes">
+        <t>In case a data plane probe fails, or in cases details of how probe
+        data is transported in the network are to be derived, telemetry data
+        can be added to data plane probe packets to retrieve additional
+        details. In such a case, in-situ OAM (IOAM) data records (see <xref
+        target="I-D.brockners-inband-oam-data"/>) can be added to the data
+        plane probe packets. With IOAM, hop by hop path tracing information
+        can be added to the probe packets to support detailed fault detection
+        and fault isolation. An operational scenario could look as follows: An
+        operator observes a failure of a data plane probe for a particular
+        source, destination and port. The failure triggers the addition of
+        IOAM path tracing information to the data plane probe as well as
+        turning on IOAM loopback mode for tracing. As a result, data plane
+        probe packets now record the path that they are taking from source to
+        destination (and from destination to source, in case the operation is
+        done symmetrically). The loopback option ensures that source and
+        destination receive copies of the packets that arrive at intermediate
+        node, and from correlating that information can derive the failed
+        node(s) or link(s).</t>
+
+        <t>The following sections provide an overview of which data records
+        can be collected as part of IOAM within the data plane probe
+        packet.</t>
+
+        <section title="In-situ OAM Tracing Options">
+          <t>The <xref target="I-D.brockners-inband-oam-data"/> defined
+          Pre-allocated Trace Option and Incremental Trace Option to collect
+          trace information at each hop that the probe packet passes through
+          in the network. One or both these trace options can be included in
+          the probe packet. Using In-Situ OAM tracing option, the following
+          data could be collected in the probe:<list style="symbols">
+              <t>Identification of network element through which packet passes
+              through.</t>
+
+              <t>Identification of the interface that a packet was received on
+              the network element.</t>
+
+              <t>Identification of the interface that a packet was sent out on
+              the network element.</t>
+
+              <t>Timestamp at which the packet was processed by the network
+              element.</t>
+
+              <t>Transit Delay - Time packet spent in the transit at a network
+              element.</t>
+
+              <t>Queue Depth at egress interface on the network element.</t>
+
+              <t>Arbitrary state of the network element without a pre-defined
+              schema.</t>
+            </list></t>
+        </section>
+
+        <section title="In-situ OAM Edge-to-Edge Option">
+          <t>This refers to telemetry data added at the sender and not to be
+          modified by any transit nodes in network. Using In-situ OAM
+          Edge-to-Edge option, a sequence number could be added in probe
+          packet in order to detect packet loss, packet reordering, or packet
+          duplication in the network.</t>
+        </section>
+      </section>
+    </section>
+
+    <section anchor="loopback_mode" title="Operating in loopback mode"
+             toc="default">
+      <t>In "loopback" mode the flow of probes is "turned back" at each
+      network element while still forwarding the original probe packet. When
+      the L-bit is set in the flags field of the In-Situ-OAM Trace option it
+      is used to convey the network element to start loopback operation. The
+      network element that receives a probe packet having the L-bit set in
+      flags of the In-Situ-OAM Trace option is required to make a copy of the
+      packet before forwarding the packet. The node is to perform the
+      following on the copy of the packet: <list>
+          <t>Change the "Message Type" field to "Probe Reply".</t>
+
+          <t>Swap the destination IP addresses in the transport header with
+          source to send the packet back to the originator.</t>
+
+          <t>Use current address of the node as source address in transport
+          header.</t>
+
+          <t>Add a new telemetry data frame corresponding to the new
+          forwarding information in the In-situ OAM Trace Option.</t>
+        </list></t>
+
+      <t>This way, a copy of the original probe is routed back to originator.
+      Notice that the return path may be different from the path that the
+      original probe has taken. This path will be recorded by the network
+      elements as the reply is transported back to the sender. Using this
+      technique one may detect the location of an unreliable or broken link in
+      a path with just one probe packet.</t>
+
+      <t>If a network element is incapable of redirecting packets back to the
+      originator, another option would be to export those packets to a network
+      analyzer device. Details on how the packet might be exported are outside
+      the scope of this document.</t>
+    </section>
+
+    <section title="Processing Probe Packet" toc="default">
+      <section title="Detecting a probe" toc="default">
+        <t>As mentioned previously, a combination of techniques is required to
+        differentiate the active probes. This may include, but should not be
+        limited to using just the known position of "Probe Id" fields.</t>
+      </section>
+    </section>
+
+    <section title="Non-Capable Devices" toc="default">
+      <t>Non-capable devices are those that cannot process a probe natively in
+      the fast-path data plane. Further, there could be two types of such
+      devices: those that can still process it via the control-plane software,
+      and those that can not. The control-plane processing should be triggered
+      by use of the "Router-Alert" option for IPv4 of IPv6 packets (see <xref
+      target="RFC2113"/> or <xref target="RFC2711"/>) added by the originator
+      of the probe. A control-plane capable device is expected to interpret
+      and fill-in as much telemetry-record data as it possibly could, given
+      the limited abilities.</t>
+
+      <t>Network elements that are not capable of processing the data-plane
+      probes are expected to perform regular packet forwarding. If a network
+      element receives a packet with the router-alert option set, but has no
+      special configuration to detect such probes, it should process it
+      according to <xref target="RFC6398"/>. Absence of the router alert
+      option leaves the non dataplane-capable devices with the only option of
+      processing the probe using traditional forwarding.</t>
+    </section>
+
+    <section title="Handling data-plane probes in the MPLS domain"
+             toc="default">
+      <t>In general, the payload of an MPLS packet is opaque to the network
+      element. However, in many cases the network element still performs a
+      lookup beyond the MPLS label stack, e.g. to obtain information such as
+      L4 ports for load balancing. It may be possible to perform data-plane
+      probe classification in the same manner, additionally using the "Probe
+      Marker" to distinguish the probe packets.</t>
+
+      <t>In accordance to <xref target="RFC6178"/> Label Edge Routers (LERs)
+      are required not to impose an MPLS router-alert label for packets
+      carrying the router-alert option. It may be beneficial to enable such
+      translation, so that an end-to-end validation could be performed if a
+      control-plane capable MPLS network element is present on the probe's
+      path.</t>
+    </section>
+
+    <section title="IANA Considerations" toc="default">
+      <t>There are no IANA considerations for this draft.</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>Security considerations will be addressed &iacute;n a later version
+      of this document.</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.2113.xml"?>
+
+      <?rfc include="reference.RFC.2711.xml"?>
+
+      <?rfc include="reference.RFC.6398.xml"?>
+
+      <?rfc include="reference.RFC.6178.xml"?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include="reference.RFC.7276.xml"?>
+
+      &I-D.brockners-inband-oam-data;
+    </references>
+  </back>
+</rfc>
