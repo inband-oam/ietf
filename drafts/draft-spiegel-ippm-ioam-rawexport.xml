@@ -190,7 +190,7 @@
       traverses a path between two points in the network. This document
       discusses how In-situ Operations, Administration, and Maintenance (IOAM)
       information can be exported in raw, i.e. uninterpreted, format from
-      network devices to system, such as a monitoring or analytics system
+      network devices to systems, such as monitoring or analytics systems
       using IPFIX.</t>
     </abstract>
   </front>
@@ -200,10 +200,10 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. IOAM data fields are
-      defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>.This document
+      defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>. This document
       discusses how In-situ Operations, Administration, and Maintenance (IOAM)
       information can be exported in raw format, i.e. uninterpreted format,
-      from network devices to system, such as a monitoring or analytics system
+      from network devices to systems, such as monitoring or analytics systems
       using IPFIX <xref target="RFC7011"></xref>.</t>
 
       <t>"Raw export of IOAM data" refers to a mode of operation where a node
@@ -217,8 +217,8 @@
       performed by the "IOAM node" which performs IOAM data-plane operation,
       whereas the interpretation of IOAM data is performed by the IOAM data
       processing system. The separation of concerns is to off-load
-      interpretation, aggregation and formating of IOAM data from the node
-      which performs data-plane operations. Or in other words, a node which is
+      interpretation, aggregation and formatting of IOAM data from the node
+      which performs data-plane operations. In other words, a node which is
       focused on data-plane operations, i.e. forwarding of packets and
       handling IOAM data will not be tasked to also interpret the IOAM data,
       but can leave this task to another system. Note that for scalability
@@ -261,7 +261,7 @@
 
  Monitoring/Analytics system: System that receives telemetry and
             other operational information from a variety of
-            sources and and provides for correlation and
+            sources and provides for correlation and
             interpretation of the data received.
 
 ]]></artwork>
@@ -279,7 +279,7 @@
             <t>Export all IOAM information contained in a packet.</t>
 
             <t>Export a specific IOAM data type - Incremental Trace type,
-            Preallocate Trace type, Proof of Transit type, Edge to Edge
+            Preallocated Trace type, Proof of Transit type, Edge to Edge
             type.</t>
 
             <t>Support coalescing of the IOAM data from multiple packets into
@@ -290,8 +290,8 @@
             the packet header and/or parts of the packet payload. This
             additional information provides context to the IOAM data (e.g. to
             be used for flow identification) and is to enable the IOAM data
-            processing system to perform further analysis on the data
-            receive.</t>
+            processing system to perform further analysis on the received
+            data.</t>
 
             <t>Report the reason why IOAM data was exported. The "reason for
             export" is to complement the IOAM data retrieved from the packet.
@@ -338,7 +338,8 @@
           <t>Selection of particular destinations within distributed telemetry
           monitoring systems, to which IOAM reports will be sent</t>
 
-          <t>Export format for flow statistics or summarized flow records</t>
+          <t>Export format for flow statistics or
+          processed/interpreted/aggregated IOAM data</t>
         </list></t>
     </section>
 
@@ -356,8 +357,8 @@
       target="Requirements"></xref>.</t>
 
       <section title="Key IPFIX information elements leveraged for IOAM raw data export">
-        <t>The existing IPFIX Information Elements are required for IOAM raw
-        data export are listed here. Their details are available in IANA's
+        <t>The existing IPFIX Information Elements that are required for IOAM
+        raw data export are listed here. Their details are available in IANA's
         IPFIX registry <xref target="IANA-IPFIX"></xref>.</t>
 
         <t>The elements used to carry the sections of the packets including
@@ -369,7 +370,7 @@
             <t hangText="315">- dataLinkFrameSection</t>
           </list>The following Information Elements will be used to provide
         context to the ipHeaderPacketSection and dataLinkFrameSection as
-        descibed in <xref target="IANA-IPFIX"></xref>:</t>
+        described in <xref target="IANA-IPFIX"></xref>:</t>
 
         <t><list style="hanging">
             <t hangText="408">- dataLinkFrameType</t>
@@ -389,7 +390,7 @@
         <t>IOAM data raw export using IPFIX requires a set of new information
         elements which are described in this section.</t>
 
-        <section title="ioamReportFlags ">
+        <section anchor="ioamReportFlags" title="ioamReportFlags">
           <t>Description:</t>
 
           <t>This Information Element describes properties associated with an
@@ -409,7 +410,15 @@
               flow of interest.</t>
 
               <t hangText="Bit 3-7">Reserved</t>
-            </list>Abstract Data Type: unsigned8</t>
+            </list></t>
+
+          <t>IANA is requested to create a new subregistry for IOAM Report
+          Flags and fill it with the initial list from the description. New
+          assignments for IOAM Encapsulation Types are administered by IANA
+          through Expert Review <xref target="RFC5226"></xref> i.e., review by
+          one of a group of experts designated by an IETF Area Director.</t>
+
+          <t>Abstract Data Type: unsigned8</t>
 
           <t>Data Type Semantics: flags</t>
 
@@ -445,7 +454,7 @@
             </list></t>
 
           <t>IANA is requested to create a new subregistry for IOAM
-          Encapsulation Types and and fill it with the initial list from the
+          Encapsulation Types and fill it with the initial list from the
           description. New assignments for IOAM Encapsulation Types are
           administered by IANA through Expert Review
           <xref target="RFC5226"></xref> i.e., review by one of a group of
@@ -797,7 +806,8 @@
           <t hangText="TBD6">ioamPOTData</t>
         </list>See <xref target="newIPFIX"></xref> for further details.</t>
 
-      <t>IANA is requested to create a subregistry for ioamEncapsulationType
+      <t>IANA is requested to create subregistries for ioamReportFlags defined
+      in <xref target="ioamReportFlags"></xref> and ioamEncapsulationType
       defined in <xref target="ioamEncapsulationType"></xref>.</t>
     </section>
 

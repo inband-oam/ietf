@@ -21,8 +21,8 @@ Abstract
    traverses a path between two points in the network.  This document
    discusses how In-situ Operations, Administration, and Maintenance
    (IOAM) information can be exported in raw, i.e. uninterpreted, format
-   from network devices to system, such as a monitoring or analytics
-   system using IPFIX.
+   from network devices to systems, such as monitoring or analytics
+   systems using IPFIX.
 
 Status of This Memo
 
@@ -104,8 +104,8 @@ Table of Contents
    In-situ Operations, Administration, and Maintenance (IOAM) records
    operational and telemetry information in the packet while the packet
    traverses a path between two points in the network.  IOAM data fields
-   are defined in [I-D.ietf-ippm-ioam-data].This document discusses how
-   In-situ Operations, Administration, and Maintenance (IOAM)
+   are defined in [I-D.ietf-ippm-ioam-data].  This document discusses
+   how In-situ Operations, Administration, and Maintenance (IOAM)
 
 
 
@@ -115,8 +115,8 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
    information can be exported in raw format, i.e. uninterpreted format,
-   from network devices to system, such as a monitoring or analytics
-   system using IPFIX [RFC7011].
+   from network devices to systems, such as monitoring or analytics
+   systems using IPFIX [RFC7011].
 
    "Raw export of IOAM data" refers to a mode of operation where a node
    exports the IOAM data as it is received in the packet.  The exporting
@@ -130,8 +130,8 @@ Internet-Draft            IOAM raw data export                March 2018
    which performs IOAM data-plane operation, whereas the interpretation
    of IOAM data is performed by the IOAM data processing system.  The
    separation of concerns is to off-load interpretation, aggregation and
-   formating of IOAM data from the node which performs data-plane
-   operations.  Or in other words, a node which is focused on data-plane
+   formatting of IOAM data from the node which performs data-plane
+   operations.  In other words, a node which is focused on data-plane
    operations, i.e. forwarding of packets and handling IOAM data will
    not be tasked to also interpret the IOAM data, but can leave this
    task to another system.  Note that for scalability reasons, a single
@@ -204,7 +204,7 @@ Internet-Draft            IOAM raw data export                March 2018
 
     Monitoring/Analytics system: System that receives telemetry and
                other operational information from a variety of
-               sources and and provides for correlation and
+               sources and provides for correlation and
                interpretation of the data received.
 
 
@@ -227,7 +227,7 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
    o  Export a specific IOAM data type - Incremental Trace type,
-      Preallocate Trace type, Proof of Transit type, Edge to Edge type.
+      Preallocated Trace type, Proof of Transit type, Edge to Edge type.
 
    o  Support coalescing of the IOAM data from multiple packets into a
       single raw export packet.
@@ -237,7 +237,7 @@ Internet-Draft            IOAM raw data export                March 2018
       packet header and/or parts of the packet payload.  This additional
       information provides context to the IOAM data (e.g. to be used for
       flow identification) and is to enable the IOAM data processing
-      system to perform further analysis on the data receive.
+      system to perform further analysis on the received data.
 
    o  Report the reason why IOAM data was exported.  The "reason for
       export" is to complement the IOAM data retrieved from the packet.
@@ -285,7 +285,8 @@ Internet-Draft            IOAM raw data export                March 2018
    o  Selection of particular destinations within distributed telemetry
       monitoring systems, to which IOAM reports will be sent
 
-   o  Export format for flow statistics or summarized flow records
+   o  Export format for flow statistics or processed/interpreted/
+      aggregated IOAM data
 
 4.  IPFIX for IOAM raw data export
 
@@ -302,9 +303,9 @@ Internet-Draft            IOAM raw data export                March 2018
 
 4.1.  Key IPFIX information elements leveraged for IOAM raw data export
 
-   The existing IPFIX Information Elements are required for IOAM raw
-   data export are listed here.  Their details are available in IANA's
-   IPFIX registry [IANA-IPFIX].
+   The existing IPFIX Information Elements that are required for IOAM
+   raw data export are listed here.  Their details are available in
+   IANA's IPFIX registry [IANA-IPFIX].
 
    The elements used to carry the sections of the packets including IOAM
    data within it are as follows:
@@ -314,7 +315,7 @@ Internet-Draft            IOAM raw data export                March 2018
    315  - dataLinkFrameSection
 
    The following Information Elements will be used to provide context to
-   the ipHeaderPacketSection and dataLinkFrameSection as descibed in
+   the ipHeaderPacketSection and dataLinkFrameSection as described in
    [IANA-IPFIX]:
 
    408  - dataLinkFrameType
@@ -327,7 +328,6 @@ Internet-Draft            IOAM raw data export                March 2018
    status of the flow and any attached reasons.
 
    89 - forwardingStatus
-
 
 
 
@@ -362,6 +362,12 @@ Internet-Draft            IOAM raw data export                March 2018
 
    Bit 3-7  Reserved
 
+   IANA is requested to create a new subregistry for IOAM Report Flags
+   and fill it with the initial list from the description.  New
+   assignments for IOAM Encapsulation Types are administered by IANA
+   through Expert Review [RFC5226] i.e., review by one of a group of
+   experts designated by an IETF Area Director.
+
    Abstract Data Type: unsigned8
 
    Data Type Semantics: flags
@@ -380,12 +386,6 @@ Internet-Draft            IOAM raw data export                March 2018
 
    The following ioamEncapsulationType values are defined here:
 
-   0  None : IOAM data follows format defined in
-      [I-D.ietf-ippm-ioam-data]
-
-   1  GRE : IOAM data follows format defined in [I-D.weis-ippm-ioam-gre]
-
-
 
 
 
@@ -393,6 +393,11 @@ Spiegel, et al.        Expires September 20, 2018               [Page 7]
 
 Internet-Draft            IOAM raw data export                March 2018
 
+
+   0  None : IOAM data follows format defined in
+      [I-D.ietf-ippm-ioam-data]
+
+   1  GRE : IOAM data follows format defined in [I-D.weis-ippm-ioam-gre]
 
    2  VXLAN-GPE : IOAM data follows format defined in
       [I-D.brockners-ippm-ioam-vxlan-gpe]
@@ -404,8 +409,8 @@ Internet-Draft            IOAM raw data export                March 2018
       [I-D.brockners-sfc-ioam-nsh]
 
    IANA is requested to create a new subregistry for IOAM Encapsulation
-   Types and and fill it with the initial list from the description.
-   New assignments for IOAM Encapsulation Types are administered by IANA
+   Types and fill it with the initial list from the description.  New
+   assignments for IOAM Encapsulation Types are administered by IANA
    through Expert Review [RFC5226] i.e., review by one of a group of
    experts designated by an IETF Area Director.
 
@@ -437,11 +442,6 @@ Internet-Draft            IOAM raw data export                March 2018
 
    ElementId: TBD3
 
-   Status: current
-
-
-
-
 
 
 
@@ -449,6 +449,8 @@ Spiegel, et al.        Expires September 20, 2018               [Page 8]
 
 Internet-Draft            IOAM raw data export                March 2018
 
+
+   Status: current
 
 4.2.4.  ioamIncrementalTraceData
 
@@ -493,8 +495,6 @@ Internet-Draft            IOAM raw data export                March 2018
    ElementId: TBD5
 
    Status: current
-
-
 
 
 
@@ -900,8 +900,8 @@ Internet-Draft            IOAM raw data export                March 2018
 
    See Section 4.2 for further details.
 
-   IANA is requested to create a subregistry for ioamEncapsulationType
-   defined in Section 4.2.2.
+   IANA is requested to create subregistries for ioamReportFlags defined
+   in Section 4.2.1 and ioamEncapsulationType defined in Section 4.2.2.
 
 7.  Manageability Considerations
 
