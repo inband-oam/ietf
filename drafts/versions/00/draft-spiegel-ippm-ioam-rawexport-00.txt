@@ -86,16 +86,18 @@ Table of Contents
      5.2.  Variable Length IP Packet (length < 255)  . . . . . . . .  11
      5.3.  Variable Length IP Packet (length > 255)  . . . . . . . .  12
      5.4.  Variable Length ETHERNET Packet (length < 255)  . . . . .  13
-     5.5.  Variable Length IP Packet with IOAM Incremental Trace
-           Data  . . . . . . . . . . . . . . . . . . . . . . . . . .  14
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
-   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  16
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  17
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
+     5.5.  Variable Length IP Packet with Fixed Length IOAM
+           Incremental Trace Data  . . . . . . . . . . . . . . . . .  14
+     5.6.  Variable Length IP Packet with Variable Length IOAM
+           Incremental Trace Data  . . . . . . . . . . . . . . . . .  15
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
+   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  17
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  17
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  17
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  18
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
 
 1.  Introduction
 
@@ -104,8 +106,6 @@ Table of Contents
    traverses a path between two points in the network.  IOAM data fields
    are defined in [I-D.ietf-ippm-ioam-data].This document discusses how
    In-situ Operations, Administration, and Maintenance (IOAM)
-   information can be exported in raw format, i.e. uninterpreted format,
-
 
 
 
@@ -114,6 +114,7 @@ Spiegel, et al.        Expires September 20, 2018               [Page 2]
 Internet-Draft            IOAM raw data export                March 2018
 
 
+   information can be exported in raw format, i.e. uninterpreted format,
    from network devices to system, such as a monitoring or analytics
    system using IPFIX [RFC7011].
 
@@ -136,7 +137,6 @@ Internet-Draft            IOAM raw data export                March 2018
    task to another system.  Note that for scalability reasons, a single
    IOAM node could choose to export IOAM data to several IOAM data
    processing systems.
-
 
 
 
@@ -755,11 +755,11 @@ Internet-Draft            IOAM raw data export                March 2018
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
 
 
-5.5.  Variable Length IP Packet with IOAM Incremental Trace Data
+5.5.  Variable Length IP Packet with Fixed Length IOAM Incremental Trace
+      Data
 
    This examples shows a variable length IP packet with length < 255
-   bytes and ioamIncrementalTraceData carried separately.
-
+   bytes and fixed length ioamIncrementalTraceData carried separately.
 
 
 
@@ -799,6 +799,62 @@ Internet-Draft            IOAM raw data export                March 2018
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
 |    Set ID ( = Template ID)    |             Length            |SetHdr
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
+|               ioamIncrementalTraceData (start)                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                              ...                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|               ioamIncrementalTraceData (end)                  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Record1
+|ioamReportFlags| fwdingStatus  |ioamEncapType  | Length (< 255)|  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                 ipHeaderPacketSection (start)                 |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                              ...                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                 ipHeaderPacketSection (end)                   |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
+
+
+5.6.  Variable Length IP Packet with Variable Length IOAM Incremental
+      Trace Data
+
+   This examples shows a variable length IP packet with length < 255
+   bytes and variable length ioamIncrementalTraceData with length < 255
+   bytes carried separately.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Spiegel, et al.        Expires September 20, 2018              [Page 15]
+
+Internet-Draft            IOAM raw data export                March 2018
+
+
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
+|        Version Number         |             Length            |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                     Export Time (seconds)                     |IPFIX
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Message
+|                        Sequence Number                        |Header
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                     Observation Domain ID                     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
+|    Set ID ( = Template ID)    |             Length            |SetHdr
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
 |ioamReportFlags| fwdingStatus  |ioamEncapType  | Length (< 255)|  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
 |               ioamIncrementalTraceData (start)                |  |
@@ -815,7 +871,6 @@ Internet-Draft            IOAM raw data export                March 2018
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
 |                 ipHeaderPacketSection (end)                   |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
-
 
 
 6.  IANA Considerations
@@ -837,7 +892,8 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 15]
+
+Spiegel, et al.        Expires September 20, 2018              [Page 16]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -893,7 +949,7 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 16]
+Spiegel, et al.        Expires September 20, 2018              [Page 17]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -949,7 +1005,7 @@ Authors' Addresses
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 17]
+Spiegel, et al.        Expires September 20, 2018              [Page 18]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -1005,4 +1061,4 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 18]
+Spiegel, et al.        Expires September 20, 2018              [Page 19]
