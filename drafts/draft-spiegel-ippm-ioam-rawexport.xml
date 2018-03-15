@@ -1,0 +1,804 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced.
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC7665 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
+<!ENTITY RFC2119 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC7799 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
+<!ENTITY RFC7011 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7011.xml">
+<!ENTITY RFC5476 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5476.xml">
+<!ENTITY RFC6830 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
+<!ENTITY RFC7276 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7276.xml">
+<!ENTITY RFC7112 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7112.xml">
+<!ENTITY RFC6833 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6833.xml">
+<!ENTITY RFC2460 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2460.xml">
+<!ENTITY RFC791 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC6564 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY RFC7820 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7820.xml">
+<!ENTITY RFC7821 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7821.xml">
+<!ENTITY RFC8126 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
+<!ENTITY RFC5905 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
+<!ENTITY RFC5226 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5226.xml">
+<!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-6man-segment-routing-header.xml">
+<!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.ietf-nvo3-geneve SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-geneve.xml">
+<!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.ietf-ntp-packet-timestamps SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ntp-packet-timestamps.xml">
+<!ENTITY I-D.draft-ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-ippm-ioam-data-02.xml">
+<!ENTITY I-D.draft-ioam-gre SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-weis-ippm-ioam-gre-00.xml">
+<!ENTITY I-D.draft-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-brockners-sfc-ioam-nsh-01.xml">
+<!ENTITY I-D.draft-ioam-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-brockners-ippm-ioam-vxlan-gpe-00.xml">
+<!ENTITY I-D.draft-ioam-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-brockners-nvo3-ioam-geneve-00.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="info" docName="draft-spiegel-ippm-ioam-rawexport-00"
+     ipr="trust200902">
+  <!-- ipr="full3978"-->
+
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN"
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the
+         full title is longer than 39 characters -->
+
+    <title abbrev="IOAM raw data export">In-situ OAM raw data export with
+    IPFIX</title>
+
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+
+    <!-- Another author who claims to be an editor -->
+
+    <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
+      <organization abbrev="">Barefoot Networks</organization>
+
+      <address>
+        <postal>
+          <street>4750 Patrick Henry Drive</street>
+
+          <city>Santa Clara, CA</city>
+
+          <code>95054</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>mspiegel@barefootnetworks.com</email>
+      </address>
+    </author>
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Ramesh Sivakolundu" initials="R." surname="Sivakolundu">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>170 West Tasman Dr.</street>
+
+          <city>SAN JOSE, CA 95134</city>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>sramesh@cisco.com</email>
+      </address>
+    </author>
+
+    <date day="19" month="March" year="2018" />
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
+         in the current day for you. If only the current year is specified, xml2rfc will fill
+	 in the current day and month for you. If the year is not the current one, it is
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to
+	 specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>tsv</area>
+
+    <workgroup>ippm</workgroup>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>inband</keyword>
+
+    <keyword>Telemetry, Tracing,</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      discusses how In-situ Operations, Administration, and Maintenance (IOAM)
+      information can be exported in raw, i.e. uninterpreted, format from
+      network devices to system, such as a monitoring or analytics system
+      using IPFIX.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction" toc="default">
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. IOAM data fields are
+      defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>.This document
+      discusses how In-situ Operations, Administration, and Maintenance (IOAM)
+      information can be exported in raw format, i.e. uninterpreted format,
+      from network devices to system, such as a monitoring or analytics system
+      using IPFIX <xref target="RFC7011"></xref>.</t>
+
+      <t>"Raw export of IOAM data" refers to a mode of operation where a node
+      exports the IOAM data as it is received in the packet. The exporting
+      node neither interprets, aggregates nor reformats the IOAM data before
+      it is exported. Raw export of IOAM data is to support an operational
+      model where the processing and interpretation of IOAM data is decoupled
+      from the operation of encapsulating/updating/decapsulating IOAM data,
+      which is also referred to as IOAM data-plane operation. The figure below
+      shows the separation of concerns for IOAM export: Exporting IOAM data is
+      performed by the "IOAM node" which performs IOAM data-plane operation,
+      whereas the interpretation of IOAM data is performed by the IOAM data
+      processing system. The separation of concerns is to off-load
+      interpretation, aggregation and formating of IOAM data from the node
+      which performs data-plane operations. Or in other words, a node which is
+      focused on data-plane operations, i.e. forwarding of packets and
+      handling IOAM data will not be tasked to also interpret the IOAM data,
+      but can leave this task to another system. Note that for scalability
+      reasons, a single IOAM node could choose to export IOAM data to several
+      IOAM data processing systems.</t>
+
+      <t><figure>
+          <artwork><![CDATA[
+                    +-------------+
+                    | Monitoring/ |
+                    | Analytics   |
+                    | system      |
+                    +-------------+
+                           ^
+                           |  Processed/interpreted/aggregated
+                           |  IOAM data
+                           |
+                    +-------------+
+                    | IOAM data   |
+                    | processing  |
+                    | system      |
+                    +-------------+
+                           ^
+                           |  Raw export of
+                           |  IOAM data
+                           |
+                    +------------+
+                    |            |
+                ..--| IOAM node  |--..
+                    |            |
+                    +------------+
+
+
+ IOAM node: IOAM encapsulating, IOAM decapsulating or
+            IOAM transit node.
+
+ IOAM data processing system: System that receives raw IOAM data
+            and provides for formatting, aggregation and
+            interpretation of the IOAM data.
+
+ Monitoring/Analytics system: System that receives telemetry and
+            other operational information from a variety of
+            sources and and provides for correlation and
+            interpretation of the data received.
+
+]]></artwork>
+        </figure></t>
+
+      <t>Raw export of IOAM data is typically generated by network devices at
+      the edges of the network. Deployment and use-case dependent, such as in
+      cases where the operator is interested in dropped packets, raw export of
+      IOAM data may be generated by IOAM transit nodes.</t>
+
+      <section anchor="Requirements" title="Requirements">
+        <t>Requirements for raw export of IOAM data:</t>
+
+        <t><list style="symbols">
+            <t>Export all IOAM information contained in a packet.</t>
+
+            <t>Export a specific IOAM data type - Incremental Trace type,
+            Preallocate Trace type, Proof of Transit type, Edge to Edge
+            type.</t>
+
+            <t>Support coalescing of the IOAM data from multiple packets into
+            a single raw export packet.</t>
+
+            <t>Support export of additional parts of the packet, other than
+            the IOAM data as part of the raw export. This could be parts of
+            the packet header and/or parts of the packet payload. This
+            additional information provides context to the IOAM data (e.g. to
+            be used for flow identification) and is to enable the IOAM data
+            processing system to perform further analysis on the data
+            receive.</t>
+
+            <t>Report the reason why IOAM data was exported. The "reason for
+            export" is to complement the IOAM data retrieved from the packet.
+            For example, if a packet was dropped by a node due to congestion,
+            it could be helpful to export the IOAM data of this dropped packet
+            along with an indication that the packet that the IOAM data
+            belongs to was dropped due to congestion.</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section anchor="Conventions" title="Conventions">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119"></xref>.</t>
+
+      <t>Abbreviations used in this document:</t>
+
+      <t><list hangIndent="11" style="hanging">
+          <t hangText="E2E">Edge to Edge</t>
+
+          <t hangText="IOAM:">In-situ Operations, Administration, and
+          Maintenance</t>
+
+          <t hangText="MTU:">Maximum Transmit Unit</t>
+
+          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="POT:">Proof of Transit</t>
+        </list></t>
+    </section>
+
+    <section title="Scope, Applicability, and Assumptions ">
+      <t>The following is considered out of scope for this document:</t>
+
+      <t><list style="symbols">
+          <t>Configuration of network devices so that they can determine when
+          to generate IOAM reports, and what information to include in those
+          reports</t>
+
+          <t>Events that trigger generation of IOAM reports</t>
+
+          <t>Selection of particular destinations within distributed telemetry
+          monitoring systems, to which IOAM reports will be sent</t>
+
+          <t>Export format for flow statistics or summarized flow records</t>
+        </list></t>
+    </section>
+
+    <section title="IPFIX for IOAM raw data export">
+      <t>IPFIX, being a generic export protocol, can export any Information
+      Elements as long as they are described in the information model. IPFIX
+      protocol is well suited for and is defined as the protocol for exporting
+      packet samples in <xref target="RFC5476"></xref>.</t>
+
+      <t>IPFIX/PSAMP <xref target="RFC7011"></xref>, <xref
+      target="RFC5476"></xref> already define most of the information elements
+      needed for exporting sections of packets needed for deriving context and
+      raw IOAM data export. This document specifies required extensions of the
+      IPFIX information model for meeting the requirements in <xref
+      target="Requirements"></xref>.</t>
+
+      <section title="Key IPFIX information elements leveraged for IOAM raw data export">
+        <t>The existing IPFIX Information Elements are required for IOAM raw
+        data export are listed here. Their details are available in IANA's
+        IPFIX registry <xref target="IANA-IPFIX"></xref>.</t>
+
+        <t>The elements used to carry the sections of the packets including
+        IOAM data within it are as follows:</t>
+
+        <t><list style="hanging">
+            <t hangText="313">- ipHeaderPacketSection</t>
+
+            <t hangText="315">- dataLinkFrameSection</t>
+          </list>The following Information Elements will be used to provide
+        context to the ipHeaderPacketSection and dataLinkFrameSection as
+        descibed in <xref target="IANA-IPFIX"></xref>:</t>
+
+        <t><list style="hanging">
+            <t hangText="408">- dataLinkFrameType</t>
+
+            <t hangText="409">- sectionOffset</t>
+
+            <t hangText="410">- sectionExportedOctets</t>
+          </list>The following Information Element will be used to provide
+        forwarding status of the flow and any attached reasons.</t>
+
+        <t><list style="hanging">
+            <t hangText="89">- forwardingStatus</t>
+          </list></t>
+      </section>
+
+      <section title="New IPFIX information elements leveraged for IOAM raw data export">
+        <t>IOAM data raw export using IPFIX requires a set of new information
+        elements which are described in this section.</t>
+
+        <section title="ioamReportFlags ">
+          <t>Description:</t>
+
+          <t>This Information Element describes properties associated with an
+          IOAM report.</t>
+
+          <t>The ioamReportFlags data type is an 8-bit field. The following
+          bits are defined here:</t>
+
+          <t><list style="hanging">
+              <t hangText="Bit 0">Dropped Association - Dropped packet of
+              interest.</t>
+
+              <t hangText="Bit 1">Congested Queue Association - Indicates the
+              presence of congestion on a monitored queue.</t>
+
+              <t hangText="Bit 2">Tracked Flow Association &ndash; Matched a
+              flow of interest.</t>
+
+              <t hangText="Bit 3-7">Reserved</t>
+            </list>Abstract Data Type: unsigned8</t>
+
+          <t>Data Type Semantics: flags</t>
+
+          <t>ElementId: TBD1</t>
+
+          <t>Status: current</t>
+        </section>
+
+        <section anchor="ioamEncapsulationType" title="ioamEncapsulationType">
+          <t>Description:</t>
+
+          <t>This Information Element specifies the type of encapsulation to
+          interpret ioamPreallocatedTraceHeader, ioamIncrementalTraceHeader,
+          ioamE2EHeader, ioamPOTHeader.</t>
+
+          <t>The following ioamEncapsulationType are defined here:</t>
+
+          <t><list style="hanging">
+              <t hangText="0">GRE : IOAM data follows format defined in <xref
+              target="I-D.weis-ippm-ioam-gre"></xref></t>
+
+              <t hangText="1">VXLAN-GPE : IOAM data follows format defined in
+              <xref target="I-D.brockners-ippm-ioam-vxlan-gpe"></xref></t>
+
+              <t hangText="2">GENEVE : IOAM data follows format defined in
+              <xref target="I-D.brockners-nvo3-ioam-geneve"></xref></t>
+
+              <t hangText="3">NSH : IOAM data follows format defined in <xref
+              target="I-D.brockners-sfc-ioam-nsh"></xref></t>
+            </list></t>
+
+          <t>IANA is requested to create a new subregistry for IOAM
+          Encapsulation Types and and fill it with the initial list from the
+          description Information Element ioamEncapsulationType, New
+          assignments for IOAM Encapsulation Types are administered by IANA
+          through Expert Review <xref target="RFC5226"></xref> i.e., review by
+          one of a group of experts designated by an IETF Area Director.</t>
+
+          <t>Abstract Data Type: unsigned8</t>
+
+          <t>Data Type Semantics: identifier</t>
+
+          <t>ElementId: TBD2</t>
+
+          <t>Status: current</t>
+        </section>
+
+        <section title="ioamPreallocatedTraceData">
+          <t>Description:</t>
+
+          <t>This Information Element carries n octets of IOAM Preallocated
+          Trace data defined in <xref
+          target="I-D.ietf-ippm-ioam-data"></xref>.</t>
+
+          <t>The format of the data is determined by the ioamEncapsulationType
+          field.</t>
+
+          <t>Abstract Data Type: octetArray</t>
+
+          <t>ElementId: TBD3</t>
+
+          <t>Status: current</t>
+        </section>
+
+        <section title="ioamIncrementalTraceData">
+          <t>Description:</t>
+
+          <t>This Information Element carries n octets of IOAM Incremental
+          Trace data defined in <xref
+          target="I-D.ietf-ippm-ioam-data"></xref>.</t>
+
+          <t>The format of the data is determined by the ioamEncapsulationType
+          field.</t>
+
+          <t>Abstract Data Type: octetArray</t>
+
+          <t>ElementId: TBD4</t>
+
+          <t>Status: current</t>
+        </section>
+
+        <section title="ioamE2EData">
+          <t>Description:</t>
+
+          <t>This Information Element carries n octets of IOAM E2E data
+          defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
+
+          <t>The format of the data is determined by the ioamEncapsulationType
+          field.</t>
+
+          <t>Abstract Data Type: octetArray</t>
+
+          <t>ElementId: TBD5</t>
+
+          <t>Status: current</t>
+        </section>
+
+        <section title="ioamPOTData">
+          <t>Description:</t>
+
+          <t>This Information Element carries n octets of IOAM POT data
+          defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
+
+          <t>The format of the data is determined by the ioamEncapsulationType
+          field.</t>
+
+          <t>Abstract Data Type: octetArray</t>
+
+          <t>ElementId: TBD6</t>
+
+          <t>Status: current</t>
+        </section>
+      </section>
+    </section>
+
+    <section title="Examples">
+      <t>This section shows a set of examples of how IOAM information along
+      with other parts of the packet can be carried using IPFIX.</t>
+
+      <section title="Fixed Length IP Packet">
+        <t>This examples shows a fixed length IP packet. IOAM data is part of
+        the ipHeaderPacketSection.</t>
+
+        <t><figure>
+            <artwork><![CDATA[ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+---
+|        Version Number         |             Length            |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                     Export Time (seconds)                     |IPFIX
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Message
+|                        Sequence Number                        |Header
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                     Observation Domain ID                     |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|    Set ID ( = Template ID)    |             Length            |SetHdr
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|ioamReportFlags| fwdingStatus  |     sectionExportedOctets     |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (start)                 |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Record1
+|                              ...                              |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (end)                   |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|ioamReportFlags| fwdingStatus  |     sectionExportedOctets     |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (start)                 |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Record2
+|                              ...                              |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (end)                   |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="Variable Length IP Packet (length &lt; 255)">
+        <t>This examples shows a variable length IP packet, with length &lt;
+        255 bytes. IOAM data is part of the ipHeaderPacketSection.</t>
+
+        <t><figure>
+            <artwork><![CDATA[ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|        Version Number         |             Length            |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                     Export Time (seconds)                     |IPFIX
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Message
+|                        Sequence Number                        |Header
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                     Observation Domain ID                     |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|    Set ID ( = Template ID)    |             Length            |SetHdr
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|ioamReportFlags| fwdingStatus  | paddingOctets | Length (< 255)|   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (start)                 |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Record1
+|                              ...                              |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (end)                   |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|ioamReportFlags| fwdingStatus  | paddingOctets | Length (< 255)|   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (start)                 |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Record2
+|                              ...                              |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (end)                   |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="Variable Length IP Packet (length &gt; 255)">
+        <t>This examples shows a variable length IP packet, with length &gt;
+        255 bytes. IOAM data is part of the ipHeaderPacketSection.</t>
+
+        <t><figure>
+            <artwork><![CDATA[ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|        Version Number         |             Length            |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                     Export Time (seconds)                     |IPFIX
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Message
+|                        Sequence Number                        |Header
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                     Observation Domain ID                     |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|    Set ID ( = Template ID)    |             Length            |SetHdr
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|ioamReportFlags| fwdingStatus  |         paddingOctets         |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+| paddingOctets |      255      |      Length (0 to 65535)      |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (start)                 |Record1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                              ...                              |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                 ipHeaderPacketSection (end)                   |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="Variable Length ETHERNET Packet (length &lt; 255)">
+        <t>This examples shows a variable length Ethernet packet, with length
+        &lt; 255 bytes. IOAM data is part of the dataLinkFrameSection.</t>
+
+        <t><figure>
+            <artwork><![CDATA[ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|        Version Number         |             Length            |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                     Export Time (seconds)                     |IPFIX
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Message
+|                        Sequence Number                        |Header
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                     Observation Domain ID                     |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|    Set ID ( = Template ID)    |             Length            |SetHdr
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+|ioamReportFlags| fwdingStatus  |    dataLinkFrameType = 0x01   |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|       dataLinkFrameSize       | paddingOctets | Length (< 255)|   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                  dataLinkFrameSection (start)                 |Record1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                              ...                              |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+   |
+|                  dataLinkFrameSection (end)                   |   |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---+--
+
+]]></artwork>
+          </figure></t>
+      </section>
+
+      <section title="Variable Length IP Packet with IOAM Incremental Trace Data">
+        <t>This examples shows a variable length IP packet with length &lt;
+        255 bytes and ioamIncrementalTraceData carried separately.</t>
+
+        <t><figure>
+            <artwork><![CDATA[ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
+|        Version Number         |             Length            |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                     Export Time (seconds)                     |IPFIX
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Message
+|                        Sequence Number                        |Header
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                     Observation Domain ID                     |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
+|    Set ID ( = Template ID)    |             Length            |SetHdr
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
+|ioamReportFlags| fwdingStatus  |ioamEncapType  | Length (< 255)|  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|               ioamIncrementalTraceData (start)                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                              ...                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|               ioamIncrementalTraceData (end)                  |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+Record1
+|                 paddingOctets                 | Length (< 255)|  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                 ipHeaderPacketSection (start)                 |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                              ...                              |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                 ipHeaderPacketSection (end)                   |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+---
+
+
+]]></artwork>
+          </figure></t>
+      </section>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>IANA is requested to allocate code points for the following
+      Information Elements in <xref target="IANA-IPFIX"></xref>:</t>
+
+      <t><list style="hanging">
+          <t hangText="TBD1">ioamReportFlags</t>
+
+          <t hangText="TBD2">ioamEncapsulationType</t>
+
+          <t hangText="TBD3">ioamPreallocatedTraceData</t>
+
+          <t hangText="TBD4">ioamIncrementalTraceData</t>
+
+          <t hangText="TBD5">ioamE2EData</t>
+
+          <t hangText="TBD6">ioamPOTData</t>
+        </list>IANA is requested to create a subregistry for
+      ioamEncapsulationType defined in <xref
+      target="ioamEncapsulationType"></xref>.</t>
+    </section>
+
+    <section title="Manageability Considerations">
+      <t>Manageability considerations will be addressed &iacute;n a later
+      version of this document..</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>Security considerations will be addressed &iacute;n a later version
+      of this document.</t>
+    </section>
+
+    <section title="Acknowledgements">
+      <t>The authors would like to thank Barak Gafni, Tal Mizrahi, John Lemon,
+      and Aviv Kfir for their thoughts and comments on raw IOAM data
+      export.</t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <!-- References split into informative and normative -->
+
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
+     1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+     2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+        (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+
+     Both are cited textually in the same manner: by using xref elements.
+     If you use the PI option, xml2rfc will, by default, try to find included files in the same
+     directory as the including file. You can also define the XML_LIBRARY environment variable
+     with a value containing a set of directories to search.  These can be either in the local
+     filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+    <references title="Normative References">
+      &RFC2119;
+
+      &RFC7011;
+
+      &RFC5476;
+
+      &I-D.draft-ietf-ippm-ioam-data;
+    </references>
+
+    <references title="Informative References">
+      <reference anchor="IANA-IPFIX"
+                 target="https://www.iana.org/assignments/ipfix/ipfix.xhtml">
+        <front>
+          <title>IP Flow Information Export (IPFIX) Entities</title>
+
+          <author></author>
+
+          <date />
+        </front>
+      </reference>
+
+      &RFC5226;
+
+      &I-D.draft-ioam-gre;
+
+      &I-D.draft-ioam-nsh;
+
+      &I-D.draft-ioam-vxlan-gpe;
+
+      &I-D.draft-ioam-geneve;
+    </references>
+  </back>
+</rfc>
