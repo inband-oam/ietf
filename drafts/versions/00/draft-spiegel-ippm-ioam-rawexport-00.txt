@@ -78,24 +78,24 @@ Table of Contents
        4.2.1.  ioamReportFlags . . . . . . . . . . . . . . . . . . .   7
        4.2.2.  ioamEncapsulationType . . . . . . . . . . . . . . . .   7
        4.2.3.  ioamPreallocatedTraceData . . . . . . . . . . . . . .   8
-       4.2.4.  ioamIncrementalTraceData  . . . . . . . . . . . . . .   8
+       4.2.4.  ioamIncrementalTraceData  . . . . . . . . . . . . . .   9
        4.2.5.  ioamE2EData . . . . . . . . . . . . . . . . . . . . .   9
-       4.2.6.  ioamPOTData . . . . . . . . . . . . . . . . . . . . .   9
-   5.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     5.1.  Fixed Length IP Packet  . . . . . . . . . . . . . . . . .   9
-     5.2.  Variable Length IP Packet (length < 255)  . . . . . . . .  10
-     5.3.  Variable Length IP Packet (length > 255)  . . . . . . . .  11
-     5.4.  Variable Length ETHERNET Packet (length < 255)  . . . . .  12
+       4.2.6.  ioamPOTData . . . . . . . . . . . . . . . . . . . . .  10
+   5.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     5.1.  Fixed Length IP Packet  . . . . . . . . . . . . . . . . .  10
+     5.2.  Variable Length IP Packet (length < 255)  . . . . . . . .  11
+     5.3.  Variable Length IP Packet (length > 255)  . . . . . . . .  12
+     5.4.  Variable Length ETHERNET Packet (length < 255)  . . . . .  13
      5.5.  Variable Length IP Packet with IOAM Incremental Trace
-           Data  . . . . . . . . . . . . . . . . . . . . . . . . . .  13
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  14
-   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  15
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  15
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  15
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  15
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  16
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
+           Data  . . . . . . . . . . . . . . . . . . . . . . . . . .  14
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  16
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  16
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  17
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  17
 
 1.  Introduction
 
@@ -378,12 +378,12 @@ Internet-Draft            IOAM raw data export                March 2018
    interpret ioamPreallocatedTraceHeader, ioamIncrementalTraceHeader,
    ioamE2EHeader, ioamPOTHeader.
 
-   The following ioamEncapsulationType are defined here:
+   The following ioamEncapsulationType values are defined here:
 
-   0  GRE : IOAM data follows format defined in [I-D.weis-ippm-ioam-gre]
+   0  None : IOAM data follows format defined in
+      [I-D.ietf-ippm-ioam-data]
 
-   1  VXLAN-GPE : IOAM data follows format defined in
-      [I-D.brockners-ippm-ioam-vxlan-gpe]
+   1  GRE : IOAM data follows format defined in [I-D.weis-ippm-ioam-gre]
 
 
 
@@ -394,18 +394,20 @@ Spiegel, et al.        Expires September 20, 2018               [Page 7]
 Internet-Draft            IOAM raw data export                March 2018
 
 
-   2  GENEVE : IOAM data follows format defined in
+   2  VXLAN-GPE : IOAM data follows format defined in
+      [I-D.brockners-ippm-ioam-vxlan-gpe]
+
+   3  GENEVE : IOAM data follows format defined in
       [I-D.brockners-nvo3-ioam-geneve]
 
-   3  NSH : IOAM data follows format defined in
+   4  NSH : IOAM data follows format defined in
       [I-D.brockners-sfc-ioam-nsh]
 
    IANA is requested to create a new subregistry for IOAM Encapsulation
-   Types and and fill it with the initial list from the description
-   Information Element ioamEncapsulationType, New assignments for IOAM
-   Encapsulation Types are administered by IANA through Expert Review
-   [RFC5226] i.e., review by one of a group of experts designated by an
-   IETF Area Director.
+   Types and and fill it with the initial list from the description.
+   New assignments for IOAM Encapsulation Types are administered by IANA
+   through Expert Review [RFC5226] i.e., review by one of a group of
+   experts designated by an IETF Area Director.
 
    Abstract Data Type: unsigned8
 
@@ -423,13 +425,30 @@ Internet-Draft            IOAM raw data export                March 2018
    data defined in [I-D.ietf-ippm-ioam-data].
 
    The format of the data is determined by the ioamEncapsulationType
-   field.
+   information element, if present.  When the ioamEncapsulationType
+   information element is present and has a value other than "None", and
+   with sufficient length, this element may also report octets from
+   subsequent headers and payload.  If no ioamEncapsulationType
+   information element is present, then the encapsulation type shall be
+   assumed to be "None" and this information element only contains
+   octets from the IOAM Preallocated Trace Option.
 
    Abstract Data Type: octetArray
 
    ElementId: TBD3
 
    Status: current
+
+
+
+
+
+
+
+Spiegel, et al.        Expires September 20, 2018               [Page 8]
+
+Internet-Draft            IOAM raw data export                March 2018
+
 
 4.2.4.  ioamIncrementalTraceData
 
@@ -439,16 +458,15 @@ Internet-Draft            IOAM raw data export                March 2018
    data defined in [I-D.ietf-ippm-ioam-data].
 
    The format of the data is determined by the ioamEncapsulationType
-   field.
+   information element, if present.  When the ioamEncapsulationType
+   information element is present and has a value other than "None", and
+   with sufficient length, this element may also report octets from
+   subsequent headers and payload.  If no ioamEncapsulationType
+   information element is present, then the encapsulation type shall be
+   assumed to be "None" and this information element only contains
+   octets from the IOAM Incremental Trace Option.
 
    Abstract Data Type: octetArray
-
-
-
-Spiegel, et al.        Expires September 20, 2018               [Page 8]
-
-Internet-Draft            IOAM raw data export                March 2018
-
 
    ElementId: TBD4
 
@@ -462,13 +480,31 @@ Internet-Draft            IOAM raw data export                March 2018
    [I-D.ietf-ippm-ioam-data].
 
    The format of the data is determined by the ioamEncapsulationType
-   field.
+   information element, if present.  When the ioamEncapsulationType
+   information element is present and has a value other than "None", and
+   with sufficient length, this element may also report octets from
+   subsequent headers and payload.  If no ioamEncapsulationType
+   information element is present, then the encapsulation type shall be
+   assumed to be "None" and this information element only contains
+   octets from the IOAM Edge-to-Edge Option.
 
    Abstract Data Type: octetArray
 
    ElementId: TBD5
 
    Status: current
+
+
+
+
+
+
+
+
+Spiegel, et al.        Expires September 20, 2018               [Page 9]
+
+Internet-Draft            IOAM raw data export                March 2018
+
 
 4.2.6.  ioamPOTData
 
@@ -478,7 +514,13 @@ Internet-Draft            IOAM raw data export                March 2018
    [I-D.ietf-ippm-ioam-data].
 
    The format of the data is determined by the ioamEncapsulationType
-   field.
+   information element, if present.  When the ioamEncapsulationType
+   information element is present and has a value other than "None", and
+   with sufficient length, this element may also report octets from
+   subsequent headers and payload.  If no ioamEncapsulationType
+   information element is present, then the encapsulation type shall be
+   assumed to be "None" and this information element only contains
+   octets from the IOAM Proof of Transit Option.
 
    Abstract Data Type: octetArray
 
@@ -501,7 +543,21 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018               [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Spiegel, et al.        Expires September 20, 2018              [Page 10]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -557,7 +613,7 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 10]
+Spiegel, et al.        Expires September 20, 2018              [Page 11]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -613,7 +669,7 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 11]
+Spiegel, et al.        Expires September 20, 2018              [Page 12]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -669,7 +725,7 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 12]
+Spiegel, et al.        Expires September 20, 2018              [Page 13]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -725,7 +781,7 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 13]
+Spiegel, et al.        Expires September 20, 2018              [Page 14]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -781,10 +837,12 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 14]
+Spiegel, et al.        Expires September 20, 2018              [Page 15]
 
 Internet-Draft            IOAM raw data export                March 2018
 
+
+   See Section 4.2 for further details.
 
    IANA is requested to create a subregistry for ioamEncapsulationType
    defined in Section 4.2.2.
@@ -835,9 +893,7 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-
-
-Spiegel, et al.        Expires September 20, 2018              [Page 15]
+Spiegel, et al.        Expires September 20, 2018              [Page 16]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -893,7 +949,7 @@ Authors' Addresses
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 16]
+Spiegel, et al.        Expires September 20, 2018              [Page 17]
 
 Internet-Draft            IOAM raw data export                March 2018
 
@@ -949,4 +1005,4 @@ Internet-Draft            IOAM raw data export                March 2018
 
 
 
-Spiegel, et al.        Expires September 20, 2018              [Page 17]
+Spiegel, et al.        Expires September 20, 2018              [Page 18]

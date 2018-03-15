@@ -385,7 +385,7 @@
           </list></t>
       </section>
 
-      <section title="New IPFIX information elements leveraged for IOAM raw data export">
+      <section anchor="newIPFIX" title="New IPFIX information elements leveraged for IOAM raw data export">
         <t>IOAM data raw export using IPFIX requires a set of new information
         elements which are described in this section.</t>
 
@@ -425,28 +425,31 @@
           interpret ioamPreallocatedTraceHeader, ioamIncrementalTraceHeader,
           ioamE2EHeader, ioamPOTHeader.</t>
 
-          <t>The following ioamEncapsulationType are defined here:</t>
+          <t>The following ioamEncapsulationType values are defined here:</t>
 
           <t><list style="hanging">
-              <t hangText="0">GRE : IOAM data follows format defined in <xref
+              <t hangText="0">None : IOAM data follows format defined in <xref
+              target="I-D.ietf-ippm-ioam-data"></xref></t>
+
+              <t hangText="1">GRE : IOAM data follows format defined in <xref
               target="I-D.weis-ippm-ioam-gre"></xref></t>
 
-              <t hangText="1">VXLAN-GPE : IOAM data follows format defined in
+              <t hangText="2">VXLAN-GPE : IOAM data follows format defined in
               <xref target="I-D.brockners-ippm-ioam-vxlan-gpe"></xref></t>
 
-              <t hangText="2">GENEVE : IOAM data follows format defined in
+              <t hangText="3">GENEVE : IOAM data follows format defined in
               <xref target="I-D.brockners-nvo3-ioam-geneve"></xref></t>
 
-              <t hangText="3">NSH : IOAM data follows format defined in <xref
+              <t hangText="4">NSH : IOAM data follows format defined in <xref
               target="I-D.brockners-sfc-ioam-nsh"></xref></t>
             </list></t>
 
           <t>IANA is requested to create a new subregistry for IOAM
           Encapsulation Types and and fill it with the initial list from the
-          description Information Element ioamEncapsulationType, New
-          assignments for IOAM Encapsulation Types are administered by IANA
-          through Expert Review <xref target="RFC5226"></xref> i.e., review by
-          one of a group of experts designated by an IETF Area Director.</t>
+          description. New assignments for IOAM Encapsulation Types are
+          administered by IANA through Expert Review
+          <xref target="RFC5226"></xref> i.e., review by one of a group of
+          experts designated by an IETF Area Director.</t>
 
           <t>Abstract Data Type: unsigned8</t>
 
@@ -465,7 +468,13 @@
           target="I-D.ietf-ippm-ioam-data"></xref>.</t>
 
           <t>The format of the data is determined by the ioamEncapsulationType
-          field.</t>
+          information element, if present. When the ioamEncapsulationType
+          information element is present and has a value other than "None",
+          and with sufficient length, this element may also report octets from
+          subsequent headers and payload. If no ioamEncapsulationType
+          information element is present, then the encapsulation type shall be
+          assumed to be "None" and this information element only contains
+          octets from the IOAM Preallocated Trace Option.</t>
 
           <t>Abstract Data Type: octetArray</t>
 
@@ -482,7 +491,13 @@
           target="I-D.ietf-ippm-ioam-data"></xref>.</t>
 
           <t>The format of the data is determined by the ioamEncapsulationType
-          field.</t>
+          information element, if present. When the ioamEncapsulationType
+          information element is present and has a value other than "None",
+          and with sufficient length, this element may also report octets from
+          subsequent headers and payload. If no ioamEncapsulationType
+          information element is present, then the encapsulation type shall be
+          assumed to be "None" and this information element only contains
+          octets from the IOAM Incremental Trace Option.</t>
 
           <t>Abstract Data Type: octetArray</t>
 
@@ -498,7 +513,13 @@
           defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
 
           <t>The format of the data is determined by the ioamEncapsulationType
-          field.</t>
+          information element, if present. When the ioamEncapsulationType
+          information element is present and has a value other than "None",
+          and with sufficient length, this element may also report octets from
+          subsequent headers and payload. If no ioamEncapsulationType
+          information element is present, then the encapsulation type shall be
+          assumed to be "None" and this information element only contains
+          octets from the IOAM Edge-to-Edge Option.</t>
 
           <t>Abstract Data Type: octetArray</t>
 
@@ -514,7 +535,13 @@
           defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
 
           <t>The format of the data is determined by the ioamEncapsulationType
-          field.</t>
+          information element, if present. When the ioamEncapsulationType
+          information element is present and has a value other than "None",
+          and with sufficient length, this element may also report octets from
+          subsequent headers and payload. If no ioamEncapsulationType
+          information element is present, then the encapsulation type shall be
+          assumed to be "None" and this information element only contains
+          octets from the IOAM Proof of Transit Option.</t>
 
           <t>Abstract Data Type: octetArray</t>
 
@@ -730,9 +757,10 @@
           <t hangText="TBD5">ioamE2EData</t>
 
           <t hangText="TBD6">ioamPOTData</t>
-        </list>IANA is requested to create a subregistry for
-      ioamEncapsulationType defined in <xref
-      target="ioamEncapsulationType"></xref>.</t>
+        </list>See <xref target="newIPFIX"></xref> for further details.</t>
+
+      <t>IANA is requested to create a subregistry for ioamEncapsulationType
+      defined in <xref target="ioamEncapsulationType"></xref>.</t>
     </section>
 
     <section title="Manageability Considerations">
