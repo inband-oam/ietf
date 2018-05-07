@@ -6,6 +6,8 @@ VXLANVERSION=00
 GENEVEVERSION=00
 NSHVERSION=01
 GREVERSION=00
+EXPORTVERSION=00
+POTVERSION=05
 
 all:	drafts
 
@@ -21,10 +23,12 @@ draft-brockners-sfc-ioam-nsh: draft-brockners-sfc-ioam-nsh.xml
 	$(XML2RFC) $< -o $@-$(NSHVERSION).txt
 draft-weis-ippm-ioam-gre: draft-weis-ippm-ioam-gre.xml
 	$(XML2RFC) $< -o $@-$(GREVERSION).txt
+draft-spiegel-ippm-ioam-rawexport: draft-spiegel-ippm-ioam-rawexport.xml 
+	$(XML2RFC) $< -o $@-$(EXPORTVERSION).txt
 draft-brockners-inband-oam-requirements: draft-brockners-inband-oam-requirements.xml 
 	$(XML2RFC) $< -o $@-$(VERSION).txt
 draft-brockners-proof-of-transit: draft-brockners-proof-of-transit.xml
-	$(XML2RFC) $< -o $@-$(VERSION).txt
+	$(XML2RFC) $< -o $@-$(POTVERSION).txt
 data: draft-ietf-ippm-ioam-data.xml
 	cp draft-ietf-ippm-ioam-data-$(DVERSION).txt versions/$(DVERSION)/
 	ID-html-diffs draft-ietf-ippm-ioam-data-$(DVERSION).txt
@@ -37,7 +41,7 @@ encap: draft-brockners-ippm-ioam-vxlan-gpe draft-brockners-sfc-ioam-nsh draft-br
 
 carlos: data encap
 
-drafts: draft-ietf-ippm-ioam-data draft-brockners-inband-oam-requirements draft-brockners-proof-of-transit encap
+drafts: draft-ietf-ippm-ioam-data draft-brockners-inband-oam-requirements draft-brockners-proof-of-transit encap draft-spiegel-ippm-ioam-rawexport
 
 .PHONY: clean draft commit
 clean:
