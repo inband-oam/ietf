@@ -19,6 +19,7 @@
 <!ENTITY RFC7821 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7821.xml">
 <!ENTITY RFC8126 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
 <!ENTITY RFC5905 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
+<!ENTITY RFC7384 SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7384.xml">
 <!ENTITY I-D.brockners-proof-of-transit SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-proof-of-transit.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
@@ -32,6 +33,7 @@
 <!ENTITY I-D.ietf-nvo3-geneve SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-geneve.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.lapukhov-dataplane-probe.xml">
 <!ENTITY I-D.ietf-ntp-packet-timestamps SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ntp-packet-timestamps.xml">
+<!ENTITY I-D.brockners-proof-of-transit SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-proof-of-transit.xml">
 <!ENTITY I-D.SPUD SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
@@ -60,7 +62,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-02" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-03" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -1684,8 +1686,32 @@ IOAM proof of transit option of IOAM POT Type 0:
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>Security considerations will be addressed &iacute;n a later version
-      of this document. </t>
+      <t>As discussed in <xref target="RFC7276"/>, a successful attack on an OAM 
+	  protocol in general, and specifically on IOAM, can prevent the detection 
+	  of failures or anomalies, or create a false illusion of nonexistent ones.
+	  </t>
+	  
+	  <t>The Proof of Transit option (Section 
+	  <xref target="IOAM_proof_of_transit_option"/>) is used for verifying
+	  the path of data packets. The security considerations of POT are further
+	  discussed in <xref target="I-D.brockners-proof-of-transit"/>.</t>
+	  
+	  <t>The data elements of IOAM can be used for network reconnaissance, 
+	  allowing attackers to collect information about network paths, 
+	  performance, queue states, and other information.</t>
+	  
+	  <t>IOAM can be used as a means for implementing Denial of Service (DoS) 
+	  attacks, or for amplifying them. For example, a malicious attacker can add 
+	  an IOAM header to packets in order to consume the resources of network 
+	  devices that take part in IOAM or collectors that analyze the IOAM data.
+	  Another example is a packet length attack, in which an attacker pushes
+	  IOAM headers into data packets, causing these packets to be increased 
+	  beyond the MTU size, resulting in fragmentation or in packet drops.</t>
+	  
+	  <t>Since IOAM options may include timestamps, if network devices use
+	  synchronization protocols then any attack on the time protocol
+	  <xref target="RFC7384"/> can compromise the integrity of the 
+	  timestamp-related data fields.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -1774,6 +1800,10 @@ IOAM proof of transit option of IOAM POT Type 0:
 
       &RFC7821;
 
+      &RFC7384;
+	  
+      &RFC7276;
+
       &I-D.lapukhov-dataplane-probe;
 
       <reference anchor="I-D.kitamura-ipv6-record-route">
@@ -1802,6 +1832,9 @@ IOAM proof of transit option of IOAM POT Type 0:
       &I-D.ietf-nvo3-geneve;
 
       &I-D.ietf-ntp-packet-timestamps;
-    </references>
+
+      &I-D.brockners-proof-of-transit;
+
+	  </references>
   </back>
 </rfc>
