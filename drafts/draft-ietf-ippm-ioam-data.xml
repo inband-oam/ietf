@@ -26,15 +26,12 @@
 <!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-6man-pdm-option.xml">
 <!ENTITY I-D.gont-v6ops-ipv6-ehs-in-real-world SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.gont-v6ops-ipv6-ehs-in-real-world.xml">
 <!ENTITY I-D.brockners-lisp-sr SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-lisp-sr.xml">
-<!ENTITY I-D.hildebrand-spud-prototype SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY I-D.ietf-sfc-nsh SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-nsh.xml">
 <!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-6man-segment-routing-header.xml">
 <!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
 <!ENTITY I-D.ietf-nvo3-geneve SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-geneve.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.lapukhov-dataplane-probe.xml">
 <!ENTITY I-D.ietf-ntp-packet-timestamps SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ntp-packet-timestamps.xml">
-<!ENTITY I-D.brockners-proof-of-transit SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-proof-of-transit.xml">
-<!ENTITY I-D.SPUD SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -154,6 +151,7 @@
 
     <author fullname="John Leddy" initials="J." surname="Leddy">
       <organization abbrev="Comcast">Comcast</organization>
+
       <address>
         <postal>
           <street/>
@@ -206,7 +204,7 @@
     </author>
 
     <author fullname="David Mozes" initials="D." surname="Mozes">
-      <organization></organization>
+      <organization/>
 
       <address>
         <postal>
@@ -273,7 +271,6 @@
           <country>Canada</country>
         </postal>
 
-
         <email>daniel.bernier@bell.ca</email>
       </address>
     </author>
@@ -298,7 +295,7 @@
       </address>
     </author>
 
-    <date day="5" month="March" year="2018"/>
+    <date day="23" month="May" year="2018"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -346,30 +343,28 @@
       information within the packet while the packet traverses a particular
       network domain. The term "in-situ" refers to the fact that the OAM data
       is added to the data packets rather than is being sent within packets
-      specifically dedicated to OAM.  IOAM is to complement
-      mechanisms such as Ping or Traceroute, or more recent active probing
-      mechanisms as described in <xref
-      target="I-D.lapukhov-dataplane-probe"/>. In terms of "active" or
-      "passive" OAM, "in-situ" OAM can be considered a hybrid OAM type. While
-      no extra packets are sent, IOAM adds information to the packets
-      therefore cannot be considered passive. In terms of the classification
-      given in <xref target="RFC7799"/> IOAM could be portrayed as Hybrid Type
-      1. "In-situ" mechanisms do not require extra packets to be sent and
-      hence don't change the packet traffic mix within the network. IOAM
-      mechanisms can be leveraged where mechanisms using e.g. ICMP do not
-      apply or do not offer the desired results, such as proving that a
-      certain traffic flow takes a pre-defined path, SLA verification for the
-      live data traffic, detailed statistics on traffic distribution paths in
-      networks that distribute traffic across multiple paths, or scenarios in
-      which probe traffic is potentially handled differently from regular data
-      traffic by the network devices.</t>
+      specifically dedicated to OAM. IOAM is to complement mechanisms such as
+      Ping or Traceroute, or more recent active probing mechanisms as
+      described in <xref target="I-D.lapukhov-dataplane-probe"/>. In terms of
+      "active" or "passive" OAM, "in-situ" OAM can be considered a hybrid OAM
+      type. While no extra packets are sent, IOAM adds information to the
+      packets therefore cannot be considered passive. In terms of the
+      classification given in <xref target="RFC7799"/> IOAM could be portrayed
+      as Hybrid Type 1. "In-situ" mechanisms do not require extra packets to
+      be sent and hence don't change the packet traffic mix within the
+      network. IOAM mechanisms can be leveraged where mechanisms using e.g.
+      ICMP do not apply or do not offer the desired results, such as proving
+      that a certain traffic flow takes a pre-defined path, SLA verification
+      for the live data traffic, detailed statistics on traffic distribution
+      paths in networks that distribute traffic across multiple paths, or
+      scenarios in which probe traffic is potentially handled differently from
+      regular data traffic by the network devices.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
       "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref
-      target="RFC2119"/>.</t>
+      document are to be interpreted as described in [RFC2119].</t>
 
       <t>Abbreviations used in this document:</t>
 
@@ -455,7 +450,10 @@
       <t>Layering: If several encapsulation protocols (e.g., in case of
       tunneling) are stacked on top of each other, IOAM data-records could be
       present at every layer. The behavior follows the ships-in-the-night
-      model.</t>
+      model, i.e. IOAM data in one layer is independent from IOAM data in
+      another layer. Layering allows operators to instrument the protocol
+      layer they want to measure. The different layers could, but do not have
+      to share the same IOAM encapsulation and decapsulation.</t>
 
       <t>Combination with active OAM mechanisms: IOAM should be usable for
       active network probing, enabling for example a customized version of
@@ -1315,9 +1313,9 @@ IOAM proof of transit option of IOAM POT Type 0:
 
                 <t hangText="Bit 1">When set indicates presence of a 32-bit
                 sequence number added to a specific tube which is used to
-                detect packet loss, packet reordering, or packet
-                duplication for that tube. Each tube leverages a
-                dedicated namespace for its sequence numbers.</t>
+                detect packet loss, packet reordering, or packet duplication
+                for that tube. Each tube leverages a dedicated namespace for
+                its sequence numbers.</t>
 
                 <t hangText="Bit 2">When set indicates presence of timestamp
                 seconds for the transmission of the frame. This 4-octet field
@@ -1686,47 +1684,47 @@ IOAM proof of transit option of IOAM POT Type 0:
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>As discussed in <xref target="RFC7276"/>, a successful attack on an OAM 
-	  protocol in general, and specifically on IOAM, can prevent the detection 
-	  of failures or anomalies, or create a false illusion of nonexistent ones.
-	  </t>
-	  
-	  <t>The Proof of Transit option (Section 
-	  <xref target="IOAM_proof_of_transit_option"/>) is used for verifying
-	  the path of data packets. The security considerations of POT are further
-	  discussed in <xref target="I-D.brockners-proof-of-transit"/>.</t>
-	  
-	  <t>The data elements of IOAM can be used for network reconnaissance, 
-	  allowing attackers to collect information about network paths, 
-	  performance, queue states, and other information.</t>
-	  
-	  <t>IOAM can be used as a means for implementing Denial of Service (DoS) 
-	  attacks, or for amplifying them. For example, a malicious attacker can add 
-	  an IOAM header to packets in order to consume the resources of network 
-	  devices that take part in IOAM or collectors that analyze the IOAM data.
-	  Another example is a packet length attack, in which an attacker pushes
-	  IOAM headers into data packets, causing these packets to be increased 
-	  beyond the MTU size, resulting in fragmentation or in packet drops.</t>
-	  
-	  <t>Since IOAM options may include timestamps, if network devices use
-	  synchronization protocols then any attack on the time protocol
-	  <xref target="RFC7384"/> can compromise the integrity of the 
-	  timestamp-related data fields.</t>
+      <t>As discussed in <xref target="RFC7276"/>, a successful attack on an
+      OAM protocol in general, and specifically on IOAM, can prevent the
+      detection of failures or anomalies, or create a false illusion of
+      nonexistent ones.</t>
 
-	  <t>At the management plane, attacks may be implemented by misconfiguring 
-	  or by maliciously configuring IOAM-enabled nodes in a way that enables 
-	  other attacks. Thus, IOAM configuration should be secured in a way that
-	  authenticates authorized users and verifies the integrity of 
-	  configuration procedures.</t>
+      <t>The Proof of Transit option (Section <xref
+      target="IOAM_proof_of_transit_option"/>) is used for verifying the path
+      of data packets. The security considerations of POT are further
+      discussed in <xref target="I-D.brockners-proof-of-transit"/>.</t>
 
-  	  <t>Notably, IOAM is expected to be deployed in specific network domains, 
-	  thus confining the potential attack vectors to within the network domain.
-	  Indeed, in order to limit the scope of threats to within the current 
-	  network domain the network operator is expected to enforce policies 
-	  that prevent IOAM traffic from leaking outside of the IOAM domain, and 
-	  prevent IOAM data from outside the domain to be processed and used within
-	  the domain.</t> 
-	  
+      <t>The data elements of IOAM can be used for network reconnaissance,
+      allowing attackers to collect information about network paths,
+      performance, queue states, and other information.</t>
+
+      <t>IOAM can be used as a means for implementing Denial of Service (DoS)
+      attacks, or for amplifying them. For example, a malicious attacker can
+      add an IOAM header to packets in order to consume the resources of
+      network devices that take part in IOAM or collectors that analyze the
+      IOAM data. Another example is a packet length attack, in which an
+      attacker pushes IOAM headers into data packets, causing these packets to
+      be increased beyond the MTU size, resulting in fragmentation or in
+      packet drops.</t>
+
+      <t>Since IOAM options may include timestamps, if network devices use
+      synchronization protocols then any attack on the time protocol <xref
+      target="RFC7384"/> can compromise the integrity of the timestamp-related
+      data fields.</t>
+
+      <t>At the management plane, attacks may be implemented by misconfiguring
+      or by maliciously configuring IOAM-enabled nodes in a way that enables
+      other attacks. Thus, IOAM configuration should be secured in a way that
+      authenticates authorized users and verifies the integrity of
+      configuration procedures.</t>
+
+      <t>Notably, IOAM is expected to be deployed in specific network domains,
+      thus confining the potential attack vectors to within the network
+      domain. Indeed, in order to limit the scope of threats to within the
+      current network domain the network operator is expected to enforce
+      policies that prevent IOAM traffic from leaking outside of the IOAM
+      domain, and prevent IOAM data from outside the domain to be processed
+      and used within the domain.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -1816,7 +1814,7 @@ IOAM proof of transit option of IOAM POT Type 0:
       &RFC7821;
 
       &RFC7384;
-	  
+
       &RFC7276;
 
       &I-D.lapukhov-dataplane-probe;
@@ -1838,8 +1836,6 @@ IOAM proof of transit option of IOAM POT Type 0:
                 type="TXT"/>
       </reference>
 
-      &I-D.SPUD;
-
       &I-D.ietf-sfc-nsh;
 
       &I-D.ietf-nvo3-vxlan-gpe;
@@ -1849,7 +1845,6 @@ IOAM proof of transit option of IOAM POT Type 0:
       &I-D.ietf-ntp-packet-timestamps;
 
       &I-D.brockners-proof-of-transit;
-
-	  </references>
+    </references>
   </back>
 </rfc>

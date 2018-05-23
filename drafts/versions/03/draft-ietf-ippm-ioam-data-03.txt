@@ -5,7 +5,7 @@
 ippm                                                        F. Brockners
 Internet-Draft                                               S. Bhandari
 Intended status: Standards Track                            C. Pignataro
-Expires: September 6, 2018                                         Cisco
+Expires: November 24, 2018                                         Cisco
                                                               H. Gredler
                                                             RtBrick Inc.
                                                                 J. Leddy
@@ -24,7 +24,7 @@ Expires: September 6, 2018                                         Cisco
                                                              Bell Canada
                                                                 J. Lemon
                                                                 Broadcom
-                                                           March 5, 2018
+                                                            May 23, 2018
 
 
                       Data Fields for In-situ OAM
@@ -49,13 +49,13 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
 
 
-Brockners, et al.       Expires September 6, 2018               [Page 1]
+Brockners, et al.       Expires November 24, 2018               [Page 1]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    Internet-Drafts are draft documents valid for a maximum of six months
@@ -63,7 +63,7 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 6, 2018.
+   This Internet-Draft will expire on November 24, 2018.
 
 Copyright Notice
 
@@ -72,7 +72,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Brockners, et al.       Expires September 6, 2018               [Page 2]
+Brockners, et al.       Expires November 24, 2018               [Page 2]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
      7.7.  IOAM E2E Type Registry  . . . . . . . . . . . . . . . . .  29
@@ -120,7 +120,7 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  30
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  31
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  31
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  32
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  31
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  33
 
 1.  Introduction
@@ -165,9 +165,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018               [Page 3]
+Brockners, et al.       Expires November 24, 2018               [Page 3]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    MTU:       Maximum Transmit Unit
@@ -221,9 +221,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018               [Page 4]
+Brockners, et al.       Expires November 24, 2018               [Page 4]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    translate into ICMPv6 extensions to enable IOAM data fields to be
@@ -250,7 +250,10 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    Layering: If several encapsulation protocols (e.g., in case of
    tunneling) are stacked on top of each other, IOAM data-records could
    be present at every layer.  The behavior follows the ships-in-the-
-   night model.
+   night model, i.e. IOAM data in one layer is independent from IOAM
+   data in another layer.  Layering allows operators to instrument the
+   protocol layer they want to measure.  The different layers could, but
+   do not have to share the same IOAM encapsulation and decapsulation.
 
    Combination with active OAM mechanisms: IOAM should be usable for
    active network probing, enabling for example a customized version of
@@ -271,17 +274,17 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    different categories, e.g. edge-to-edge, per node tracing, or for
    proof of transit.  In IOAM these categories are referred to as IOAM-
    Types.  A common registry is maintained for IOAM-Types, see
+
+
+
+Brockners, et al.       Expires November 24, 2018               [Page 5]
+
+Internet-Draft           In-situ OAM Data Fields                May 2018
+
+
    Section 7.2 for details.  Corresponding to these IOAM-Types,
    different IOAM data fields are defined.  IOAM data fields can be
    encapsulated into a variety of protocols, such as NSH, Geneve, IPv6,
-
-
-
-Brockners, et al.       Expires September 6, 2018               [Page 5]
-
-Internet-Draft           In-situ OAM Data Fields              March 2018
-
-
    etc.  The definition of how IOAM data fields are encapsulated into
    other protocols is outside the scope of this document.
 
@@ -327,16 +330,16 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    are utilized at the same time, the Incremental Trace Option MUST be
    placed before the Pre-allocated Trace Option.  Given that the
    operator knows which equipment is deployed in a particular IOAM, the
+
+
+
+Brockners, et al.       Expires November 24, 2018               [Page 6]
+
+Internet-Draft           In-situ OAM Data Fields                May 2018
+
+
    operator will decide by means of configuration which type(s) of trace
    options will be enabled for a particular domain.
-
-
-
-
-Brockners, et al.       Expires September 6, 2018               [Page 6]
-
-Internet-Draft           In-situ OAM Data Fields              March 2018
-
 
    Pre-allocated Trace Option:  This trace option is defined as a
       container of node data fields with pre-allocated space for each
@@ -381,18 +384,19 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
    The following IOAM data is defined for IOAM tracing:
 
+
+
+
+
+
+Brockners, et al.       Expires November 24, 2018               [Page 7]
+
+Internet-Draft           In-situ OAM Data Fields                May 2018
+
+
    o  Identification of the IOAM node.  An IOAM node identifier can
       match to a device identifier or a particular control point or
       subsystem within a device.
-
-
-
-
-
-Brockners, et al.       Expires September 6, 2018               [Page 7]
-
-Internet-Draft           In-situ OAM Data Fields              March 2018
-
 
    o  Identification of the interface that a packet was received on,
       i.e. ingress interface.
@@ -441,13 +445,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-
-
-
-
-Brockners, et al.       Expires September 6, 2018               [Page 8]
+Brockners, et al.       Expires November 24, 2018               [Page 8]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    Pre-allocated and incremental trace option headers:
@@ -501,9 +501,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018               [Page 9]
+Brockners, et al.       Expires November 24, 2018               [Page 9]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
       Bit 2    When set indicates presence of timestamp seconds in the
@@ -557,9 +557,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 10]
+Brockners, et al.       Expires November 24, 2018              [Page 10]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    NodeLen:  5-bit unsigned integer.  This field specifies the length of
@@ -613,9 +613,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 11]
+Brockners, et al.       Expires November 24, 2018              [Page 11]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
       Bit 2-3  Reserved: Must be zero.
@@ -669,9 +669,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 12]
+Brockners, et al.       Expires November 24, 2018              [Page 12]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
       Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
@@ -725,9 +725,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 13]
+Brockners, et al.       Expires November 24, 2018              [Page 13]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
       three cases, the Timestamp Subseconds field contains the 32 least
@@ -781,9 +781,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 14]
+Brockners, et al.       Expires November 24, 2018              [Page 14]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
       to the analyzer by some out-of-band mechanism.  The specification
@@ -837,9 +837,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 15]
+Brockners, et al.       Expires November 24, 2018              [Page 15]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
          depend on the lower layer protocol that IOAM is encapsulated
@@ -893,9 +893,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 16]
+Brockners, et al.       Expires November 24, 2018              [Page 16]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
       1.  Recompute the UDP Checksum field.
@@ -949,9 +949,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 17]
+Brockners, et al.       Expires November 24, 2018              [Page 17]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1005,9 +1005,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 18]
+Brockners, et al.       Expires November 24, 2018              [Page 18]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1061,9 +1061,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 19]
+Brockners, et al.       Expires November 24, 2018              [Page 19]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    IOAM proof of transit option:
@@ -1117,9 +1117,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 20]
+Brockners, et al.       Expires November 24, 2018              [Page 20]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    IOAM proof of transit option of IOAM POT Type 0:
@@ -1173,9 +1173,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 21]
+Brockners, et al.       Expires November 24, 2018              [Page 21]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
 4.3.  IOAM Edge-to-Edge Option
@@ -1229,9 +1229,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 22]
+Brockners, et al.       Expires November 24, 2018              [Page 22]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
                bits of the timestamp format that is specified in
@@ -1285,9 +1285,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 23]
+Brockners, et al.       Expires November 24, 2018              [Page 23]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
         0                   1                   2                   3
@@ -1341,9 +1341,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 24]
+Brockners, et al.       Expires November 24, 2018              [Page 24]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
       allowing the timestamp to be measured with respect to the clock of
@@ -1397,9 +1397,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 25]
+Brockners, et al.       Expires November 24, 2018              [Page 25]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    Wraparound:
@@ -1453,9 +1453,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 26]
+Brockners, et al.       Expires November 24, 2018              [Page 26]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
       + Units: the unit is microseconds.  The value of this field is in
@@ -1509,9 +1509,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 27]
+Brockners, et al.       Expires November 24, 2018              [Page 27]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
 7.  IANA Considerations
@@ -1565,9 +1565,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 28]
+Brockners, et al.       Expires November 24, 2018              [Page 28]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
 7.3.  IOAM Trace Type Registry
@@ -1621,9 +1621,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 29]
+Brockners, et al.       Expires November 24, 2018              [Page 29]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
 9.  Security Considerations
@@ -1677,9 +1677,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 30]
+Brockners, et al.       Expires November 24, 2018              [Page 30]
 
-Internet-Draft           In-situ OAM Data Fields              March 2018
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    Nadahalli, LJ Wobker, Erik Nordmark, Vengada Prasad Govindan, and
@@ -1713,11 +1713,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
               <https://standards.ieee.org/findstds/
               standard/1003.1-2008.html>.
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
    [RFC5905]  Mills, D., Martin, J., Ed., Burbank, J., and W. Kasch,
               "Network Time Protocol Version 4: Protocol and Algorithms
               Specification", RFC 5905, DOI 10.17487/RFC5905, June 2010,
@@ -1728,16 +1723,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/info/rfc8126>.
 
-
-
-
-
-
-Brockners, et al.       Expires September 6, 2018              [Page 31]
-
-Internet-Draft           In-situ OAM Data Fields              March 2018
-
-
 11.2.  Informative References
 
    [I-D.brockners-proof-of-transit]
@@ -1746,10 +1731,12 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
               of Transit", draft-brockners-proof-of-transit-05 (work in
               progress), May 2018.
 
-   [I-D.hildebrand-spud-prototype]
-              Hildebrand, J. and B. Trammell, "Substrate Protocol for
-              User Datagrams (SPUD) Prototype", draft-hildebrand-spud-
-              prototype-03 (work in progress), March 2015.
+
+
+Brockners, et al.       Expires November 24, 2018              [Page 31]
+
+Internet-Draft           In-situ OAM Data Fields                May 2018
+
 
    [I-D.ietf-ntp-packet-timestamps]
               Mizrahi, T., Fabini, J., and A. Morton, "Guidelines for
@@ -1784,15 +1771,8 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    [RFC7276]  Mizrahi, T., Sprecher, N., Bellagamba, E., and Y.
               Weingarten, "An Overview of Operations, Administration,
               and Maintenance (OAM) Tools", RFC 7276,
-              DOI 10.17487/RFC7276, June 2014,
-              <https://www.rfc-editor.org/info/rfc7276>.
-
-
-
-Brockners, et al.       Expires September 6, 2018              [Page 32]
-
-Internet-Draft           In-situ OAM Data Fields              March 2018
-
+              DOI 10.17487/RFC7276, June 2014, <https://www.rfc-
+              editor.org/info/rfc7276>.
 
    [RFC7384]  Mizrahi, T., "Security Requirements of Time Protocols in
               Packet Switched Networks", RFC 7384, DOI 10.17487/RFC7384,
@@ -1800,18 +1780,25 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
               Chaining (SFC) Architecture", RFC 7665,
-              DOI 10.17487/RFC7665, October 2015,
-              <https://www.rfc-editor.org/info/rfc7665>.
+              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
+              editor.org/info/rfc7665>.
 
    [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
               Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
               May 2016, <https://www.rfc-editor.org/info/rfc7799>.
 
+
+
+Brockners, et al.       Expires November 24, 2018              [Page 32]
+
+Internet-Draft           In-situ OAM Data Fields                May 2018
+
+
    [RFC7820]  Mizrahi, T., "UDP Checksum Complement in the One-Way
               Active Measurement Protocol (OWAMP) and Two-Way Active
               Measurement Protocol (TWAMP)", RFC 7820,
-              DOI 10.17487/RFC7820, March 2016,
-              <https://www.rfc-editor.org/info/rfc7820>.
+              DOI 10.17487/RFC7820, March 2016, <https://www.rfc-
+              editor.org/info/rfc7820>.
 
    [RFC7821]  Mizrahi, T., "UDP Checksum Complement in the Network Time
               Protocol (NTP)", RFC 7821, DOI 10.17487/RFC7821, March
@@ -1837,19 +1824,6 @@ Authors' Addresses
    Email: shwethab@cisco.com
 
 
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires September 6, 2018              [Page 33]
-
-Internet-Draft           In-situ OAM Data Fields              March 2018
-
-
    Carlos Pignataro
    Cisco Systems, Inc.
    7200-11 Kit Creek Road
@@ -1863,6 +1837,17 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    RtBrick Inc.
 
    Email: hannes@rtbrick.com
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires November 24, 2018              [Page 33]
+
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    John Leddy
@@ -1895,17 +1880,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    Email: mosesster@gmail.com
 
 
-
-
-
-
-
-
-Brockners, et al.       Expires September 6, 2018              [Page 34]
-
-Internet-Draft           In-situ OAM Data Fields              March 2018
-
-
    Petr Lapukhov
    Facebook
    1 Hacker Way
@@ -1920,6 +1894,16 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
    4750 Patrick Henry Drive
    Santa Clara, CA  95054
    US
+
+
+
+
+
+
+
+Brockners, et al.       Expires November 24, 2018              [Page 34]
+
+Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
    Daniel Bernier
@@ -1957,4 +1941,20 @@ Internet-Draft           In-situ OAM Data Fields              March 2018
 
 
 
-Brockners, et al.       Expires September 6, 2018              [Page 35]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires November 24, 2018              [Page 35]
