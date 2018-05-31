@@ -1,0 +1,554 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml2rfc.tools.ietf.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced.
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC6830 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
+<!ENTITY RFC6833 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6833.xml">
+<!ENTITY RFC2460 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2460.xml">
+<!ENTITY RFC7276 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7276.xml">
+<!ENTITY RFC7112 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7112.xml">
+<!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
+<!ENTITY RFC3232 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3232.xml">
+<!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
+<!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
+<!ENTITY I-D.brockners-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-proof-of-transit.xml">
+<!ENTITY I-D.penno-sfc-trace SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.penno-sfc-trace.xml">
+<!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
+<!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
+<!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-6man-pdm-option.xml">
+<!ENTITY I-D.gont-v6ops-ipv6-ehs-in-real-world SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.gont-v6ops-ipv6-ehs-in-real-world.xml">
+<!ENTITY I-D.brockners-lisp-sr SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-lisp-sr.xml">
+<!ENTITY I-D.hildebrand-spud-prototype SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
+<!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.SPUD SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+     please see http://xml2rfc.tools.ietf.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="std" docName="draft-ietf-sfc-ioam-nsh-00"
+     ipr="trust200902">
+  <!-- ipr="full3978"-->
+
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN"
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the
+         full title is longer than 39 characters -->
+
+    <title abbrev="In-situ OAM NSH encapsulation">NSH Encapsulation for
+    In-situ OAM Data</title>
+
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+
+    <!-- Another author who claims to be an editor -->
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Vengada Prasad Govindan" initials="V."
+            surname="Govindan">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <email>venggovi@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>7200-11 Kit Creek Road</street>
+
+          <city>Research Triangle Park</city>
+
+          <region>NC</region>
+
+          <code>27709</code>
+
+          <country>United States</country>
+        </postal>
+
+        <email>cpignata@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Hannes Gredler" initials="H." surname="Gredler">
+      <organization>RtBrick Inc.</organization>
+
+      <address>
+        <email>hannes@rtbrick.com</email>
+      </address>
+    </author>
+
+    <author fullname="John Leddy" initials="J." surname="Leddy">
+      <organization abbrev="Comcast">Comcast</organization>
+
+      <address>
+        <email>John_Leddy@cable.comcast.com</email>
+      </address>
+    </author>
+
+    <author fullname="Stephen Youell" initials="S." surname="Youell">
+      <organization abbrev="JMPC">JP Morgan Chase</organization>
+
+      <address>
+        <postal>
+          <street>25 Bank Street</street>
+
+          <city>London</city>
+
+          <code>E14 5JP</code>
+
+          <country>United Kingdom</country>
+        </postal>
+
+        <email>stephen.youell@jpmorgan.com</email>
+      </address>
+    </author>
+
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
+      <organization abbrev="">Marvell</organization>
+
+      <address>
+        <postal>
+          <street>6 Hamada St.</street>
+
+          <city>Yokneam</city>
+
+          <code>20692</code>
+
+          <country>Israel</country>
+        </postal>
+
+        <email>talmi@marvell.com</email>
+      </address>
+    </author>
+
+    <author fullname="David Mozes" initials="D." surname="Mozes">
+      <organization></organization>
+
+      <address>
+        <postal>
+          <street/>
+
+          <city/>
+
+          <code/>
+
+          <country/>
+        </postal>
+
+        <email>mosesster@gmail.com</email>
+      </address>
+    </author>
+
+    <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
+      <organization abbrev="">Facebook</organization>
+
+      <address>
+        <postal>
+          <street>1 Hacker Way</street>
+
+          <city>Menlo Park, CA</city>
+
+          <code>94025</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>petr@fb.com</email>
+      </address>
+    </author>
+
+    <author fullname="Remy Chang" initials="R." surname="Chang">
+      <organization abbrev="">Barefoot Networks</organization>
+
+      <address>
+        <postal>
+          <street>2185 Park Boulevard</street>
+
+          <city>Palo Alto, CA</city>
+
+          <code>94306</code>
+
+          <country>US</country>
+        </postal>
+
+        <email/>
+      </address>
+    </author>
+
+    <date day="31" month="May" year="2018"/>
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
+         in the current day for you. If only the current year is specified, xml2rfc will fill
+	 in the current day and month for you. If the year is not the current one, it is
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to
+	 specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>rtg</area>
+
+    <workgroup>sfc</workgroup>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>inband</keyword>
+
+    <keyword>Telemetry, Tracing</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>In-situ Operations, Administration, and Maintenance (OAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      outlines how IOAM data fields are encapsulated in the Network Service
+      Header (NSH).</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction" toc="default">
+      <t>In-situ OAM (IOAM) records OAM information within the packet while
+      the packet traverses a particular network domain. The term "in-situ"
+      refers to the fact that the OAM data is added to the data packets rather
+      than is being sent within packets specifically dedicated to OAM. This
+      document defines how IOAM data fields are transported as part of the
+      Network Service Header (NSH) <xref target="RFC8300"/> encapsulation. The
+      IOAM data fields are defined in <xref
+      target="I-D.ietf-ippm-ioam-data"/>. An implementation of IOAM which
+      leverages NSH to carry the IOAM data is available from the FD.io open
+      source software project <xref target="FD.io"/>.</t>
+    </section>
+
+    <section anchor="Conventions" title="Conventions">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119"/>.</t>
+
+      <t>Abbreviations used in this document:</t>
+
+      <t><list hangIndent="11" style="hanging">
+          <t hangText="IOAM:">In-situ Operations, Administration, and
+          Maintenance</t>
+
+          <t hangText="NSH:">Network Service Header</t>
+
+          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="TLV:">Type, Length, Value</t>
+        </list></t>
+    </section>
+
+    <section title="IOAM data fields encapsulation in NSH">
+      <t>NSH is defined in <xref target="RFC8300"/>. IOAM data fields are
+      carried in NSH using a next protocol header which follows the NSH MDx
+      metadata TLVs. An IOAM header is added containing the different IOAM data
+      fields defined in <xref target="I-D.ietf-ippm-ioam-data"/>. In an
+      administrative domain where IOAM is used, insertion of the IOAM header in
+      NSH is enabled at the NSH tunnel endpoints, which also serve as IOAM
+      encapsulating/decapsulating nodes by means of configuration.</t>
+
+      <t><figure>
+          <artwork><![CDATA[ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|Ver|O|C|R|R|R|R|R|R|   Length  |  MD Type      | NP = TBD_IOAM |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  N
+|          Service Path Identifer               | Service Index |  S
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  H
+|                            ...                                |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|  IOAM-Type    | IOAM HDR len  |    Reserved   | Next Protocol |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
+!                                                               |  O
+!                                                               |  A
+~                 IOAM Option and Data Space                    ~  M
+|                                                               |  |
+|                                                               |  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+|                                                               |
+|                                                               |
+|                 Payload + Padding (L2/L3/ESP/...)             |
+|                                                               |
+|                                                               |
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+]]></artwork>
+        </figure></t>
+
+      <t>The NSH header and fields are defined in <xref target="RFC8300"/>.
+      The "NSH Next Protocol" value (referred to as "NP" in the diagram above)
+      is TBD_IOAM.</t>
+
+      <t>The IOAM related fields in NSH are defined as follows:</t>
+
+      <t><list style="hanging">
+          <t hangText="IOAM-Type:">8-bit field defining the IOAM Option type,
+          as defined in Section 7.2 of <xref
+          target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+          <t hangText="IOAM HDR Len:">8 bit Length field contains the length
+          of the IOAM header in 4-octet units.</t>
+
+          <t hangText="Reserved bits:">Reserved bits are present for future
+          use. The reserved bits MUST be set to 0x0 upon transmission and
+          ignored upon receipt.</t>
+
+          <t hangText="Next Protocol:">8-bit unsigned integer that determines
+          the type of header following IOAM protocol.</t>
+
+          <t hangText="IOAM Option and Data Space:">IOAM option header and
+          data is present as specified by the IOAM-Type field, and is defined
+          in Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+        </list>Multiple IOAM options MAY be included within the NSH
+      encapsulation. For example, if a NSH encapsulation contains two IOAM
+      options before a data payload, the Next Protocol field of the first IOAM
+      option will contain the value of TBD_IOAM, while the Next Protocol field
+      of the second IOAM option will contain the "NSH Next Protocol" number
+      indicating the type of the data payload.</t>
+    </section>
+
+    <section title="Considerations">
+      <t>This section summarizes a set of considerations on the overall
+      approach taken for IOAM data encapsulation in NSH, as well as deployment
+      considerations.</t>
+
+      <section title="Discussion of the encapsulation approach">
+        <t>This section is to support the working group discussion in
+        selecting the most appropriate approach for encapsulating IOAM data
+        fields in NSH.</t>
+
+        <t>An encapsulation of IOAM data fields in NSH should be friendly to
+        an implementation in both hardware as well as software forwarders and
+        support a wide range of deployment cases, including large networks
+        that desire to leverage multiple IOAM data fields at the same
+        time.</t>
+
+        <t><list style="empty">
+            <t>Hardware and software friendly implementation: Hardware
+            forwarders benefit from an encapsulation that minimizes iterative
+            look-ups of fields within the packet: Any operation which looks up
+            the value of a field within the packet, based on which another
+            lookup is performed, consumes additional gates and time in an
+            implementation - both of which are desired to be kept to a
+            minimum. This means that flat TLV structures are to be preferred
+            over nested TLV structures. IOAM data fields are grouped into
+            three option categories: Trace, proof-of-transit, and
+            edge-to-edge. Each of these three options defines a TLV structure.
+            A hardware-friendly encapsulation approach avoids grouping these
+            three option categories into yet another TLV structure, but would
+            rather carry the options as a serial sequence.</t>
+
+            <t>Total length of the IOAM data fields: The total length of IOAM
+            data can grow quite large in case multiple different IOAM data
+            fields are used and large path-lengths need to be considered. If
+            for example an operator would consider using the IOAM trace option
+            and capture node-id, app_data, egress/ingress interface-id,
+            timestamp seconds, timestamps nanoseconds at every hop, then a
+            total of 20 octets would be added to the packet at every hop. In
+            case this particular deployment would have a maximum path length
+            of 15 hops in the IOAM domain, then a maximum of 300 octets of
+            IOAM data were to be encapsulated in the packet.</t>
+          </list>Different approaches for encapsulating IOAM data fields in NSH
+        could be considered:</t>
+
+        <t><list style="numbers">
+            <t>Encapsulation of IOAM data fields as "NSH MD Type 2" (see <xref
+            target="RFC8300"/>, section 2.5). Each IOAM data field option
+            (trace, proof-of-transit, and edge-to-edge) would be specified by
+            a type, with the different IOAM data fields being TLVs within this
+            the particular option type. NSH MD Type 2 offers support for
+            variable length meta-data. The length field is 6-bits, resulting
+            in a maximum of 256 (2^6 x 4) octets.</t>
+
+            <t>Encapsulation of IOAM data fields using the "Next Protocol"
+            field. Each IOAM data field option (trace, proof-of-transit, and
+            edge-to-edge) would be specified by its own "next protocol".</t>
+
+            <t>Encapsulation of IOAM data fields using the "Next Protocol"
+            field. A single NSH protocol type code point would be allocated for
+            IOAM. A "sub-type" field would then specify what IOAM options type
+            (trace, proof-of-transit, edge-to-edge) is carried.</t>
+
+          </list>The third option has been chosen here. This option avoids the
+        additional layer of TLV nesting that the use of NSH MD Type 2 would
+        result in. In addition, this option does not constrain IOAM data to a
+        maximum of 256 octets, thus allowing support for very large
+        deployments.</t>
+      </section>
+
+      <section title="IOAM and the use of the NSH O-bit">
+        <t><xref target="RFC8300"/> defines an "O bit" for OAM packets. Per
+        <xref target="RFC8300"/> the O bit must be set for OAM packets and
+        must not be set for non-OAM packets. Packets with IOAM data included
+        MUST follow this definition, i.e. the O bit MUST NOT be set for
+        regular customer traffic which also carries IOAM data and the O bit
+        MUST be set for OAM packets which carry only IOAM data without any
+        regular data payload.</t>
+      </section>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>IANA is requested to allocate protocol numbers for the following "NSH
+      Next Protocol" related to IOAM:</t>
+
+      <t><figure>
+          <artwork><![CDATA[              +---------------+-------------+---------------+
+              | Next Protocol | Description | Reference     |
+              +---------------+-------------+---------------+
+              | x             | TBD_IOAM    | This document |
+              +---------------+-------------+---------------+
+
+]]></artwork>
+        </figure></t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>IOAM is considered a "per domain" feature, where one or several
+      operators decide on leveraging and configuring IOAM according to their
+      needs. Still, operators need to properly secure the IOAM domain to avoid
+      malicious configuration and use, which could include injecting malicious
+      IOAM packets into a domain.</t>
+    </section>
+
+    <section title="Acknowledgements">
+      <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+      Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+      Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker, and
+      Andrew Yourtchenko for the comments and advice.</t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <!-- References split into informative and normative -->
+
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
+     1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+     2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+        (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+
+     Both are cited textually in the same manner: by using xref elements.
+     If you use the PI option, xml2rfc will, by default, try to find included files in the same
+     directory as the including file. You can also define the XML_LIBRARY environment variable
+     with a value containing a set of directories to search.  These can be either in the local
+     filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+    <references title="Normative References">
+      &RFC2119;
+
+      &I-D.ietf-ippm-ioam-data;
+
+      &RFC8300;
+
+      &RFC2784;
+
+      &RFC3232;
+    </references>
+
+    <references title="Informative References">
+      &RFC7665;
+
+      <reference anchor="FD.io" target="https://fd.io/">
+        <front>
+          <title>Fast Data Project: FD.io</title>
+
+          <author/>
+
+          <date/>
+        </front>
+      </reference>
+    </references>
+  </back>
+</rfc>
