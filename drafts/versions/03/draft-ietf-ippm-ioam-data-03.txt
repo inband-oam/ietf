@@ -115,12 +115,11 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
      7.7.  IOAM E2E Type Registry  . . . . . . . . . . . . . . . . .  29
-   8.  Manageability Considerations  . . . . . . . . . . . . . . . .  29
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  30
-   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  30
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  31
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  31
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  31
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  29
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  30
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  31
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  31
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  31
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  33
 
 1.  Introduction
@@ -162,6 +161,7 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
               [I-D.ietf-nvo3-geneve]
 
    IOAM:      In-situ Operations, Administration, and Maintenance
+
 
 
 
@@ -1499,8 +1499,8 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
    process the information further and export the information using
    e.g., IPFIX.
 
-   The discussion of IOAM data processing and export is left for a
-   future version of this document.
+   Raw data export of IOAM data using IPFIX is discussed in
+   [I-D.spiegel-ippm-ioam-rawexport].
 
 
 
@@ -1610,12 +1610,12 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
    - 3 are defined in this document.  The meaning of Bit 4 - 15 are
    available for assignments via RFC Required process as per [RFC8126].
 
-8.  Manageability Considerations
+8.  Security Considerations
 
-   Manageability considerations will be addressed in a later version of
-   this document..
-
-
+   As discussed in [RFC7276], a successful attack on an OAM protocol in
+   general, and specifically on IOAM, can prevent the detection of
+   failures or anomalies, or create a false illusion of nonexistent
+   ones.
 
 
 
@@ -1625,13 +1625,6 @@ Brockners, et al.       Expires November 24, 2018              [Page 29]
 
 Internet-Draft           In-situ OAM Data Fields                May 2018
 
-
-9.  Security Considerations
-
-   As discussed in [RFC7276], a successful attack on an OAM protocol in
-   general, and specifically on IOAM, can prevent the detection of
-   failures or anomalies, or create a false illusion of nonexistent
-   ones.
 
    The Proof of Transit option (Section Section 4.2) is used for
    verifying the path of data packets.  The security considerations of
@@ -1669,10 +1662,17 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
    domain, and prevent IOAM data from outside the domain to be processed
    and used within the domain.
 
-10.  Acknowledgements
+9.  Acknowledgements
 
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+   Nadahalli, LJ Wobker, Erik Nordmark, Vengada Prasad Govindan, and
+   Andrew Yourtchenko for the comments and advice.
+
+   This document leverages and builds on top of several concepts
+   described in [I-D.kitamura-ipv6-record-route].  The authors would
+   like to acknowledge the work done by the author Hiroshi Kitamura and
+   people involved in writing it.
 
 
 
@@ -1682,21 +1682,13 @@ Brockners, et al.       Expires November 24, 2018              [Page 30]
 Internet-Draft           In-situ OAM Data Fields                May 2018
 
 
-   Nadahalli, LJ Wobker, Erik Nordmark, Vengada Prasad Govindan, and
-   Andrew Yourtchenko for the comments and advice.
-
-   This document leverages and builds on top of several concepts
-   described in [I-D.kitamura-ipv6-record-route].  The authors would
-   like to acknowledge the work done by the author Hiroshi Kitamura and
-   people involved in writing it.
-
    The authors would like to gracefully acknowledge useful review and
    insightful comments received from Joe Clarke, Al Morton, and Mickey
    Spiegel.
 
-11.  References
+10.  References
 
-11.1.  Normative References
+10.1.  Normative References
 
    [IEEE1588v2]
               Institute of Electrical and Electronics Engineers, "IEEE
@@ -1713,6 +1705,11 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
               <https://standards.ieee.org/findstds/
               standard/1003.1-2008.html>.
 
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
+
    [RFC5905]  Mills, D., Martin, J., Ed., Burbank, J., and W. Kasch,
               "Network Time Protocol Version 4: Protocol and Algorithms
               Specification", RFC 5905, DOI 10.17487/RFC5905, June 2010,
@@ -1723,13 +1720,16 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/info/rfc8126>.
 
-11.2.  Informative References
+10.2.  Informative References
 
    [I-D.brockners-proof-of-transit]
               Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
               Leddy, J., Youell, S., Mozes, D., and T. Mizrahi, "Proof
               of Transit", draft-brockners-proof-of-transit-05 (work in
               progress), May 2018.
+
+
+
 
 
 
@@ -1741,7 +1741,7 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
    [I-D.ietf-ntp-packet-timestamps]
               Mizrahi, T., Fabini, J., and A. Morton, "Guidelines for
               Defining Packet Timestamps", draft-ietf-ntp-packet-
-              timestamps-01 (work in progress), March 2018.
+              timestamps-02 (work in progress), June 2018.
 
    [I-D.ietf-nvo3-geneve]
               Gross, J., Ganga, I., and T. Sridhar, "Geneve: Generic
@@ -1768,6 +1768,12 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
               probe for in-band telemetry collection", draft-lapukhov-
               dataplane-probe-01 (work in progress), June 2016.
 
+   [I-D.spiegel-ippm-ioam-rawexport]
+              Spiegel, M., Brockners, F., Bhandari, S., and R.
+              Sivakolundu, "In-situ OAM raw data export with IPFIX",
+              draft-spiegel-ippm-ioam-rawexport-00 (work in progress),
+              March 2018.
+
    [RFC7276]  Mizrahi, T., Sprecher, N., Bellagamba, E., and Y.
               Weingarten, "An Overview of Operations, Administration,
               and Maintenance (OAM) Tools", RFC 7276,
@@ -1778,6 +1784,16 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
               Packet Switched Networks", RFC 7384, DOI 10.17487/RFC7384,
               October 2014, <https://www.rfc-editor.org/info/rfc7384>.
 
+
+
+
+
+
+Brockners, et al.       Expires November 24, 2018              [Page 32]
+
+Internet-Draft           In-situ OAM Data Fields                May 2018
+
+
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
               Chaining (SFC) Architecture", RFC 7665,
               DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
@@ -1786,13 +1802,6 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
    [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
               Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
               May 2016, <https://www.rfc-editor.org/info/rfc7799>.
-
-
-
-Brockners, et al.       Expires November 24, 2018              [Page 32]
-
-Internet-Draft           In-situ OAM Data Fields                May 2018
-
 
    [RFC7820]  Mizrahi, T., "UDP Checksum Complement in the One-Way
               Active Measurement Protocol (OWAMP) and Two-Way Active
@@ -1833,21 +1842,18 @@ Authors' Addresses
    Email: cpignata@cisco.com
 
 
-   Hannes Gredler
-   RtBrick Inc.
-
-   Email: hannes@rtbrick.com
-
-
-
-
-
 
 
 
 Brockners, et al.       Expires November 24, 2018              [Page 33]
 
 Internet-Draft           In-situ OAM Data Fields                May 2018
+
+
+   Hannes Gredler
+   RtBrick Inc.
+
+   Email: hannes@rtbrick.com
 
 
    John Leddy
@@ -1889,12 +1895,6 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
    Email: petr@fb.com
 
 
-   Remy Chang
-   Barefoot Networks
-   4750 Patrick Henry Drive
-   Santa Clara, CA  95054
-   US
-
 
 
 
@@ -1904,6 +1904,13 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
 Brockners, et al.       Expires November 24, 2018              [Page 34]
 
 Internet-Draft           In-situ OAM Data Fields                May 2018
+
+
+   Remy Chang
+   Barefoot Networks
+   4750 Patrick Henry Drive
+   Santa Clara, CA  95054
+   US
 
 
    Daniel Bernier
@@ -1920,13 +1927,6 @@ Internet-Draft           In-situ OAM Data Fields                May 2018
    US
 
    Email: john.lemon@broadcom.com
-
-
-
-
-
-
-
 
 
 
