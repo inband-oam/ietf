@@ -5,6 +5,7 @@
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC7605 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7605.xml">
 <!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
@@ -59,7 +60,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-brockners-ippm-ioam-vxlan-gpe-00"
+<rfc category="std" docName="draft-brockners-ippm-ioam-vxlan-gpe-01"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -275,7 +276,7 @@
       </address>
     </author>
 
-    <date day="3" month="March" year="2018"/>
+    <date day="27" month="June" year="2018"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -482,6 +483,22 @@
         data payload / customer traffic must not set the O bit. Packets that
         carry only IOAM data fields without any payload must set the O bit.</t>
       </section>
+
+      <section title="Transit devices">
+        <t>If IOAM is deployed in domains where UDP port numbers are not
+           controlled and do not have a domain-wide meaning, such as on the
+           global Internet, transit devices MUST NOT attempt to modify the
+           IOAM data contained in the IOAM header following the VXLAN-GPE 
+           header. In case UDP port numbers are not controlled there might
+           be UDP packets specifying the same UDP port number that VXLAN-GPE
+           utilizes, i.e. 4790, but with a payload that is not VXLAN-GPE.
+           The scenario and associated reasoning is discussed in
+           <xref target="RFC7605"/>
+           which states that "it is important to recognize that any
+           interpretation of port numbers -- except at the endpoints -- may
+           be incorrect, because port numbers are meaningful only at the endpoints."
+        </t>
+      </section>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -546,6 +563,8 @@
       &RFC2784;
 
       &RFC3232;
+
+      &RFC7605;
 
       <reference anchor="ETYPES"
                  target="https://www.iana.org/assignments/ethernet-numbers/ethernet-numbers.xhtml">
