@@ -22,6 +22,23 @@
     <title abbrev="In-situ OAM IPv6 encapsulation">In-situ OAM IPv6
     Options</title>
 
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
     <author fullname="Frank Brockners" initials="F." surname="Brockners">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
 
@@ -43,23 +60,6 @@
         <email>fbrockne@cisco.com</email>
 
         <!-- uri and facsimile elements may also be added -->
-      </address>
-    </author>
-
-    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-
-      <address>
-        <postal>
-          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
-          Road</street>
-
-          <city>Bangalore, KARNATAKA 560 087</city>
-
-          <country>India</country>
-        </postal>
-
-        <email>shwethab@cisco.com</email>
       </address>
     </author>
 
@@ -215,7 +215,7 @@
       </address>
     </author>
 
-    <date day="24" month="June" year="2018" />
+    <date day="29" month="June" year="2018" />
 
     <area>Transport Area, Internet</area>
 
@@ -264,14 +264,15 @@
     </section>
 
     <section title="In-situ OAM Metadata Transport in IPv6">
-      <t>IOAM data is carried in IPv6 packets as Hop-by-Hop or Destination
-      options. An IPv6 option is defined corresponding to each of the IOAM
-      data fields defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>.
-      This mechanisms of in-situ OAM in IPv6 is used to enhance diagnostics of
-      IPv6 networks. It complements other mechanisms proposed to enhance
+      <t>An IPv6 option is defined corresponding to each of the IOAM data
+      fields defined in <xref target="I-D.ietf-ippm-ioam-data"></xref>. This
+      mechanisms of in-situ OAM in IPv6 is used to enhance diagnostics of IPv6
+      networks. It complements other mechanisms proposed to enhance
       diagnostics of IPv6 networks, such as the IPv6 Performance and
       Diagnostic Metrics Destination Option described in <xref
-      target="RFC8250"></xref>.</t>
+      target="RFC8250"></xref>. IOAM data is carried in IPv6 packets as
+      Hop-by-Hop or Destination options as specified in the individual option
+      definition below.</t>
 
       <t>IPv6 hop-by-hop and destination option format for carrying in-situ
       OAM data fields:<figure>
@@ -315,35 +316,32 @@ Option Data          Variable-length field.  Option-Type-specific
           <t>Pre-allocated Tracing Option: The in-situ OAM Preallocated
           Tracing option defined in <xref
           target="I-D.ietf-ippm-ioam-data"></xref> is represented as a IPv6
-          option in hop by hop extension header or IPv6 destination options
-          extension headerby allocating following type: <list style="hanging">
+          option in hop by hop extension header by allocating following type:
+          <list style="hanging">
               <t hangText="Option Type:">001xxxxxx 8-bit identifier of the
               type of option. xxxxxx=TBD1.</t>
             </list></t>
 
           <t>Incremental Tracing Option: The in-situ OAM Incremental Tracing
           option defined in <xref target="I-D.ietf-ippm-ioam-data"></xref> is
-          represented as a IPv6 option in hop by hop extension header or Ipv6
-          destination options extension header by allocating following type:
-          <list style="hanging">
+          represented as a IPv6 option in hop by hop extension header by
+          allocating following type: <list style="hanging">
               <t hangText="Option Type:">001xxxxxx 8-bit identifier of the
               type of option. xxxxxx=TBD2.</t>
             </list></t>
 
           <t>Proof of Transit Option: The in-situ OAM POT option defined in
           <xref target="I-D.ietf-ippm-ioam-data"></xref> is represented as a
-          IPv6 option in hop by hop extension header or IPv6 destination
-          options extension header by allocating following type: <list
-              style="hanging">
+          IPv6 option in hop by hop extension header by allocating following
+          type: <list style="hanging">
               <t hangText="Option Type:">001xxxxxx 8-bit identifier of the
               type of option. xxxxxx=TBD3.</t>
             </list></t>
 
           <t>Edge to Edge Option: The in-situ OAM E2E option defined in <xref
           target="I-D.ietf-ippm-ioam-data"></xref> is represented as a IPv6
-          option in hop by hop extension header or IPv6 option in destination
-          options extension header by allocating following type: <list
-              style="hanging">
+          option in IPv6 option in destination options extension header by
+          allocating following type: <list style="hanging">
               <t hangText="Option Type:">000xxxxxx 8-bit identifier of the
               type of option. xxxxxx=TBD4.</t>
             </list></t>
@@ -351,10 +349,10 @@ Option Data          Variable-length field.  Option-Type-specific
       requirement. Following the convention in IPv6, these options are aligned
       in a packet so that multi-octet values within the Option Data field of
       each option are 4-octet aligned as specified in <xref
-      target="I-D.ietf-ippm-ioam-data"></xref>. In addition to maintain IPv6
+      target="I-D.ietf-ippm-ioam-data"></xref>. In addition, to maintain IPv6
       extenstion header 8-octet alignment requirement, Trace-Type for
       Incremental Tracing Option in IPv6 MUST be selected such that the IOAM
-      node data length is a multiple of 8-octets. </t>
+      node data length is a multiple of 8-octets.</t>
     </section>
 
     <section title="Security Considerations">
@@ -378,18 +376,17 @@ Option Data          Variable-length field.  Option-Type-specific
 
       <t><figure>
           <artwork><![CDATA[
-   Hex Value      Binary Value      Description             Reference
-                  act chg rest
-   -------------------------------------------------------------------
-   TBD_1          00   1   TBD1   IOAM Pre-allocated        [This draft]
-                                  Tracing Option
-   TBD_2          00   1   TBD2   IOAM Incremental          [This draft]
-                                  Tracing Option
-   TBD_3          00   1   TBD3   IOAM Proof of Transit     [This draft]
-                                  Option
-   TBD_4          00   0   TBD4   IOAM Edge to Edge         [This draft]
-                                  Option
-
+   Hex Value    Binary Value      Description           Reference
+                act chg rest
+   ----------------------------------------------------------------
+   TBD_1        00   1   TBD1   IOAM Pre-allocated      [This draft]
+                                Tracing Option
+   TBD_2        00   1   TBD2   IOAM Incremental        [This draft]
+                                Tracing Option
+   TBD_3        00   1   TBD3   IOAM Proof of Transit   [This draft]
+                                Option
+   TBD_4        00   0   TBD4   IOAM Edge to Edge       [This draft]
+                                Option
 ]]></artwork>
         </figure></t>
     </section>
@@ -399,16 +396,15 @@ Option Data          Variable-length field.  Option-Type-specific
       Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu Harichandra
       Babu, Akshaya Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark,
       LJ Wobker, and Andrew Yourtchenko for the comments and advice. For the
-      IPv6 encapsulation, this document leverages and builds on top of several
-      concepts described in <xref
+      IPv6 encapsulation, this document leverages concepts described in <xref
       target="I-D.kitamura-ipv6-record-route"></xref>. The authors would like
       to acknowledge the work done by the author Hiroshi Kitamura and people
       involved in writing it.</t>
     </section>
 
-    <!-- <section anchor="Acknowledgements" title="Acknowledgements"> -->
+    <!---->
 
-    <!-- </section> -->
+    <!-- -->
   </middle>
 
   <back>

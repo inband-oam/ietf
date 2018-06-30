@@ -2,10 +2,10 @@
 
 
 
-ippm,6man                                                   F. Brockners
-Internet-Draft                                               S. Bhandari
+ippm,6man                                                    S. Bhandari
+Internet-Draft                                              F. Brockners
 Intended status: Standards Track                            C. Pignataro
-Expires: December 26, 2018                                         Cisco
+Expires: December 31, 2018                                         Cisco
                                                               H. Gredler
                                                             RtBrick Inc.
                                                                 J. Leddy
@@ -23,7 +23,7 @@ Expires: December 26, 2018                                         Cisco
                                                        Barefoot Networks
                                                              S. Krishnan
                                                                   Kaloom
-                                                           June 24, 2018
+                                                           June 29, 2018
 
 
                         In-situ OAM IPv6 Options
@@ -53,12 +53,12 @@ Status of This Memo
 
 
 
-Brockners, et al.       Expires December 26, 2018               [Page 1]
+Bhandari, et al.        Expires December 31, 2018               [Page 1]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 
-   This Internet-Draft will expire on December 26, 2018.
+   This Internet-Draft will expire on December 31, 2018.
 
 Copyright Notice
 
@@ -87,7 +87,7 @@ Table of Contents
    6.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   6
    7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
      7.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
-     7.2.  Informative References  . . . . . . . . . . . . . . . . .   7
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   6
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Brockners, et al.       Expires December 26, 2018               [Page 2]
+Bhandari, et al.        Expires December 31, 2018               [Page 2]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
@@ -128,13 +128,14 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 3.  In-situ OAM Metadata Transport in IPv6
 
-   IOAM data is carried in IPv6 packets as Hop-by-Hop or Destination
-   options.  An IPv6 option is defined corresponding to each of the IOAM
-   data fields defined in [I-D.ietf-ippm-ioam-data].  This mechanisms of
-   in-situ OAM in IPv6 is used to enhance diagnostics of IPv6 networks.
-   It complements other mechanisms proposed to enhance diagnostics of
-   IPv6 networks, such as the IPv6 Performance and Diagnostic Metrics
-   Destination Option described in [RFC8250].
+   An IPv6 option is defined corresponding to each of the IOAM data
+   fields defined in [I-D.ietf-ippm-ioam-data].  This mechanisms of in-
+   situ OAM in IPv6 is used to enhance diagnostics of IPv6 networks.  It
+   complements other mechanisms proposed to enhance diagnostics of IPv6
+   networks, such as the IPv6 Performance and Diagnostic Metrics
+   Destination Option described in [RFC8250].  IOAM data is carried in
+   IPv6 packets as Hop-by-Hop or Destination options as specified in the
+   individual option definition below.
 
    IPv6 hop-by-hop and destination option format for carrying in-situ
    OAM data fields:
@@ -164,8 +165,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 
 
-
-Brockners, et al.       Expires December 26, 2018               [Page 3]
+Bhandari, et al.        Expires December 31, 2018               [Page 3]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
@@ -205,42 +205,38 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
    1.  Pre-allocated Tracing Option: The in-situ OAM Preallocated
        Tracing option defined in [I-D.ietf-ippm-ioam-data] is
-       represented as a IPv6 option in hop by hop extension header or
-       IPv6 destination options extension headerby allocating following
-       type:
+       represented as a IPv6 option in hop by hop extension header by
+       allocating following type:
 
        Option Type:  001xxxxxx 8-bit identifier of the type of option.
           xxxxxx=TBD1.
 
    2.  Incremental Tracing Option: The in-situ OAM Incremental Tracing
        option defined in [I-D.ietf-ippm-ioam-data] is represented as a
-       IPv6 option in hop by hop extension header or Ipv6 destination
-       options extension header by allocating following type:
-
-
-
-
-
-Brockners, et al.       Expires December 26, 2018               [Page 4]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
-
+       IPv6 option in hop by hop extension header by allocating
+       following type:
 
        Option Type:  001xxxxxx 8-bit identifier of the type of option.
           xxxxxx=TBD2.
 
+
+
+Bhandari, et al.        Expires December 31, 2018               [Page 4]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
+
+
    3.  Proof of Transit Option: The in-situ OAM POT option defined in
        [I-D.ietf-ippm-ioam-data] is represented as a IPv6 option in hop
-       by hop extension header or IPv6 destination options extension
-       header by allocating following type:
+       by hop extension header by allocating following type:
 
        Option Type:  001xxxxxx 8-bit identifier of the type of option.
           xxxxxx=TBD3.
 
    4.  Edge to Edge Option: The in-situ OAM E2E option defined in
-       [I-D.ietf-ippm-ioam-data] is represented as a IPv6 option in hop
-       by hop extension header or IPv6 option in destination options
-       extension header by allocating following type:
+       [I-D.ietf-ippm-ioam-data] is represented as a IPv6 option in IPv6
+       option in destination options extension header by allocating
+       following type:
 
        Option Type:  000xxxxxx 8-bit identifier of the type of option.
           xxxxxx=TBD4.
@@ -249,7 +245,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
    requirement.  Following the convention in IPv6, these options are
    aligned in a packet so that multi-octet values within the Option Data
    field of each option are 4-octet aligned as specified in
-   [I-D.ietf-ippm-ioam-data].  In addition to maintain IPv6 extenstion
+   [I-D.ietf-ippm-ioam-data].  In addition, to maintain IPv6 extenstion
    header 8-octet alignment requirement, Trace-Type for Incremental
    Tracing Option in IPv6 MUST be selected such that the IOAM node data
    length is a multiple of 8-octets.
@@ -277,23 +273,26 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 
 
-Brockners, et al.       Expires December 26, 2018               [Page 5]
+
+
+
+
+Bhandari, et al.        Expires December 31, 2018               [Page 5]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 
-   Hex Value      Binary Value      Description             Reference
-                  act chg rest
-   -------------------------------------------------------------------
-   TBD_1          00   1   TBD1   IOAM Pre-allocated        [This draft]
-                                  Tracing Option
-   TBD_2          00   1   TBD2   IOAM Incremental          [This draft]
-                                  Tracing Option
-   TBD_3          00   1   TBD3   IOAM Proof of Transit     [This draft]
-                                  Option
-   TBD_4          00   0   TBD4   IOAM Edge to Edge         [This draft]
-                                  Option
-
+      Hex Value    Binary Value      Description           Reference
+                   act chg rest
+      ----------------------------------------------------------------
+      TBD_1        00   1   TBD1   IOAM Pre-allocated      [This draft]
+                                   Tracing Option
+      TBD_2        00   1   TBD2   IOAM Incremental        [This draft]
+                                   Tracing Option
+      TBD_3        00   1   TBD3   IOAM Proof of Transit   [This draft]
+                                   Option
+      TBD_4        00   0   TBD4   IOAM Edge to Edge       [This draft]
+                                   Option
 
 6.  Acknowledgements
 
@@ -301,11 +300,10 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
    Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu Harichandra
    Babu, Akshaya Nadahalli, Stefano Previdi, Hemant Singh, Erik
    Nordmark, LJ Wobker, and Andrew Yourtchenko for the comments and
-   advice.  For the IPv6 encapsulation, this document leverages and
-   builds on top of several concepts described in
-   [I-D.kitamura-ipv6-record-route].  The authors would like to
-   acknowledge the work done by the author Hiroshi Kitamura and people
-   involved in writing it.
+   advice.  For the IPv6 encapsulation, this document leverages concepts
+   described in [I-D.kitamura-ipv6-record-route].  The authors would
+   like to acknowledge the work done by the author Hiroshi Kitamura and
+   people involved in writing it.
 
 7.  References
 
@@ -319,26 +317,26 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
               progress), October 2017.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
-              RFC2119, March 1997, <https://www.rfc-editor.org/info/
-              rfc2119>.
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+7.2.  Informative References
 
 
 
 
 
 
-Brockners, et al.       Expires December 26, 2018               [Page 6]
+
+Bhandari, et al.        Expires December 31, 2018               [Page 6]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
-
-7.2.  Informative References
 
    [I-D.kitamura-ipv6-record-route]
               Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
@@ -346,9 +344,9 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
               (work in progress), November 2000.
 
    [RFC8200]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
-              (IPv6) Specification", STD 86, RFC 8200, DOI 10.17487/
-              RFC8200, July 2017, <https://www.rfc-editor.org/info/
-              rfc8200>.
+              (IPv6) Specification", STD 86, RFC 8200,
+              DOI 10.17487/RFC8200, July 2017, <https://www.rfc-
+              editor.org/info/rfc8200>.
 
    [RFC8250]  Elkins, N., Hamilton, R., and M. Ackermann, "IPv6
               Performance and Diagnostic Metrics (PDM) Destination
@@ -357,15 +355,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 Authors' Addresses
 
-   Frank Brockners
-   Cisco Systems, Inc.
-   Hansaallee 249, 3rd Floor
-   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
-   Germany
-
-   Email: fbrockne@cisco.com
-
-
    Shwetha Bhandari
    Cisco Systems, Inc.
    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
@@ -373,6 +362,15 @@ Authors' Addresses
    India
 
    Email: shwethab@cisco.com
+
+
+   Frank Brockners
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
 
 
    Carlos Pignataro
@@ -384,20 +382,16 @@ Authors' Addresses
    Email: cpignata@cisco.com
 
 
-
-
-
-
-
-Brockners, et al.       Expires December 26, 2018               [Page 7]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
-
-
    Hannes Gredler
    RtBrick Inc.
 
    Email: hannes@rtbrick.com
+
+
+
+Bhandari, et al.        Expires December 31, 2018               [Page 7]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 
    John Leddy
@@ -445,7 +439,13 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 
 
-Brockners, et al.       Expires December 26, 2018               [Page 8]
+
+
+
+
+
+
+Bhandari, et al.        Expires December 31, 2018               [Page 8]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
@@ -501,4 +501,4 @@ Internet-Draft       In-situ OAM IPv6 encapsulation            June 2018
 
 
 
-Brockners, et al.       Expires December 26, 2018               [Page 9]
+Bhandari, et al.        Expires December 31, 2018               [Page 9]
