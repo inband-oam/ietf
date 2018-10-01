@@ -2,38 +2,42 @@
 
 
 
-Network Working Group                                       F. Brockners
+ippm                                                        F. Brockners
 Internet-Draft                                               S. Bhandari
-Intended status: Experimental                                    S. Dara
-Expires: April 4, 2019                                      C. Pignataro
-                                                                   Cisco
+Intended status: Standards Track                            C. Pignataro
+Expires: May 3, 2018                                               Cisco
+                                                              H. Gredler
+                                                            RtBrick Inc.
                                                                 J. Leddy
                                                                  Comcast
                                                                S. Youell
                                                                     JPMC
-                                                                D. Mozes
-
                                                               T. Mizrahi
                                                                  Marvell
-                                                               A. Aguado
-                                       Universidad Politecnica de Madrid
-                                                                D. Lopez
-                                                          Telefonica I+D
-                                                         October 1, 2018
+                                                                D. Mozes
+                                              Mellanox Technologies Ltd.
+                                                             P. Lapukhov
+                                                                Facebook
+                                                                R. Chang
+                                                       Barefoot Networks
+                                                              D. Bernier
+                                                             Bell Canada
+                                                        October 30, 2017
 
 
-                            Proof of Transit
-                   draft-ietf-sfc-proof-of-transit-00
+                      Data Fields for In-situ OAM
+                      draft-ietf-ippm-ioam-data-01
 
 Abstract
 
-   Several technologies such as Traffic Engineering (TE), Service
-   Function Chaining (SFC), and policy based routing are used to steer
-   traffic through a specific, user-defined path.  This document defines
-   mechanisms to securely prove that traffic transited said defined
-   path.  These mechanisms allow to securely verify whether, within a
-   given path, all packets traversed all the nodes that they are
-   supposed to visit.
+   In-situ Operations, Administration, and Maintenance (IOAM) records
+   operational and telemetry information in the packet while the packet
+   traverses a path between two points in the network.  This document
+   discusses the data fields and associated data types for in-situ OAM.
+   In-situ OAM data fields can be embedded into a variety of transports
+   such as NSH, Segment Routing, Geneve, native IPv6 (via extension
+   header), or IPv4.  In-situ OAM can be used to complement OAM
+   mechanisms based on e.g.  ICMP or other types of probe packets.
 
 Status of This Memo
 
@@ -43,31 +47,32 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                  [Page 1]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-
-
-
-Brockners, et al.         Expires April 4, 2019                 [Page 1]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-   This Internet-Draft will expire on April 4, 2019.
+   This Internet-Draft will expire on May 3, 2018.
 
 Copyright Notice
 
-   Copyright (c) 2018 IETF Trust and the persons identified as the
+   Copyright (c) 2017 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -78,1190 +83,1414 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   3.  Proof of Transit  . . . . . . . . . . . . . . . . . . . . . .   5
-     3.1.  Basic Idea  . . . . . . . . . . . . . . . . . . . . . . .   5
-     3.2.  Solution Approach . . . . . . . . . . . . . . . . . . . .   6
-       3.2.1.  Setup . . . . . . . . . . . . . . . . . . . . . . . .   7
-       3.2.2.  In Transit  . . . . . . . . . . . . . . . . . . . . .   7
-       3.2.3.  Verification  . . . . . . . . . . . . . . . . . . . .   7
-     3.3.  Illustrative Example  . . . . . . . . . . . . . . . . . .   7
-       3.3.1.  Basic Version . . . . . . . . . . . . . . . . . . . .   7
-         3.3.1.1.  Secret Shares . . . . . . . . . . . . . . . . . .   8
-         3.3.1.2.  Lagrange Polynomials  . . . . . . . . . . . . . .   8
-         3.3.1.3.  LPC Computation . . . . . . . . . . . . . . . . .   8
-         3.3.1.4.  Reconstruction  . . . . . . . . . . . . . . . . .   9
-         3.3.1.5.  Verification  . . . . . . . . . . . . . . . . . .   9
-       3.3.2.  Enhanced Version  . . . . . . . . . . . . . . . . . .   9
-         3.3.2.1.  Random Polynomial . . . . . . . . . . . . . . . .   9
-         3.3.2.2.  Reconstruction  . . . . . . . . . . . . . . . . .  10
-         3.3.2.3.  Verification  . . . . . . . . . . . . . . . . . .  10
-       3.3.3.  Final Version . . . . . . . . . . . . . . . . . . . .  11
-     3.4.  Operational Aspects . . . . . . . . . . . . . . . . . . .  11
-     3.5.  Ordered POT (OPOT)  . . . . . . . . . . . . . . . . . . .  12
-       3.5.1.  Nested Encryption . . . . . . . . . . . . . . . . . .  12
-       3.5.2.  Symmetric Masking Between Nodes . . . . . . . . . . .  12
-   4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  13
-   5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  14
-     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  14
-     5.2.  YANG Model  . . . . . . . . . . . . . . . . . . . . . . .  15
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Scope, Applicability, and Assumptions . . . . . . . . . . . .   4
+   4.  IOAM Data Types and Formats . . . . . . . . . . . . . . . . .   5
+     4.1.  IOAM Tracing Options  . . . . . . . . . . . . . . . . . .   6
+       4.1.1.  Pre-allocated Trace Option  . . . . . . . . . . . . .   8
+       4.1.2.  Incremental Trace Option  . . . . . . . . . . . . . .  11
+       4.1.3.  IOAM node data fields and associated formats  . . . .  14
+       4.1.4.  Examples of IOAM node data  . . . . . . . . . . . . .  19
+     4.2.  IOAM Proof of Transit Option  . . . . . . . . . . . . . .  21
+     4.3.  IOAM Edge-to-Edge Option  . . . . . . . . . . . . . . . .  23
+   5.  IOAM Data Export  . . . . . . . . . . . . . . . . . . . . . .  23
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
+     6.1.  Creation of a New In-Situ OAM
+           (IOAM) Protocol Parameters IANA registry  . . . . . . . .  24
+     6.2.  IOAM Trace Type Registry  . . . . . . . . . . . . . . . .  24
+     6.3.  IOAM Trace Flags Registry . . . . . . . . . . . . . . . .  24
+     6.4.  IOAM POT Type Registry  . . . . . . . . . . . . . . . . .  25
+     6.5.  IOAM E2E Type Registry  . . . . . . . . . . . . . . . . .  25
+   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  25
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  25
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  25
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  25
 
 
 
-Brockners, et al.         Expires April 4, 2019                 [Page 2]
+Brockners, et al.          Expires May 3, 2018                  [Page 2]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-   7.  Manageability Considerations  . . . . . . . . . . . . . . . .  18
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  18
-     8.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  18
-     8.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  19
-     8.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  20
-     8.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  20
-     8.5.  Anti-Tampering  . . . . . . . . . . . . . . . . . . . . .  21
-     8.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  21
-     8.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  21
-     8.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  21
-     8.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  22
-       8.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  22
-       8.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  22
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  23
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  23
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  23
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  23
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  23
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  26
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
 
 1.  Introduction
 
-   Several deployments use Traffic Engineering, policy routing, Segment
-   Routing (SR), and Service Function Chaining (SFC) [RFC7665] to steer
-   packets through a specific set of nodes.  In certain cases,
-   regulatory obligations or a compliance policy require operators to
-   prove that all packets that are supposed to follow a specific path
-   are indeed being forwarded across and exact set of pre-determined
-   nodes.
-
-   If a packet flow is supposed to go through a series of service
-   functions or network nodes, it has to be proven that indeed all
-   packets of the flow followed the path or service chain or collection
-   of nodes specified by the policy.  In case some packets of a flow
-   weren't appropriately processed, a verification device should
-   determine the policy violation and take corresponding actions
-   corresponding to the policy (e.g., drop or redirect the packet, send
-   an alert etc.)  In today's deployments, the proof that a packet
-   traversed a particular path or service chain is typically delivered
-   in an indirect way: Service appliances and network forwarding are in
-   different trust domains.  Physical hand-off-points are defined
-   between these trust domains (i.e.  physical interfaces).  Or in other
-   terms, in the "network forwarding domain" things are wired up in a
-   way that traffic is delivered to the ingress interface of a service
-   appliance and received back from an egress interface of a service
-   appliance.  This "wiring" is verified and then trusted upon.  The
-   evolution to Network Function Virtualization (NFV) and modern service
-   chaining concepts (using technologies such as Locator/ID Separation
-   Protocol (LISP), Network Service Header (NSH), Segment Routing (SR),
-
-
-
-Brockners, et al.         Expires April 4, 2019                 [Page 3]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-   etc.) blurs the line between the different trust domains, because the
-   hand-off-points are no longer clearly defined physical interfaces,
-   but are virtual interfaces.  As a consequence, different trust layers
-   should not to be mixed in the same device.  For an NFV scenario a
-   different type of proof is required.  Offering a proof that a packet
-   indeed traversed a specific set of service functions or nodes allows
-   operators to evolve from the above described indirect methods of
-   proving that packets visit a predetermined set of nodes.
-
-   The solution approach presented in this document is based on a small
-   portion of operational data added to every packet.  This "in-situ"
-   operational data is also referred to as "proof of transit data", or
-   POT data.  The POT data is updated at every required node and is used
-   to verify whether a packet traversed all required nodes.  A
-   particular set of nodes "to be verified" is either described by a set
-   of secret keys, or a set of shares of a single secret.  Nodes on the
-   path retrieve their individual keys or shares of a key (using for
-   e.g., Shamir's Secret Sharing scheme) from a central controller.  The
-   complete key set is only known to the controller and a verifier node,
-   which is typically the ultimate node on a path that performs
-   verification.  Each node in the path uses its secret or share of the
-   secret to update the POT data of the packets as the packets pass
-   through the node.  When the verifier receives a packet, it uses its
-   key(s) along with data found in the packet to validate whether the
-   packet traversed the path correctly.
+   This document defines data fields for "in-situ" Operations,
+   Administration, and Maintenance (IOAM).  In-situ OAM records OAM
+   information within the packet while the packet traverses a particular
+   network domain.  The term "in-situ" refers to the fact that the OAM
+   data is added to the data packets rather than is being sent within
+   packets specifically dedicated to OAM.  A discussion of the
+   motivation and requirements for in-situ OAM can be found in
+   [I-D.brockners-inband-oam-requirements].  IOAM is to complement
+   mechanisms such as Ping or Traceroute, or more recent active probing
+   mechanisms as described in [I-D.lapukhov-dataplane-probe].  In terms
+   of "active" or "passive" OAM, "in-situ" OAM can be considered a
+   hybrid OAM type.  While no extra packets are sent, IOAM adds
+   information to the packets therefore cannot be considered passive.
+   In terms of the classification given in [RFC7799] IOAM could be
+   portrayed as Hybrid Type 1.  "In-situ" mechanisms do not require
+   extra packets to be sent and hence don't change the packet traffic
+   mix within the network.  IOAM mechanisms can be leveraged where
+   mechanisms using e.g.  ICMP do not apply or do not offer the desired
+   results, such as proving that a certain traffic flow takes a pre-
+   defined path, SLA verification for the live data traffic, detailed
+   statistics on traffic distribution paths in networks that distribute
+   traffic across multiple paths, or scenarios in which probe traffic is
+   potentially handled differently from regular data traffic by the
+   network devices.
 
 2.  Conventions
 
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
    Abbreviations used in this document:
 
-   HMAC:      Hash based Message Authentication Code.  For example,
-              HMAC-SHA256 generates 256 bits of MAC
+   E2E        Edge to Edge
+
+   Geneve:    Generic Network Virtualization Encapsulation
+              [I-D.ietf-nvo3-geneve]
 
    IOAM:      In-situ Operations, Administration, and Maintenance
 
-   LISP:      Locator/ID Separation Protocol
-
-   LPC:       Lagrange Polynomial Constants
-
    MTU:       Maximum Transmit Unit
 
-   NFV:       Network Function Virtualization
+   NSH:       Network Service Header [I-D.ietf-sfc-nsh]
 
-   NSH:       Network Service Header
+
+
+Brockners, et al.          Expires May 3, 2018                  [Page 3]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+   OAM:       Operations, Administration, and Maintenance
 
    POT:       Proof of Transit
 
-
-
-
-
-Brockners, et al.         Expires April 4, 2019                 [Page 4]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-   POT-profile:  Proof of Transit Profile that has the necessary data
-              for nodes to participate in proof of transit
-
-   RND:       Random Bits generated per packet.  Packet fields that
-              donot change during the traversal are given as input to
-              HMAC-256 algorithm.  A minimum of 32 bits (left most) need
-              to be used from the output if RND is used to verify the
-              packet integrity.  This is a standard recommendation by
-              NIST.
-
-   SEQ_NO:    Sequence number initialized to a predefined constant.
-              This is used in concatenation with RND bits to mitigate
-              different attacks discussed later.
-
    SFC:       Service Function Chain
+
+   SID:       Segment Identifier
 
    SR:        Segment Routing
 
-3.  Proof of Transit
+   VXLAN-GPE: Virtual eXtensible Local Area Network, Generic Protocol
+              Extension [I-D.ietf-nvo3-vxlan-gpe]
 
-   This section discusses methods and algorithms to provide for a "proof
-   of transit" for packets traversing a specific path.  A path which is
-   to be verified consists of a set of nodes.  Transit of the data
-   packets through those nodes is to be proven.  Besides the nodes, the
-   setup also includes a Controller that creates secrets and secrets
-   shares and configures the nodes for POT operations.
+3.  Scope, Applicability, and Assumptions
 
-   The methods how traffic is identified and associated to a specific
-   path is outside the scope of this document.  Identification could be
-   done using a filter (e.g., 5-tuple classifier), or an identifier
-   which is already present in the packet (e.g., path or service
-   identifier, NSH Service Path Identifier (SPI), flow-label, etc.)
+   IOAM deployment assumes a set of constraints, requirements, and
+   guiding principles which are described in this section.
 
-   The solution approach is detailed in two steps.  Initially the
-   concept of the approach is explained.  This concept is then further
-   refined to make it operationally feasible.
+   Scope: This document defines the data fields and associated data
+   types for in-situ OAM.  The in-situ OAM data field can be transported
+   by a variety of transport protocols, including NSH, Segment Routing,
+   Geneve, IPv6, or IPv4.  Specification details for these different
+   transport protocols are outside the scope of this document.
 
-3.1.  Basic Idea
+   Deployment domain (or scope) of in-situ OAM deployment: IOAM is a
+   network domain focused feature, with "network domain" being a set of
+   network devices or entities within a single administration.  For
+   example, a network domain can include an enterprise campus using
+   physical connections between devices or an overlay network using
+   virtual connections / tunnels for connectivity between said devices.
+   A network domain is defined by its perimeter or edge.  Designers of
+   carrier protocols for IOAM must specify mechanisms to ensure that
+   IOAM data stays within an IOAM domain.  In addition, the operator of
+   such a domain is expected to put provisions in place to ensure that
+   IOAM data does not leak beyond the edge of an IOAM domain, e.g. using
+   for example packet filtering methods.  The operator should consider
+   potential operational impact of IOAM to mechanisms such as ECMP
+   processing (e.g.  load-balancing schemes based on packet length could
+   be impacted by the increased packet size due to IOAM), path MTU (i.e.
+   ensure that the MTU of all links within a domain is sufficiently
+   large to support the increased packet size due to IOAM) and ICMP
+   message handling (i.e. in case of a native IPv6 transport, IOAM
+   support for ICMPv6 Echo Request/Reply could desired which would
+   translate into ICMPv6 extensions to enable IOAM data fields to be
+   copied from an Echo Request message to an Echo Reply message).
 
-   The method relies on adding POT data to all packets that traverse a
-   path.  The added POT data allows a verifying node (egress node) to
-   check whether a packet traversed the identified set of nodes on a
-   path correctly or not.  Security mechanisms are natively built into
-   the generation of the POT data to protect against misuse (i.e.
-   configuration mistakes, malicious administrators playing tricks with
-   routing, capturing, spoofing and replaying packets).  The mechanism
-   for POT leverages "Shamir's Secret Sharing" scheme [SSS].
+   IOAM control points: IOAM data fields are added to or removed from
+   the live user traffic by the devices which form the edge of a domain.
 
 
 
-
-Brockners, et al.         Expires April 4, 2019                 [Page 5]
+Brockners, et al.          Expires May 3, 2018                  [Page 4]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-   Shamir's secret sharing base idea: A polynomial (represented by its
-   coefficients) is chosen as a secret by the controller.  A polynomial
-   represents a curve.  A set of well-defined points on the curve are
-   needed to construct the polynomial.  Each point of the polynomial is
-   called "share" of the secret.  A single secret is associated with a
-   particular set of nodes, which typically represent the path, to be
-   verified.  Shares of the single secret (i.e., points on the curve)
-   are securely distributed from a Controller to the network nodes.
-   Nodes use their respective share to update a cumulative value in the
-   POT data of each packet.  Only a verifying node has access to the
-   complete secret.  The verifying node validates the correctness of the
-   received POT data by reconstructing the curve.
+   Devices within an IOAM domain can update and/or add IOAM data-fields.
+   Domain edge devices can be hosts or network devices.
 
-   The polynomial cannot be constructed if any of the points are missed
-   or tampered.  Per Shamir's Secret Sharing Scheme, any lesser points
-   means one or more nodes are missed.  Details of the precise
-   configuration needed for achieving security are discussed further
-   below.
+   Traffic-sets that IOAM is applied to: IOAM can be deployed on all or
+   only on subsets of the live user traffic.  It SHOULD be possible to
+   enable IOAM on a selected set of traffic (e.g., per interface, based
+   on an access control list or flow specification defining a specific
+   set of traffic, etc.)  The selected set of traffic can also be all
+   traffic.
 
-   While applicable in theory, a vanilla approach based on Shamir's
-   secret sharing could be easily attacked.  If the same polynomial is
-   reused for every packet for a path a passive attacker could reuse the
-   value.  As a consequence, one could consider creating a different
-   polynomial per packet.  Such an approach would be operationally
-   complex.  It would be complex to configure and recycle so many curves
-   and their respective points for each node.  Rather than using a
-   single polynomial, two polynomials are used for the solution
-   approach: A secret polynomial which is kept constant, and a per-
-   packet polynomial which is public.  Operations are performed on the
-   sum of those two polynomials - creating a third polynomial which is
-   secret and per packet.
+   Encapsulation independence: Data formats for IOAM SHOULD be defined
+   in a transport-independent manner.  IOAM applies to a variety of
+   encapsulating protocols.  A definition of how IOAM data fields are
+   carried by different transport protocols is outside the scope of this
+   document.
 
-3.2.  Solution Approach
+   Layering: If several encapsulation protocols (e.g., in case of
+   tunneling) are stacked on top of each other, IOAM data-records could
+   be present at every layer.  The behavior follows the ships-in-the-
+   night model.
 
-   Solution approach: The overall algorithm uses two polynomials: POLY-1
-   and POLY-2.  POLY-1 is secret and constant.  Each node gets a point
-   on POLY-1 at setup-time and keeps it secret.  POLY-2 is public,
-   random and per packet.  Each node generates a point on POLY-2 each
-   time a packet crosses it.  Each node then calculates (point on POLY-1
-   + point on POLY-2) to get a (point on POLY-3) and passes it to
-   verifier by adding it to each packet.  The verifier constructs POLY-3
-   from the points given by all the nodes and cross checks whether
-   POLY-3 = POLY-1 + POLY-2.  Only the verifier knows POLY-1.  The
-   solution leverages finite field arithmetic in a field of size "prime
-   number".
+   Combination with active OAM mechanisms: IOAM should be usable for
+   active network probing, enabling for example a customized version of
+   traceroute.  Decapsulating IOAM nodes may have an ability to send the
+   IOAM information retrieved from the packet back to the source address
+   of the packet or to the encapsulating node.
 
-   Detailed algorithms are discussed next.  A simple example is
-   discussed in Section 3.3.
+   IOAM implementation: The IOAM data-field definitions take the
+   specifics of devices with hardware data-plane and software data-plane
+   into account.
+
+4.  IOAM Data Types and Formats
+
+   This section defines IOAM data types and data fields and associated
+   data types required for IOAM.  The different uses of IOAM require the
+   definition of different types of data.  The IOAM data fields for the
+   data being carried corresponds to the three main categories of IOAM
+   data defined in [I-D.brockners-inband-oam-requirements], which are:
+   edge-to-edge, per node, and for selected nodes only.
+
+   Transport options for IOAM data are outside the scope of this memo,
+   and are discussed in [I-D.brockners-inband-oam-transport].  IOAM data
+   fields are fixed length data fields.  A bit field determines the set
+   of OAM data fields embedded in a packet.  Depending on the type of
+   the encapsulation, a counter field indicates how many data fields are
+   included in a particular packet.
 
 
 
-Brockners, et al.         Expires April 4, 2019                 [Page 6]
+
+
+Brockners, et al.          Expires May 3, 2018                  [Page 5]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-3.2.1.  Setup
+   IOAM is expected to be deployed in a specific domain rather than on
+   the overall Internet.  The part of the network which employs IOAM is
+   referred to as the "IOAM-domain".  IOAM data is added to a packet
+   upon entering the IOAM-domain and is removed from the packet when
+   exiting the domain.  Within the IOAM-domain, the IOAM data may be
+   updated by network nodes that the packet traverses.  The device which
+   adds an IOAM data container to the packet to capture IOAM data is
+   called the "IOAM encapsulating node", whereas the device which
+   removes the IOAM data container is referred to as the "IOAM
+   decapsulating node".  Nodes within the domain which are aware of IOAM
+   data and read and/or write or process the IOAM data are called "IOAM
+   transit nodes".  IOAM nodes which add or remove the IOAM data
+   container can also update the IOAM data fields at the same time.  Or
+   in other words, IOAM encapsulation or decapsulating nodes can also
+   serve as IOAM transit nodes at the same time.  Note that not every
+   node in an IOAM domain needs to be an IOAM transit node.  For
+   example, a Segment Routing deployment might require the segment
+   routing path to be verified.  In that case, only the SR nodes would
+   also be IOAM transit nodes rather than all nodes.
 
-   A controller generates a first polynomial (POLY-1) of degree k and
-   k+1 points on the polynomial.  The constant coefficient of POLY-1 is
-   considered the SECRET.  The non-constant coefficients are used to
-   generate the Lagrange Polynomial Constants (LPC).  Each of the k
-   nodes (including verifier) are assigned a point on the polynomial
-   i.e., shares of the SECRET.  The verifier is configured with the
-   SECRET.  The Controller also generates coefficients (except the
-   constant coefficient, called "RND", which is changed on a per packet
-   basis) of a second polynomial POLY-2 of the same degree.  Each node
-   is configured with the LPC of POLY-2.  Note that POLY-2 is public.
+4.1.  IOAM Tracing Options
 
-3.2.2.  In Transit
+   "IOAM tracing data" is expected to be collected at every node that a
+   packet traverses to ensure visibility into the entire path a packet
+   takes within an IOAM domain, i.e., in a typical deployment all nodes
+   in an in-situ OAM-domain would participate in IOAM and thus be IOAM
+   transit nodes, IOAM encapsulating or IOAM decapsulating nodes.  If
+   not all nodes within a domain are IOAM capable, IOAM tracing
+   information will only be collected on those nodes which are IOAM
+   capable.  Nodes which are not IOAM capable will forward the packet
+   without any changes to the IOAM data fields.  The maximum number of
+   hops and the minimum path MTU of the IOAM domain is assumed to be
+   known.
 
-   For each packet, the ingress node generates a random number (RND).
-   It is considered as the constant coefficient for POLY-2.  A
-   cumulative value (CML) is initialized to 0.  Both RND, CML are
-   carried as within the packet POT data.  As the packet visits each
-   node, the RND is retrieved from the packet and the respective share
-   of POLY-2 is calculated.  Each node calculates (Share(POLY-1) +
-   Share(POLY-2)) and CML is updated with this sum.  This step is
-   performed by each node until the packet completes the path.  The
-   verifier also performs the step with its respective share.
+   To optimize hardware and software implementations tracing is defined
+   as two separate options.  Any deployment MAY choose to configure and
+   support one or both of the following options.  An implementation of
+   the transport protocol that carries these in-situ OAM data MAY choose
+   to support only one of the options.  In the event that both options
+   are utilized at the same time, the Incremental Trace Option MUST be
+   placed before the Pre-allocated Trace Option.  Given that the
+   operator knows which equipment is deployed in a particular IOAM, the
+   operator will decide by means of configuration which type(s) of trace
+   options will be enabled for a particular domain.
 
-3.2.3.  Verification
-
-   The verifier cross checks whether CML = SECRET + RND.  If this
-   matches then the packet traversed the specified set of nodes in the
-   path.  This is due to the additive homomorphic property of Shamir's
-   Secret Sharing scheme.
-
-3.3.  Illustrative Example
-
-   This section shows a simple example to illustrate step by step the
-   approach described above.
-
-3.3.1.  Basic Version
-
-   Assumption: It is to be verified whether packets passed through 3
-   nodes.  A polynomial of degree 2 is chosen for verification.
-
-   Choices: Prime = 53.  POLY-1(x) = (3x^2 + 3x + 10) mod 53.  The
-   secret to be re-constructed is the constant coefficient of POLY-1,
-   i.e., SECRET=10.  It is important to note that all operations are
-   done over a finite field (i.e., modulo prime).
+   Pre-allocated Trace Option:  This trace option is defined as a
+      container of node data fields with pre-allocated space for each
+      node to populate its information.  This option is useful for
 
 
 
-
-
-Brockners, et al.         Expires April 4, 2019                 [Page 7]
+Brockners, et al.          Expires May 3, 2018                  [Page 6]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-3.3.1.1.  Secret Shares
+      software implementations where it is efficient to allocate the
+      space once and index into the array to populate the data during
+      transit.  The IOAM encapsulating node allocates the option header
+      and sets the fields in the option header.  The in situ OAM
+      encapsulating node allocates an array which is used to store
+      operational data retrieved from every node while the packet
+      traverses the domain.  IOAM transit nodes update the content of
+      the array.  A pointer which is part of the IOAM trace data points
+      to the next empty slot in the array, which is where the next IOAM
+      transit node fills in its data.
 
-   The shares of the secret are the points on POLY-1 chosen for the 3
-   nodes.  For example, let x0=2, x1=4, x2=5.
+   Incremental Trace Option:  This trace option is defined as a
+      container of node data fields where each node allocates and pushes
+      its node data immediately following the option header.  The
+      maximum length of the node data list is written into the option
+      header.  This type of trace recording is useful for some of the
+      hardware implementations as this eliminates the need for the
+      transit network elements to read the full array in the option and
+      allows for arbitrarily long packets as the MTU allows.  The in-
+      situ OAM encapsulating node allocates the option header.  The in-
+      situ OAM encapsulating node based on operational state and
+      configuration sets the fields in the header to control how large
+      the node data list can grow.  IOAM transit nodes push their node
+      data to the node data list and increment the number of node data
+      fields in the header.
 
-      POLY-1(2) = 28 => (x0, y0) = (2, 28)
+   Every node data entry is to hold information for a particular IOAM
+   transit node that is traversed by a packet.  The in-situ OAM
+   decapsulating node removes the IOAM data and processes and/or exports
+   the metadata.  IOAM data uses its own name-space for information such
+   as node identifier or interface identifier.  This allows for a
+   domain-specific definition and interpretation.  For example: In one
+   case an interface-id could point to a physical interface (e.g., to
+   understand which physical interface of an aggregated link is used
+   when receiving or transmitting a packet) whereas in another case it
+   could refer to a logical interface (e.g., in case of tunnels).
 
-      POLY-1(4) = 17 => (x1, y1) = (4, 17)
+   The following IOAM data is defined for IOAM tracing:
 
-      POLY-1(5) = 47 => (x2, y2) = (5, 47)
+   o  Identification of the IOAM node.  An IOAM node identifier can
+      match to a device identifier or a particular control point or
+      subsystem within a device.
 
-   The three points above are the points on the curve which are
-   considered the shares of the secret.  They are assigned to three
-   nodes respectively and are kept secret.
+   o  Identification of the interface that a packet was received on,
+      i.e. ingress interface.
 
-3.3.1.2.  Lagrange Polynomials
-
-   Lagrange basis polynomials (or Lagrange polynomials) are used for
-   polynomial interpolation.  For a given set of points on the curve
-   Lagrange polynomials (as defined below) are used to reconstruct the
-   curve and thus reconstruct the complete secret.
-
-      l0(x) = (((x-x1) / (x0-x1)) * ((x-x2)/x0-x2))) mod 53 =
-      (((x-4) / (2-4)) * ((x-5)/2-5))) mod 53 =
-      (10/3 - 3x/2 + (1/6)x^2) mod 53
-
-      l1(x) = (((x-x0) / (x1-x0)) * ((x-x2)/x1-x2))) mod 53 =
-      (-5 + 7x/2 - (1/2)x^2) mod 53
-
-      l2(x) = (((x-x0) / (x2-x0)) * ((x-x1)/x2-x1))) mod 53 =
-      (8/3 - 2 + (1/3)x^2) mod 53
-
-3.3.1.3.  LPC Computation
-
-   Since x0=2, x1=4, x2=5 are chosen points.  Given that computations
-   are done over a finite arithmetic field ("modulo a prime number"),
-   the Lagrange basis polynomial constants are computed modulo 53.  The
-   Lagrange Polynomial Constant (LPC) would be 10/3 , -5 , 8/3.
-
-      LPC(x0) = (10/3) mod 53 = 21
-
-      LPC(x1) = (-5) mod 53 = 48
-
-      LPC(x2) = (8/3) mod 53 = 38
-
-   For a general way to compute the modular multiplicative inverse, see
-   e.g., the Euclidean algorithm.
+   o  Identification of the interface that a packet was sent out on,
+      i.e. egress interface.
 
 
 
-
-Brockners, et al.         Expires April 4, 2019                 [Page 8]
+Brockners, et al.          Expires May 3, 2018                  [Page 7]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-3.3.1.4.  Reconstruction
+   o  Time of day when the packet was processed by the node.  Different
+      definitions of processing time are feasible and expected, though
+      it is important that all devices of an in-situ OAM domain follow
+      the same definition.
 
-   Reconstruction of the polynomial is well-defined as
+   o  Generic data: Format-free information where syntax and semantic of
+      the information is defined by the operator in a specific
+      deployment.  For a specific deployment, all IOAM nodes should
+      interpret the generic data the same way.  Examples for generic
+      IOAM data include geo-location information (location of the node
+      at the time the packet was processed), buffer queue fill level or
+      cache fill level at the time the packet was processed, or even a
+      battery charge level.
 
-   POLY1(x) = l0(x) * y0 + l1(x) * y1 + l2(x) * y2
+   o  A mechanism to detect whether IOAM trace data was added at every
+      hop or whether certain hops in the domain weren't in-situ OAM
+      transit nodes.
 
-   Subsequently, the SECRET, which is the constant coefficient of
-   POLY1(x) can be computed as below
+   The "node data list" array in the packet is populated iteratively as
+   the packet traverses the network, starting with the last entry of the
+   array, i.e., "node data list [n]" is the first entry to be populated,
+   "node data list [n-1]" is the second one, etc.
 
-   SECRET = (y0*LPC(l0)+y1*LPC(l1)+y2*LPC(l2)) mod 53
-
-   The secret can be easily reconstructed using the y-values and the
-   LPC:
-
-   SECRET = (y0*LPC(l0) + y1*LPC(l1) + y2*LPC(l2)) mod 53 = mod (28 * 21
-   + 17 * 48 + 47 * 38) mod 53 = 3190 mod 53 = 10
-
-   One observes that the secret reconstruction can easily be performed
-   cumulatively hop by hop.  CML represents the cumulative value.  It is
-   the POT data in the packet that is updated at each hop with the
-   node's respective (yi*LPC(i)), where i is their respective value.
-
-3.3.1.5.  Verification
-
-   Upon completion of the path, the resulting CML is retrieved by the
-   verifier from the packet POT data.  Recall that verifier is
-   preconfigured with the original SECRET.  It is cross checked with the
-   CML by the verifier.  Subsequent actions based on the verification
-   failing or succeeding could be taken as per the configured policies.
-
-3.3.2.  Enhanced Version
-
-   As observed previously, the vanilla algorithm that involves a single
-   secret polynomial is not secure.  Therefore, the solution is further
-   enhanced with usage of a random second polynomial chosen per packet.
-
-3.3.2.1.  Random Polynomial
-
-   Let the second polynomial POLY-2 be (RND + 7x + 10 x^2).  RND is a
-   random number and is generated for each packet.  Note that POLY-2 is
-   public and need not be kept secret.  The nodes can be pre-configured
-   with the non-constant coefficients (for example, 7 and 10 in this
-   case could be configured through the Controller on each node).  So
-   precisely only RND value changes per packet and is public and the
-   rest of the non-constant coefficients of POLY-2 kept secret.
+4.1.1.  Pre-allocated Trace Option
 
 
 
 
 
 
-Brockners, et al.         Expires April 4, 2019                 [Page 9]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                  [Page 8]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-3.3.2.2.  Reconstruction
+   In-situ OAM pre-allocated trace option:
 
-   Recall that each node is preconfigured with their respective
-   Share(POLY-1).  Each node calculates its respective Share(POLY-2)
-   using the RND value retrieved from the packet.  The CML
-   reconstruction is enhanced as below.  At every node, CML is updated
-   as
+   Pre-allocated trace option header:
 
-   CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod Prime
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         IOAM-Trace-Type       |NodeLen|  Flags  | Octets-left |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   Let us observe the packet level transformations in detail.  For the
-   example packet here, let the value RND be 45.  Thus POLY-2 would be
-   (45 + 7x + 10x^2).
-
-   The shares that could be generated are (2, 46), (4, 21), (5, 12).
-
-      At ingress: The fields RND = 45.  CML = 0.
-
-      At node-1 (x0): Respective share of POLY-2 is generated i.e., (2,
-      46) because share index of node-1 is 2.
-
-      CML = 0 + ((28 + 46)* 21) mod 53 = 17
-
-      At node-2 (x1): Respective share of POLY-2 is generated i.e., (4,
-      21) because share index of node-2 is 4.
-
-      CML = 17 + ((17 + 21)*48) mod 53 = 17 + 22 = 39
-
-      At node-3 (x2), which is also the verifier: The respective share
-      of POLY-2 is generated i.e., (5, 12) because the share index of
-      the verifier is 12.
-
-      CML = 39 + ((47 + 12)*38) mod 53 = 39 + 16 = 55 mod 53 = 2
-
-   The verification using CML is discussed in next section.
-
-3.3.2.3.  Verification
-
-   As shown in the above example, for final verification, the verifier
-   compares:
-
-   VERIFY = (SECRET + RND) mod Prime, with Prime = 53 here
-
-   VERIFY = (RND-1 + RND-2) mod Prime = ( 10 + 45 ) mod 53 = 2
-
-   Since VERIFY = CML the packet is proven to have gone through nodes 1,
-   2, and 3.
+   Pre-allocated Trace Option Data MUST be 4-octet aligned:
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |                                                               |  |
+   |                        node data list [0]                     |  |
+   |                                                               |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  D
+   |                                                               |  a
+   |                        node data list [1]                     |  t
+   |                                                               |  a
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   ~                             ...                               ~  S
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  p
+   |                                                               |  a
+   |                        node data list [n-1]                   |  c
+   |                                                               |  e
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                                                               |  |
+   |                        node data list [n]                     |  |
+   |                                                               |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
 
 
+   IOAM-Trace-Type:  A 16-bit identifier which specifies which data
+      types are used in this node data list.
 
-Brockners, et al.         Expires April 4, 2019                [Page 10]
+      The IOAM-Trace-Type value is a bit field.  The following bit
+      fields are defined in this document, with details on each field
+      described in the Section 4.1.3.  The order of packing the data
+      fields in each node data element follows the bit order of the
+      IOAM-Trace-Type field, as follows:
+
+      Bit 0    (Most significant bit) When set indicates presence of
+               Hop_Lim and node_id in the node data.
+
+      Bit 1    When set indicates presence of ingress_if_id and
+               egress_if_id (short format) in the node data.
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                  [Page 9]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-3.3.3.  Final Version
+      Bit 2    When set indicates presence of timestamp seconds in the
+               node data
 
-   The enhanced version of the protocol is still prone to replay and
-   preplay attacks.  An attacker could reuse the POT metadata for
-   bypassing the verification.  So additional measures using packet
-   integrity checks (HMAC) and sequence numbers (SEQ_NO) are discussed
-   later "Security Considerations" section.
+      Bit 3    When set indicates presence of timestamp nanoseconds in
+               the node data.
 
-3.4.  Operational Aspects
+      Bit 4    When set indicates presence of transit delay in the node
+               data.
 
-   To operationalize this scheme, a central controller is used to
-   generate the necessary polynomials, the secret share per node, the
-   prime number, etc. and distributing the data to the nodes
-   participating in proof of transit.  The identified node that performs
-   the verification is provided with the verification key.  The
-   information provided from the Controller to each of the nodes
-   participating in proof of transit is referred to as a proof of
-   transit profile (POT-profile).  Also note that the set of nodes for
-   which the transit has to be proven are typically associated to a
-   different trust domain than the verifier.  Note that building the
-   trust relationship between the Controller and the nodes is outside
-   the scope of this document.  Techniques such as those described in
-   [I-D.ietf-anima-autonomic-control-plane] might be applied.
+      Bit 5    When set indicates presence of app_data (short format) in
+               the node data.
 
-   To optimize the overall data amount of exchanged and the processing
-   at the nodes the following optimizations are performed:
+      Bit 6    When set indicates presence of queue depth in the node
+               data.
 
-   1.  The points (x, y) for each of the nodes on the public and private
-       polynomials are picked such that the x component of the points
-       match.  This lends to the LPC values which are used to calculate
-       the cumulative value CML to be constant.  Note that the LPC are
-       only depending on the x components.  They can be computed at the
-       controller and communicated to the nodes.  Otherwise, one would
-       need to distributed the x components to all the nodes.
+      Bit 7    When set indicates presence of variable length Opaque
+               State Snapshot field.
 
-   2.  A pre-evaluated portion of the public polynomial for each of the
-       nodes is calculated and added to the POT-profile.  Without this
-       all the coefficients of the public polynomial had to be added to
-       the POT profile and each node had to evaluate them.  As stated
-       before, the public portion is only the constant coefficient RND
-       value, the pre-evaluated portion for each node should be kept
-       secret as well.
+      Bit 8    When set indicates presence of Hop_Lim and node_id in
+               wide format in the node data.
 
-   3.  To provide flexibility on the size of the cumulative and random
-       numbers carried in the POT data a field to indicate this is
-       shared and interpreted at the nodes.
+      Bit 9    When set indicates presence of ingress_if_id and
+               egress_if_id in wide format in the node data.
 
+      Bit 10   When set indicates presence of app_data wide in the node
+               data.
 
+      Bit 11   When set indicates presence of the Checksum Complement
+               node data.
 
+      Bit 12-15  Undefined in this draft.
+
+      Section 4.1.3 describes the IOAM data types and their formats.
+      Within an in-situ OAM domain possible combinations of these bits
+      making the IOAM-Trace-Type can be restricted by configuration
+      knobs.
+
+   NodeLen:  4-bit unsigned integer.  This field specifies the length of
+      data added by each node in multiples of 4-octets.  For example, if
+      3 IOAM-Trace-Type bits are set and none of them is wide, then the
+      NodeLen would be 3.  If 3 IOAM-Trace-Type bits are set and 2 of
+      them are wide, then the NodeLen would be 5.
+
+   Flags  5-bit field.  Following flags are defined:
+
+      Bit 0  "Overflow" (O-bit) (most significant bit).  This bit is set
+         by the network element if there is not enough number of octets
+         left to record node data, no field is added and the overflow
 
 
-Brockners, et al.         Expires April 4, 2019                [Page 11]
+
+Brockners, et al.          Expires May 3, 2018                 [Page 10]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-3.5.  Ordered POT (OPOT)
+         "O-bit" must be set to "1" in the header.  This is useful for
+         transit nodes to ignore further processing of the option.
 
-   In certain scenarios preserving the order of the nodes traversed by
-   the packet may be needed.  Two alternatives, one based on "nested
-   encryption", and another based on "symmetric masking between nodes"
-   are described here for preserving the order
+      Bit 1  "Loopback" (L-bit).  Loopback mode is used to send a copy
+         of a packet back towards the source.  Loopback mode assumes
+         that a return path from transit nodes and destination nodes
+         towards the source exists.  The encapsulating node decides
+         (e.g. using a filter) which packets loopback mode is enabled
+         for by setting the loopback bit.  The encapsulating node also
+         needs to ensure that sufficient space is available in the IOAM
+         header for loopback operation.  The loopback bit when set
+         indicates to the transit nodes processing this option to create
+         a copy of the packet received and send this copy of the packet
+         back to the source of the packet while it continues to forward
+         the original packet towards the destination.  The source
+         address of the original packet is used as destination address
+         in the copied packet.  The address of the node performing the
+         copy operation is used as the source address.  The L-bit MUST
+         be cleared in the copy of the packet a nodes sends it back
+         towards the source.  On its way back towards the source, the
+         packet is processed like a regular packet with IOAM
+         information.  Once the return packet reaches the IOAM domain
+         boundary IOAM decapsulation occurs as with any other packet
+         containing IOAM information.
 
-3.5.1.  Nested Encryption
+      Bit 2-4  Reserved: Must be zero.
 
-   1.  The controller provisions all the nodes with their respective
-       secret keys.
+   Octets-left:  7-bit unsigned integer.  It is the data space in
+      multiples of 4-octets remaining for recording the node data.  This
+      is used as an offset in data space to record the node data
+      element.
 
-   2.  The controller provisions the verifier with all the secret keys
-       of the nodes.
+   Node data List [n]:  Variable-length field.  The type of which is
+      determined by the IOAM-Trace-Type representing the n-th node data
+      in the node data list.  The node data list is encoded starting
+      from the last node data of the path.  The first element of the
+      node data list (node data list [0]) contains the last node of the
+      path while the last node data of the node data list (node data
+      list[n]) contains the first node data of the path traced.  The
+      index contained in "Octets-left" identifies the offset for current
+      active node data to be populated.
 
-   3.  For each packet, the ingress node generates a random number RND
-       and encrypts it with its secret key to generate CML value
-
-   4.  Each subsequent node on the path encrypts CML with their
-       respective secret key and passes it along
-
-   5.  The verifier is also provisioned with the expected sequence of
-       nodes in order to verify the order
-
-   6.  The verifier receives the CML, RND values, re-encrypts the RND
-       with keys in the same order as expected sequence to verify.
-
-   With this nested encryption approach it is possible to retain the
-   order in which the nodes are traversed, at the cost of:
-
-   1.  Standard AES encryption would need 128 bits of RND, CML.  This
-       results in a 256 bits of additional overhead is added per packet
-
-   2.  In hardware platforms that do not support native encryption
-       capabilities like (AES-NI).  This approach would have
-       considerable impact on the computational latency
-
-3.5.2.  Symmetric Masking Between Nodes
-
-   1.  The controller provisions all the nodes with (or asks them to
-       agree on) a couple of secrets, that we will refer as masks, one
-       for the connection from the upstream node(s), another for the
-       connection to the downstream node(s).  For obvious reasons, the
-       ingress and egress (verifier) nodes only receive one, for
-       downstream and upstream, respectively.
-
-   2.  Any two contiguous nodes in the OPOT stream share the mask for
-       the connection between them, in the shape of symmetric keys.
+4.1.2.  Incremental Trace Option
 
 
 
-Brockners, et al.         Expires April 4, 2019                [Page 12]
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 11]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-       Masks can be refreshed as per-policy, defined at each hop or
-       globally by the controller.
+   In-situ OAM incremental trace option:
 
-   3.  Each mask has the same size in bits as the length assigned to CML
-       plus RND, as described in the above sections.
+   In-situ OAM incremental trace option Header:
 
-   4.  Whenever a packet is received at an intermediate node, the
-       CML+RND sequence is deciphered (by XORing, though other ciphering
-       schemas MAY be possible) with the upstream mask before applying
-       the procedures described in Section 3.3.2.
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |        IOAM-Trace-Type        |NodeLen|  Flags  | Max Length  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   5.  Once the new values of CML+RND are produced, they are ciphered
-       (by XORing, though other ciphering schemas MAY be possible) with
-       the downstream mask before transmitting the packet to the next
-       node downstream.
+   IOAM Incremental Trace Option Data MUST be 4-octet aligned:
 
-   6.  The ingress node only applies step 5 above, while the verifier
-       only applies step 4 before running the verification procedure.
-
-   The described process allows the verifier to check if the packet has
-   followed the correct order while traversing the path.  In particular,
-   the reconstruction process will fail if the order is not respected,
-   as the deciphering process will produce invalid CML and RND values,
-   and the interpolation (secret reconstruction) will finally generate a
-   wrong verification value.
-
-   This procedure does not impose a high computational burden, does not
-   require additional packet overhead, can be deployed on chains of any
-   length, does not require any node to be aware of any additional
-   information than the upstream and downstream masks, and can be
-   integrated with the other operational mechanisms applied by the
-   controller to distribute shares and other secret material.
-
-4.  Sizing the Data for Proof of Transit
-
-   Proof of transit requires transport of two data fields in every
-   packet that should be verified:
-
-   1.  RND: Random number (the constant coefficient of public
-       polynomial)
-
-   2.  CML: Cumulative
-
-   The size of the data fields determines how often a new set of
-   polynomials would need to be created.  At maximum, the largest RND
-   number that can be represented with a given number of bits determines
-   the number of unique polynomials POLY-2 that can be created.  The
-   table below shows the maximum interval for how long a single set of
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   |                        node data list [0]                     |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   |                        node data list [1]                     |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   ~                             ...                               ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   |                        node data list [n-1]                   |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                                                               |
+   |                        node data list [n]                     |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
 
-Brockners, et al.         Expires April 4, 2019                [Page 13]
+   IOAM-trace-type:  A 16-bit identifier which specifies which data
+      types are used in this node data list.
+
+      The IOAM-Trace-Type value is a bit field.  The following bit
+      fields are defined in this document, with details on each field
+      described in the Section 4.1.3.  The order of packing the data
+      fields in each node data element follows the bit order of the
+      IOAM-Trace-Type field, as follows:
+
+      Bit 0    (Most significant bit) When set indicates presence of
+               Hop_Lim and node_id in the node data.
+
+      Bit 1    When set indicates presence of ingress_if_id and
+               egress_if_id (short format) in the node data.
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 12]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-   polynomials could last for a variety of bit rates and RND sizes: When
-   choosing 64 bits for RND and CML data fields, the time between a
-   renewal of secrets could be as long as 3,100 years, even when running
-   at 100 Gbps.
+      Bit 2    When set indicates presence of timestamp seconds in the
+               node data.
 
-   +-------------+--------------+------------------+-------------------+
-   |   Transfer  |  Secret/RND  | Max # of packets |   Time RND lasts  |
-   |     rate    |     size     |                  |                   |
-   +-------------+--------------+------------------+-------------------+
-   |    1 Gbps   |      64      |  2^64 = approx.  |  approx. 310,000  |
-   |             |              |     2*10^19      |       years       |
-   |   10 Gbps   |      64      |  2^64 = approx.  |   approx. 31,000  |
-   |             |              |     2*10^19      |       years       |
-   |   100 Gbps  |      64      |  2^64 = approx.  |   approx. 3,100   |
-   |             |              |     2*10^19      |       years       |
-   |    1 Gbps   |      32      |  2^32 = approx.  |   2,200 seconds   |
-   |             |              |      4*10^9      |                   |
-   |   10 Gbps   |      32      |  2^32 = approx.  |    220 seconds    |
-   |             |              |      4*10^9      |                   |
-   |   100 Gbps  |      32      |  2^32 = approx.  |     22 seconds    |
-   |             |              |      4*10^9      |                   |
-   +-------------+--------------+------------------+-------------------+
+      Bit 3    When set indicates presence of timestamp nanoseconds in
+               the node data.
 
-                      Table assumes 64 octet packets
+      Bit 4    When set indicates presence of transit delay in the node
+               data.
 
-                   Table 1: Proof of transit data sizing
+      Bit 5    When set indicates presence of app_data in the node data.
 
-   If the symmetric masking method for ordered POT is used
-   (Section 3.5.2), the masks used between nodes adjacent in the path
-   MUST have a length equal to the sum of the ones of RND and CML.
+      Bit 6    When set indicates presence of queue depth in the node
+               data.
 
-5.  Node Configuration
+      Bit 7    When set indicates presence of variable length Opaque
+               State Snapshot field.
 
-   A POT system consists of a number of nodes that participate in POT
-   and a Controller, which serves as a control and configuration entity.
-   The Controller is to create the required parameters (polynomials,
-   prime number, etc.) and communicate those to the nodes.  The sum of
-   all parameters for a specific node is referred to as "POT-profile".
-   This document does not define a specific protocol to be used between
-   Controller and nodes.  It only defines the procedures and the
-   associated YANG data model.
+      Bit 8    When set indicates presence of Hop_Lim and node_id wide
+               in the node data.
 
-5.1.  Procedure
+      Bit 9    When set indicates presence of ingress_if_id and
+               egress_if_id in wide format in the node data.
 
-   The Controller creates new POT-profiles at a constant rate and
-   communicates the POT-profile to the nodes.  The controller labels a
-   POT-profile "even" or "odd" and the Controller cycles between "even"
-   and "odd" labeled profiles.  The rate at which the POT-profiles are
+      Bit 10   When set indicates presence of app_data wide in the node
+               data.
+
+      Bit 11   When set indicates presence of the Checksum Complement
+               node data.
+
+      Bit 12-15  Undefined in this draft.
+
+      Section 4.1.3 describes the IOAM data types and their formats.
+
+   NodeLen:  4-bit unsigned integer.  This field specifies the length of
+      data added by each node in multiples of 4-octets.  For example, if
+      3 IOAM-Trace-Type bits are set and none of them is wide, then the
+      NodeLen would be 3.  If 3 IOAM-Trace-Type bits are set and 2 of
+      them are wide, then the NodeLen would be 5.
+
+   Flags  5-bit field.  Following flags are defined:
+
+      Bit 0  "Overflow" (O-bit) (most significant bit).  This bit is set
+         by the network element if there is not enough number of octets
+         left to record node data, no field is added and the overflow
+         "O-bit" must be set to "1" in the header.  This is useful for
+         transit nodes to ignore further processing of the option.
 
 
 
-Brockners, et al.         Expires April 4, 2019                [Page 14]
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 13]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-   communicated to the nodes is configurable and is more frequent than
-   the speed at which a POT-profile is "used up" (see table above).
-   Once the POT-profile has been successfully communicated to all nodes
-   (e.g., all NETCONF transactions completed, in case NETCONF is used as
-   a protocol), the controller sends an "enable POT-profile" request to
-   the ingress node.
+      Bit 1  "Loopback" (L-bit).  This bit when set indicates to the
+         transit nodes processing this option to send a copy of the
+         packet back to the source of the packet while it continues to
+         forward the original packet towards the destination.  The L-bit
+         MUST be cleared in the copy of the packet before sending it.
 
-   All nodes maintain two POT-profiles (an even and an odd POT-profile):
-   One POT-profile is currently active and in use; one profile is
-   standby and about to get used.  A flag in the packet is indicating
-   whether the odd or even POT-profile is to be used by a node.  This is
-   to ensure that during profile change the service is not disrupted.
-   If the "odd" profile is active, the Controller can communicate the
-   "even" profile to all nodes.  Only if all the nodes have received the
-   POT-profile, the Controller will tell the ingress node to switch to
-   the "even" profile.  Given that the indicator travels within the
-   packet, all nodes will switch to the "even" profile.  The "even"
-   profile gets active on all nodes and nodes are ready to receive a new
-   "odd" profile.
+      Bit 2-4  Reserved.  Must be zero.
 
-   Unless the ingress node receives a request to switch profiles, it'll
-   continue to use the active profile.  If a profile is "used up" the
-   ingress node will recycle the active profile and start over (this
-   could give rise to replay attacks in theory - but with 2^32 or 2^64
-   packets this isn't really likely in reality).
+   Maximum Length:  7-bit unsigned integer.  This field specifies the
+      maximum length of the node data list in multiples of 4-octets.
+      Given that the sender knows the minimum path MTU, the sender can
+      set the maximum length according to the number of node data bytes
+      allowed before exceeding the MTU.  Thus, a simple comparison
+      between "NodeLen" and "Max Length" allows to decide whether or not
+      data could be added.
 
-5.2.  YANG Model
+   Node data List [n]:  Variable-length field.  The type of which is
+      determined by the OAM Type representing the n-th node data in the
+      node data list.  The node data list is encoded starting from the
+      last node data of the path.  The first element of the node data
+      list (node data list [0]) contains the last node of the path while
+      the last node data of the node data list (node data list[n])
+      contains the first node data of the path traced.
 
-   This section defines that YANG data model for the information
-   exchange between the Controller and the nodes.
+4.1.3.  IOAM node data fields and associated formats
 
-   <CODE BEGINS> file "ietf-pot-profile@2016-06-15.yang"
-   module ietf-pot-profile {
+   All the data fields MUST be 4-octet aligned.  The IOAM encapsulating
+   node MUST initialize data fields that it adds to the packet to zero.
+   If a node which is supposed to update an IOAM data field is not
+   capable of populating the value of a field set in the IOAM-Trace-
+   Type, the field value MUST be left unaltered except when explicitly
+   specified in the field description below.  In the description of data
+   below if zero is valid value then a non-zero value to mean not
+   populated is specified.
 
-     yang-version 1;
+   Data field and associated data type for each of the data field is
+   shown below:
 
-     namespace "urn:ietf:params:xml:ns:yang:ietf-pot-profile";
+   Hop_Lim and node_id:  4-octet field defined as follows:
 
-     prefix ietf-pot-profile;
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   Hop_Lim     |              node_id                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-     organization "IETF xxx Working Group";
-
-     contact "";
-
-     description "This module contains a collection of YANG
-                  definitions for proof of transit configuration
-                  parameters. The model is meant for proof of
-                  transit and is targeted for communicating the
-
+      Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
+         value in the packet at the node that records this data.  Hop
+         Limit information is used to identify the location of the node
 
 
-Brockners, et al.         Expires April 4, 2019                [Page 15]
+
+Brockners, et al.          Expires May 3, 2018                 [Page 14]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-                  POT-profile between a controller and nodes
-                  participating in proof of transit.";
+         in the communication path.  This is copied from the lower
+         layer, e.g., TTL value in IPv4 header or hop limit field from
+         IPv6 header of the packet when the packet is ready for
+         transmission.  The semantics of the Hop_Lim field depend on the
+         lower layer protocol that IOAM is encapsulated over, and
+         therefore its specific semantics are outside the scope of this
+         memo.
 
-     revision 2016-06-15 {
-       description
-         "Initial revision.";
-       reference
-         "";
-     }
+      node_id:  3-octet unsigned integer.  Node identifier field to
+         uniquely identify a node within in-situ OAM domain.  The
+         procedure to allocate, manage and map the node_ids is beyond
+         the scope of this document.
 
-     typedef profile-index-range {
-       type int32 {
-         range "0 .. 1";
-       }
-       description
-         "Range used for the profile index. Currently restricted to
-          0 or 1 to identify the odd or even profiles.";
-     }
+   ingress_if_id and egress_if_id:  4-octet field defined as follows:
+      When this field is part of the data field but a node populating
+      the field is not able to fill it, the position in the field must
+      be filled with value 0xFFFFFFFF to mean not populated.
 
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |     ingress_if_id             |         egress_if_id          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-     grouping pot-profile {
-       description "A grouping for proof of transit profiles.";
-       list pot-profile-list {
-         key "pot-profile-index";
-         ordered-by user;
-         description "A set of pot profiles.";
+      ingress_if_id:  2-octet unsigned integer.  Interface identifier to
+         record the ingress interface the packet was received on.
 
-         leaf pot-profile-index {
-           type profile-index-range;
-           mandatory true;
-           description
-             "Proof of transit profile index.";
-         }
+      egress_if_id:  2-octet unsigned integer.  Interface identifier to
+         record the egress interface the packet is forwarded out of.
 
-         leaf prime-number {
-           type uint64;
-           mandatory true;
-           description
-             "Prime number used for module math computation";
-         }
+   timestamp seconds:  4-octet unsigned integer.  Absolute timestamp in
+      seconds that specifies the time at which the packet was received
+      by the node.  The structure of this field is identical to the most
+      significant 32 bits of the 64 least significant bits of the
+      [IEEE1588v2] timestamp.  This truncated field consists of a 32-bit
+      seconds field.  As defined in [IEEE1588v2], the timestamp
+      specifies the number of seconds elapsed since 1 January 1970
+      00:00:00 according to the International Atomic Time (TAI).
 
-         leaf secret-share {
-           type uint64;
-           mandatory true;
-           description
-             "Share of the secret of polynomial 1 used in computation";
-         }
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       timestamp seconds                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   timestamp nanoseconds:  4-octet unsigned integer in the range 0 to
+      10^9-1.  This timestamp specifies the fractional part of the wall
+      clock time at which the packet was received by the node in units
+      of nanoseconds.  This field is identical to the 32 least
+      significant bits of the [IEEE1588v2] timestamp.  This fields
 
 
 
-
-Brockners, et al.         Expires April 4, 2019                [Page 16]
+Brockners, et al.          Expires May 3, 2018                 [Page 15]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-         leaf public-polynomial {
-           type uint64;
-           mandatory true;
-           description
-             "Pre evaluated Public polynomial";
-         }
+      allows for delay computation between any two nodes in the network
+      when the nodes are time synchronized.  When this field is part of
+      the data field but a node populating the field is not able to fill
+      it, the field position in the field must be filled with value
+      0xFFFFFFFF to mean not populated.
 
-         leaf lpc {
-           type uint64;
-           mandatory true;
-           description
-             "Lagrange Polynomial Coefficient";
-         }
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       timestamp nanoseconds                   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-         leaf validator {
-           type boolean;
-           default "false";
-           description
-             "True if the node is a verifier node";
-         }
+   transit delay:  4-octet unsigned integer in the range 0 to 2^31-1.
+      It is the time in nanoseconds the packet spent in the transit
+      node.  This can serve as an indication of the queuing delay at the
+      node.  If the transit delay exceeds 2^31-1 nanoseconds then the
+      top bit 'O' is set to indicate overflow and value set to
+      0x80000000.  When this field is part of the data field but a node
+      populating the field is not able to fill it, the field position in
+      the field must be filled with value 0xFFFFFFFF to mean not
+      populated.
 
-         leaf validator-key {
-           type uint64;
-           description
-             "Secret key for validating the path, constant of poly 1";
-         }
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |O|                     transit delay                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-         leaf bitmask {
-           type uint64;
-           default 4294967295;
-           description
-             "Number of bits as mask used in controlling the size of the
-              random value generation. 32-bits of mask is default.";
-         }
-       }
-     }
+   app_data:  4-octet placeholder which can be used by the node to add
+      application specific data.  App_data represents a "free-format"
+      4-octet bit field with its semantics defined by a specific
+      deployment.
 
-     container pot-profiles {
-       description "A group of proof of transit profiles.";
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       app_data                                |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-       list pot-profile-set {
-         key "pot-profile-name";
-         ordered-by user;
-         description
-           "Set of proof of transit profiles that group parameters
-            required to classify and compute proof of transit
-            metadata at a node";
-
+   queue depth:  4-octet unsigned integer field.  This field indicates
+      the current length of the egress interface queue of the interface
+      from where the packet is forwarded out.  The queue depth is
+      expressed as the current number of memory buffers used by the
+      queue (a packet may consume one or more memory buffers, depending
+      on its size).  When this field is part of the data field but a
+      node populating the field is not able to fill it, the field
+      position in the field must be filled with value 0xFFFFFFFF to mean
+      not populated.
 
 
 
-Brockners, et al.         Expires April 4, 2019                [Page 17]
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 16]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-         leaf pot-profile-name {
-           type string;
-           mandatory true;
-           description
-             "Unique identifier for each proof of transit profile";
-         }
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       queue depth                             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-         leaf active-profile-index {
-           type profile-index-range;
-           description
-             "Proof of transit profile index that is currently active.
-              Will be set in the first hop of the path or chain.
-              Other nodes will not use this field.";
-         }
+   Opaque State Snapshot:  Variable length field.  It allows the network
+      element to store an arbitrary state in the node data field ,
+      without a pre-defined schema.  The schema needs to be made known
+      to the analyzer by some out-of-band mechanism.  The specification
+      of this mechanism is beyond the scope of this document.  The
+      24-bit "Schema Id" field in the field indicates which particular
+      schema is used, and should be configured on the network element by
+      the operator.
 
-         uses pot-profile;
-       }
-     /*** Container: end ***/
-     }
-   /*** module: end ***/
-   }
-   <CODE ENDS>
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |   Length      |                     Schema ID                 |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                                                               |
+      |                                                               |
+      |                        Opaque data                            |
+      ~                                                               ~
+      .                                                               .
+      .                                                               .
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+      Length:  1-octet unsigned integer.  It is the length in octets of
+         the Opaque data field that follows Schema Id.  It MUST always
+         be a multiple of 4.
+
+      Schema ID:  3-octet unsigned integer identifying the schema of
+         Opaque data.
+
+      Opaque data:  Variable length field.  This field is interpreted as
+         specified by the schema identified by the Schema ID.
+
+   Hop_Lim and node_id wide:  8-octet field defined as follows:
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |   Hop_Lim     |              node_id                          ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   ~                         node_id (contd)                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+      Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit
+         value in the packet at the node that records this data.  Hop
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 17]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+         Limit information is used to identify the location of the node
+         in the communication path.  This is copied from the lower layer
+         for e.g.  TTL value in IPv4 header or hop limit field from IPv6
+         header of the packet.  The semantics of the Hop_Lim field
+         depend on the lower layer protocol that IOAM is encapsulated
+         over, and therefore its specific semantics are outside the
+         scope of this memo.
+
+      node_id:  7-octet unsigned integer.  Node identifier field to
+         uniquely identify a node within in-situ OAM domain.  The
+         procedure to allocate, manage and map the node_ids is beyond
+         the scope of this document.
+
+   ingress_if_id and egress_if_id wide:  8-octet field defined as
+      follows: When this field is part of the data field but a node
+      populating the field is not able to fill it, the field position in
+      the field must be filled with value 0xFFFFFFFFFFFFFFFF to mean not
+      populated.
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       ingress_if_id                           |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       egress_if_id                            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+      ingress_if_id:  4-octet unsigned integer.  Interface identifier to
+         record the ingress interface the packet was received on.
+
+      egress_if_id:  4-octet unsigned integer.  Interface identifier to
+         record the egress interface the packet is forwarded out of.
+
+   app_data wide:  8-octet placeholder which can be used by the node to
+      add application specific data.  App data represents a "free-
+      format" 8-octed bit field with its semantics defined by a specific
+      deployment.
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       app data                                ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   ~                       app data (contd)                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   Checksum Complement:  4-octet node data which contains a two-octet
+      Checksum Complement field, and a 2-octet reserved field.  The
+      Checksum Complement can be used when IOAM is transported over
+      encapsulations that make use of a UDP transport, such as VXLAN-GPE
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 18]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+      or Geneve.  In this case, incorporating the IOAM node data
+      requires the UDP Checksum field to be updated.  Rather than to
+      recompute the Chekcsum field, a node can use the Checksum
+      Complement to make a checksum-neutral update in the UDP payload;
+      the Checksum Complement is assigned a value that complements the
+      rest of the node data fields that were added by the current node,
+      causing the existing UDP Checksum field to remain correct.
+      Checksum Complement fields are used in a similar manner in
+      [RFC7820] and [RFC7821].
+
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7
+   8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |      Checksum Complement      |           Reserved            |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+4.1.4.  Examples of IOAM node data
+
+   An entry in the "node data list" array can have different formats,
+   following the needs of the deployment.  Some deployments might only
+   be interested in recording the node identifiers, whereas others might
+   be interested in recording node identifier and timestamp.  The
+   section defines different types that an entry in "node data list" can
+   take.
+
+   0xD400:  IOAM-Trace-Type is 0xD400 then the format of node data is:
+
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Hop_Lim     |              node_id                          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |     ingress_if_id             |         egress_if_id          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                  timestamp nanoseconds                        |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                            app_data                           |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   0xC000:  IOAM-Trace-Type is 0xC000 then the format is:
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 19]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Hop_Lim     |              node_id                          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |     ingress_if_id             |         egress_if_id          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+
+   0x9000:  IOAM-Trace-Type is 0x9000 then the format is:
+
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Hop_Lim     |              node_id                          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                   timestamp nanoseconds                       |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   0x8400:  IOAM-Trace-Type is 0x8400 then the format is:
+
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Hop_Lim     |              node_id                          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                            app_data                           |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   0x9400:  IOAM-Trace-Type is 0x9400 then the format is:
+
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Hop_Lim     |              node_id                          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                    timestamp nanoseconds                      |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                            app_data                           |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   0x3180:  IOAM-Trace-Type is 0x3180 then the format is:
+
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 20]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                      timestamp seconds                        |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                    timestamp nanoseconds                      |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Length      |                     Schema Id                 |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                                                               |
+       |                                                               |
+       |                        Opaque data                            |
+       ~                                                               ~
+       .                                                               .
+       .                                                               .
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |   Hop_Lim     |              node_id                          |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+       |                         node_id(contd)                        |
+       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+4.2.  IOAM Proof of Transit Option
+
+   IOAM Proof of Transit data is to support the path or service function
+   chain [RFC7665] verification use cases.  Proof-of-transit uses
+   methods like nested hashing or nested encryption of the IOAM data or
+   mechanisms such as Shamir's Secret Sharing Schema (SSSS).  While
+   details on how the IOAM data for the proof of transit option is
+   processed at IOAM encapsulating, decapsulating and transit nodes are
+   outside the scope of the document, all of these approaches share the
+   need to uniquely identify a packet as well as iteratively operate on
+   a set of information that is handed from node to node.
+   Correspondingly, two pieces of information are added as IOAM data to
+   the packet:
+
+   o  Random: Unique identifier for the packet (e.g., 64-bits allow for
+      the unique identification of 2^64 packets).
+
+   o  Cumulative: Information which is handed from node to node and
+      updated by every node according to a verification algorithm.
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 21]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+   IOAM proof of transit option:
+
+   IOAM proof of transit option header:
+
+    0 1 2 3 4 5 6 7
+   +-+-+-+-+-+-+-+-+
+   |IOAM POT Type|P|
+   +-+-+-+-+-+-+-+-+
+
+   IOAM proof of transit option data MUST be 4-octet aligned:
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |                           Random                              |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
+   |                        Random(contd)                          |  O
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
+   |                         Cumulative                            |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                         Cumulative (contd)                    |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+
+
+
+   IOAM POT Type:  7-bit identifier of a particular POT variant that
+      dictates the POT data that is included.  This document defines POT
+      Type 0:
+
+      0: POT data is a 16 Octet field as described below.
+
+   Profile to use (P):  1-bit.  Indicates which POT-profile is used to
+      generate the Cumulative.  Any node participating in POT will have
+      a maximum of 2 profiles configured that drive the computation of
+      cumulative.  The two profiles are numbered 0, 1.  This bit conveys
+      whether profile 0 or profile 1 is used to compute the Cumulative.
+
+   Random:  64-bit Per packet Random number.
+
+   Cumulative:  64-bit Cumulative that is updated at specific nodes by
+      processing per packet Random number field and configured
+      parameters.
+
+   Note: Larger or smaller sizes of "Random" and "Cumulative" data are
+   feasible and could be required for certain deployments (e.g.  in case
+   of space constraints in the transport protocol used).  Future
+   versions of this document will address different sizes of data for
+   "proof of transit".
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 22]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+4.3.  IOAM Edge-to-Edge Option
+
+   The IOAM edge-to-edge option is to carry data that is added by the
+   IOAM encapsulating node and interpreted by IOAM decapsulating node.
+   The IOAM transit nodes MAY process the data without modifying it.
+
+   Currently only sequence numbers use the IOAM edge-to-edge option.  In
+   order to detect packet loss, packet reordering, or packet duplication
+   in an in-situ OAM-domain, sequence numbers can be added to packets of
+   a particular tube (see [I-D.hildebrand-spud-prototype]).  Each tube
+   leverages a dedicated namespace for its sequence numbers.
+
+     IOAM edge-to-edge option:
+
+      IOAM edge-to-edge option header:
+
+       0 1 2 3 4 5 6 7
+      +-+-+-+-+-+-+-+-+
+      | IOAM-E2E-Type |
+      +-+-+-+-+-+-+-+-+
+
+      IOAM edge-to-edge option data MUST be 4-octet aligned:
+
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |       E2E Option data field determined by IOAM-E2E-Type       |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   IOAM-E2E-Type:  8-bit identifier of a particular in situ OAM E2E
+      variant.
+
+         0: E2E option data is a 64-bit sequence number added to a
+         specific tube which is used to identify packet loss and
+         reordering for that tube.
+
+5.  IOAM Data Export
+
+   IOAM nodes collect information for packets traversing a domain that
+   supports IOAM.  IOAM decapsulating nodes as well as IOAM transit
+   nodes can choose to retrieve IOAM information from the packet,
+   process the information further and export the information using
+   e.g., IPFIX.
+
+   The discussion of IOAM data processing and export is left for a
+   future version of this document.
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 23]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
 
 6.  IANA Considerations
 
-   IANA considerations will be added in a future version of this
-   document.
+   This document requests the following IANA Actions.
+
+6.1.  Creation of a New In-Situ OAM (IOAM) Protocol Parameters IANA
+      registry
+
+   IANA is requested to create a new protocol registry for "In-Situ OAM
+   (IOAM) Protocol Parameters".  This is the common registry that will
+   include registrations for all IOAM namespaces.  Each Registry, whose
+   names are listed below:
+
+      IOAM Trace Type
+
+      IOAM Trace flags
+
+      IOAM POT Type
+
+      IOAM E2E Type
+
+   will contain the current set of possibilities defined in this
+   document.  New registries in this name space are created via RFC
+   Required process as per [RFC8126].
+
+   The subsequent sub-sections detail the registries herein contained.
+
+6.2.  IOAM Trace Type Registry
+
+   This registry defines code point for each bit in the 16-bit IOAM-
+   Trace-Type field for Pre-allocated trace option and Incremental trace
+   option defined in Section 4.1.  The meaning of Bit 0 - 11 for trace
+   type are defined in this document in Paragraph 1 of (Section 4.1.1).
+   The meaning for Bit 12 - 15 are available for assignment via RFC
+   Required process as per [RFC8126].
+
+6.3.  IOAM Trace Flags Registry
+
+   This registry defines code point for each bit in the 5 bit flags for
+   Pre-allocated trace option and Incremental trace option defined in
+   Section 4.1.  The meaning of Bit 0 - 1 for trace flags are defined in
+   this document in Paragraph 5 of Section 4.1.1.  The meaning for Bit 2
+   - 4 are available for assignment via RFC Required process as per
+   [RFC8126].
+
+
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 24]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+6.4.  IOAM POT Type Registry
+
+   This registry defines 128 code points to define IOAM POT Type for
+   IOAM proof of transit option Section 4.2.  The code point value 0 is
+   defined in this document, 1 - 127 are available for assignment via
+   RFC Required process as per [RFC8126].
+
+6.5.  IOAM E2E Type Registry
+
+   This registry defines 256 code points to define IOAM-E2E-Type for
+   IOAM E2E option Section 4.3.  The code point value 0 is defined in
+   this document, 1 - 255 are available for assignments via RFC Required
+   process as per [RFC8126].
 
 7.  Manageability Considerations
 
    Manageability considerations will be addressed in a later version of
-   this document.
+   this document..
 
 8.  Security Considerations
 
-   Different security requirements achieved by the solution approach are
-   discussed here.
-
-8.1.  Proof of Transit
-
-   Proof of correctness and security of the solution approach is per
-   Shamir's Secret Sharing Scheme [SSS].  Cryptographically speaking it
-   achieves information-theoretic security i.e., it cannot be broken by
-   an attacker even with unlimited computing power.  As long as the
-   below conditions are met it is impossible for an attacker to bypass
-   one or multiple nodes without getting caught.
-
-
-
-
-
-Brockners, et al.         Expires April 4, 2019                [Page 18]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-   o  If there are k+1 nodes in the path, the polynomials (POLY-1, POLY-
-      2) should be of degree k.  Also k+1 points of POLY-1 are chosen
-      and assigned to each node respectively.  The verifier can re-
-      construct the k degree polynomial (POLY-3) only when all the
-      points are correctly retrieved.
-
-   o  Precisely three values are kept secret by individual nodes.  Share
-      of SECRET (i.e. points on POLY-1), Share of POLY-2, LPC, P.  Note
-      that only constant coefficient, RND, of POLY-2 is public. x values
-      and non-constant coefficient of POLY-2 are secret
-
-   An attacker bypassing a few nodes will miss adding a respective point
-   on POLY-1 to corresponding point on POLY-2 , thus the verifier cannot
-   construct POLY-3 for cross verification.
-
-   Also it is highly recommended that different polynomials should be
-   used as POLY-1 across different paths, traffic profiles or service
-   chains.
-
-   If symmetric masking is used to assure OPOT (Section 3.5.2), the
-   nodes need to keep two additional secrets: the upstream and upstream
-   masks, that have to be managed under the same conditions as the
-   secrets mentioned above.  And it is equally recommended to employ a
-   different set of mask pairs across different paths, traffic profiles
-   or service chains.
-
-8.2.  Cryptanalysis
-
-   A passive attacker could try to harvest the POT data (i.e., CML, RND
-   values) in order to determine the configured secrets.  Subsequently
-   two types of differential analysis for guessing the secrets could be
-   done.
-
-   o  Inter-Node: A passive attacker observing CML values across nodes
-      (i.e., as the packets entering and leaving), cannot perform
-      differential analysis to construct the points on POLY-1.  This is
-      because at each point there are four unknowns (i.e.  Share(POLY-
-      1), Share(Poly-2) LPC and prime number P) and three known values
-      (i.e.  RND, CML-before, CML-after).  The application of symmetric
-      masking for OPOT makes inter-node analysis less feasible.
-
-   o  Inter-Packets: A passive attacker could observe CML values across
-      packets (i.e., values of PKT-1 and subsequent PKT-2), in order to
-      predict the secrets.  Differential analysis across packets could
-      be mitigated using a good PRNG for generating RND.  Note that if
-      constant coefficient is a sequence number than CML values become
-      quite predictable and the scheme would be broken.  If symmetric
-      masking is used for OPOT, inter-packet analysis could be applied
-
-
-
-Brockners, et al.         Expires April 4, 2019                [Page 19]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-      to guess mask values, what requires a proper refresh rate for
-      masks, at least as high as the one used for LPCs.
-
-8.3.  Anti-Replay
-
-   A passive attacker could reuse a set of older RND and the
-   intermediate CML values to bypass certain nodes in later packets.
-   Such attacks could be avoided by carefully choosing POLY-2 as a
-   (SEQ_NO + RND).  For example, if 64 bits are being used for POLY-2
-   then first 16 bits could be a sequence number SEQ_NO and next 48 bits
-   could be a random number.
-
-   Subsequently, the verifier could use the SEQ_NO bits to run classic
-   anti-replay techniques like sliding window used in IPSEC.  The
-   verifier could buffer up to 2^16 packets as a sliding window.
-   Packets arriving with a higher SEQ_NO than current buffer could be
-   flagged legitimate.  Packets arriving with a lower SEQ_NO than
-   current buffer could be flagged as suspicious.
-
-   For all practical purposes in the rest of the document RND means
-   SEQ_NO + RND to keep it simple.
-
-   The solution discussed in this memo does not currently mitigate
-   replay attacks.  An anti-replay mechanism may be included in future
-   versions of the solution.
-
-8.4.  Anti-Preplay
-
-   An active attacker could try to perform a man-in-the-middle (MITM)
-   attack by extracting the POT of PKT-1 and using it in PKT-2.
-   Subsequently attacker drops the PKT-1 in order to avoid duplicate POT
-   values reaching the verifier.  If the PKT-1 reaches the verifier,
-   then this attack is same as Replay attacks discussed before.
-
-   Preplay attacks are possible since the POT metadata is not dependent
-   on the packet fields.  Below steps are recommended for remediation:
-
-   o  Ingress node and Verifier are configured with common pre shared
-      key
-
-   o  Ingress node generates a Message Authentication Code (MAC) from
-      packet fields using standard HMAC algorithm.
-
-   o  The left most bits of the output are truncated to desired length
-      to generate RND.  It is recommended to use a minimum of 32 bits.
-
-
-
-
-
-
-Brockners, et al.         Expires April 4, 2019                [Page 20]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-   o  The verifier regenerates the HMAC from the packet fields and
-      compares with RND.  To ensure the POT data is in fact that of the
-      packet.
-
-   If an HMAC is used, an active attacker lacks the knowledge of the
-   pre-shared key, and thus cannot launch preplay attacks.
-
-   The solution discussed in this memo does not currently mitigate
-   prereplay attacks.  A mitigation mechanism may be included in future
-   versions of the solution.
-
-8.5.  Anti-Tampering
-
-   An active attacker could not insert any arbitrary value for CML.
-   This would subsequently fail the reconstruction of the POLY-3.  Also
-   an attacker could not update the CML with a previously observed
-   value.  This could subsequently be detected by using timestamps
-   within the RND value as discussed above.
-
-8.6.  Recycling
-
-   The solution approach is flexible for recycling long term secrets
-   like POLY-1.  All the nodes could be periodically updated with shares
-   of new SECRET as best practice.  The table above could be consulted
-   for refresh cycles (see Section 4).
-
-   If symmetric masking is used for OPOT (Section 3.5.2), mask values
-   must be periodically updated as well, at least as frequently as the
-   other secrets are.
-
-8.7.  Redundant Nodes and Failover
-
-   A "node" or "service" in terms of POT can be implemented by one or
-   multiple physical entities.  In case of multiple physical entities
-   (e.g., for load-balancing, or business continuity situations -
-   consider for example a set of firewalls), all physical entities which
-   are implementing the same POT node are given that same share of the
-   secret.  This makes multiple physical entities represent the same POT
-   node from an algorithm perspective.
-
-8.8.  Controller Operation
-
-   The Controller needs to be secured given that it creates and holds
-   the secrets, as need to be the nodes.  The communication between
-   Controller and the nodes also needs to be secured.  As secure
-   communication protocol such as for example NETCONF over SSH should be
-   chosen for Controller to node communication.
-
-
-
-
-Brockners, et al.         Expires April 4, 2019                [Page 21]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-   The Controller only interacts with the nodes during the initial
-   configuration and thereafter at regular intervals at which the
-   operator chooses to switch to a new set of secrets.  In case 64 bits
-   are used for the data fields "CML" and "RND" which are carried within
-   the data packet, the regular intervals are expected to be quite long
-   (e.g., at 100 Gbps, a profile would only be used up after 3100 years)
-   - see Section 4 above, thus even a "headless" operation without a
-   Controller can be considered feasible.  In such a case, the
-   Controller would only be used for the initial configuration of the
-   POT-profiles.
-
-   If OPOT (Section 3.5.2) is applied using symmetric masking, the
-   Controller will be required to perform a a periodic refresh of the
-   mask pairs.  The use of OPOT SHOULD be configurable as part of the
-   required level of assurance through the Controller management
-   interface.
-
-8.9.  Verification Scope
-
-   The POT solution defined in this document verifies that a data-packet
-   traversed or transited a specific set of nodes.  From an algorithm
-   perspective, a "node" is an abstract entity.  It could be represented
-   by one or multiple physical or virtual network devices, or is could
-   be a component within a networking device or system.  The latter
-   would be the case if a forwarding path within a device would need to
-   be securely verified.
-
-8.9.1.  Node Ordering
-
-   POT using Shamir's secret sharing scheme as discussed in this
-   document provides for a means to verify that a set of nodes has been
-   visited by a data packet.  It does not verify the order in which the
-   data packet visited the nodes.
-
-   In case the order in which a data packet traversed a particular set
-   of nodes needs to be verified as well, the alternate schemes related
-   to OPOT (Section 3.5) have to be considered.  Since these schemes
-   introduce at least additional control requirements, the selection of
-   order verification SHOULD be configurable the Controller management
-   interface.
-
-8.9.2.  Stealth Nodes
-
-   The POT approach discussed in this document is to prove that a data
-   packet traversed a specific set of "nodes".  This set could be all
-   nodes within a path, but could also be a subset of nodes in a path.
-   Consequently, the POT approach isn't suited to detect whether
-
-
-
-
-Brockners, et al.         Expires April 4, 2019                [Page 22]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-   "stealth" nodes which do not participate in proof-of-transit have
-   been inserted into a path.
+   Security considerations will be addressed in a later version of this
+   document.  For a discussion of security requirements of in-situ OAM,
+   please refer to [I-D.brockners-inband-oam-requirements].
 
 9.  Acknowledgements
 
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-   Nadahalli, Erik Nordmark, and Andrew Yourtchenko for the comments and
-   advice.
+   Nadahalli, LJ Wobker, Erik Nordmark, Vengada Prasad Govindan, and
+   Andrew Yourtchenko for the comments and advice.
+
+   This document leverages and builds on top of several concepts
+   described in [I-D.kitamura-ipv6-record-route].  The authors would
+   like to acknowledge the work done by the author Hiroshi Kitamura and
+   people involved in writing it.
+
+   The authors would like to gracefully acknowledge useful review and
+   insightful comments received from Joe Clarke, Al Morton, and Mickey
+   Spiegel.
 
 10.  References
 
 10.1.  Normative References
 
-   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
-              RFC7665, October 2015, <https://www.rfc-editor.org/info/
-              rfc7665>.
 
-   [SSS]      "Shamir's Secret Sharing", <https://en.wikipedia.org/wiki/
-              Shamir%27s_Secret_Sharing>.
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 25]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+   [IEEE1588v2]
+              Institute of Electrical and Electronics Engineers,
+              "1588-2008 - IEEE Standard for a Precision Clock
+              Synchronization Protocol for Networked Measurement and
+              Control Systems",  IEEE Std 1588-2008, 2008,
+              <http://standards.ieee.org/findstds/
+              standard/1588-2008.html>.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
+
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/info/rfc8126>.
 
 10.2.  Informative References
 
-   [I-D.ietf-anima-autonomic-control-plane]
-              Behringer, M., Eckert, T., and S. Bjarnason, "An Autonomic
-              Control Plane", draft-ietf-anima-autonomic-control-
-              plane-03 (work in progress), July 2016.
+   [I-D.brockners-inband-oam-requirements]
+              Brockners, F., Bhandari, S., Dara, S., Pignataro, C.,
+              Gredler, H., Leddy, J., Youell, S., Mozes, D., Mizrahi,
+              T., <>, P., and r. remy@barefootnetworks.com,
+              "Requirements for In-situ OAM", draft-brockners-inband-
+              oam-requirements-03 (work in progress), March 2017.
+
+   [I-D.brockners-inband-oam-transport]
+              Brockners, F., Bhandari, S., Govindan, V., Pignataro, C.,
+              Gredler, H., Leddy, J., Youell, S., Mizrahi, T., Mozes,
+              D., Lapukhov, P., and R. Chang, "Encapsulations for In-
+              situ OAM Data", draft-brockners-inband-oam-transport-05
+              (work in progress), July 2017.
+
+   [I-D.hildebrand-spud-prototype]
+              Hildebrand, J. and B. Trammell, "Substrate Protocol for
+              User Datagrams (SPUD) Prototype", draft-hildebrand-spud-
+              prototype-03 (work in progress), March 2015.
+
+   [I-D.ietf-nvo3-geneve]
+              Gross, J., Ganga, I., and T. Sridhar, "Geneve: Generic
+              Network Virtualization Encapsulation", draft-ietf-
+              nvo3-geneve-05 (work in progress), September 2017.
+
+   [I-D.ietf-nvo3-vxlan-gpe]
+              Maino, F., Kreeger, L., and U. Elzur, "Generic Protocol
+              Extension for VXLAN", draft-ietf-nvo3-vxlan-gpe-04 (work
+              in progress), April 2017.
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 26]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
+   [I-D.ietf-sfc-nsh]
+              Quinn, P., Elzur, U., and C. Pignataro, "Network Service
+              Header (NSH)", draft-ietf-sfc-nsh-27 (work in progress),
+              October 2017.
+
+   [I-D.kitamura-ipv6-record-route]
+              Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
+              Option Extension", draft-kitamura-ipv6-record-route-00
+              (work in progress), November 2000.
+
+   [I-D.lapukhov-dataplane-probe]
+              Lapukhov, P. and r. remy@barefootnetworks.com, "Data-plane
+              probe for in-band telemetry collection", draft-lapukhov-
+              dataplane-probe-01 (work in progress), June 2016.
+
+   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
+              editor.org/info/rfc7665>.
+
+   [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
+              Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
+              May 2016, <https://www.rfc-editor.org/info/rfc7799>.
+
+   [RFC7820]  Mizrahi, T., "UDP Checksum Complement in the One-Way
+              Active Measurement Protocol (OWAMP) and Two-Way Active
+              Measurement Protocol (TWAMP)", RFC 7820,
+              DOI 10.17487/RFC7820, March 2016, <https://www.rfc-
+              editor.org/info/rfc7820>.
+
+   [RFC7821]  Mizrahi, T., "UDP Checksum Complement in the Network Time
+              Protocol (NTP)", RFC 7821, DOI 10.17487/RFC7821, March
+              2016, <https://www.rfc-editor.org/info/rfc7821>.
 
 Authors' Addresses
 
@@ -1274,6 +1503,17 @@ Authors' Addresses
    Email: fbrockne@cisco.com
 
 
+
+
+
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 27]
+
+Internet-Draft           In-situ OAM Data Fields            October 2017
+
+
    Shwetha Bhandari
    Cisco Systems, Inc.
    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
@@ -1283,22 +1523,6 @@ Authors' Addresses
    Email: shwethab@cisco.com
 
 
-
-
-Brockners, et al.         Expires April 4, 2019                [Page 23]
-
-Internet-Draft              Proof of Transit                October 2018
-
-
-   Sashank Dara
-   Cisco Systems, Inc.
-   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
-   BANGALORE, Bangalore, KARNATAKA 560 087
-   INDIA
-
-   Email: sadara@cisco.com
-
-
    Carlos Pignataro
    Cisco Systems, Inc.
    7200-11 Kit Creek Road
@@ -1306,6 +1530,12 @@ Internet-Draft              Proof of Transit                October 2018
    United States
 
    Email: cpignata@cisco.com
+
+
+   Hannes Gredler
+   RtBrick Inc.
+
+   Email: hannes@rtbrick.com
 
 
    John Leddy
@@ -1323,15 +1553,10 @@ Internet-Draft              Proof of Transit                October 2018
    Email: stephen.youell@jpmorgan.com
 
 
-   David Mozes
-
-   Email: mosesster@gmail.com
-
-
    Tal Mizrahi
    Marvell
    6 Hamada St.
-   Yokneam  20692
+   Yokneam  2066721
    Israel
 
    Email: talmi@marvell.com
@@ -1340,41 +1565,37 @@ Internet-Draft              Proof of Transit                October 2018
 
 
 
-
-Brockners, et al.         Expires April 4, 2019                [Page 24]
+Brockners, et al.          Expires May 3, 2018                 [Page 28]
 
-Internet-Draft              Proof of Transit                October 2018
+Internet-Draft           In-situ OAM Data Fields            October 2017
 
 
-   Alejandro Aguado
-   Universidad Politecnica de Madrid
-   Campus Montegancedo, Boadilla del Monte
-   Madrid  28660
-   Spain
+   David Mozes
+   Mellanox Technologies Ltd.
 
-   Phone: +34 910 673 086
-   Email: a.aguadom@fi.upm.es
+   Email: davidm@mellanox.com
 
 
-   Diego R. Lopez
-   Telefonica I+D
-   Editor Jose Manuel Lara, 9 (1-B)
-   Seville  41013
-   Spain
+   Petr Lapukhov
+   Facebook
+   1 Hacker Way
+   Menlo Park, CA  94025
+   US
 
-   Phone: +34 913 129 041
-   Email: diego.r.lopez@telefonica.com
-
+   Email: petr@fb.com
 
 
+   Remy Chang
+   Barefoot Networks
+   2185 Park Boulevard
+   Palo Alto, CA  94306
+   US
 
 
+   Daniel
+   Bell Canada
 
-
-
-
-
-
+   Email: daniel.bernier@bell.ca
 
 
 
@@ -1397,4 +1618,7 @@ Internet-Draft              Proof of Transit                October 2018
 
 
 
-Brockners, et al.         Expires April 4, 2019                [Page 25]
+
+
+
+Brockners, et al.          Expires May 3, 2018                 [Page 29]
