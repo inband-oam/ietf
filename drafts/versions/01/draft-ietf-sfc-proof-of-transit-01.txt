@@ -198,6 +198,10 @@ Internet-Draft              Proof of Transit                October 2018
 
 2.  Conventions
 
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
    Abbreviations used in this document:
 
    HMAC:      Hash based Message Authentication Code.  For example,
@@ -215,16 +219,14 @@ Internet-Draft              Proof of Transit                October 2018
 
    NSH:       Network Service Header
 
-   POT:       Proof of Transit
-
-
-
 
 
 Brockners, et al.         Expires April 4, 2019                 [Page 4]
 
 Internet-Draft              Proof of Transit                October 2018
 
+
+   POT:       Proof of Transit
 
    POT-profile:  Proof of Transit Profile that has the necessary data
               for nodes to participate in proof of transit
@@ -271,8 +273,6 @@ Internet-Draft              Proof of Transit                October 2018
    path correctly or not.  Security mechanisms are natively built into
    the generation of the POT data to protect against misuse (i.e.
    configuration mistakes, malicious administrators playing tricks with
-   routing, capturing, spoofing and replaying packets).  The mechanism
-   for POT leverages "Shamir's Secret Sharing" scheme [SSS].
 
 
 
@@ -281,6 +281,9 @@ Brockners, et al.         Expires April 4, 2019                 [Page 5]
 
 Internet-Draft              Proof of Transit                October 2018
 
+
+   routing, capturing, spoofing and replaying packets).  The mechanism
+   for POT leverages "Shamir's Secret Sharing" scheme [SSS].
 
    Shamir's secret sharing base idea: A polynomial (represented by its
    coefficients) is chosen as a secret by the controller.  A polynomial
@@ -328,15 +331,15 @@ Internet-Draft              Proof of Transit                October 2018
    solution leverages finite field arithmetic in a field of size "prime
    number".
 
-   Detailed algorithms are discussed next.  A simple example is
-   discussed in Section 3.3.
-
 
 
 Brockners, et al.         Expires April 4, 2019                 [Page 6]
 
 Internet-Draft              Proof of Transit                October 2018
 
+
+   Detailed algorithms are discussed next.  A simple example is
+   discussed in Section 3.3.
 
 3.2.1.  Setup
 
@@ -382,9 +385,6 @@ Internet-Draft              Proof of Transit                October 2018
 
    Choices: Prime = 53.  POLY-1(x) = (3x^2 + 3x + 10) mod 53.  The
    secret to be re-constructed is the constant coefficient of POLY-1,
-   i.e., SECRET=10.  It is important to note that all operations are
-   done over a finite field (i.e., modulo prime).
-
 
 
 
@@ -393,6 +393,9 @@ Brockners, et al.         Expires April 4, 2019                 [Page 7]
 
 Internet-Draft              Proof of Transit                October 2018
 
+
+   i.e., SECRET=10.  It is important to note that all operations are
+   done over a finite field (i.e., modulo prime).
 
 3.3.1.1.  Secret Shares
 
@@ -439,9 +442,6 @@ Internet-Draft              Proof of Transit                October 2018
 
       LPC(x2) = (8/3) mod 53 = 38
 
-   For a general way to compute the modular multiplicative inverse, see
-   e.g., the Euclidean algorithm.
-
 
 
 
@@ -449,6 +449,9 @@ Brockners, et al.         Expires April 4, 2019                 [Page 8]
 
 Internet-Draft              Proof of Transit                October 2018
 
+
+   For a general way to compute the modular multiplicative inverse, see
+   e.g., the Euclidean algorithm.
 
 3.3.1.4.  Reconstruction
 
@@ -495,9 +498,6 @@ Internet-Draft              Proof of Transit                October 2018
    case could be configured through the Controller on each node).  So
    precisely only RND value changes per packet and is public and the
    rest of the non-constant coefficients of POLY-2 kept secret.
-
-
-
 
 
 
@@ -1248,6 +1248,11 @@ Internet-Draft              Proof of Transit                October 2018
 
 10.1.  Normative References
 
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
+              RFC2119, March 1997, <https://www.rfc-editor.org/info/
+              rfc2119>.
+
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
               Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
               RFC7665, October 2015, <https://www.rfc-editor.org/info/
@@ -1259,9 +1264,9 @@ Internet-Draft              Proof of Transit                October 2018
 10.2.  Informative References
 
    [I-D.ietf-anima-autonomic-control-plane]
-              Behringer, M., Eckert, T., and S. Bjarnason, "An Autonomic
-              Control Plane", draft-ietf-anima-autonomic-control-
-              plane-03 (work in progress), July 2016.
+              Eckert, T., Behringer, M., and S. Bjarnason, "An Autonomic
+              Control Plane (ACP)", draft-ietf-anima-autonomic-control-
+              plane-18 (work in progress), August 2018.
 
 Authors' Addresses
 
@@ -1274,13 +1279,8 @@ Authors' Addresses
    Email: fbrockne@cisco.com
 
 
-   Shwetha Bhandari
-   Cisco Systems, Inc.
-   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
-   Bangalore, KARNATAKA 560 087
-   India
 
-   Email: shwethab@cisco.com
+
 
 
 
@@ -1288,6 +1288,15 @@ Authors' Addresses
 Brockners, et al.         Expires April 4, 2019                [Page 23]
 
 Internet-Draft              Proof of Transit                October 2018
+
+
+   Shwetha Bhandari
+   Cisco Systems, Inc.
+   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+   Bangalore, KARNATAKA 560 087
+   India
+
+   Email: shwethab@cisco.com
 
 
    Sashank Dara
@@ -1328,15 +1337,6 @@ Internet-Draft              Proof of Transit                October 2018
    Email: mosesster@gmail.com
 
 
-   Tal Mizrahi
-   Marvell
-   6 Hamada St.
-   Yokneam  20692
-   Israel
-
-   Email: talmi@marvell.com
-
-
 
 
 
@@ -1344,6 +1344,15 @@ Internet-Draft              Proof of Transit                October 2018
 Brockners, et al.         Expires April 4, 2019                [Page 24]
 
 Internet-Draft              Proof of Transit                October 2018
+
+
+   Tal Mizrahi
+   Marvell
+   6 Hamada St.
+   Yokneam  20692
+   Israel
+
+   Email: talmi@marvell.com
 
 
    Alejandro Aguado
@@ -1364,15 +1373,6 @@ Internet-Draft              Proof of Transit                October 2018
 
    Phone: +34 913 129 041
    Email: diego.r.lopez@telefonica.com
-
-
-
-
-
-
-
-
-
 
 
 
