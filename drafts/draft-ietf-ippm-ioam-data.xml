@@ -529,7 +529,7 @@
 
             <t>which IOAM option headers need to be processed/updated in case
             there are multiple IOAM option headers present in the packet.
-            Multiple option header can be present in a packet in case of
+            Multiple option headers can be present in a packet in case of
             overlapping IOAM domains or in case of a layered IOAM
             deployment.</t>
 
@@ -550,8 +550,8 @@
             deployment, the combination of Node-ID and Namespace-ID will
             always be unique. Similarly, namespaces can be used to define how
             certain IOAM data fields are interpreted: IOAM offers three
-            different timestamp format options. The Namespace-ID can determine
-            which timestamp format to use. </t>
+            different timestamp format options. The Namespace-ID may be used
+            to determine the timestamp format.</t>
 
             <t>Namespaces can be used to identify different sets of devices
             (e.g. different types of devices) in a deployment: If an operator
@@ -691,7 +691,7 @@ Pre-allocated and incremental trace option headers:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |        Namespace-ID           |NodeLen  | Flags | RemainingLen|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|               IOAM-Trace-Type                 |  Reserved     |    
+|               IOAM-Trace-Type                 |  Reserved     |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -720,13 +720,12 @@ The trace option data MUST be 4-octet aligned:
 
 ]]></artwork>
             </figure> <list style="hanging">
-              <t anchor="IOAMTraceType" hangText="Namespace-ID:">16-bit
-              identifier of an IOAM namespace. The Namespace-ID value of
-              0x0000 is defined as the default value and MUST be known to all
-              the nodes implementing IOAM. For any other Namespace-ID value
-              that does not match any Namespace-ID the node is configured to
-              operate on, then the node MUST NOT change the contents of the
-              IOAM data fields. </t>
+              <t hangText="Namespace-ID:">16-bit identifier of an IOAM
+              namespace. The Namespace-ID value of 0x0000 is defined as the
+              default value and MUST be known to all the nodes implementing
+              IOAM. For any other Namespace-ID value that does not match any
+              Namespace-ID the node is configured to operate on, the node
+              MUST NOT change the contents of the IOAM data fields. </t>
 
               <t hangText="NodeLen:">5-bit unsigned integer. This field
               specifies the length of data added by each node in multiples of
@@ -796,8 +795,9 @@ The trace option data MUST be 4-octet aligned:
               used as an offset in data space to record the node data
               element.</t>
 
-              <t hangText="IOAM-Trace-Type:">A 16-bit identifier which
-              specifies which data types are used in this node data list.</t>
+              <t anchor="IOAMTraceType" hangText="IOAM-Trace-Type:">A 16-bit
+              identifier which specifies which data types are used in this
+              node data list.</t>
 
               <t hangText=" ">The IOAM-Trace-Type value is a bit field. The
               following bit fields are defined in this document, with details
@@ -823,8 +823,8 @@ The trace option data MUST be 4-octet aligned:
                   <t hangText="Bit 4">When set indicates presence of transit
                   delay in the node data.</t>
 
-                  <t hangText="Bit 5">When set indicates presence of app_data
-                  (short format) in the node data.</t>
+                  <t hangText="Bit 5">When set indicates presence of namespace
+                  specific data (short format) in the node data.</t>
 
                   <t hangText="Bit 6">When set indicates presence of queue
                   depth in the node data.</t>
@@ -839,13 +839,10 @@ The trace option data MUST be 4-octet aligned:
                   ingress_if_id and egress_if_id in wide format in the node
                   data.</t>
 
-                  <t hangText="Bit 10">When set indicates presence of app_data
-                  wide in the node data.</t>
+                  <t hangText="Bit 10">When set indicates presence of
+                  namespace specific data in wide format in the node data.</t>
 
-                  <t hangText="Bit 11">When set indicates presence of the
-                  Checksum Complement node data.</t>
-
-                  <t hangText="Bit 12-15">Undefined. An IOAM encapsulating
+                  <t hangText="Bit 11-22">Undefined. An IOAM encapsulating
                   node must set the value of each of these bits to 0. If an
                   IOAM transit node receives a packet with one or more of
                   these bits set to 1, it must either: <list style="numbers">
@@ -858,6 +855,9 @@ The trace option data MUST be 4-octet aligned:
                       <t>Not add any node data fields to the packet, even for
                       the IOAM-Trace-Type bits defined above.</t>
                     </list></t>
+
+                  <t hangText="Bit 23">When set indicates presence of the
+                  Checksum Complement node data.</t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-node-data-element"></xref>
@@ -981,13 +981,13 @@ The trace option data MUST be 4-octet aligned:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
 
-              <t hangText="app_data:">4-octet placeholder which can be used by
-              the node to add application specific data. App_data represents a
-              "free-format" 4-octet bit field with its semantics defined by a
-              specific deployment.<figure>
+              <t hangText="namespace specific data:">4-octet field which can
+              be used by the node to add namespace specific data. This
+              represents a "free-format" 4-octet bit field with its semantics
+              defined in the context of a specific namespace.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       app_data                                |
+|                    namespace specific data                    |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
 
@@ -1005,12 +1005,14 @@ The trace option data MUST be 4-octet aligned:
 
               <t hangText="Opaque State Snapshot:">Variable length field. It
               allows the network element to store an arbitrary state in the
-              node data field , without a pre-defined schema. The schema needs
+              node data field, without a pre-defined schema. The schema is to
+              be defined within the context of a namespace. The schema needs
               to be made known to the analyzer by some out-of-band mechanism.
               The specification of this mechanism is beyond the scope of this
-              document. The 24-bit "Schema Id" field in the field indicates
-              which particular schema is used, and should be configured on the
-              network element by the operator. <figure>
+              document. A 24-bit "Schema Id" field, interpreted within the
+              context of a namespace, indicates which particular schema is
+              used, and should be configured on the network element by the
+              operator.<figure>
                   <artwork><![CDATA[    0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1082,15 +1084,15 @@ The trace option data MUST be 4-octet aligned:
                   packet is forwarded out of.</t>
                 </list></t>
 
-              <t hangText="app_data wide:">8-octet placeholder which can be
-              used by the node to add application specific data. App data
-              represents a "free-format" 8-octed bit field with its semantics
-              defined by a specific deployment. <figure>
+              <t hangText="namespace specific data wide:">8-octet field which
+              can be used by the node to add namespace specific data. This
+              represents a "free-format" 8-octet bit field with its semantics
+              defined in the context of a specific namespace.<figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       app data                                ~
+|                    namespace specific data                    ~
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-~                       app data (contd)                        |
+~                namespace specific data (contd)                |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
                 </figure></t>
@@ -1145,9 +1147,9 @@ The trace option data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |     ingress_if_id             |         egress_if_id          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                  timestamp subseconds                         |
+    |                     timestamp subseconds                      |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                            app_data                           |
+    |                    namespace specific data                    |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -1184,7 +1186,7 @@ The trace option data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                            app_data                           |
+    |                    namespace specific data                    |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 ]]></artwork>
@@ -1198,7 +1200,7 @@ The trace option data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                    timestamp subseconds                       |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                            app_data                           |
+    |                    namespace specific data                    |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 ]]></artwork>
@@ -1281,7 +1283,7 @@ IOAM proof of transit option data MUST be 4-octet aligned.:
             namespace. The Namespace-ID value of 0x0000 is defined as the
             default value and MUST be known to all the nodes implementing
             IOAM. For any other Namespace-ID value that does not match any
-            Namespace-ID the node is configured to operate on, then the node
+            Namespace-ID the node is configured to operate on, the node
             MUST NOT change the contents of the IOAM data fields.</t>
 
             <t hangText="IOAM POT Type:">8-bit identifier of a particular POT
@@ -1332,7 +1334,7 @@ IOAM proof of transit option of IOAM POT Type 0:
               namespace. The Namespace-ID value of 0x0000 is defined as the
               default value and MUST be known to all the nodes implementing
               IOAM. For any other Namespace-ID value that does not match any
-              Namespace-ID the node is configured to operate on, then the node
+              Namespace-ID the node is configured to operate on, the node
               MUST NOT change the contents of the IOAM data fields.</t>
 
               <t hangText="IOAM POT Type:">8-bit identifier of a particular
@@ -1703,6 +1705,8 @@ IOAM proof of transit option of IOAM POT Type 0:
             <t>IOAM POT flags</t>
 
             <t>IOAM E2E Type</t>
+
+            <t>IOAM Namespace-ID</t>
           </list>will contain the current set of possibilities defined in this
         document. New registries in this name space are created via RFC
         Required process as per <xref target="RFC8126"></xref>.</t>
@@ -1733,20 +1737,55 @@ IOAM proof of transit option of IOAM POT Type 0:
         <t>This registry defines code point for each bit in the 16-bit
         IOAM-Trace-Type field for Pre-allocated trace option and Incremental
         trace option defined in <xref target="IOAM_tracing_option"></xref>.
-        The meaning of Bit 0 - 11 for trace type are defined in this document
-        in <xref target="IOAMTraceType"></xref> <xref
-        target="TraceOptionDef">of</xref>. The meaning for Bit 12 - 15 are
-        available for assignment via RFC Required process as per <xref
-        target="RFC8126"></xref>.</t>
+        The meaning of Bits 0 - 11 for trace type are defined in this document
+        in <xref target="IOAMTraceType"></xref> of <xref
+        target="TraceOptionDef"></xref>:</t>
+
+        <t><list style="hanging">
+            <t hangText="Bit 0">hop_Lim and node_id in short format</t>
+
+            <t hangText="Bit 1">ingress_if_id and egress_if_id in short
+            format</t>
+
+            <t hangText="Bit 2">timestamp seconds</t>
+
+            <t hangText="Bit 3">timestamp subseconds</t>
+
+            <t hangText="Bit 4">transit delay</t>
+
+            <t hangText="Bit 5">namespace specific data in short format</t>
+
+            <t hangText="Bit 6">queue depth</t>
+
+            <t hangText="Bit 7">variable length Opaque State Snapshot</t>
+
+            <t hangText="Bit 8">hop_Lim and node_id in wide format</t>
+
+            <t hangText="Bit 9">ingress_if_id and egress_if_id in wide
+            format</t>
+
+            <t hangText="Bit 10">namespace specific data in wide format</t>
+
+            <t hangText="Bit 23">checksum complement</t>
+          </list>
+        The meaning for Bits 11 - 22 are available for assignment via RFC
+        Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM Trace Flags Registry">
-        <t>This registry defines code point for each bit in the 4 bit flags
+        <t>This registry defines code points for each bit in the 4 bit flags
         for Pre-allocated trace option and Incremental trace option defined in
         <xref target="IOAM_tracing_option"></xref>. The meaning of Bit 0 - 1
         for trace flags are defined in this document in <xref
-        target="TraceFlags"></xref> of <xref target="TraceOptionDef"></xref>.
-        The meaning for Bit 2 - 3 are available for assignment via RFC
+        target="TraceFlags"></xref> of <xref target="TraceOptionDef"></xref>:
+        </t>
+
+        <t><list style="hanging">
+            <t hangText="Bit 0">"Overflow" (O-bit)</t>
+
+            <t hangText="Bit 1">"Loopback" (L-bit)</t>
+          </list>
+        The meaning for Bits 2 - 3 are available for assignment via RFC
         Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
@@ -1754,36 +1793,64 @@ IOAM proof of transit option of IOAM POT Type 0:
         <t>This registry defines 256 code points to define IOAM POT Type for
         IOAM proof of transit option <xref
         target="IOAM_proof_of_transit_option"></xref>. The code point value 0
-        is defined in this document, 1 - 255 are available for assignment via
-        RFC Required process as per <xref target="RFC8126"></xref>.</t>
+        is defined in this document:</t>
+
+        <t><list style="hanging">
+            <t hangText="0:">16 Octet POT data</t>
+          </list>
+        1 - 255 are available for assignment via RFC Required process as per
+        <xref target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM POT Flags Registry">
-        <t>This registry defines code point for each bit in the 8 bit flags
+        <t>This registry defines code points for each bit in the 8 bit flags
         for IOAM POT option defined in <xref
         target="IOAM_proof_of_transit_option"></xref>. The meaning of Bit 0
         for IOAM POT flags is defined in this document in <xref
-        target="IOAM_proof_of_transit_option"></xref>. The meaning for Bit 1 -
-        7 are available for assignment via RFC Required process as per <xref
-        target="RFC8126"></xref>.</t>
+        target="IOAM_proof_of_transit_option"></xref>:</t>
+
+        <t><list style="hanging">
+            <t hangText="Bit 0">"Profile-to-use" (P-bit)</t>
+          </list>
+        The meaning for Bits 1 - 7 are available for assignment via RFC
+        Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM E2E Type Registry">
         <t>This registry defines code points for each bit in the 16 bit
         IOAM-E2E-Type field for IOAM E2E option <xref
         target="IOAM_edge_to_edge_opt"></xref>. The meaning of Bit 0 - 3 are
-        defined in this document. The meaning of Bit 4 - 15 are available for
-        assignments via RFC Required process as per <xref
-        target="RFC8126"></xref>.</t>
+        defined in this document:</t>
+
+        <t><list style="hanging">
+            <t hangText="Bit 0">64-bit sequence number</t>
+
+            <t hangText="Bit 1">32-bit sequence number</t>
+
+            <t hangText="Bit 2">timestamp seconds</t>
+
+            <t hangText="Bit 3">timestamp subseconds</t>
+          </list>
+        The meaning of Bits 4 - 15 are available for assignment via RFC
+        Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
-      <section title="Namespace-ID Registry ">
-        <t>IANA is requested to set up a "Namespace-ID Registry", containing
-        16-bit values. IANA is requested to assign the values 0x0001 to 0x7FFF
-        for operator-managed Namespace-ID values, as specified in <xref
+      <section title="IOAM Namespace-ID Registry ">
+        <t>IANA is requested to set up an "IOAM Namespace-ID Registry",
+        containing 16-bit values. The meaning of Bit 0 is defined in this
+        document. IANA is requested to reserve the values 0x0001 to 0x7FFF
+        for private use (managed by operators), as specified in <xref
         target="ioam_namespaces"></xref> of the current document. Registry
-        entries are assigned via the "Expert Review" policy defined in <xref
-        target="RFC8126"></xref>.</t>
+        entries for the values 0x8000 to 0xFFFF are to be assigned via the
+        "Expert Review" policy defined in <xref target="RFC8126"></xref>.</t>
+
+        <t><list style="hanging">
+            <t hangText="0:">default namespace (known to all IOAM nodes)</t>
+
+            <t hangText="0x0001 - 0x7FFF:">reserved for private use</t>
+
+            <t hangText="0x8000 - 0xFFFF:">unassigned</t>
+          </list></t>
       </section>
     </section>
 
