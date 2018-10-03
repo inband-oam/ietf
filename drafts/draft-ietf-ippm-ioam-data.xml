@@ -842,10 +842,10 @@ The trace option data MUST be 4-octet aligned:
                   <t hangText="Bit 10">When set indicates presence of app_data
                   wide in the node data.</t>
 
-                  <t hangText="Bit 11">When set indicates presence of the
-                  Checksum Complement node data.</t>
+                  <t hangText="Bit 11">When set indicates presence of buffer 
+	          occupancy.</t>
 
-                  <t hangText="Bit 12-15">Undefined. An IOAM encapsulating
+                  <t hangText="Bit 12-23">Undefined. An IOAM encapsulating
                   node must set the value of each of these bits to 0. If an
                   IOAM transit node receives a packet with one or more of
                   these bits set to 1, it must either: <list style="numbers">
@@ -857,6 +857,8 @@ The trace option data MUST be 4-octet aligned:
 
                       <t>Not add any node data fields to the packet, even for
                       the IOAM-Trace-Type bits defined above.</t>
+		  <t hangText="Bit 22">When set indicates presence of the
+                  Checksum Complement node data.</t>
                     </list></t>
                 </list></t>
 
@@ -1095,6 +1097,16 @@ The trace option data MUST be 4-octet aligned:
 ]]></artwork>
                 </figure></t>
 
+	      <t hangText="buffer occupancy:">4-octet unsigned integer field. This
+              field indicates the current status of the buffer occupancy. The
+              buffer occupancy is expressed as the current number of memory buffers
+              used by the set of queues that share a common buffer pool. <figure>
+                  <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       buffer occupancy                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
+                </figure></t>
+		  
               <t hangText="Checksum Complement:">4-octet node data which
               contains a two-octet Checksum Complement field, and a 2-octet
               reserved field. The Checksum Complement is useful when IOAM is
@@ -1800,7 +1812,7 @@ IOAM proof of transit option of IOAM POT Type 0:
 
       <t>The data elements of IOAM can be used for network reconnaissance,
       allowing attackers to collect information about network paths,
-      performance, queue states, and other information.</t>
+      performance, queue states, buffer occupancy and other information.</t>
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
