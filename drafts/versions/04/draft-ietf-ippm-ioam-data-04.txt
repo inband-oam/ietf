@@ -49,7 +49,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
 
 
@@ -72,7 +72,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -104,8 +104,8 @@ Table of Contents
            Registry (IOAM) Protocol Parameters IANA registry . . . .  29
      7.2.  IOAM Type Registry  . . . . . . . . . . . . . . . . . . .  30
      7.3.  IOAM Trace Type Registry  . . . . . . . . . . . . . . . .  30
-     7.4.  IOAM Trace Flags Registry . . . . . . . . . . . . . . . .  30
-     7.5.  IOAM POT Type Registry  . . . . . . . . . . . . . . . . .  30
+     7.4.  IOAM Trace Flags Registry . . . . . . . . . . . . . . . .  31
+     7.5.  IOAM POT Type Registry  . . . . . . . . . . . . . . . . .  31
 
 
 
@@ -115,14 +115,14 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
 
      7.6.  IOAM POT Flags Registry . . . . . . . . . . . . . . . . .  31
-     7.7.  IOAM E2E Type Registry  . . . . . . . . . . . . . . . . .  31
-     7.8.  Namespace-ID Registry . . . . . . . . . . . . . . . . . .  31
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  31
-   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  32
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  32
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  32
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  33
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  35
+     7.7.  IOAM E2E Type Registry  . . . . . . . . . . . . . . . . .  32
+     7.8.  IOAM Namespace-ID Registry  . . . . . . . . . . . . . . .  32
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  32
+   9.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  33
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  34
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  34
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  34
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  36
 
 1.  Introduction
 
@@ -345,7 +345,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
    o  which IOAM option headers need to be processed/updated in case
       there are multiple IOAM option headers present in the packet.
-      Multiple option header can be present in a packet in case of
+      Multiple option headers can be present in a packet in case of
       overlapping IOAM domains or in case of a layered IOAM deployment.
 
    o  whether IOAM option header(s) should be removed from the packet,
@@ -363,8 +363,8 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
       deployment, the combination of Node-ID and Namespace-ID will
       always be unique.  Similarly, namespaces can be used to define how
       certain IOAM data fields are interpreted: IOAM offers three
-      different timestamp format options.  The Namespace-ID can
-      determine which timestamp format to use.
+      different timestamp format options.  The Namespace-ID may be used
+      to determine the timestamp format.
 
    o  Namespaces can be used to identify different sets of devices
       (e.g., different types of devices) in a deployment: If an operator
@@ -566,8 +566,8 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
       Namespace-ID value of 0x0000 is defined as the default value and
       MUST be known to all the nodes implementing IOAM.  For any other
       Namespace-ID value that does not match any Namespace-ID the node
-      is configured to operate on, then the node MUST NOT change the
-      contents of the IOAM data fields.
+      is configured to operate on, the node MUST NOT change the contents
+      of the IOAM data fields.
 
    NodeLen:  5-bit unsigned integer.  This field specifies the length of
       data added by each node in multiples of 4-octets, excluding the
@@ -674,8 +674,8 @@ Brockners, et al.        Expires March 28, 2019                [Page 12]
 Internet-Draft           In-situ OAM Data Fields          September 2018
 
 
-      Bit 5    When set indicates presence of app_data (short format) in
-               the node data.
+      Bit 5    When set indicates presence of namespace specific data
+               (short format) in the node data.
 
       Bit 6    When set indicates presence of queue depth in the node
                data.
@@ -689,13 +689,10 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
       Bit 9    When set indicates presence of ingress_if_id and
                egress_if_id in wide format in the node data.
 
-      Bit 10   When set indicates presence of app_data wide in the node
-               data.
+      Bit 10   When set indicates presence of namespace specific data in
+               wide format in the node data.
 
-      Bit 11   When set indicates presence of the Checksum Complement
-               node data.
-
-      Bit 12-15  Undefined.  An IOAM encapsulating node must set the
+      Bit 11-22  Undefined.  An IOAM encapsulating node must set the
                value of each of these bits to 0.  If an IOAM transit
                node receives a packet with one or more of these bits set
                to 1, it must either:
@@ -708,6 +705,9 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
                2.  Not add any node data fields to the packet, even for
                    the IOAM-Trace-Type bits defined above.
+
+      Bit 23   When set indicates presence of the Checksum Complement
+               node data.
 
       Section 4.2.2 describes the IOAM data types and their formats.
       Within an in-situ OAM domain possible combinations of these bits
@@ -842,14 +842,14 @@ Brockners, et al.        Expires March 28, 2019                [Page 15]
 Internet-Draft           In-situ OAM Data Fields          September 2018
 
 
-   app_data:  4-octet placeholder which can be used by the node to add
-      application specific data.  App_data represents a "free-format"
-      4-octet bit field with its semantics defined by a specific
-      deployment.
+   namespace specific data:  4-octet field which can be used by the node
+      to add namespace specific data.  This represents a "free-format"
+      4-octet bit field with its semantics defined in the context of a
+      specific namespace.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                       app_data                                |
+   |                    namespace specific data                    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    queue depth:  4-octet unsigned integer field.  This field indicates
@@ -865,13 +865,14 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    Opaque State Snapshot:  Variable length field.  It allows the network
-      element to store an arbitrary state in the node data field ,
-      without a pre-defined schema.  The schema needs to be made known
-      to the analyzer by some out-of-band mechanism.  The specification
-      of this mechanism is beyond the scope of this document.  The
-      24-bit "Schema Id" field in the field indicates which particular
-      schema is used, and should be configured on the network element by
-      the operator.
+      element to store an arbitrary state in the node data field,
+      without a pre-defined schema.  The schema is to be defined within
+      the context of a namespace.  The schema needs to be made known to
+      the analyzer by some out-of-band mechanism.  The specification of
+      this mechanism is beyond the scope of this document.  A 24-bit
+      "Schema Id" field, interpreted within the context of a namespace,
+      indicates which particular schema is used, and should be
+      configured on the network element by the operator.
 
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -888,7 +889,6 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
       Length:  1-octet unsigned integer.  It is the length in multiples
          of 4-octets of the Opaque data field that follows Schema Id.
-
 
 
 
@@ -957,16 +957,16 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
       egress_if_id:  4-octet unsigned integer.  Interface identifier to
          record the egress interface the packet is forwarded out of.
 
-   app_data wide:  8-octet placeholder which can be used by the node to
-      add application specific data.  App data represents a "free-
-      format" 8-octed bit field with its semantics defined by a specific
-      deployment.
+   namespace specific data wide:  8-octet field which can be used by the
+      node to add namespace specific data.  This represents a "free-
+      format" 8-octet bit field with its semantics defined in the
+      context of a specific namespace.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                       app data                                ~
+   |                    namespace specific data                    ~
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   ~                       app data (contd)                        |
+   ~                namespace specific data (contd)                |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    Checksum Complement:  4-octet node data which contains a two-octet
@@ -1027,9 +1027,9 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |     ingress_if_id             |         egress_if_id          |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                  timestamp subseconds                         |
+       |                     timestamp subseconds                      |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                            app_data                           |
+       |                    namespace specific data                    |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -1070,7 +1070,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |   Hop_Lim     |              node_id                          |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                            app_data                           |
+       |                    namespace specific data                    |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -1082,7 +1082,7 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |                    timestamp subseconds                       |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-       |                            app_data                           |
+       |                    namespace specific data                    |
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -1161,8 +1161,8 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
       Namespace-ID value of 0x0000 is defined as the default value and
       MUST be known to all the nodes implementing IOAM.  For any other
       Namespace-ID value that does not match any Namespace-ID the node
-      is configured to operate on, then the node MUST NOT change the
-      contents of the IOAM data fields.
+      is configured to operate on, the node MUST NOT change the contents
+      of the IOAM data fields.
 
    IOAM POT Type:  8-bit identifier of a particular POT variant that
       specifies the POT data that is included.  This document defines
@@ -1215,8 +1215,8 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
       Namespace-ID value of 0x0000 is defined as the default value and
       MUST be known to all the nodes implementing IOAM.  For any other
       Namespace-ID value that does not match any Namespace-ID the node
-      is configured to operate on, then the node MUST NOT change the
-      contents of the IOAM data fields.
+      is configured to operate on, the node MUST NOT change the contents
+      of the IOAM data fields.
 
    IOAM POT Type:  8-bit identifier of a particular POT variant that
       specifies the POT data that is included.  This section defines the
@@ -1614,9 +1614,9 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
       IOAM E2E Type
 
-   will contain the current set of possibilities defined in this
-   document.  New registries in this name space are created via RFC
-   Required process as per [RFC8126].
+      IOAM Namespace-ID
+
+
 
 
 
@@ -1625,6 +1625,10 @@ Brockners, et al.        Expires March 28, 2019                [Page 29]
 
 Internet-Draft           In-situ OAM Data Fields          September 2018
 
+
+   will contain the current set of possibilities defined in this
+   document.  New registries in this name space are created via RFC
+   Required process as per [RFC8126].
 
    The subsequent sub-sections detail the registries herein contained.
 
@@ -1649,30 +1653,26 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
    This registry defines code point for each bit in the 16-bit IOAM-
    Trace-Type field for Pre-allocated trace option and Incremental trace
-   option defined in Section 4.2.  The meaning of Bit 0 - 11 for trace
-   type are defined in this document in Paragraph 1 of (Section 4.2.1).
-   The meaning for Bit 12 - 15 are available for assignment via RFC
-   Required process as per [RFC8126].
+   option defined in Section 4.2.  The meaning of Bits 0 - 11 for trace
+   type are defined in this document in Paragraph 5 of Section 4.2.1:
 
-7.4.  IOAM Trace Flags Registry
+   Bit 0  hop_Lim and node_id in short format
 
-   This registry defines code point for each bit in the 4 bit flags for
-   Pre-allocated trace option and Incremental trace option defined in
-   Section 4.2.  The meaning of Bit 0 - 1 for trace flags are defined in
-   this document in Paragraph 3 of Section 4.2.1.  The meaning for Bit 2
-   - 3 are available for assignment via RFC Required process as per
-   [RFC8126].
+   Bit 1  ingress_if_id and egress_if_id in short format
 
-7.5.  IOAM POT Type Registry
+   Bit 2  timestamp seconds
 
-   This registry defines 256 code points to define IOAM POT Type for
-   IOAM proof of transit option Section 4.3.  The code point value 0 is
-   defined in this document, 1 - 255 are available for assignment via
-   RFC Required process as per [RFC8126].
+   Bit 3  timestamp subseconds
 
+   Bit 4  transit delay
 
+   Bit 5  namespace specific data in short format
 
+   Bit 6  queue depth
 
+   Bit 7  variable length Opaque State Snapshot
+
+   Bit 8  hop_Lim and node_id in wide format
 
 
 
@@ -1682,28 +1682,94 @@ Brockners, et al.        Expires March 28, 2019                [Page 30]
 Internet-Draft           In-situ OAM Data Fields          September 2018
 
 
+   Bit 9  ingress_if_id and egress_if_id in wide format
+
+   Bit 10  namespace specific data in wide format
+
+   Bit 23  checksum complement
+
+   The meaning for Bits 11 - 22 are available for assignment via RFC
+   Required process as per [RFC8126].
+
+7.4.  IOAM Trace Flags Registry
+
+   This registry defines code points for each bit in the 4 bit flags for
+   Pre-allocated trace option and Incremental trace option defined in
+   Section 4.2.  The meaning of Bit 0 - 1 for trace flags are defined in
+   this document in Paragraph 3 of Section 4.2.1:
+
+   Bit 0  "Overflow" (O-bit)
+
+   Bit 1  "Loopback" (L-bit)
+
+   The meaning for Bits 2 - 3 are available for assignment via RFC
+   Required process as per [RFC8126].
+
+7.5.  IOAM POT Type Registry
+
+   This registry defines 256 code points to define IOAM POT Type for
+   IOAM proof of transit option Section 4.3.  The code point value 0 is
+   defined in this document:
+
+   0: 16 Octet POT data
+
+   1 - 255 are available for assignment via RFC Required process as per
+   [RFC8126].
+
 7.6.  IOAM POT Flags Registry
 
-   This registry defines code point for each bit in the 8 bit flags for
+   This registry defines code points for each bit in the 8 bit flags for
    IOAM POT option defined in Section 4.3.  The meaning of Bit 0 for
-   IOAM POT flags is defined in this document in Section 4.3.  The
-   meaning for Bit 1 - 7 are available for assignment via RFC Required
-   process as per [RFC8126].
+   IOAM POT flags is defined in this document in Section 4.3:
+
+   Bit 0  "Profile-to-use" (P-bit)
+
+   The meaning for Bits 1 - 7 are available for assignment via RFC
+   Required process as per [RFC8126].
+
+
+
+
+
+
+
+Brockners, et al.        Expires March 28, 2019                [Page 31]
+
+Internet-Draft           In-situ OAM Data Fields          September 2018
+
 
 7.7.  IOAM E2E Type Registry
 
    This registry defines code points for each bit in the 16 bit IOAM-
    E2E-Type field for IOAM E2E option Section 4.4.  The meaning of Bit 0
-   - 3 are defined in this document.  The meaning of Bit 4 - 15 are
-   available for assignments via RFC Required process as per [RFC8126].
+   - 3 are defined in this document:
 
-7.8.  Namespace-ID Registry
+   Bit 0  64-bit sequence number
 
-   IANA is requested to set up a "Namespace-ID Registry", containing
-   16-bit values.  IANA is requested to assign the values 0x0001 to
-   0x7FFF for operator-managed Namespace-ID values, as specified in
-   Section 4.1 of the current document.  Registry entries are assigned
-   via the "Expert Review" policy defined in [RFC8126].
+   Bit 1  32-bit sequence number
+
+   Bit 2  timestamp seconds
+
+   Bit 3  timestamp subseconds
+
+   The meaning of Bits 4 - 15 are available for assignment via RFC
+   Required process as per [RFC8126].
+
+7.8.  IOAM Namespace-ID Registry
+
+   IANA is requested to set up an "IOAM Namespace-ID Registry",
+   containing 16-bit values.  The meaning of Bit 0 is defined in this
+   document.  IANA is requested to reserve the values 0x0001 to 0x7FFF
+   for private use (managed by operators), as specified in Section 4.1
+   of the current document.  Registry entries for the values 0x8000 to
+   0xFFFF are to be assigned via the "Expert Review" policy defined in
+   [RFC8126].
+
+   0: default namespace (known to all IOAM nodes)
+
+   0x0001 - 0x7FFF:  reserved for private use
+
+   0x8000 - 0xFFFF:  unassigned
 
 8.  Security Considerations
 
@@ -1720,6 +1786,14 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
    allowing attackers to collect information about network paths,
    performance, queue states, and other information.
 
+
+
+
+Brockners, et al.        Expires March 28, 2019                [Page 32]
+
+Internet-Draft           In-situ OAM Data Fields          September 2018
+
+
    IOAM can be used as a means for implementing Denial of Service (DoS)
    attacks, or for amplifying them.  For example, a malicious attacker
    can add an IOAM header to packets in order to consume the resources
@@ -1728,15 +1802,6 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
    an attacker pushes IOAM headers into data packets, causing these
    packets to be increased beyond the MTU size, resulting in
    fragmentation or in packet drops.
-
-
-
-
-
-Brockners, et al.        Expires March 28, 2019                [Page 31]
-
-Internet-Draft           In-situ OAM Data Fields          September 2018
-
 
    Since IOAM options may include timestamps, if network devices use
    synchronization protocols then any attack on the time protocol
@@ -1773,6 +1838,18 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
    insightful comments received from Joe Clarke, Al Morton, and Mickey
    Spiegel.
 
+
+
+
+
+
+
+
+Brockners, et al.        Expires March 28, 2019                [Page 33]
+
+Internet-Draft           In-situ OAM Data Fields          September 2018
+
+
 10.  References
 
 10.1.  Normative References
@@ -1781,30 +1858,21 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
               Institute of Electrical and Electronics Engineers, "IEEE
               Std 1588-2008 - IEEE Standard for a Precision Clock
               Synchronization Protocol for Networked Measurement and
-              Control Systems", IEEE Std 1588-2008, 2008,
+              Control Systems",  IEEE Std 1588-2008, 2008,
               <http://standards.ieee.org/findstds/
               standard/1588-2008.html>.
-
-
-
-
-
-Brockners, et al.        Expires March 28, 2019                [Page 32]
-
-Internet-Draft           In-situ OAM Data Fields          September 2018
-
 
    [POSIX]    Institute of Electrical and Electronics Engineers, "IEEE
               Std 1003.1-2008 (Revision of IEEE Std 1003.1-2004) - IEEE
               Standard for Information Technology - Portable Operating
-              System Interface (POSIX(R))", IEEE Std 1003.1-2008, 2008,
+              System Interface (POSIX(R))",  IEEE Std 1003.1-2008, 2008,
               <https://standards.ieee.org/findstds/
               standard/1003.1-2008.html>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
-              RFC2119, March 1997, <https://www.rfc-editor.org/info/
-              rfc2119>.
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
    [RFC5905]  Mills, D., Martin, J., Ed., Burbank, J., and W. Kasch,
               "Network Time Protocol Version 4: Protocol and Algorithms
@@ -1829,6 +1897,15 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
               Defining Packet Timestamps", draft-ietf-ntp-packet-
               timestamps-03 (work in progress), August 2018.
 
+
+
+
+
+Brockners, et al.        Expires March 28, 2019                [Page 34]
+
+Internet-Draft           In-situ OAM Data Fields          September 2018
+
+
    [I-D.ietf-nvo3-geneve]
               Gross, J., Ganga, I., and T. Sridhar, "Geneve: Generic
               Network Virtualization Encapsulation", draft-ietf-
@@ -1838,17 +1915,6 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
               Maino, F., Kreeger, L., and U. Elzur, "Generic Protocol
               Extension for VXLAN", draft-ietf-nvo3-vxlan-gpe-06 (work
               in progress), April 2018.
-
-
-
-
-
-
-
-Brockners, et al.        Expires March 28, 2019                [Page 33]
-
-Internet-Draft           In-situ OAM Data Fields          September 2018
-
 
    [I-D.ietf-sfc-nsh]
               Quinn, P., Elzur, U., and C. Pignataro, "Network Service
@@ -1873,18 +1939,28 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
    [RFC7276]  Mizrahi, T., Sprecher, N., Bellagamba, E., and Y.
               Weingarten, "An Overview of Operations, Administration,
-              and Maintenance (OAM) Tools", RFC 7276, DOI 10.17487/
-              RFC7276, June 2014, <https://www.rfc-editor.org/info/
-              rfc7276>.
+              and Maintenance (OAM) Tools", RFC 7276,
+              DOI 10.17487/RFC7276, June 2014,
+              <https://www.rfc-editor.org/info/rfc7276>.
 
    [RFC7384]  Mizrahi, T., "Security Requirements of Time Protocols in
               Packet Switched Networks", RFC 7384, DOI 10.17487/RFC7384,
               October 2014, <https://www.rfc-editor.org/info/rfc7384>.
 
    [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665, DOI 10.17487/
-              RFC7665, October 2015, <https://www.rfc-editor.org/info/
-              rfc7665>.
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015,
+              <https://www.rfc-editor.org/info/rfc7665>.
+
+
+
+
+
+
+Brockners, et al.        Expires March 28, 2019                [Page 35]
+
+Internet-Draft           In-situ OAM Data Fields          September 2018
+
 
    [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
               Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
@@ -1892,19 +1968,9 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
    [RFC7820]  Mizrahi, T., "UDP Checksum Complement in the One-Way
               Active Measurement Protocol (OWAMP) and Two-Way Active
-              Measurement Protocol (TWAMP)", RFC 7820, DOI 10.17487/
-              RFC7820, March 2016, <https://www.rfc-editor.org/info/
-              rfc7820>.
-
-
-
-
-
-
-Brockners, et al.        Expires March 28, 2019                [Page 34]
-
-Internet-Draft           In-situ OAM Data Fields          September 2018
-
+              Measurement Protocol (TWAMP)", RFC 7820,
+              DOI 10.17487/RFC7820, March 2016,
+              <https://www.rfc-editor.org/info/rfc7820>.
 
    [RFC7821]  Mizrahi, T., "UDP Checksum Complement in the Network Time
               Protocol (NTP)", RFC 7821, DOI 10.17487/RFC7821, March
@@ -1945,21 +2011,18 @@ Authors' Addresses
    Email: hannes@rtbrick.com
 
 
+
+
+Brockners, et al.        Expires March 28, 2019                [Page 36]
+
+Internet-Draft           In-situ OAM Data Fields          September 2018
+
+
    John Leddy
    Comcast
    United States
 
    Email: John_Leddy@cable.comcast.com
-
-
-
-
-
-
-
-Brockners, et al.        Expires March 28, 2019                [Page 35]
-
-Internet-Draft           In-situ OAM Data Fields          September 2018
 
 
    Stephen Youell
@@ -2001,21 +2064,21 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
    US
 
 
+
+
+
+
+
+Brockners, et al.        Expires March 28, 2019                [Page 37]
+
+Internet-Draft           In-situ OAM Data Fields          September 2018
+
+
    Daniel Bernier
    Bell Canada
    Canada
 
    Email: daniel.bernier@bell.ca
-
-
-
-
-
-
-
-Brockners, et al.        Expires March 28, 2019                [Page 36]
-
-Internet-Draft           In-situ OAM Data Fields          September 2018
 
 
    John Lemon
@@ -2062,11 +2125,4 @@ Internet-Draft           In-situ OAM Data Fields          September 2018
 
 
 
-
-
-
-
-
-
-
-Brockners, et al.        Expires March 28, 2019                [Page 37]
+Brockners, et al.        Expires March 28, 2019                [Page 38]
