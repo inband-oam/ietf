@@ -550,7 +550,7 @@
             deployment, the combination of Node-ID and Namespace-ID will
             always be unique. Similarly, namespaces can be used to define how
             certain IOAM data fields are interpreted: IOAM offers three
-            different timestamp format options. The Namespace-ID may be used
+            different timestamp format options. The Namespace-ID can be used
             to determine the timestamp format.</t>
 
             <t>Namespaces can be used to identify different sets of devices
@@ -561,16 +561,33 @@
             different sets of devices, or it could be for reasons of optimized
             space usage in the packet header. This could also stem from
             hardware or operational limitations on the size of the trace data
-            that can be added and processed, preventing collection of full
-            trace for a flow. Assigning different Namespace-IDs to different
+            that can be added and processed, preventing collection of a full
+            trace for a flow.</t>
+		    
+            <t><list style="symbols">
+	        <t>Assigning different Namespace-IDs to different
             sets of nodes or network partitions and using the Namespace-ID as
-            a selector at the IOAM encapsulating node, full trace for a flow
-            could be collected and constructed via partial trace in different
+            a selector at the IOAM encapsulating node, a full trace for a flow
+            could be collected and constructed via partial traces in different
             packets of the same flow. Example: An operator could choose to
             group the devices of a domain into two namespaces, in a way that
             at average, only every second hop would be recorded by any device.
             To retrieve a full view of the deployment, the captured IOAM data
             fields of the two namespaces need to be correlated.</t>
+		    
+	        <t>Assigning different Namespace-IDs to different
+            sets of nodes or network partitions and using a separate IOAM header
+	        for each Namespace-ID, a full trace for a flow
+            could be collected and constructed via partial traces from each IOAM
+	        header in each of the packets in the flow. Example: An operator
+	        could choose to group the devices of a domain into two namespaces,
+	        in a way that each namespace is represented by one of two IOAM
+	        headers in the packet. Each node would record data only for the IOAM
+	        namespace that it belongs to, ignoring the other IOAM header with a
+		    namespace to which it doesn't belong. To retrieve a full view of
+		    the deployment, the captured IOAM data fields of the two namespaces
+		    need to be correlated.</t>
+	      </list></t>
           </list></t>
       </section>
 
