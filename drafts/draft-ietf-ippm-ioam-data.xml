@@ -562,32 +562,32 @@
             space usage in the packet header. This could also stem from
             hardware or operational limitations on the size of the trace data
             that can be added and processed, preventing collection of a full
-            trace for a flow.</t>
-		    
-            <t><list style="symbols">
-	        <t>Assigning different Namespace-IDs to different
-            sets of nodes or network partitions and using the Namespace-ID as
-            a selector at the IOAM encapsulating node, a full trace for a flow
-            could be collected and constructed via partial traces in different
-            packets of the same flow. Example: An operator could choose to
-            group the devices of a domain into two namespaces, in a way that
-            at average, only every second hop would be recorded by any device.
-            To retrieve a full view of the deployment, the captured IOAM data
-            fields of the two namespaces need to be correlated.</t>
-		    
-	        <t>Assigning different Namespace-IDs to different
-            sets of nodes or network partitions and using a separate IOAM header
-	        for each Namespace-ID, a full trace for a flow
-            could be collected and constructed via partial traces from each IOAM
-	        header in each of the packets in the flow. Example: An operator
-	        could choose to group the devices of a domain into two namespaces,
-	        in a way that each namespace is represented by one of two IOAM
-	        headers in the packet. Each node would record data only for the IOAM
-	        namespace that it belongs to, ignoring the other IOAM header with a
-		    namespace to which it doesn't belong. To retrieve a full view of
-		    the deployment, the captured IOAM data fields of the two namespaces
-		    need to be correlated.</t>
-	      </list></t>
+            trace for a flow.<list style="symbols">
+                <t>Assigning different Namespace-IDs to different sets of
+                nodes or network partitions and using the Namespace-ID as a
+                selector at the IOAM encapsulating node, a full trace for a
+                flow could be collected and constructed via partial traces in
+                different packets of the same flow. Example: An operator could
+                choose to group the devices of a domain into two namespaces,
+                in a way that at average, only every second hop would be
+                recorded by any device. To retrieve a full view of the
+                deployment, the captured IOAM data fields of the two
+                namespaces need to be correlated.</t>
+
+                <t>Assigning different Namespace-IDs to different sets of
+                nodes or network partitions and using a separate IOAM header
+                for each Namespace-ID, a full trace for a flow could be
+                collected and constructed via partial traces from each IOAM
+                header in each of the packets in the flow. Example: An
+                operator could choose to group the devices of a domain into
+                two namespaces, in a way that each namespace is represented by
+                one of two IOAM headers in the packet. Each node would record
+                data only for the IOAM namespace that it belongs to, ignoring
+                the other IOAM header with a namespace to which it doesn't
+                belong. To retrieve a full view of the deployment, the
+                captured IOAM data fields of the two namespaces need to be
+                correlated.</t>
+              </list></t>
           </list></t>
       </section>
 
@@ -741,8 +741,8 @@ The trace option data MUST be 4-octet aligned:
               namespace. The Namespace-ID value of 0x0000 is defined as the
               default value and MUST be known to all the nodes implementing
               IOAM. For any other Namespace-ID value that does not match any
-              Namespace-ID the node is configured to operate on, the node
-              MUST NOT change the contents of the IOAM data fields.</t>
+              Namespace-ID the node is configured to operate on, the node MUST
+              NOT change the contents of the IOAM data fields.</t>
 
               <t hangText="NodeLen:">5-bit unsigned integer. This field
               specifies the length of data added by each node in multiples of
@@ -858,9 +858,9 @@ The trace option data MUST be 4-octet aligned:
 
                   <t hangText="Bit 10">When set indicates presence of
                   namespace specific data in wide format in the node data.</t>
-		      
-		  <t hangText="Bit 11">When set indicates presence of buffer
-	          occupancy in the node data.</t>
+
+                  <t hangText="Bit 11">When set indicates presence of buffer
+                  occupancy in the node data.</t>
 
                   <t hangText="Bit 12-22">Undefined. An IOAM encapsulating
                   node must set the value of each of these bits to 0. If an
@@ -874,8 +874,8 @@ The trace option data MUST be 4-octet aligned:
 
                       <t>Not add any node data fields to the packet, even for
                       the IOAM-Trace-Type bits defined above.</t>
-		     </list></t>
-		  
+                    </list></t>
+
                   <t hangText="Bit 23">When set indicates presence of the
                   Checksum Complement node data.</t>
                 </list></t>
@@ -1117,16 +1117,17 @@ The trace option data MUST be 4-octet aligned:
 ]]></artwork>
                 </figure></t>
 
-	      <t hangText="buffer occupancy:">4-octet unsigned integer field. This
-              field indicates the current status of the buffer occupancy. The
-              buffer occupancy is expressed as the current number of memory buffers
-              used by the set of queues that share a common buffer pool. <figure>
+              <t hangText="buffer occupancy:">4-octet unsigned integer field.
+              This field indicates the current status of the buffer occupancy.
+              The buffer occupancy is expressed as the current number of
+              memory buffers used by the set of queues that share a common
+              buffer pool. <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       buffer occupancy                        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
                 </figure></t>
-		  
+
               <t hangText="Checksum Complement:">4-octet node data which
               contains a two-octet Checksum Complement field, and a 2-octet
               reserved field. The Checksum Complement is useful when IOAM is
@@ -1313,8 +1314,8 @@ IOAM proof of transit option data MUST be 4-octet aligned.:
             namespace. The Namespace-ID value of 0x0000 is defined as the
             default value and MUST be known to all the nodes implementing
             IOAM. For any other Namespace-ID value that does not match any
-            Namespace-ID the node is configured to operate on, the node
-            MUST NOT change the contents of the IOAM data fields.</t>
+            Namespace-ID the node is configured to operate on, the node MUST
+            NOT change the contents of the IOAM data fields.</t>
 
             <t hangText="IOAM POT Type:">8-bit identifier of a particular POT
             variant that specifies the POT data that is included. This
@@ -1364,8 +1365,8 @@ IOAM proof of transit option of IOAM POT Type 0:
               namespace. The Namespace-ID value of 0x0000 is defined as the
               default value and MUST be known to all the nodes implementing
               IOAM. For any other Namespace-ID value that does not match any
-              Namespace-ID the node is configured to operate on, the node
-              MUST NOT change the contents of the IOAM data fields.</t>
+              Namespace-ID the node is configured to operate on, the node MUST
+              NOT change the contents of the IOAM data fields.</t>
 
               <t hangText="IOAM POT Type:">8-bit identifier of a particular
               POT variant that specifies the POT data that is included. This
@@ -1797,9 +1798,8 @@ IOAM proof of transit option of IOAM POT Type 0:
             <t hangText="Bit 10">namespace specific data in wide format</t>
 
             <t hangText="Bit 23">checksum complement</t>
-          </list>
-        The meaning for Bits 11 - 22 are available for assignment via RFC
-        Required process as per <xref target="RFC8126"></xref>.</t>
+          </list> The meaning for Bits 11 - 22 are available for assignment
+        via RFC Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM Trace Flags Registry">
@@ -1807,16 +1807,15 @@ IOAM proof of transit option of IOAM POT Type 0:
         for Pre-allocated trace option and Incremental trace option defined in
         <xref target="IOAM_tracing_option"></xref>. The meaning of Bit 0 - 1
         for trace flags are defined in this document in <xref
-        target="TraceFlags"></xref> of <xref target="TraceOptionDef"></xref>:
-        </t>
+        target="TraceFlags"></xref> of <xref
+        target="TraceOptionDef"></xref>:</t>
 
         <t><list style="hanging">
             <t hangText="Bit 0">"Overflow" (O-bit)</t>
 
             <t hangText="Bit 1">"Loopback" (L-bit)</t>
-          </list>
-        The meaning for Bits 2 - 3 are available for assignment via RFC
-        Required process as per <xref target="RFC8126"></xref>.</t>
+          </list> The meaning for Bits 2 - 3 are available for assignment via
+        RFC Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM POT Type Registry">
@@ -1827,9 +1826,8 @@ IOAM proof of transit option of IOAM POT Type 0:
 
         <t><list style="hanging">
             <t hangText="0:">16 Octet POT data</t>
-          </list>
-        1 - 255 are available for assignment via RFC Required process as per
-        <xref target="RFC8126"></xref>.</t>
+          </list> 1 - 255 are available for assignment via RFC Required
+        process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM POT Flags Registry">
@@ -1841,9 +1839,8 @@ IOAM proof of transit option of IOAM POT Type 0:
 
         <t><list style="hanging">
             <t hangText="Bit 0">"Profile-to-use" (P-bit)</t>
-          </list>
-        The meaning for Bits 1 - 7 are available for assignment via RFC
-        Required process as per <xref target="RFC8126"></xref>.</t>
+          </list> The meaning for Bits 1 - 7 are available for assignment via
+        RFC Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM E2E Type Registry">
@@ -1860,16 +1857,15 @@ IOAM proof of transit option of IOAM POT Type 0:
             <t hangText="Bit 2">timestamp seconds</t>
 
             <t hangText="Bit 3">timestamp subseconds</t>
-          </list>
-        The meaning of Bits 4 - 15 are available for assignment via RFC
-        Required process as per <xref target="RFC8126"></xref>.</t>
+          </list> The meaning of Bits 4 - 15 are available for assignment via
+        RFC Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
       <section title="IOAM Namespace-ID Registry ">
         <t>IANA is requested to set up an "IOAM Namespace-ID Registry",
         containing 16-bit values. The meaning of Bit 0 is defined in this
-        document. IANA is requested to reserve the values 0x0001 to 0x7FFF
-        for private use (managed by operators), as specified in <xref
+        document. IANA is requested to reserve the values 0x0001 to 0x7FFF for
+        private use (managed by operators), as specified in <xref
         target="ioam_namespaces"></xref> of the current document. Registry
         entries for the values 0x8000 to 0xFFFF are to be assigned via the
         "Expert Review" policy defined in <xref target="RFC8126"></xref>.</t>
