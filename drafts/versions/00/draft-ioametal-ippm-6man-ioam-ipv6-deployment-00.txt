@@ -27,7 +27,7 @@ Abstract
    In-situ Operations, Administration, and Maintenance (IOAM) records
    operational and telemetry information in the packet while the packet
    traverses a path between two points in the network.  This document
-   outlines how IOAM data fields are encapsulated in IPv6.
+   outlines how IOAM can be enabled in a network.
 
 Status of This Memo
 
@@ -79,21 +79,20 @@ Table of Contents
    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
      2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
      2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  IOAM encap in v6  . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  IOAM domains bounded by hosts . . . . . . . . . . . . . . . .   5
-   5.  IOAM domains bounded by network devices . . . . . . . . . . .   5
-     5.1.  Requirements  . . . . . . . . . . . . . . . . . . . . . .   6
-     5.2.  Approach  . . . . . . . . . . . . . . . . . . . . . . . .   6
-     5.3.  Domain Interior Routes/Prefixes . . . . . . . . . . . . .   7
-     5.4.  Example . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     5.5.  Domain Exterior Routes/Prefixes . . . . . . . . . . . . .   8
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+   3.  IOAM domains bounded by hosts . . . . . . . . . . . . . . . .   3
+   4.  IOAM domains bounded by network devices . . . . . . . . . . .   3
+     4.1.  Requirements  . . . . . . . . . . . . . . . . . . . . . .   3
+     4.2.  Deployment options  . . . . . . . . . . . . . . . . . . .   4
+       4.2.1.  Option - 1  . . . . . . . . . . . . . . . . . . . . .   4
+       4.2.2.  Option - 2  . . . . . . . . . . . . . . . . . . . . .   7
+       4.2.3.  Comparison  . . . . . . . . . . . . . . . . . . . . .   7
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -104,6 +103,7 @@ Table of Contents
    fields are encapsulated in the IPv6 [RFC8200].  This document
    discusses deployment options for networks which leverage IOAM data
    fields encapsulated in the IPv6 protocol.
+
 
 
 
@@ -142,26 +142,26 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
    POT:       Proof of Transit
 
-3.  IOAM encap in v6
+3.  IOAM domains bounded by hosts
 
-   IOAM data is carried in IPv6 packets as Hop-by-Hop or Destination
-   options.  One IPv6 Destination Options and Hop-by-Hop Options Type
-   codepoint is assigned for IOAM.  Multiple options with the same
-   Option Type MAY appear in the same Hop-by-Hop Options or Destination
-   Options header, with varying content.  This mechanism of in-situ OAM
-   in IPv6 is used to enhance diagnostics of IPv6 networks.  It
-   complements other mechanisms proposed to enhance diagnostics of IPv6
-   networks, such as the IPv6 Performance and Diagnostic Metrics
-   Destination Option described in [RFC8250].
+   For deployments where the IOAM domain is bounded by hosts, hosts will
+   perform the operation of IOAM data field encapsulation and
+   decapsulation.  IOAM data is carried in IPv6 packets as Hop-by-Hop or
+   Destination options, see [I-D.ioametal-ippm-6man-ioam-ipv6-options].
 
-   IPv6 Hop-by-Hop and Destination Option format for carrying in-situ
-   OAM data fields:
+4.  IOAM domains bounded by network devices
 
+   For deployments where the IOAM domain is bounded by network devices,
+   network devices such as routers form the edge of an IOAM domain.
+   Network devices will perform the operation of IOAM data field
+   encapsulation and decapsulation.
 
+4.1.  Requirements
 
-
-
-
+   R1 The packet with the added OAM information must follow the same
+      path within the domain that the same packet without the OAM
+      information would follow within the domain even in the presence of
+      ECMP.
 
 
 
@@ -170,155 +170,42 @@ Bhandari, et al.          Expires July 26, 2019                 [Page 3]
 Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  Option Type  |  Opt Data Len |   Reserved    |   IOAM Type   |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-   |                                                               |  |
-   .                                                               .  I
-   .                     Option Data                               .  O
-   .                                                               .  A
-   .                                                               .  M
-   .                                                               .  .
-   .                                                               .  O
-   .                                                               .  P
-   .                                                               .  T
-   .                                                               .  I
-   .                                                               .  O
-   .                                                               .  N
-   .                                                               .  |
-   |                                                               |  |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   R2 Dealing with PMTU - Packet size changes might exceed PMTU.
+      Addition of OAM information must not lead to fragmentation of the
+      packet.
 
+   R3 Incremental Trace IOAM HbH Option - which is proposed to support a
+      hardware implementations changes Option Data Len en-route.
+      Dealing with PMTU- Packet size changes can exceed PMTU; see above.
 
-   Option Type:  8-bit identifier of the type of option.
+   R4 Misleading ICMP errors due to addition and/or presence of OAM data
+      in the packet can confuse the source of the packet that did not
+      insert the OAM information
 
-   Opt Data Len:  8-bit unsigned integer.  Length of the Reserved and
-      Option Data field of this option, in octets.
+   R5 OAM data leaks may affect the forwarding behavior and state of
+      network elements outside the domain.  Build a mechanism to prevent
+      data leaks or be able to assure that upon leak network elements
+      outside the domain are not affected i.e continue to process other
+      valid packets.
 
-   Reserved:  8-bit field MUST be set to zero upon transmission and
-      ignored upon reception.
+   R6 Source OAM domain that inserted and leaked OAM data must be easy
+      to identify for purpose of troubleshooting.  For e.g.  It very
+      time consuming to troubleshoot source that inserted the EH but
+      didn't remove when the packet traverses across AS (you have to
+      walk the AS path, contacting each operator, asking them to verify
+      their config, get packet captures etc.), and all the while you may
+      have a number of angry customers/end-users
 
-   IOAM Type:  8-bit field as defined in section 7.2 in
-      [I-D.ietf-ippm-ioam-data].
+   R7 Compliance with [RFC8200] would require OAM data to be
+      encapsulated instead of header/option insertion into inflight
+      packets.
 
-   Option Data:  Variable-length field.  Option-Type-specific data.
+4.2.  Deployment options
 
-   In-situ OAM Options are inserted as Option data as follows:
+   This section lists out possible deployment options that can be
+   employed to meet the requirements listed in Section Section 4.1.
 
-   1.  Pre-allocated Tracing Option: The in-situ OAM Preallocated
-       Tracing option defined in [I-D.ietf-ippm-ioam-data] is
-       represented as a IPv6 option in hop by hop extension header:
-
-       Option Type:  001xxxxx 8-bit identifier of the IOAM type of
-          option. xxxxx=TBD.
-
-       IOAM Type:  IOAM Pre-allocated Trace Option Type.
-
-   2.  Incremental Tracing Option: The in-situ OAM Incremental Tracing
-       option defined in [I-D.ietf-ippm-ioam-data] is represented as a
-       IPv6 option in hop by hop extension header:
-
-
-
-
-Bhandari, et al.          Expires July 26, 2019                 [Page 4]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
-
-
-       Option Type:  001xxxxx 8-bit identifier of the IOAM type of
-          option. xxxxx=TBD.
-
-       IOAM Type:  IOAM Incremental Trace Option Type.
-
-   3.  Proof of Transit Option: The in-situ OAM POT option defined in
-       [I-D.ietf-ippm-ioam-data] is represented as a IPv6 option in hop
-       by hop extension header:
-
-       Option Type:  001xxxxx 8-bit identifier of the IOAM type of
-          option. xxxxx=TBD.
-
-       IOAM Type:  IOAM POT Option Type.
-
-   4.  Edge to Edge Option: The in-situ OAM E2E option defined in
-       [I-D.ietf-ippm-ioam-data] is represented as a IPv6 option in IPv6
-       option in destination options extension header:
-
-       Option Type:  000xxxxx 8-bit identifier of the IOAM type of
-          option. xxxxx=TBD.
-
-       IOAM Type:  IOAM E2E Option Type.
-
-   All the in-situ OAM IPv6 options defined here have alignment
-   requirements.  Specifically, they all require 4n alignment.  This
-   ensures that 4 octet fields specified in [I-D.ietf-ippm-ioam-data]
-   such as transit delay are aligned at a multiple-of-4 offset from the
-   start of the Hop-by-Hop Options header.  In addition, to maintain
-   IPv6 extension header 8-octet alignment and avoid the need to add or
-   remove padding at every hop, the Trace-Type for Incremental Tracing
-   Option in IPv6 MUST be selected such that the IOAM node data length
-   is a multiple of 8-octets.
-
-4.  IOAM domains bounded by hosts
-
-   For deployments where the IOAM domain is bounded by hosts, hosts will
-   perform the operation of IOAM data field encapsulation and
-   decapsulation.  IOAM data is carried in IPv6 packets as Hop-by-Hop or
-   Destination options, see [I-D.ioametal-ippm-6man-ioam-ipv6-options].
-
-5.  IOAM domains bounded by network devices
-
-   For deployments where the IOAM domain is bounded by network devices,
-   network devices such as routers form the edge of an IOAM domain.
-   Network devices will perform the operation of IOAM data field
-   encapsulation and decapsulation.
-
-
-
-
-
-Bhandari, et al.          Expires July 26, 2019                 [Page 5]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
-
-
-5.1.  Requirements
-
-   o  have the packet with the added OAM information follow the same
-      path within the domain that the same packet without the OAM
-      information would follow within the domain would have taken.
-
-   o  How do you deal with PMTU? - Packet size changes might exceed PMTU
-
-   o  Incremental Trace IOAM HbH Option - which is to support a
-      hardware-friendly implementation: Changes Option Data Len en-
-      route.  Dealing with PMTU- Packet size changes can exceed PMTU;
-      see above.
-
-   o  Misleading ICMP errors confusing the source
-
-   o  Possible leaks that affect the forwarding behavior and state of
-      network elements outside the domain: have the Dest.  Addr. of the
-      packet with the added OAM information only be valid within the OAM
-      domain i.e. an "interior DA", so that if through failure the
-      packet leaks, it isn't a valid DA on the Internet and will be
-      dropped by, if nothing else earlier, an Internet router with a
-      default free route table
-
-   o  An additional one is that if you were are receiver of this outside
-      of the domain because it as leaked, at the destination, after the
-      packet as traversed a number of ASes over the Internet, there is
-      nothing to identify the device/AS that inserted the EH.  Very time
-      consuming to troubleshoot who inserted the EH but didn't remove it
-      (you have to walk the AS path, contacting each operator, asking
-      them to verify their config, get packet captures etc.), and all
-      the while you may have a number of angry customers/end-users
-
-   o  encapsulate rather than insert, because encapsulation would be
-      simpler, and is the traditional way of adding information to PDUs
-      across many decades and many protocols
-
-5.2.  Approach
+4.2.1.  Option - 1
 
    Leverage an IP-in-IPv6 approach: Preserve the original IP packet and
    add an IPv6 header including IOAM data fields in an extension header
@@ -333,16 +220,17 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
 
-Bhandari, et al.          Expires July 26, 2019                 [Page 6]
+
+Bhandari, et al.          Expires July 26, 2019                 [Page 4]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
-5.3.  Domain Interior Routes/Prefixes
+4.2.1.1.  Domain Interior Routes/Prefixes
 
-   For each IP route/prefix interior to the IOAM domain (i.e. hosts have
-   addresses from these prefixes) a corresponding /128 route from the
-   ION address space is allocated on every IOAM encapsulating/
+   For each IP route/prefix interior to the IOAM domain (i.e.  hosts
+   have addresses from these prefixes) a corresponding /128 route from
+   the ION address space is allocated on every IOAM encapsulating/
    decapsulating router with the same metric and associated interface.
    When a host originated packet arrives at an IOAM encapsulating
    router, the destination address of the packet is looked up to find
@@ -357,7 +245,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
    understood as an internal routeable index or proxy for the
    destination address/prefix of the original packet.
 
-5.4.  Example
+4.2.1.2.  Example
 
    This examples assumes a network where routers X, Y, Z are part of an
    IOAM domain.  Even though the example shows and IPv6 network, the
@@ -389,7 +277,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
 
-Bhandari, et al.          Expires July 26, 2019                 [Page 7]
+Bhandari, et al.          Expires July 26, 2019                 [Page 5]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
@@ -434,7 +322,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
    be the corresponding fd1f:d2:feed::3456/128 (Router X intf C's first
    and matching ION /128 prefix).
 
-5.5.  Domain Exterior Routes/Prefixes
+4.2.1.3.  Domain Exterior Routes/Prefixes
 
    For exterior routes, IPv6-in-IP tunnelling is used in a similar way.
    Transit across the ION follows the transit approach for traffic
@@ -445,38 +333,89 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
 
-Bhandari, et al.          Expires July 26, 2019                 [Page 8]
+Bhandari, et al.          Expires July 26, 2019                 [Page 6]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
-6.  Security Considerations
+4.2.2.  Option - 2
 
-   This document describes the encapsulation of IOAM data fields in
-   IPv6.  Security considerations of the specific IOAM data fields for
-   each case (i.e., Trace, Proof of Transit, and E2E) are described in
-   defined in [I-D.ietf-ippm-ioam-data].
+   1.  Perform IP-in-IPv6 approach with source changed to that of the
+       IOAM encapsulating node but destination unchanged.
 
-   As this document describes new options for IPv6 , these are similar
-   to the security considerations of [RFC8200] and the new weakness
-   documented in [RFC8250].
+   2.  Define a new IOAM E2E destination option to identify the Source
+       IOAM domain (AS, v6 prefix).  Insert this option into the IOAM
+       destination options EH attached to the outer IPv6 header
 
-7.  IANA Considerations
+   3.  Identify PATH MTU tolerance range in the IOAM domain and do not
+       perform IOAM encapsulation operation if it exceeds the packet
+       size beyond PMTU.
 
-   This draft requests the following IPv6 Option Type assignments from
-   the Destination Options and Hop-by-Hop Options sub-registry of
-   Internet Protocol Version 6 (IPv6) Parameters.
+   4.  Modify the forwarding elements in the IOAM domain to perform ECMP
+       calculation that match the original packet.
 
-   http://www.iana.org/assignments/ipv6-parameters/ipv6-
-   parameters.xhtml#ipv6-parameters-2
+       A.  Option 1: Employ IOAM with immediate export flag to help
+           quick look up of appropriate headers for ECMP calculation.
 
-      Hex Value    Binary Value      Description           Reference
-                   act chg rest
-      ----------------------------------------------------------------
-      TBD_1_0      00   0  TBD_1     IOAM                  [This draft]
-      TBD_1_1      00   1  TBD_1     IOAM                  [This draft]
+       B.  Option 2 : Based on additional fields in the outer header to
+           match the ECMP hashing of the original packet.  E.g. flow
+           label to carry original packets ECMP hash?
 
-8.  Acknowledgements
+       C.  Option 3: Looking beyond IOAM header into the inner header
+
+   5.  To deal with leaked packets containing IOAM :
+
+       A.  All the IOAM options are defined with type "00 - skip over
+           this option and continue processing the header.  So presence
+           of the options must not cause packet drop in the network
+           elements that do not understand the option.
+
+       B.  Encourage adoption of [I-D.ietf-6man-hbh-header-handling]
+
+4.2.3.  Comparison
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bhandari, et al.          Expires July 26, 2019                 [Page 7]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
+
+
+   Table to compare options against requirements
+
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Requirement|  Option-1            |    Option-2     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |    R1     |
+   |    R2     |
+   |    R3     |
+   |    R4     |
+   |    R5     |
+   |    R6     |
+   |    R7     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+5.  Security Considerations
+
+6.  IANA Considerations
+
+   N/A
+
+7.  Acknowledgements
 
    The authors would like to thank Mark Smith, Tom Herbert, Eric Vyncke,
    Nalini Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu
@@ -487,9 +426,12 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
    like to acknowledge the work done by the author Hiroshi Kitamura and
    people involved in writing it.
 
-9.  References
+8.  References
 
-9.1.  Normative References
+8.1.  Normative References
+
+   [I-D.ietf-6man-hbh-header-handling]
+              .
 
    [I-D.ietf-ippm-ioam-data]
               Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
@@ -501,7 +443,9 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
 
-Bhandari, et al.          Expires July 26, 2019                 [Page 9]
+
+
+Bhandari, et al.          Expires July 26, 2019                 [Page 8]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
@@ -527,7 +471,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
-9.2.  Informative References
+8.2.  Informative References
 
    [I-D.kitamura-ipv6-record-route]
               Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
@@ -557,7 +501,7 @@ Authors' Addresses
 
 
 
-Bhandari, et al.          Expires July 26, 2019                [Page 10]
+Bhandari, et al.          Expires July 26, 2019                 [Page 9]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
@@ -573,7 +517,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
    Mark Smith
    PO BOX 521
-   HEIDELBERG , VIC  3084
+   HEIDELBERG, VIC  3084
    AU
 
    Email: markzzzsmith@gmail.com
@@ -613,7 +557,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
 
-Bhandari, et al.          Expires July 26, 2019                [Page 11]
+Bhandari, et al.          Expires July 26, 2019                [Page 10]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
@@ -669,4 +613,4 @@ Internet-Draft       In-situ OAM IPv6 encapsulation         January 2019
 
 
 
-Bhandari, et al.          Expires July 26, 2019                [Page 12]
+Bhandari, et al.          Expires July 26, 2019                [Page 11]
