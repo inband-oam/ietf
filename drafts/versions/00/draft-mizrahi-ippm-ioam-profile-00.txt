@@ -1,0 +1,280 @@
+
+
+
+
+Network Working Group                                          A. Author
+Internet-Draft                                               Affiliation
+Intended status: Informational                         February 19, 2019
+Expires: August 23, 2019
+
+
+                          In Situ OAM Profiles
+                   draft-mizrahi-ippm-ioam-profile-00
+
+Abstract
+
+   In Situ Operations, Administration and Maintenance (IOAM) is used for
+   monitoring network performance and for detecting bottlenecks and
+   anomalies by incorporating IOAM information into in-flight data
+   packets.  This document introduces the concept of use case driven
+   IOAM profiles.  An IOAM profile defines a use case or a set of use
+   cases for IOAM, and a set of rules that restrict the scope and
+   features of the IOAM specification to a subset of the full
+   functionality.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on August 23, 2019.
+
+Copyright Notice
+
+   Copyright (c) 2019 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+
+
+
+Author                   Expires August 23, 2019                [Page 1]
+
+Internet-Draft                IOAM Profiles                February 2019
+
+
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Specifying an IOAM Profile  . . . . . . . . . . . . . . . . .   3
+     2.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.2.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.3.  Namespace-ID  . . . . . . . . . . . . . . . . . . . . . .   3
+     2.4.  IOAM Options  . . . . . . . . . . . . . . . . . . . . . .   3
+     2.5.  IOAM Option Header Field Values . . . . . . . . . . . . .   4
+     2.6.  Opaque State Snapshot . . . . . . . . . . . . . . . . . .   4
+     2.7.  Timestamp Format  . . . . . . . . . . . . . . . . . . . .   4
+     2.8.  Profile Coexistence . . . . . . . . . . . . . . . . . . .   4
+     2.9.  Validity  . . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   5.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
+
+1.  Introduction
+
+   IOAM [I-D.ietf-ippm-ioam-data] is used for monitoring traffic in the
+   network by incorporating IOAM information into data packets.
+
+   This document introduces the concept of use case driven IOAM
+   profiles.  An IOAM profile defines a use case or a set of use cases
+   for IOAM, and a set of rules that restrict the scope and features of
+   the IOAM specification to a subset of the full functionality.  Based
+   on the guidelines in this document, it is expected that future
+   documents may define one or more IOAM profiles.  The current document
+   does not specify any IOAM profiles.
+
+   The motivation for defining profiles is to limit the scope of IOAM
+   features, allowing simpler implementation, verification, and
+   interoperability testing in the context of specific use cases that do
+   not require the full functionality of IOAM.
+
+   This document does not require any changes in IOAM
+   [I-D.ietf-ippm-ioam-data].  Furthermore, it is expected that future
+   IOAM profile specifications will not require changes in IOAM, since a
+   profile, by definition, derives a subset of the existing
+   functionality.
+
+
+
+
+
+
+Author                   Expires August 23, 2019                [Page 2]
+
+Internet-Draft                IOAM Profiles                February 2019
+
+
+2.  Specifying an IOAM Profile
+
+2.1.  Overview
+
+   A profile defines a set of rules that limit the scope or
+   functionality of IOAM.  By default, any detail in IOAM that is not
+   specifically addressed or limited by the profile is as defined in
+   IOAM [I-D.ietf-ippm-ioam-data].  The rest of this section presents a
+   set of topics that may be addressed in a profile specification.  A
+   profile may include some or all of these topics, and optionally other
+   topics.
+
+2.2.  Use Cases
+
+   An IOAM profile should define the use case(s) for using the profile.
+   The use case may describe deployment scenarios or specific
+   applications that make use of IOAM data.  The use case should
+   typically define the required functionality from IOAM.  For example,
+   an IOAM profile may be defined such that it requires transit delay
+   monitoring, but does not require path tracing.  These requirements
+   then affect which IOAM data fields are used in the profile.
+
+2.3.  Namespace-ID
+
+   IOAM namespaces are defined in Section 4.1 of
+   [I-D.ietf-ippm-ioam-data].  An IOAM profile can be bound to a
+   specific Namespace-ID value or to a set of Namespace-ID values.
+   Thus, a profile specification may request IANA to allocate one or
+   more Namespace-ID values.  Note that a profile may also be defined
+   without being bound to a specific Namesampe-ID, in which case the
+   profile specification may not include the current section.
+
+2.4.  IOAM Options
+
+   IOAM information may be represented in one of four possible IOAM
+   options: Pre-allocated Trace Option, Incremental Trace Option, Proof
+   Of Transit (POT) Option, and Edge-to-Edge Option.  An IOAM profile
+   may specify a subset of allowed options.  A profile may define some
+   options as mandatory in the current profile, or some options as
+   forbidden in the current profile.
+
+   For each IOAM option, a profile specification may limit the scope of
+   the profile to certain features.  For example, a profile may be
+   defined to use the Incremental Trace Option such that only specific
+   data types are used in the profile, while others are not.
+
+
+
+
+
+
+Author                   Expires August 23, 2019                [Page 3]
+
+Internet-Draft                IOAM Profiles                February 2019
+
+
+2.5.  IOAM Option Header Field Values
+
+   An IOAM profile may define specific values or specific value range
+   for some of the fields in the IOAM option headers.  For example, a
+   profile may define a specific value that is allowed to be used in the
+   Flags field of the trace option header.
+
+2.6.  Opaque State Snapshot
+
+   The Opaque State Snapshot, as defined in [I-D.ietf-ippm-ioam-data],
+   is a variable length field that may be used in IOAM trace options.
+   The Opaque State Snapshot is defined in a flexible Type/Length/Value
+   manner.  An IOAM profile may define a specific format for the Opaque
+   State Snapshot including for example a specific length and a specific
+   interpretation of the opaque data.
+
+2.7.  Timestamp Format
+
+   A profile may specify a specific timestamp format to be used in IOAM
+   data fields.
+
+2.8.  Profile Coexistence
+
+   An IOAM node may be configured to operate in one or more IOAM
+   profiles.  If more than one profile is enabled, there should be a way
+   for IOAM nodes to distinguish between packets that use different IOAM
+   profiles, e.g., using the Namespace-ID.  Therefore, it is recommended
+   that a profile specification includes a definition of how to
+   distinguish between packets from different profiles.
+
+2.9.  Validity
+
+   When an IOAM transit node or an IOAM decapsulating node receives a
+   packet with one or more IOAM options, it needs to detect which
+   profile the packet is bound to.  The node then needs to perform
+   validity checks including verifying that the packet belongs to one of
+   the profiles that is supported and enabled in the current node, and
+   that all the IOAM options in the current packet conform to the
+   profile specification.
+
+   An IOAM transit/decapsulating node that receives a packet with IOAM
+   options that do not pass the validity check can either forward/
+   decapsulate the packet without IOAM processing, or it can process the
+   packet as a conventional IOAM-enabled packet, if it is able to do so
+   and if the network policy allows this behavior.
+
+
+
+
+
+
+Author                   Expires August 23, 2019                [Page 4]
+
+Internet-Draft                IOAM Profiles                February 2019
+
+
+3.  IANA Considerations
+
+   This document does not include any requests from IANA.
+
+4.  Security Considerations
+
+   The security considerations of IOAM in general are discussed in
+   [I-D.ietf-ippm-ioam-data].  This document presents the concept of
+   IOAM profiles; since an IOAM profile is a specific use case of IOAM,
+   any security threat that is relevant to the profile is also relevant
+   to the full-blown IOAM.  Therefore, the current document does not
+   present any new security considerations beyond
+   [I-D.ietf-ippm-ioam-data].  Moreover, in some cases a profile may
+   limit the set of features of IOAM in a way that reduces the set of
+   potential threats compared a full implementation of IOAM.
+
+5.  Normative References
+
+   [I-D.ietf-ippm-ioam-data]
+              Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
+              Leddy, J., Youell, S., Mizrahi, T., Mozes, D., Lapukhov,
+              P., Chang, R., daniel.bernier@bell.ca, d., and J. Lemon,
+              "Data Fields for In-situ OAM", draft-ietf-ippm-ioam-
+              data-04 (work in progress), October 2018.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+Author's Address
+
+   Author
+   Affiliation
+   Country
+
+   Email: email@address
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Author                   Expires August 23, 2019                [Page 5]

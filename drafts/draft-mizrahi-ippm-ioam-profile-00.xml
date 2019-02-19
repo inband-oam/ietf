@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<!-- [
+
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC2629 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2629.xml">
+<!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
+<!ENTITY RFC5226 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5226.xml">
+]>
+-->
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<rfc category="info" docName="draft-mizrahi-ippm-ioam-profile-00"
+     ipr="trust200902">
+  <front>
+    <title abbrev="IOAM Profiles">In Situ OAM Profiles</title>
+
+    <author fullname="Author" initials="A." surname="Author">
+      <organization abbrev="">Affiliation</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <city></city>
+
+          <code></code>
+
+          <country>Country</country>
+        </postal>
+
+        <email>email@address</email>
+      </address>
+    </author>
+
+    <date year="2019"/>
+
+    <area>General</area>
+
+    <workgroup>Network Working Group</workgroup>
+
+    <keyword>IOAM</keyword>
+
+    <abstract>
+      <t>In Situ Operations, Administration and Maintenance (IOAM) is used for
+	  monitoring network performance and for detecting bottlenecks and 
+	  anomalies by incorporating IOAM information into in-flight data packets. 
+	  This document introduces the concept of use case driven IOAM profiles. 
+	  An IOAM profile defines a use case or a set of use cases for IOAM, and
+	  a set of rules that restrict the scope and features of the IOAM 
+	  specification to a subset of the full functionality.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>IOAM <xref target="I-D.ietf-ippm-ioam-data"/> is used for 
+	  monitoring traffic in the network by incorporating IOAM information 
+	  into data packets.</t> 
+	  
+	  <t>This document introduces the concept of use case driven IOAM profiles. 
+	  An IOAM profile defines a use case or a set of use cases for IOAM, and
+	  a set of rules that restrict the scope and features of the IOAM 
+	  specification to a subset of the full functionality. Based on the 
+	  guidelines in this document, it is expected that future documents may 
+	  define one or more IOAM profiles. The current document does not specify 
+	  any IOAM profiles.</t>
+	  
+	  <t>The motivation for defining profiles is to limit the scope of
+	  IOAM features, allowing simpler implementation, verification, and
+	  interoperability testing in the context of specific use cases that 
+	  do not require the full functionality of IOAM.</t>
+	  
+	  <t>This document does not require any changes in IOAM
+	  <xref target="I-D.ietf-ippm-ioam-data"/>. Furthermore, it is 
+	  expected that future IOAM profile specifications will not require
+	  changes in IOAM, since a profile, by definition, derives a subset of
+	  the existing functionality.</t>
+	  
+    </section>
+
+    <section title="Specifying an IOAM Profile">
+      <section title="Overview">
+		<t>A profile defines a set of rules that limit the scope or 
+		functionality of IOAM. By default, any detail in IOAM that 
+		is not specifically addressed or limited by the profile is as
+		defined in IOAM <xref target="I-D.ietf-ippm-ioam-data"/>.
+		The rest of this section presents a set of topics that may
+		be addressed in a profile specification. A profile may include
+		some or all of these topics, and optionally other topics.</t>
+      </section>
+	  
+	  <section title="Use Cases">
+	    <t>An IOAM profile should define the use case(s) for using the
+		profile. The use case may describe deployment scenarios or
+		specific applications that make use of IOAM data. The use case
+		should typically define the required functionality from IOAM.
+		For example, an IOAM profile may be defined such that it requires
+		transit delay monitoring, but does not require path tracing. 
+		These requirements then affect which IOAM data fields are used 
+		in the profile.</t>
+	  </section>
+
+	  <section title="Namespace-ID">
+        <t>IOAM namespaces are defined in Section 4.1 of 
+		<xref target="I-D.ietf-ippm-ioam-data"/>. 
+		An IOAM profile can be bound to a specific Namespace-ID 
+		value or to a set of Namespace-ID values. Thus, a profile
+		specification may request IANA to allocate one or more 
+		Namespace-ID values. Note that a profile may also be defined
+		without being bound to a specific Namesampe-ID, in which case
+		the profile specification may not include the current section.</t>
+      </section>
+
+
+  	  <section title="IOAM Options">
+        <t>IOAM information may be represented in one of four possible IOAM 
+		options: Pre-allocated Trace Option, Incremental Trace Option, Proof 
+		Of Transit (POT) Option, and Edge-to-Edge Option. An IOAM profile 
+		may specify a subset of allowed options. A profile may define some
+		options as mandatory in the current profile, or some options as
+		forbidden in the current profile.</t>
+		
+		<t>For each IOAM option, a profile specification may limit the scope
+		of the profile to certain features. For example, a profile may be defined
+		to use the Incremental Trace Option such that only specific data types
+		are used in the profile, while others are not.</t>
+		
+      </section>
+
+  	  <section title="IOAM Option Header Field Values">
+		<t>An IOAM profile may define specific values or specific value range for
+		some of the fields in the IOAM option headers. For example, a profile may
+		define a specific value that is allowed to be used in the Flags field of
+		the trace option header.</t>
+      </section>
+	  
+  	  <section title="Opaque State Snapshot">
+		<t>The Opaque State Snapshot, as defined in 
+		<xref target="I-D.ietf-ippm-ioam-data"/>, is a variable length field that
+		may be used in IOAM trace options. The Opaque State Snapshot is defined 
+		in a flexible Type/Length/Value manner. An IOAM profile may define a 
+		specific format for the Opaque State Snapshot including for example
+		a specific length and a specific interpretation of the opaque data.</t>
+      </section>
+	  
+      <section title="Timestamp Format">
+        <t>A profile may specify a specific timestamp format to be used in 
+		IOAM data fields.</t>
+      </section>
+
+	  <section title="Profile Coexistence">
+	    <t>An IOAM node may be configured to operate in one or more IOAM profiles.
+		If more than one profile is enabled, there should be a way for IOAM nodes
+		to distinguish between packets that use different IOAM profiles, e.g.,
+		using the Namespace-ID. Therefore, it is recommended that a profile 
+		specification includes a definition of how to distinguish between
+		packets from different profiles.</t>
+      </section>
+		
+	  <section title="Validity">
+		<t>When an IOAM transit node or an IOAM decapsulating node receives a packet
+		with one or more IOAM options, it needs to detect which profile the packet
+		is bound to. The node then needs to perform validity checks including
+		verifying that the packet belongs to one of the profiles that is supported 
+		and enabled in the current node, and that all the IOAM options in the current
+		packet conform to the profile specification.</t>
+
+		<t>An IOAM transit/decapsulating node that receives a packet with IOAM options 
+		that do not pass the validity check can either forward/decapsulate the 
+		packet without IOAM processing, or it can process the packet as a conventional 
+		IOAM-enabled packet, if it is able to do so and if the network policy allows this 
+		behavior.</t> 
+		
+	  </section>
+	  
+    </section>
+
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This document does not include any requests from IANA.</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>The security considerations of IOAM in general are discussed in 
+	  <xref target="I-D.ietf-ippm-ioam-data"/>. This document presents 
+	  the concept of IOAM profiles; since an IOAM profile is 
+	  a specific use case of IOAM, any security threat that is 
+	  relevant to the profile is also relevant to the full-blown IOAM.
+	  Therefore, the current document does not present any new
+	  security considerations beyond 
+	  <xref target="I-D.ietf-ippm-ioam-data"/>.
+	  Moreover, in some cases a profile may limit the set of features of 
+	  IOAM in a way that reduces the set of potential threats
+	  compared a full implementation of IOAM.</t>
+    </section>
+
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <references title="Normative References">
+      <?rfc include='reference.RFC.2119'?>
+
+      <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
+
+      <!--&RFC2119;-->
+	  
+      <?rfc include='reference.I-D.ietf-ippm-ioam-data'?>
+    </references>
+
+    <!-- Change Log
+
+   -->
+  </back>
+</rfc>
