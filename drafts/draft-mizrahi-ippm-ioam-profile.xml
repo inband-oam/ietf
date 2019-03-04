@@ -21,8 +21,8 @@
   <front>
     <title abbrev="IOAM Profiles">In Situ OAM Profiles</title>
 
-    <author fullname="Author" initials="A." surname="Author">
-      <organization abbrev="">Affiliation</organization>
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
+      <organization abbrev="">Huawei Network.IO Innovation Lab</organization>
 
       <address>
         <postal>
@@ -32,10 +32,159 @@
 
           <code></code>
 
-          <country>Country</country>
+          <country>Israel</country>
         </postal>
 
-        <email>email@address</email>
+        <email>tal.mizrahi.phd@gmail.com</email>
+      </address>
+    </author>
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Ramesh Sivakolundu" initials="R." surname="Sivakolundu">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>170 West Tasman Dr.</street>
+
+          <city>SAN JOSE, CA 95134</city>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>sramesh@cisco.com</email>
+      </address>
+    </author>
+	
+    <author fullname="Aviv Kfir" initials="A." surname="Kfir">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>avivk@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Barak Gafni" initials="B." surname="Gafni">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>gbarak@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
+      <organization abbrev="">Barefoot Networks</organization>
+
+      <address>
+        <postal>
+          <street>4750 Patrick Henry Drive</street>
+
+          <city>Santa Clara, CA</city>
+
+          <code>95054</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>mspiegel@barefootnetworks.com</email>
+      </address>
+    </author>
+
+    <author fullname="Tianran Zhou" initials="T." surname="Zhou">
+      <organization abbrev="">Huawei</organization>
+
+      <address>
+        <postal>
+          <street>156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>zhoutianran@huawei.com</email>
+      </address>
+    </author>
+	
+    <author fullname="John Lemon" initials="J." surname="Lemon">
+      <organization abbrev="">Broadcom</organization>
+
+      <address>
+        <postal>
+          <street>270 Innovation Drive</street>
+
+          <city>San Jose</city>
+
+          <region>CA</region>
+
+          <code>95134</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>john.lemon@broadcom.com</email>
       </address>
     </author>
 
@@ -113,7 +262,15 @@
 		An IOAM profile can be bound to a specific Namespace-ID 
 		value or to a set of Namespace-ID values. Thus, a profile
 		specification may request IANA to allocate one or more 
-		Namespace-ID values. Note that a profile may also be defined
+		Namespace-ID values.</t>
+		
+		<t>It should be noted that the Namespace-ID is typically used for 
+		other purposes, as specified in 
+		<xref target="I-D.ietf-ippm-ioam-data"/>, and thus the scope of
+		a Namespace and the scope of an IOAM profile are generally 
+		independent. However, some profiles may be defined in a way that
+		binds the profile to a specific Namespace-ID value or to a specific
+		Namespace-ID range. Note that a profile may also be defined
 		without being bound to a specific Namesampe-ID, in which case
 		the profile specification may not include the current section.</t>
       </section>
@@ -131,7 +288,6 @@
 		of the profile to certain features. For example, a profile may be defined
 		to use the Incremental Trace Option such that only specific data types
 		are used in the profile, while others are not.</t>
-		
       </section>
 
   	  <section title="IOAM Option Header Field Values">
@@ -216,6 +372,63 @@
       <?rfc include='reference.I-D.ietf-ippm-ioam-data'?>
     </references>
 
+    <section anchor="appendix" title="An IOAM Profile Example">
+      <section title="Overview">
+	    <t>This section presents an example of an IOAM profile specification.
+		The profile makes use of the Hop limit, Node ID and Transit delay data
+		fields, and is thus called the HNT profile for short.</t>
+	  </section>
+	  
+	  <section title="Use Cases">
+	    <t>This profile is intended for path tracing and transit delay 
+		monitoring, while using compact data with just two data fields per
+		packet. The profile can be useful in networks with a large number of 
+		hops.</t> 
+	  </section>
+	  
+  	  <section title="IOAM Options">
+	    <t>The HNT profile makes use of the Incremental Trace Option. A packet
+		that includes IOAM data according to the current profile includes a 
+		single IOAM option - the Incremental Trace Option. Specifically, two
+		data fields are used in this profile: the Hop_Lim and node_id field, 
+		and the transit delay field.</t>
+	  </section>
+
+
+  	  <section title="IOAM Option Header Field Values">
+	    <t>The IOAM-Trace-Type field in the header of the Incremental Trace 
+		Option in current profile has a fixed value; Bit 0 (the most 
+		significant bit) and Bit 4 are set, while the rest of the bits are 
+		zero, indicating the two data fields that are used in the option.</t>
+	  </section>
+
+  	  <section title="Opaque State Snapshot">
+	    <t>The opaque state snapshot is never used in this profile. Note that 
+		the NodeLen field, as defined in 
+		<xref target="I-D.ietf-ippm-ioam-data"/>, represents the length of the
+		data excluding the opaque state snapshot. Since this field is not used
+		in the current profile, the NodeLen represents the actual length of the
+		data.</t>
+	  </section>
+	  
+	  <section title="Profile Coexistence">
+	    <t>It is assumed that the current profile is used in a confined 
+		administrative domain in which no other IOAM profiles are used. 
+		Therefore, it is assumed that the current profile does not coexist
+		with other profiles.</t> 
+	  </section>
+
+	  <section title="Validity">
+		<t>An IOAM transit/decapsulating node that receives a packet with IOAM 
+		options that do not comply to the current profile should 
+		forward/decapsulate the packet without IOAM processing, if it is able 
+		to do so. If a decapsulating node is not able to decapsulate an IOAM 
+		option that is not compliant to the current profile, the packet is 
+		discarded.</t> 
+	  </section>
+    </section>
+	
+	
     <!-- Change Log
 
    -->

@@ -2,10 +2,22 @@
 
 
 
-Network Working Group                                          A. Author
-Internet-Draft                                               Affiliation
-Intended status: Informational                         February 19, 2019
-Expires: August 23, 2019
+Network Working Group                                         T. Mizrahi
+Internet-Draft                          Huawei Network.IO Innovation Lab
+Intended status: Informational                              F. Brockners
+Expires: September 4, 2019                                   S. Bhandari
+                                                          R. Sivakolundu
+                                                                   Cisco
+                                                                 A. Kfir
+                                                                B. Gafni
+                                             Mellanox Technologies, Inc.
+                                                              M. Spiegel
+                                                       Barefoot Networks
+                                                                 T. Zhou
+                                                                  Huawei
+                                                                J. Lemon
+                                                                Broadcom
+                                                           March 3, 2019
 
 
                           In Situ OAM Profiles
@@ -37,7 +49,14 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 23, 2019.
+   This Internet-Draft will expire on September 4, 2019.
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 1]
+
+Internet-Draft                IOAM Profiles                   March 2019
+
 
 Copyright Notice
 
@@ -50,14 +69,6 @@ Copyright Notice
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
-
-
-
-Author                   Expires August 23, 2019                [Page 1]
-
-Internet-Draft                IOAM Profiles                February 2019
-
-
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
@@ -69,16 +80,24 @@ Table of Contents
      2.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   3
      2.2.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   3
      2.3.  Namespace-ID  . . . . . . . . . . . . . . . . . . . . . .   3
-     2.4.  IOAM Options  . . . . . . . . . . . . . . . . . . . . . .   3
+     2.4.  IOAM Options  . . . . . . . . . . . . . . . . . . . . . .   4
      2.5.  IOAM Option Header Field Values . . . . . . . . . . . . .   4
      2.6.  Opaque State Snapshot . . . . . . . . . . . . . . . . . .   4
      2.7.  Timestamp Format  . . . . . . . . . . . . . . . . . . . .   4
-     2.8.  Profile Coexistence . . . . . . . . . . . . . . . . . . .   4
-     2.9.  Validity  . . . . . . . . . . . . . . . . . . . . . . . .   4
+     2.8.  Profile Coexistence . . . . . . . . . . . . . . . . . . .   5
+     2.9.  Validity  . . . . . . . . . . . . . . . . . . . . . . . .   5
    3.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
    5.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
+   Appendix A.  An IOAM Profile Example  . . . . . . . . . . . . . .   6
+     A.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   6
+     A.2.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   6
+     A.3.  IOAM Options  . . . . . . . . . . . . . . . . . . . . . .   6
+     A.4.  IOAM Option Header Field Values . . . . . . . . . . . . .   6
+     A.5.  Opaque State Snapshot . . . . . . . . . . . . . . . . . .   6
+     A.6.  Profile Coexistence . . . . . . . . . . . . . . . . . . .   7
+     A.7.  Validity  . . . . . . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -87,6 +106,14 @@ Table of Contents
 
    This document introduces the concept of use case driven IOAM
    profiles.  An IOAM profile defines a use case or a set of use cases
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 2]
+
+Internet-Draft                IOAM Profiles                   March 2019
+
+
    for IOAM, and a set of rules that restrict the scope and features of
    the IOAM specification to a subset of the full functionality.  Based
    on the guidelines in this document, it is expected that future
@@ -103,16 +130,6 @@ Table of Contents
    IOAM profile specifications will not require changes in IOAM, since a
    profile, by definition, derives a subset of the existing
    functionality.
-
-
-
-
-
-
-Author                   Expires August 23, 2019                [Page 2]
-
-Internet-Draft                IOAM Profiles                February 2019
-
 
 2.  Specifying an IOAM Profile
 
@@ -142,9 +159,25 @@ Internet-Draft                IOAM Profiles                February 2019
    [I-D.ietf-ippm-ioam-data].  An IOAM profile can be bound to a
    specific Namespace-ID value or to a set of Namespace-ID values.
    Thus, a profile specification may request IANA to allocate one or
-   more Namespace-ID values.  Note that a profile may also be defined
-   without being bound to a specific Namesampe-ID, in which case the
-   profile specification may not include the current section.
+   more Namespace-ID values.
+
+
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 3]
+
+Internet-Draft                IOAM Profiles                   March 2019
+
+
+   It should be noted that the Namespace-ID is typically used for other
+   purposes, as specified in [I-D.ietf-ippm-ioam-data], and thus the
+   scope of a Namespace and the scope of an IOAM profile are generally
+   independent.  However, some profiles may be defined in a way that
+   binds the profile to a specific Namespace-ID value or to a specific
+   Namespace-ID range.  Note that a profile may also be defined without
+   being bound to a specific Namesampe-ID, in which case the profile
+   specification may not include the current section.
 
 2.4.  IOAM Options
 
@@ -159,16 +192,6 @@ Internet-Draft                IOAM Profiles                February 2019
    the profile to certain features.  For example, a profile may be
    defined to use the Incremental Trace Option such that only specific
    data types are used in the profile, while others are not.
-
-
-
-
-
-
-Author                   Expires August 23, 2019                [Page 3]
-
-Internet-Draft                IOAM Profiles                February 2019
-
 
 2.5.  IOAM Option Header Field Values
 
@@ -190,6 +213,18 @@ Internet-Draft                IOAM Profiles                February 2019
 
    A profile may specify a specific timestamp format to be used in IOAM
    data fields.
+
+
+
+
+
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 4]
+
+Internet-Draft                IOAM Profiles                   March 2019
+
 
 2.8.  Profile Coexistence
 
@@ -216,16 +251,6 @@ Internet-Draft                IOAM Profiles                February 2019
    packet as a conventional IOAM-enabled packet, if it is able to do so
    and if the network policy allows this behavior.
 
-
-
-
-
-
-Author                   Expires August 23, 2019                [Page 4]
-
-Internet-Draft                IOAM Profiles                February 2019
-
-
 3.  IANA Considerations
 
    This document does not include any requests from IANA.
@@ -244,6 +269,19 @@ Internet-Draft                IOAM Profiles                February 2019
 
 5.  Normative References
 
+
+
+
+
+
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 5]
+
+Internet-Draft                IOAM Profiles                   March 2019
+
+
    [I-D.ietf-ippm-ioam-data]
               Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
               Leddy, J., Youell, S., Mizrahi, T., Mozes, D., Lapukhov,
@@ -256,13 +294,169 @@ Internet-Draft                IOAM Profiles                February 2019
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-Author's Address
+Appendix A.  An IOAM Profile Example
 
-   Author
-   Affiliation
-   Country
+A.1.  Overview
 
-   Email: email@address
+   This section presents an example of an IOAM profile specification.
+   The profile makes use of the Hop limit, Node ID and Transit delay
+   data fields, and is thus called the HNT profile for short.
+
+A.2.  Use Cases
+
+   This profile is intended for path tracing and transit delay
+   monitoring, while using compact data with just two data fields per
+   packet.  The profile can be useful in networks with a large number of
+   hops.
+
+A.3.  IOAM Options
+
+   The HNT profile makes use of the Incremental Trace Option.  A packet
+   that includes IOAM data according to the current profile includes a
+   single IOAM option - the Incremental Trace Option.  Specifically, two
+   data fields are used in this profile: the Hop_Lim and node_id field,
+   and the transit delay field.
+
+A.4.  IOAM Option Header Field Values
+
+   The IOAM-Trace-Type field in the header of the Incremental Trace
+   Option in current profile has a fixed value; Bit 0 (the most
+   significant bit) and Bit 4 are set, while the rest of the bits are
+   zero, indicating the two data fields that are used in the option.
+
+A.5.  Opaque State Snapshot
+
+   The opaque state snapshot is never used in this profile.  Note that
+   the NodeLen field, as defined in [I-D.ietf-ippm-ioam-data],
+   represents the length of the data excluding the opaque state
+
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 6]
+
+Internet-Draft                IOAM Profiles                   March 2019
+
+
+   snapshot.  Since this field is not used in the current profile, the
+   NodeLen represents the actual length of the data.
+
+A.6.  Profile Coexistence
+
+   It is assumed that the current profile is used in a confined
+   administrative domain in which no other IOAM profiles are used.
+   Therefore, it is assumed that the current profile does not coexist
+   with other profiles.
+
+A.7.  Validity
+
+   An IOAM transit/decapsulating node that receives a packet with IOAM
+   options that do not comply to the current profile should forward/
+   decapsulate the packet without IOAM processing, if it is able to do
+   so.  If a decapsulating node is not able to decapsulate an IOAM
+   option that is not compliant to the current profile, the packet is
+   discarded.
+
+Authors' Addresses
+
+   Tal Mizrahi
+   Huawei Network.IO Innovation Lab
+   Israel
+
+   Email: tal.mizrahi.phd@gmail.com
+
+
+   Frank Brockners
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
+
+
+   Shwetha Bhandari
+   Cisco Systems, Inc.
+   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+   Bangalore, KARNATAKA 560 087
+   India
+
+   Email: shwethab@cisco.com
+
+
+
+
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 7]
+
+Internet-Draft                IOAM Profiles                   March 2019
+
+
+   Ramesh Sivakolundu
+   Cisco Systems, Inc.
+   170 West Tasman Dr.
+   SAN JOSE, CA 95134
+   U.S.A.
+
+   Email: sramesh@cisco.com
+
+
+   Aviv Kfir
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: avivk@mellanox.com
+
+
+   Barak Gafni
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: gbarak@mellanox.com
+
+
+   Mickey Spiegel
+   Barefoot Networks
+   4750 Patrick Henry Drive
+   Santa Clara, CA  95054
+   US
+
+   Email: mspiegel@barefootnetworks.com
+
+
+   Tianran Zhou
+   Huawei
+   156 Beiqing Rd.
+   Beijing  100095
+   China
+
+   Email: zhoutianran@huawei.com
+
+
+
+
+
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 8]
+
+Internet-Draft                IOAM Profiles                   March 2019
+
+
+   John Lemon
+   Broadcom
+   270 Innovation Drive
+   San Jose, CA  95134
+   US
+
+   Email: john.lemon@broadcom.com
 
 
 
@@ -277,4 +471,34 @@ Author's Address
 
 
 
-Author                   Expires August 23, 2019                [Page 5]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Mizrahi, et al.         Expires September 4, 2019               [Page 9]
