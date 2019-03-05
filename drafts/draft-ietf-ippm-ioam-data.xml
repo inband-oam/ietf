@@ -60,7 +60,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-04" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-05" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -459,9 +459,11 @@
 
       <t>Combination with active OAM mechanisms: IOAM should be usable for
       active network probing, enabling for example a customized version of
-      traceroute. Decapsulating IOAM nodes may have an ability to send the
-      IOAM information retrieved from the packet back to the source address of
-      the packet or to the encapsulating node.</t>
+      traceroute. IOAM may also be carried out on cloned or sampled copies of
+      data packets, when the operator prefers not to directly modify data
+      packets for IOAM purposes. Decapsulating IOAM nodes must have the
+      ability to discard active IOAM packets, potentially in addition to
+      retrieving the IOAM information. </t>
 
       <t>IOAM implementation: The IOAM data-field definitions take the
       specifics of devices with hardware data-plane and software data-plane
@@ -806,7 +808,19 @@ The trace option data MUST be 4-octet aligned:
          	  back at the initiator, it is a local matter how it is
          	  recognized as a loopback packet.</t>
 
-                  <t hangText="Bit 2-3">Reserved: Must be zero.</t>
+                  <t hangText="Bit 2">"Active" (A-bit). When set, this indicates
+                  that this is an active OAM packet, where "active" is used in
+                  the sense defined in <xref target="RFC7799"></xref>, rather
+                  than a data packet. For example, the packet may be a probe, or
+                  it may be a (possibly truncated) copy of a data packet. At the
+                  IOAM decapsulating node, in addition to processing and/or
+                  exporting the metadata, the packet must be discarded rather
+                  than forwarded. If this bit is not set, then the decapsulating
+                  node should attempt to forward the packet after IOAM
+                  decapsulation.
+
+                  <t hangText="Bit 3">Reserved: Must be set to zero upon
+                  transmission and ignored upon receipt.</t>
                 </list></t>
 
               <t hangText="RemainingLen:">7-bit unsigned integer. This field
@@ -1820,7 +1834,7 @@ IOAM proof of transit option of IOAM POT Type 0:
       <section title="IOAM Trace Flags Registry">
         <t>This registry defines code points for each bit in the 4 bit flags
         for Pre-allocated trace option and Incremental trace option defined in
-        <xref target="IOAM_tracing_option"></xref>. The meaning of Bit 0 - 1
+        <xref target="IOAM_tracing_option"></xref>. The meaning of Bit 0 - 2
         for trace flags are defined in this document in <xref
         target="TraceFlags"></xref> of <xref
         target="TraceOptionDef"></xref>:</t>
@@ -1829,7 +1843,9 @@ IOAM proof of transit option of IOAM POT Type 0:
             <t hangText="Bit 0">"Overflow" (O-bit)</t>
 
             <t hangText="Bit 1">"Loopback" (L-bit)</t>
-          </list> The meaning for Bits 2 - 3 are available for assignment via
+
+            <t hangText="Bit 2">"Active" (A-bit)</t>
+          </list> The meaning for Bit 3 is available for assignment via
         RFC Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
