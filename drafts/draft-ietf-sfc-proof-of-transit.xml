@@ -12,6 +12,7 @@
 <!ENTITY RFC2460 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2460.xml">
 <!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.brockners-inband-oam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-data.xml">
 <!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
 <!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
@@ -437,6 +438,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       using a filter (e.g., 5-tuple classifier), or an identifier which is
       already present in the packet (e.g., path or service identifier, NSH
       Service Path Identifier (SPI), flow-label, etc.)</t>
+	  
+	  <t>The POT is encapsulated in pakets as an IOAM Proof Of Transit Option.
+	  The details and format of the encapsulation and the POT Option format
+	  are specified in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
 
       <t>The solution approach is detailed in two steps. Initially the concept
       of the approach is explained. This concept is then further refined to
@@ -447,24 +452,23 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         path. The added POT data allows a verifying node (egress node) to
         check whether a packet traversed the identified set of nodes on a path
         correctly or not. Security mechanisms are natively built into the
-        generation of the POT data to protect against misuse (i.e.
-        configuration mistakes, malicious administrators playing tricks with
-        routing, capturing, spoofing and replaying packets). The mechanism for
-        POT leverages "Shamir's Secret Sharing" scheme <xref
-        target="SSS"/>.</t>
+        generation of the POT data to protect against misuse (e.g.,
+        configuration mistakes). The mechanism for POT leverages "Shamir's 
+		Secret Sharing" scheme <xref target="SSS"/>.</t>
 
         <t>Shamir's secret sharing base idea: A polynomial (represented by its
-        coefficients) is chosen as a secret by the controller. A polynomial
-        represents a curve. A set of well-defined points on the curve are
-        needed to construct the polynomial. Each point of the polynomial is
-        called a &ldquo;share&rdquo; of the secret. A single secret is
-        associated with a particular set of nodes, which typically represent
-        the path to be verified. Shares of the single secret (i.e., points on
-        the curve) are securely distributed from a Controller to the network
-        nodes. Nodes use their respective share to update a cumulative value
-        in the POT data of each packet. Only a verifying node has access to
-        the complete secret. The verifying node validates the correctness of
-        the received POT data by reconstructing the curve.</t>
+        coefficients) of degree k is chosen as a secret by the controller. A 
+		polynomial represents a curve. A set of k+1 points on the 
+		curve are needed to construct the polynomial. Each point of the 
+		polynomial is called a &ldquo;share&rdquo; of the secret. A single 
+		secret is associated with a particular set of k+1 nodes, which 
+		typically represent the path to be verified. k+1 shares of the single 
+		secret (i.e., k+1 points on the curve) are securely distributed from 
+		a Controller to the network nodes. Nodes use their respective share 
+		to update a cumulative value in the POT data of each packet. Only a 
+		verifying node has access to the complete secret. The verifying node 
+		validates the correctness of the received POT data by reconstructing 
+		the curve.</t>
 
         <t>The polynomial cannot be reconstructed if any of the points are
         missed or tampered. Per Shamir's Secret Sharing Scheme, any lesser
@@ -480,19 +484,22 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         complex. It would be complex to configure and recycle so many curves
         and their respective points for each node. Rather than using a single
         polynomial, two polynomials are used for the solution approach: A
-        secret polynomial which is kept constant, and a per-packet polynomial
-        which is public. Operations are performed on the sum of those two
-        polynomials - creating a third polynomial which is secret and per
-        packet.</t>
+        secret polynomial as described above which is kept constant, and a 
+		per-packet polynomial which is public and generated by the ingress 
+		node (the first node along the path). Operations are performed on the 
+		sum of those two polynomials - creating a third polynomial which is 
+		secret and per packet.</t>
       </section>
 
       <section title="Solution Approach">
         <t>Solution approach: The overall algorithm uses two polynomials:
-        POLY-1 and POLY-2. POLY-1 is secret and constant. Each node gets a
-        point on POLY-1 at setup-time and keeps it secret. POLY-2 is public,
-        random and per packet. Each node generates a point on POLY-2 each time
-        a packet crosses it. Each node then calculates (point on POLY-1 +
-        point on POLY-2) to get a (point on POLY-3) and passes it to verifier
+        POLY-1 and POLY-2. POLY-1 is secret and constant. A different POLY-1 
+		is used for each path, and its value is known to the controller and to
+		the varifier of the respective path. Each node gets a point on POLY-1 
+		at setup-time and keeps it secret. POLY-2 is public, random and per 
+		packet. Each node generates a point on POLY-2 each time a packet 
+		crosses it. Each node then calculates (point on POLY-1 + point on 
+		POLY-2) to get a (point on POLY-3) and passes it to verifier
         by adding it to each packet. The verifier constructs POLY-3 from the
         points given by all the nodes and cross checks whether POLY-3 = POLY-1
         + POLY-2. Only the verifier knows POLY-1. The solution leverages
@@ -504,9 +511,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
         <section title="Setup">
           <t>A controller generates a first polynomial (POLY-1) of degree k
-          and k+1 points on the polynomial. The constant coefficient of POLY-1
-          is considered the SECRET. The non-constant coefficients are used to
-          generate the Lagrange Polynomial Constants (LPC). Each of the k
+          and k+1 points on the polynomial, corresponding to the k+1 nodes 
+		  along the path. The constant coefficient of POLY-1 is considered 
+		  the SECRET. The non-constant coefficients are used to
+          generate the Lagrange Polynomial Constants (LPC). Each of the k+1
           nodes (including verifier) are assigned a point on the polynomial
           i.e., shares of the SECRET. The verifier is configured with the
           SECRET. The Controller also generates coefficients (except the
@@ -595,11 +603,11 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             be 10/3 , -5 , 8/3.</t>
 
             <t><list style="empty">
-                <t>LPC(x0) = (10/3) mod 53 = 21</t>
+                <t>LPC(l0) = (10/3) mod 53 = 21</t>
 
-                <t>LPC(x1) = (-5) mod 53 = 48</t>
+                <t>LPC(l1) = (-5) mod 53 = 48</t>
 
-                <t>LPC(x2) = (8/3) mod 53 = 38</t>
+                <t>LPC(l2) = (8/3) mod 53 = 38</t>
               </list>For a general way to compute the modular multiplicative
             inverse, see e.g., the Euclidean algorithm.</t>
           </section>
@@ -710,9 +718,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         <section title="Final Version">
           <t>The enhanced version of the protocol is still prone to replay and
           preplay attacks. An attacker could reuse the POT metadata for
-          bypassing the verification. So additional measures using packet
-          integrity checks (HMAC) and sequence numbers (SEQ_NO) are discussed
-          later "Security Considerations" section.</t>
+          bypassing the verification. Further details are discussed in the
+          "Security Considerations" section.</t>
         </section>
       </section>
 
@@ -762,15 +769,15 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         defined set of nodes have been traversed by a packet. The order in
         which nodes where traversed is not verified. "Ordered Proof of Transit
         (OPOT)" addresses the need of deployments, that require to verify the
-        order in which nodes were traversed.OPOT extends the POT scheme with
+        order in which nodes were traversed. OPOT extends the POT scheme with
         symmetric masking between the nodes.</t>
 
         <t><list style="numbers">
-            <t>The controller provisions all the nodes with (or asks them to
-            agree on) a couple of secrets, that we will refer as masks, one
-            for the connection from the upstream node(s), another for the
-            connection to the downstream node(s). For obvious reasons, the
-            ingress and egress (verifier) nodes only receive one, for
+            <t>For each path the controller provisions all the nodes with 
+			(or asks them to agree on) two secrets per node, that we will refer 
+			to as masks, one for the connection from the upstream node(s), 
+			another for the connection to the downstream node(s). For obvious 
+			reasons, the ingress and egress (verifier) nodes only receive one, for
             downstream and upstream, respectively.</t>
 
             <t>Any two contiguous nodes in the OPOT stream share the mask for
@@ -1102,8 +1109,20 @@ module ietf-pot-profile {
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>Different security requirements achieved by the solution approach are
-      discussed here.</t>
+      <t>POT is a mechanism that is used for verifying the path through which
+	  a packet was forwarded. The security considerations of IOAM in general
+	  are discussed in <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically,
+	  it is assumed that POT is used in a confined network domain, and 
+	  therefore the potential threats that POT is intended to mitigate should
+	  be viewed accordingly. POT prevents spoofing and tampering; an attacker
+	  cannot maliciously create a bogus POT or modify a legitimate one. 
+	  Furthermore, a legitimate node that takes part in the POT protocol 
+	  cannot masquerade as another node along the path. However, POT does
+	  not provide resiliency to man-in-the-middle attacks; for example, an
+	  attacker can replay a POT, or swap the POT values between different 
+	  packets. These considerations are discussed in detail in the rest
+	  of this section.</t>
+
 
       <section title="Proof of Transit">
         <t>Proof of correctness and security of the solution approach is per
@@ -1134,7 +1153,7 @@ module ietf-pot-profile {
 
         <t>If symmetric masking is used to assure OPOT (<xref
         target="mask-opot"/>), the nodes need to keep two additional secrets:
-        the upstream and upstream masks, that have to be managed under the
+        the downstream and upstream masks, that have to be managed under the
         same conditions as the secrets mentioned above. And it is equally
         recommended to employ a different set of mask pairs across different
         paths, traffic profiles or service chains.</t>
@@ -1160,18 +1179,21 @@ module ietf-pot-profile {
             if constant coefficient is a sequence number than CML values
             become quite predictable and the scheme would be broken. If
             symmetric masking is used for OPOT, inter-packet analysis could be
-            applied to guess mask values, what requires a proper refresh rate
+            applied to guess mask values, which requires a proper refresh rate
             for masks, at least as high as the one used for LPCs.</t>
           </list></t>
       </section>
 
       <section title="Anti-Replay">
         <t>A passive attacker could reuse a set of older RND and the
-        intermediate CML values to bypass certain nodes in later packets. Such
-        attacks could be avoided by carefully choosing POLY-2 as a (SEQ_NO +
-        RND). For example, if 64 bits are being used for POLY-2 then first 16
-        bits could be a sequence number SEQ_NO and next 48 bits could be a
-        random number.</t>
+        intermediate CML values. Thus, an attacker can attach an old 
+		(replayed) RND and CML with a new packet in order to bypass some of 
+		the nodes along the path.</t>
+		
+		<t>Such attacks could be avoided by carefully choosing POLY-2 as a 
+		(SEQ_NO + RND). For example, if 64 bits are being used for POLY-2 
+		then first 16 bits could be a sequence number SEQ_NO and next 48 bits 
+		could be a random number.</t>
 
         <t>Subsequently, the verifier could use the SEQ_NO bits to run classic
         anti-replay techniques like sliding window used in IPSEC. The verifier
@@ -1217,11 +1239,11 @@ module ietf-pot-profile {
         pre-shared key, and thus cannot launch preplay attacks.</t>
 
         <t>The solution discussed in this memo does not currently mitigate
-        prereplay attacks. A mitigation mechanism may be included in future
+        preplay attacks. A mitigation mechanism may be included in future
         versions of the solution.</t>
       </section>
 
-      <section title="Anti-Tampering">
+      <section title="Tampering">
         <t>An active attacker could not insert any arbitrary value for CML.
         This would subsequently fail the reconstruction of the POLY-3. Also an
         attacker could not update the CML with a previously observed value.
@@ -1334,6 +1356,8 @@ module ietf-pot-profile {
     <references title="Normative References">
       &RFC2119;
 
+      &I-D.ietf-ippm-ioam-data;
+	  
       &RFC7665;
 
       <reference anchor="SSS"
