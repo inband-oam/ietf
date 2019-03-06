@@ -155,7 +155,7 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
-      outlines how IOAM can be enabled in a network.</t>
+      outlines how IOAM can be enabled in an IPv6 network.</t>
     </abstract>
   </front>
 
@@ -218,14 +218,16 @@
           fields is the same.</t>
 
           <t hangText="C2">Given that IOAM data fields increase the total size
-          of the packet, the packet size could exceed the PMTU. In particular,
-          the incremental trace IOAM HbH Option, which is proposed to support
-          hardware implementations of IOAM, changes Option Data Length
-          en-route. Operators of an IOAM domain are to ensure that the
-          addition of OAM information does not lead to fragmentation of the
-          packet. Careful control of the MTU in a network is one of the
-          reasons why IOAM is considered a domain specific feature, see also
-          <xref target="I-D.ietf-ippm-ioam-data"/>. In addition, the PMTU
+          of the packet, the size of the packet including the IOAM data could 
+		  exceed the PMTU. In particular, the incremental trace IOAM HbH 
+		  Option, which is proposed to support hardware implementations of 
+		  IOAM, changes Option Data Length en-route. Operators of an IOAM 
+		  domain are to ensure that the addition of OAM information does not 
+		  lead to fragmentation of the packet, by configuring the MTU of 
+		  transit routers and switches to a sufficiently high value. Careful 
+		  control of the MTU in a network is one of the reasons why IOAM is 
+		  considered a domain specific feature, see also 
+		  <xref target="I-D.ietf-ippm-ioam-data"/>. In addition, the PMTU
           tolerance range in the IOAM domain should be identified (e.g.
           through configuration) and IOAM encapsulation operations and/or IOAM
           data field insertion (in case of incremental tracing) should not be
@@ -233,27 +235,27 @@
 
           <t hangText="C3">Packets with IOAM data or associated ICMP errors,
           should not arrive at destinations which have no knowledge of IOAM.
-          Consider using IOAM in a transit network: Misleading ICMP errors due
+          Consider using IOAM in transit devices; misleading ICMP errors due
           to addition and/or presence of OAM data in the packet can confuse a
           source of the packet that did not insert the OAM information.</t>
 
           <t hangText="C4">OAM data leaks may affect the forwarding behavior
-          and state of network elements outside an IOAM domain. Build a
-          mechanism to prevent data leaks or be able to assure that upon leak
-          network elements outside the domain are not affected i.e continue to
-          process other valid packets.</t>
+          and state of network elements outside an IOAM domain. Such leaks
+		  should be mitigated by mechanisms to prevent data leaks or to assure 
+		  that upon leak network elements outside the domain are not affected, 
+		  i.e., continue to process other valid packets.</t>
 
-          <t hangText="C5">Source OAM domain that inserted and leaked OAM data
-          must be easy to identify for purpose of troubleshooting. For e.g. It
-          very time consuming to troubleshoot source that inserted the EH but
-          didn't remove when the packet traverses across AS (you have to walk
-          the AS path, contacting each operator, asking them to verify their
-          config, get packet captures etc.), and all the while you may have a
-          number of angry customers/end-users.</t>
+          <t hangText="C5">The source of that inserted and leaked the IOAM 
+		  data must be easy to identify for the purpose of troubleshooting, 
+		  due to the high complexity of troubleshooting a source that inserted 
+		  the IOAM data and did not remove it when the packet traversed across 
+		  an AS. Such a troubleshooting process may require coordination 
+		  between multiple operators, complicated configuration verification, 
+		  packet capture analysis, etc.</t>
 
           <t hangText="C6">Compliance with <xref target="RFC8200"/> would
-          require OAM data to be encapsulated instead of header/option
-          insertion into in-flight packets.</t>
+          require OAM data to be encapsulated in a tunnel instead of inserting
+		  a header/option into in-flight packets.</t>
         </list></t>
     </section>
 
@@ -265,7 +267,7 @@
       target="I-D.ioametal-ippm-6man-ioam-ipv6-options"/>.</t>
     </section>
 
-    <section title="IOAM domains bounded by network devices ">
+    <section title="IOAM domains bounded by network devices">
       <t>For deployments where the IOAM domain is bounded by network devices,
       network devices such as routers form the edge of an IOAM domain. Network
       devices will perform the operation of IOAM data field encapsulation and
@@ -322,6 +324,17 @@
           the ION could leverage the transit approach for traffic between BGP
           border routers, as described in RFC1772, "A.2.3 Encapsulation".</t>
         </section>
+		
+		<section title="x-in-IPv6 Encapsulation that is used Independently">
+		  <t>In some cases it is desirable to monitor a domain that uses an
+		  overlay network that is deployed independently of the need for IOAM,
+		  e.g., an overlay network that runs Geneve-in-IPv6, or VXLAN-in-IPv6.
+		  In this case IOAM can be encapsulated in as an extension header in
+		  the tunnel (outer) IPv6 header. Thus, the tunnel encapsulating node
+		  is also the IOAM encapsulating node, and the tunnel end point is 
+		  also the IOAM decapsulating node.</t>
+		</section>
+		
       </section>
     </section>
 
