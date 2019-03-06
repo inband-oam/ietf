@@ -475,15 +475,29 @@
       data types required for IOAM.</t>
 
       <t>To accommodate the different uses of IOAM, IOAM data fields fall into
-      different categories, e.g. edge-to-edge, per node tracing, or for proof
-      of transit. In IOAM these categories are referred to as IOAM-Types. A
-      common registry is maintained for IOAM-Types, see <xref
-      target="IOAM-type-registry"></xref> for details. Corresponding to these
-      IOAM-Types, different IOAM data fields are defined. IOAM data fields can
-      be encapsulated into a variety of protocols, such as NSH, Geneve, IPv6,
-      etc. The definition of how IOAM data fields are encapsulated into other
-      protocols is outside the scope of this document.</t>
+      different categories, as specified below. In IOAM these categories are 
+	  referred to as IOAM-Types. A common registry is maintained for 
+	  IOAM-Types, see <xref target="IOAM-type-registry"></xref> for details. 
+	  Corresponding to these IOAM-Types, different IOAM data fields are 
+	  defined. IOAM data fields can be encapsulated into a variety of 
+	  protocols, such as NSH, Geneve, IPv6, etc. The definition of how IOAM 
+	  data fields are encapsulated into other protocols is outside the scope 
+	  of this document.</t>
 
+	  <t>This document defines four IOAM-Types, as specified in this section:
+	  </t>
+
+      <t><list style="symbols">
+          <t>Pre-allocated Trace Option</t>
+
+          <t>Incremental Trace Option</t>
+		  
+		  <t>Proof of Transit (POT) Option</t>
+		  
+		  <t>Edge-to-Edge (E2E) Option</t>
+       </list>
+	  </t>
+	  
       <t>IOAM is expected to be deployed in a specific domain rather than on
       the overall Internet. The part of the network which employs IOAM is
       referred to as the "IOAM-domain". IOAM data is added to a packet upon
@@ -496,12 +510,29 @@
       the domain which are aware of IOAM data and read and/or write or process
       the IOAM data are called "IOAM transit nodes". IOAM nodes which add or
       remove the IOAM data container can also update the IOAM data fields at
-      the same time. Or in other words, IOAM encapsulation or decapsulating
+      the same time. Or in other words, IOAM encapsulating or decapsulating
       nodes can also serve as IOAM transit nodes at the same time. Note that
       not every node in an IOAM domain needs to be an IOAM transit node. For
       example, a Segment Routing deployment might require the segment routing
       path to be verified. In that case, only the SR nodes would also be IOAM
       transit nodes rather than all nodes.</t>
+
+	  <t>An IOAM encapsulating node incorporates one or more IOAM data 
+	  options (from the list of four IOAM-Types above) into en route packets
+	  that IOAM is enabled for. If IOAM is enabled for a selected subset of
+	  the traffic, the encapsulating node is responsible for applying the
+	  IOAM functionality to the selected subset.
+	  </t>
+	  
+	  <t>An IOAM transit node updates one or more of the IOAM options. If both
+	  the pre-allocated and the incremental trace options are present in the
+	  packet, each IOAM transit node will update at most one of these options.
+	  A transit node cannot add new IOAM options to a packet, and cannot change
+	  an IOAM Edge-to-Edge Option.</t>
+	  
+	  <t>An IOAM decapsulating node removes all the IOAM options from en route
+	  packets.</t>
+	  
 
       <section anchor="ioam_namespaces" title="IOAM Namespaces">
         <t>IOAM data fields are defined within an IOAM namespace. An IOAM
@@ -627,9 +658,12 @@
             situ OAM encapsulating node allocates an array which is used to
             store operational data retrieved from every node while the packet
             traverses the domain. IOAM transit nodes update the content of the
-            array. A pointer which is part of the IOAM trace data points to
-            the next empty slot in the array, which is where the next IOAM
-            transit node fills in its data.</t>
+            array, and possibly update the checksums of outer headers. A 
+			pointer which is part of the IOAM trace data points to
+            the next empty slot in the array. An IOAM transit node that updates
+			the content of the pre-allocated option also updates the value of
+			the pointer, which specifies where the next IOAM transit node fills 
+			in its data.</t>
 
             <t hangText="Incremental Trace Option:">This trace option is
             defined as a container of node data fields where each node
@@ -817,7 +851,7 @@ The trace option data MUST be 4-octet aligned:
                   exporting the metadata, the packet must be discarded rather
                   than forwarded. If this bit is not set, then the decapsulating
                   node should attempt to forward the packet after IOAM
-                  decapsulation.
+                  decapsulation.</t>
 
                   <t hangText="Bit 3">Reserved: Must be set to zero upon
                   transmission and ignored upon receipt.</t>
