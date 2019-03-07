@@ -819,8 +819,38 @@ The trace option data MUST be 4-octet aligned:
                   node should attempt to forward the packet after IOAM
                   decapsulation.
 
-                  <t hangText="Bit 3">Reserved: Must be set to zero upon
-                  transmission and ignored upon receipt.</t>
+		  <t hangText="Bit 3">"Immediate Export" (I-bit). Immediate 
+		  Export mode is used to export IOAM requested data immediately at every 
+		  IOAM suported network node, instead of adding the data to the packet traversing 
+			  the network.
+			  The various types of IOAM nodes MUST process packets with the I-bit set as follows:
+		      1. An encapsulating IOAM node configured to set the I-bit encapsulates 
+		          the packet with the IOAM header and sets the I-bit, leaving the IOAM header without
+			  local collected data, and 
+			  exports the requested IOAM data immediately. 
+			  The encapsulating IOAM node is the only type of node allowed to set the I-bit.
+		      2. A transit node that processes a packet with the I-bit set is expected to export 
+			  the requested IOAM data, and not incorporate it into the IOAM header. 
+			  3. A decapsulating IOAM node that processes a packet with the I-bit set is expected to export 
+			  the requested IOAM data, and decapsulate the IOAM header.
+			  
+			  As a means to support easier tracing of a particular immediate exported data set of flows within 
+			  a network, a deployment MAY attach an IOAM edge-to-edge option in addition to the trace option, 
+			  that includes a sequence number. See Bit 1 in the IOAM-E2E-Types.
+			  
+			  The format of the Immediate Export mode allows a deployment decision on the way to export IOAM data.
+			  
+			  There are a few benefits the authors would like to highlight regarding the use of the Immediate Export mode:
+			  1. Security: No data is attached to the packets traversing the network. This behavior solves the security 
+			  concern related to potential leaking of data describing behavior of the network and its behavior.
+			  2. MTU: Once a packet is IOAM encapsulated, it doesn't change its length during its traverse through the network.
+			  In addition, it is the most compact way to encapsulate a packet with IOAM, since data is not collected from the network nodes.
+			  3. Congestion concern: Although Immediate Export mode does add data to the network, it doesn't force sending data through 
+			  the route taken by the packet. This is unlike the mode where an original packet is duplicated, which may cause congestion 
+			  detected or investigated in the network to become worse, changing the behavior of the investigated network.
+			  
+		      
+		      </t>
                 </list></t>
 
               <t hangText="RemainingLen:">7-bit unsigned integer. This field
@@ -1845,8 +1875,12 @@ IOAM proof of transit option of IOAM POT Type 0:
             <t hangText="Bit 1">"Loopback" (L-bit)</t>
 
             <t hangText="Bit 2">"Active" (A-bit)</t>
-          </list> The meaning for Bit 3 is available for assignment via
-        RFC Required process as per <xref target="RFC8126"></xref>.</t>
+
+          <t hangText="Bit 3">"Immediate Export" (I-bit)</t>
+
+          </list>
+        </t>
+
       </section>
 
       <section title="IOAM POT Type Registry">
@@ -1952,7 +1986,8 @@ IOAM proof of transit option of IOAM POT Type 0:
       current network domain the network operator is expected to enforce
       policies that prevent IOAM traffic from leaking outside of the IOAM
       domain, and prevent IOAM data from outside the domain to be processed
-      and used within the domain.</t>
+      and used within the domain. Another way to prevent the data to get leaked 
+      is using the Immediate Export mode of the trace option.</t>
     </section>
 
     <section title="Acknowledgements">
