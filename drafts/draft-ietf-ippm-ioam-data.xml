@@ -60,7 +60,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-04" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-05" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -459,9 +459,11 @@
 
       <t>Combination with active OAM mechanisms: IOAM should be usable for
       active network probing, enabling for example a customized version of
-      traceroute. Decapsulating IOAM nodes may have an ability to send the
-      IOAM information retrieved from the packet back to the source address of
-      the packet or to the encapsulating node.</t>
+      traceroute. IOAM may also be carried out on cloned or sampled copies of
+      data packets, when the operator prefers not to directly modify data
+      packets for IOAM purposes. Decapsulating IOAM nodes must have the
+      ability to discard active IOAM packets, potentially in addition to
+      retrieving the IOAM information. </t>
 
       <t>IOAM implementation: The IOAM data-field definitions take the
       specifics of devices with hardware data-plane and software data-plane
@@ -771,31 +773,52 @@ The trace option data MUST be 4-octet aligned:
                   processing of the option.</t>
 
                   <t hangText="Bit 1">"Loopback" (L-bit). Loopback mode is
-                  used to send a copy of a packet back towards the source.
-                  Loopback mode assumes that a return path from transit nodes
-                  and destination nodes towards the source exists. The
-                  encapsulating node decides (e.g. using a filter) which
-                  packets loopback mode is enabled for by setting the loopback
-                  bit. The encapsulating node also needs to ensure that
-                  sufficient space is available in the IOAM header for
-                  loopback operation. The loopback bit when set indicates to
-                  the transit nodes processing this option to create a copy of
-                  the packet received and send this copy of the packet back to
-                  the source of the packet while it continues to forward the
-                  original packet towards the destination. The source address
-                  of the original packet is used as destination address in the
-                  copied packet. The address of the node performing the copy
-                  operation is used as the source address. The L-bit MUST be
-                  cleared in the copy of the packet that a node sends back
-                  towards the source. On its way back towards the source, the
-                  packet is processed like a regular packet with IOAM
-                  information. Once the return packet reaches the IOAM domain
-                  boundary IOAM decapsulation occurs as with any other packet
-                  containing IOAM information.</t>
+		  used to send a copy of a packet back towards the source.
+		  Loopback mode assumes that a return path from transit nodes
+		  and destination nodes towards the source exists.  The
+		  encapsulating node decides (e.g., using a filter) which
+		  packets loopback mode is enabled for by setting the
+		  loopback bit.  The encapsulating node also needs to ensure
+		  that sufficient space is available in the IOAM header for
+		  loopback operation, which includes intermediate nodes
+		  adding trace data on the original path and then again on
+         	  the return path.  A loopback bit that is set indicates to the
+        	  transit nodes processing this option that they are to create a
+        	  copy of the received packet and send the copy back to the
+         	  source of the packet.  The copy has its metadata added after
+         	  being copied in order to allow any egress-dependent information
+         	  to be set based on the egress of the copy rather than the
+         	  original.  The original packet continues towards its
+         	  destination.  The source address of the original packet is used
+         	  as the destination address in the copied packet.  The address
+         	  of the node performing the copy operation is used as the source
+         	  address.  The L-bit MUST be cleared in the copy of the packet
+         	  that a node sends back towards the source.  On its way back
+         	  towards the source, the copied packet is processed like any
+         	  other packet with IOAM information, including adding any
+         	  requested data at each transit node (assuming there is
+         	  sufficient space).  Once the return packet reaches the IOAM
+         	  domain boundary, IOAM decapsulation occurs as with any other
+         	  packet containing IOAM information. Because any intermediate
+         	  node receiving such a packet would not know how to process the
+         	  original packet, and because there would be a risk of the
+         	  original packet leaking past the initiator of the IOAM
+         	  loopback, the initiator of an IOAM loopback MUST be the
+         	  initiator of the packet. Once a loopback packet is received
+         	  back at the initiator, it is a local matter how it is
+         	  recognized as a loopback packet.</t>
 
-		<t hangText="Bit 2"> TBD - Mickey </t>
+                  <t hangText="Bit 2">"Active" (A-bit). When set, this indicates
+                  that this is an active OAM packet, where "active" is used in
+                  the sense defined in <xref target="RFC7799"></xref>, rather
+                  than a data packet. For example, the packet may be a probe, or
+                  it may be a (possibly truncated) copy of a data packet. At the
+                  IOAM decapsulating node, in addition to processing and/or
+                  exporting the metadata, the packet must be discarded rather
+                  than forwarded. If this bit is not set, then the decapsulating
+                  node should attempt to forward the packet after IOAM
+                  decapsulation.
 
-		      
 		  <t hangText="Bit 3">"Immediate Export" (I-bit). Immediate 
 		  Export mode is used to export IOAM requested data immediately at every 
 		  IOAM suported network node, instead of adding the data to the packet traversing 
@@ -828,7 +851,6 @@ The trace option data MUST be 4-octet aligned:
 			  
 		      
 		      </t>
-		  		      
                 </list></t>
 
               <t hangText="RemainingLen:">7-bit unsigned integer. This field
@@ -1852,11 +1874,13 @@ IOAM proof of transit option of IOAM POT Type 0:
 
             <t hangText="Bit 1">"Loopback" (L-bit)</t>
 
-	    <t hangText="Bit 2"> TBD Mickey (A-bit)</t>
-	
-	    <t hangText="Bit 3">"Immediate Export" (I-bit)</t>
+            <t hangText="Bit 2">"Active" (A-bit)</t>
 
-	    </list> 
+          <t hangText="Bit 3">"Immediate Export" (I-bit)</t>
+
+          </list>
+        </t>
+
       </section>
 
       <section title="IOAM POT Type Registry">
