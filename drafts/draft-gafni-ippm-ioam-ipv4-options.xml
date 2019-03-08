@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- edited with XMLSPY v5 rel. 4 U (http://www.xmlspy.com) by Fred Baker (private) -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced.
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
+<!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC793 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0793.xml">
+<!ENTITY RFC768 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0768.xml">
+<!ENTITY I-D.draft-ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-ippm-ioam-data-01.xml">
+]>
+<?rfc toc="yes"?>
+<?rfc tocompact="no"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<rfc category="std" docName="draft-gafni-ippm-ioam-ipv4-options-00"
+     ipr="trust200902">
+  <front>
+    <title abbrev="In-situ OAM IPv4 encapsulation">In-situ OAM IPv4
+    Options</title>
+
+    <author fullname="Barak Gafni" initials="B." surname="Gafni">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>gbarak@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Aviv Kfir" initials="A." surname="Kfir">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>avivk@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Ramesh Sivakolundu" initials="R." surname="Sivakolundu">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>170 West Tasman Dr.</street>
+
+          <city>SAN JOSE, CA 95134</city>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>sramesh@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
+      <organization abbrev="">Huawei Network.IO Innovation Lab</organization>
+
+      <address>
+        <postal>
+          <street/>
+
+          <city/>
+
+          <code/>
+
+          <country>Israel</country>
+        </postal>
+
+        <email>tal.mizrahi.phd@gmail.com</email>
+      </address>
+    </author>
+
+    <date day="04" month="March" year="2019"/>
+
+    <area>Transport Area, Internet</area>
+
+    <workgroup>ippm</workgroup>
+
+    <abstract>
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      outlines how IOAM data fields are encapsulated in IPv4.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      outlines how IOAM data fields are encapsulated in the IPv4 <xref
+      target="RFC0791"/>.</t>
+    </section>
+
+    <section title="Conventions">
+      <section title="Requirements Language">
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described in BCP
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only
+        when, they appear in all capitals, as shown here.</t>
+      </section>
+
+      <section title="Abbreviations">
+        <t>Abbreviations used in this document:</t>
+
+        <t><list hangIndent="11" style="hanging">
+            <t hangText="E2E:">Edge-to-Edge</t>
+
+            <t hangText="IOAM:">In-situ Operations, Administration, and
+            Maintenance</t>
+
+            <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section title="In-situ OAM Metadata Transport in IPv4">
+      <t>An IPv4 option is defined corresponding to each of the IOAM data
+      fields defined in <xref target="I-D.ietf-ippm-ioam-data"/>. These
+      mechanisms of in-situ OAM in IPv4 are used to enhance diagnostics of
+      IPv4 networks. IOAM is carried in IPv4 packets as a new single option,
+      with an option type identifier TBD_IOAM that will be defined by IANA,
+      and according to the options definition in <xref target="RFC0791"/>.
+      While specifying a new option to carry IOAM data, one may see this as an
+      extension to the already defined "record route" and "internet timestamp"
+      options in <xref target="RFC0791"/>, which allows a packet to record its
+      route and collect timestamps throughout the network. The various IOAM
+      data fields defined in [I-D.ietf-ippm-ioam-data] are added as TLVs
+      within the new IPv4 option. In an administrative domain where IOAM is
+      used, insertion of the IOAM header in IPv4 is enabled at the IOAM domain
+      edge, which serve as IOAM encapsulating/decapsulating nodes by means of
+      configuration.</t>
+
+      <t>An IPv4 option format for carrying in-situ OAM data fields: <figure>
+          <artwork><![CDATA[
+
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Option Type  | Option Length |   Reserved    |   IOAM-Type   |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   .                                                               .  |
+   .                     Option Data                               .  I
+   .                                                               .  O
+   .                                                               .  A
+   .                                                               .  M
+   .                                                               .  -
+   .                                                               .  O
+   .                                                               .  P
+   .                                                               .  T
+   .                                                               .  I
+   .                                                               .  O
+   .                                                               .  N
+   |                                                               |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+		  
+]]></artwork>
+        </figure></t>
+
+      <t><list style="hanging">
+          <t hangText="Option Type:">8-bit identifier of the type of option,
+          consist of: 1 bit - copied flag, 2 bits - option class, 5 bits -
+          option number. For more details see <xref target="RFC0791"/>.</t>
+
+          <t hangText="Option Length:">8-bit unsigned integer. Length of the
+          option including the Option Type octet, the Option Length octet, the
+          Reserved octet, the IOAM Type octet, and option-data octets.</t>
+
+          <t hangText="Reserved:">8-bits field, reserved for future use. MUST
+          be zero on transmission and ignored on receipt.</t>
+
+          <t hangText="IOAM Type:">8-bit field defining the IOAM Option type,
+          as defined in Section 7.2 of <xref
+          target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+          <t hangText="Option Data:">Variable-length field, including the IOAM
+          data as defined in <xref target="I-D.ietf-ippm-ioam-data"/>, in
+          particular see section 4.</t>
+        </list></t>
+
+      <section title="Considerations for in-situ OAM in IPv4 options">
+        <t>In the scope of IPv4 header and its options in <xref
+        target="RFC0791"/>, there are unique considerations for embedding
+        in-situ OAM in the IPv4 options.</t>
+
+        <section title="Alignment">
+          <t>Within an IPv4 options stack there is no requirement for
+          alignment outside the octet granularity, which doesn't limit the
+          granularity of the in-situ OAM, since it is already 4-octects
+          aligned.</t>
+        </section>
+
+        <section title="Total available length">
+          <t>There are three fields that may affect the total available length
+          for in-situ OAM data to be incorporated in the IPv4 options: <list
+              style="numbers">
+              <t>The IPv4 header's IHL, as described in <xref
+              target="RFC0791"/> in section 3.1: This 4-bit field can reach up
+              to 15 times 4 octets, including the IPv4 header, which is 20
+              octets. This leaves a maximum actual length of 40 octets to the
+              options. Reducing 4 octets for the use of the option's header,
+              it leaves 36 octets for the use of the in-situ OAM data. In the
+              context of the trace type, which has an 8 octets header, this
+              leaves 28 bytes for actual data to be collected during the
+              packet's traverse through the network.</t>
+
+              <t>The option's length, as described here above in section 3:
+              This 8-bit field can reach up to 255 octets. Doesn't further
+              restrict the in-situ OAM length, because of the above
+              restrictions that are already applied.</t>
+
+              <t>Datagram's Total length, as described in <xref
+              target="RFC0791"/> in section 3.1: Doesn't further restrict the
+              in-situ OAM length, because of the above restrictions that are
+              already applied.</t>
+            </list></t>
+        </section>
+
+        <section title="Pre-allocation vs. Incremental trace types">
+          <t>Considering the IPv4 architecture, and specifically the "record
+          route" and "internet timestamp" options definitions, the RFC calls
+          for "The size of the option does not change due to adding
+          addresses...", and similarly for the timestamp option. Hence, while
+          incorporating In-situ OAM trace type header, an implementation
+          SHOULD use one of these two techniques: <list style="numbers">
+              <t>Immediate Export mode, controlled by the I-bit as part of the
+              trace flags.</t>
+
+              <t>Pre-allocated trace type as described in section 4.1.1 of
+              <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+            </list></t>
+        </section>
+
+        <section title="Checksum considerations">
+          <section title="IP checksum">
+            <t>IPv4 Header Checksum, as described in <xref target="RFC0791"/>
+            MUST be recalculated by a device that is updating the In-situ OAM
+            IPv4 option.</t>
+          </section>
+
+          <section title="TCP checksum">
+            <t>TCP's pseudo header, as described in <xref target="RFC0793"/>,
+            doesn't include neither the IPv4 options nor the IHL, hence
+            doesn't need to be recalculated by a device that is adding,
+            removing or updating the in-situ OAM IPv4 option.</t>
+          </section>
+
+          <section title="UDP checksum">
+            <t>UDP's pseudo header, as described in <xref target="RFC0768"/>,
+            doesn't include neither the IPv4 options nor the IHL, hence
+            doesn't need to be recalculated by a device that is adding,
+            removing or updating the in-situ OAM IPv4 option.</t>
+          </section>
+        </section>
+
+        <section title="Fragmentation">
+          <t>Considering the IPv4 architecture, and specifically the "record
+          route" and "internet timestamp" options definitions, <xref
+          target="RFC0791"/> is calling for setting the option's copy to zero,
+          hence "Not copied on fragmentation, goes in first fragment only". It
+          seems reasonable to the authors to keep this idea to prevent
+          duplication of route data and maintain similar behavior for the
+          operator, hence an implementer SHOULD follow this method.</t>
+        </section>
+      </section>
+    </section>
+
+    <section title="Security Considerations">
+      <t>This document describes the encapsulation of IOAM data fields in
+      IPv4. Security considerations of the specific IOAM data fields for each
+      case (i.e., Trace, Proof of Transit, and E2E) are described in defined
+      in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+      <t>As this document describes a new option for IPv4, that is similar in
+      their behavior to an already existing options, the security
+      considerations are similar as well to those of <xref
+      target="RFC0791"/>.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This draft requests the following IPv4 Option Type assignments from
+      sub-registry of Internet Protocol Version 4 (IPv4) Parameters:</t>
+
+      <t>TBD</t>
+    </section>
+
+    <!---->
+
+    <!-- -->
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      &RFC2119;
+
+      &RFC8174;
+
+      &I-D.draft-ietf-ippm-ioam-data;
+    </references>
+
+    <references title="Informative References">
+      &RFC791;
+
+      &RFC793;
+
+      &RFC768;
+    </references>
+  </back>
+</rfc>
