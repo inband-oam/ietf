@@ -5,7 +5,6 @@ TVERSION=00
 VXLANVERSION=01
 GENEVEVERSION=01
 NSHVERSION=01
-GREVERSION=00
 ETHVERSION=01
 EXPORTVERSION=00
 POTVERSION=02
@@ -25,8 +24,6 @@ draft-brockners-ippm-ioam-vxlan-gpe: draft-brockners-ippm-ioam-vxlan-gpe.xml
 	$(XML2RFC) $< -o $@-$(VXLANVERSION).txt
 draft-brockners-ippm-ioam-geneve: draft-brockners-ippm-ioam-geneve.xml 
 	$(XML2RFC) $< -o $@-$(GENEVEVERSION).txt
-draft-weis-ippm-ioam-gre: draft-weis-ippm-ioam-gre.xml
-	$(XML2RFC) $< -o $@-$(GREVERSION).txt
 draft-weis-ippm-ioam-eth: draft-weis-ippm-ioam-eth.xml
 	$(XML2RFC) $< -o $@-$(ETHVERSION).txt
 draft-ioametal-ippm-6man-ioam-ipv6-options: draft-ioametal-ippm-6man-ioam-ipv6-options.xml
@@ -39,8 +36,7 @@ data: draft-ietf-ippm-ioam-data.xml
 	cp draft-ietf-ippm-ioam-data-$(DVERSION).txt versions/$(DVERSION)/
 	ID-html-diffs draft-ietf-ippm-ioam-data-$(DVERSION).txt
 	cp draft-ietf-ippm-ioam-data*html versions/$(DVERSION)/
-encap: draft-brockners-ippm-ioam-vxlan-gpe draft-ietf-sfc-ioam-nsh draft-brockners-ippm-ioam-geneve draft-weis-ippm-ioam-gre draft-ioametal-ippm-6man-ioam-ipv6-options
-	cp draft-weis-ippm-ioam-gre-$(GREVERSION).txt versions/$(GREVERSION)/
+encap: draft-brockners-ippm-ioam-vxlan-gpe draft-ietf-sfc-ioam-nsh draft-brockners-ippm-ioam-geneve draft-weis-ippm-ioam-eth draft-ioametal-ippm-6man-ioam-ipv6-options
 	cp draft-weis-ippm-ioam-eth-$(ETHVERSION).txt versions/$(ETHVERSION)/
 	cp draft-ietf-sfc-ioam-nsh-$(NSHVERSION).txt versions/$(NSHVERSION)/
 	cp draft-brockners-ippm-ioam-vxlan-gpe-$(VXLANVERSION).txt versions/$(VXLANVERSION)/
