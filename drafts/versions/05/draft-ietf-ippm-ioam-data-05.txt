@@ -1504,8 +1504,8 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
       follows the bit order of the IOAM-E2E-Type field, as follows:
 
       Bit 0    (Most significant bit) When set indicates presence of a
-               64-bit sequence number added to a specific tube which is
-               used to detect packet loss, packet reordering, or packet
+               64-bit sequence number added to a specific "packet group"
+               which is used to detect packet loss, packet reordering,
 
 
 
@@ -1514,14 +1514,20 @@ Brockners, et al.      Expires September 10, 2019              [Page 27]
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
 
-               duplication for that tube.  Each tube leverages a
-               dedicated namespace for its sequence numbers.
+               or packet duplication within the group.  Each "packet
+               group" leverages a dedicated namespace for its sequence
+               numbers.  The "packet group" is deployment dependent and
+               defined at the IOAM encapsulating node e.g. by n-tuple
+               based classification of packets.
 
       Bit 1    When set indicates presence of a 32-bit sequence number
-               added to a specific tube which is used to detect packet
-               loss, packet reordering, or packet duplication for that
-               tube.  Each tube leverages a dedicated namespace for its
-               sequence numbers.
+               added to a specific "packet group" which is used to
+               detect packet loss, packet reordering, or packet
+               duplication within that group.  Each "packet group"
+               leverages a dedicated namespace for its sequence numbers.
+               The "packet group" is deployment dependent and defined at
+               the IOAM encapsulating node e.g. by n-tuple based
+               classification of packets.
 
       Bit 2    When set indicates presence of timestamp seconds for the
                transmission of the frame.  This 4-octet field has three
@@ -1555,12 +1561,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
                of these bits to zero upon transmission and ignore upon
                receipt.
 
-   E2E Option data:  Variable-length field.  The type of which is
-      determined by the IOAM-E2E-Type.
-
-
-
-
 
 
 
@@ -1569,6 +1569,9 @@ Brockners, et al.      Expires September 10, 2019              [Page 28]
 
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
+
+   E2E Option data:  Variable-length field.  The type of which is
+      determined by the IOAM-E2E-Type.
 
 5.  Timestamp Formats
 
@@ -1616,15 +1619,15 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
 
    Epoch:
 
-      The PTP [IEEE1588v2] epoch is 1 January 1970 00:00:00 TAI, which
-      is 31 December 1969 23:59:51.999918 UTC.
-
 
 
 Brockners, et al.      Expires September 10, 2019              [Page 29]
 
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
+
+      The PTP [IEEE1588v2] epoch is 1 January 1970 00:00:00 TAI, which
+      is 31 December 1969 23:59:51.999918 UTC.
 
    Resolution:
 
@@ -1672,15 +1675,14 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
 
       + Size: 32 bits.
 
-      + Units: seconds.
-
-
 
 
 Brockners, et al.      Expires September 10, 2019              [Page 30]
 
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
+
+      + Units: seconds.
 
       Fraction: specifies the fractional portion of the number of
       seconds since the epoch.
@@ -1721,8 +1723,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    This timestamp format is based on the POSIX time format [POSIX].  The
    detailed specification of the timestamp format used in this document
    is presented below.
-
-
 
 
 
