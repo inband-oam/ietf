@@ -1504,8 +1504,8 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
       follows the bit order of the IOAM-E2E-Type field, as follows:
 
       Bit 0    (Most significant bit) When set indicates presence of a
-               64-bit sequence number added to a specific tube which is
-               used to detect packet loss, packet reordering, or packet
+               64-bit sequence number added to a specific "packet group"
+               which is used to detect packet loss, packet reordering,
 
 
 
@@ -1514,14 +1514,18 @@ Brockners, et al.      Expires September 10, 2019              [Page 27]
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
 
-               duplication for that tube.  Each tube leverages a
-               dedicated namespace for its sequence numbers.
+               or packet duplication within the group.  The "packet
+               group" is deployment dependent and defined at the IOAM
+               encapsulating node e.g. by n-tuple based classification
+               of packets.
 
       Bit 1    When set indicates presence of a 32-bit sequence number
-               added to a specific tube which is used to detect packet
-               loss, packet reordering, or packet duplication for that
-               tube.  Each tube leverages a dedicated namespace for its
-               sequence numbers.
+               added to a specific "packet group" which is used to
+               detect packet loss, packet reordering, or packet
+               duplication within that group.  The "packet group" is
+               deployment dependent and defined at the IOAM
+               encapsulating node e.g. by n-tuple based classification
+               of packets.
 
       Bit 2    When set indicates presence of timestamp seconds for the
                transmission of the frame.  This 4-octet field has three
@@ -1557,10 +1561,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
 
    E2E Option data:  Variable-length field.  The type of which is
       determined by the IOAM-E2E-Type.
-
-
-
-
 
 
 
