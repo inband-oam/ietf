@@ -181,25 +181,26 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
       arrive at destinations which have no knowledge of IOAM.  Consider
       using IOAM in a transit network: Misleading ICMP errors due to
       addition and/or presence of OAM data in the packet can confuse a
-      source of the packet that did not insert the OAM information.
+      source of the packet that did not insert the OAM information. This
+      is especially critical in the cases where the IOAM domains are 
+      bounded by network devices.
 
    C4 OAM data leaks may affect the forwarding behavior and state of
-      network elements outside an IOAM domain.  Build a mechanism to
-      prevent data leaks or be able to assure that upon leak network
-      elements outside the domain are not affected i.e continue to
-      process other valid packets.
+      network elements outside an IOAM domain.  IOAM domains SHOULD
+      provide a mechanism to prevent data leaks or be able to assure 
+      that upon leak network elements outside the domain are not 
+      affected i.e they continue to process other valid packets.
 
    C5 Source OAM domain that inserted and leaked OAM data must be easy
       to identify for purpose of troubleshooting.  For e.g.  It very
       time consuming to troubleshoot source that inserted the EH but
       didn't remove when the packet traverses across AS (you have to
       walk the AS path, contacting each operator, asking them to verify
-      their config, get packet captures etc.), and all the while you may
-      have a number of angry customers/end-users.
-
+      their config, get packet captures etc.)
+      
    C6 Compliance with [RFC8200] would require OAM data to be
-      encapsulated instead of header/option insertion into in-flight
-      packets.
+      encapsulated instead of header/option insertion directly into 
+      in-flight packets using the original IPv6 header.
 
 4.  IOAM domains bounded by hosts
 
@@ -247,7 +248,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
        the packet does not change.
 
    2.  To simplify debugging in case of leaked IOAM data fields in
-       packets, consider a new IOAM E2E destination option to identify
+       packets, consider a new IOAM destination option to identify
        the Source IOAM domain (AS, v6 prefix).  Insert this option into
        the IOAM destination options EH attached to the outer IPv6
        header.  This additional information would allow for easy
@@ -257,10 +258,10 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
    3.  All the IOAM options are defined with type "00 - skip over this
        option and continue processing the header.  So presence of the
        options must not cause packet drop in the network elements that
-       do not understand the option.  In addition
+       do not understand the option.  In addition the implications of
        [I-D.ietf-6man-hbh-header-handling] should be considered.
 
-5.1.2.  IP-in-IPv6 encapsulation with ULA
+5.1.2.  IP-in-IPv6 encapsulation with ULA [RFC4193]
 
    The "IP-in-IPv6 encapsulation with ULA" approach can be used to apply
    IOAM to an IPv6 as well as an IPv4 network.  In addition, it fulfills
@@ -283,13 +284,16 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
 
 
    leverage the transit approach for traffic between BGP border routers,
-   as described in RFC1772, "A.2.3 Encapsulation".
+   as described in RFC1772, "A.2.3 Encapsulation". Assuming that the 
+   operational guidelines specified in Section 4 of RFC4193 are properly
+   followed, the probability of leaks in this approach will be almost 
+   close to zero.
 
 6.  Security Considerations
 
    This document discusses the deployment of IOAM with IPv6 options.
    Security considerations of the specific IOAM data fields are
-   described in [I-D.ietf-ippm-ioam-data].
+   described in [I-D.ietf-ippm-ioam-data]. 
 
 7.  IANA Considerations
 
@@ -343,6 +347,10 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
               DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
               editor.org/info/rfc2119>.
 
+   [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
+              Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
+              <https://www.rfc-editor.org/info/rfc4193>.
+              
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
