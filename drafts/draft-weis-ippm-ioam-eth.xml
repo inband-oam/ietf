@@ -5,7 +5,7 @@
      There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
-<!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
+<!ENTITY RFC2890 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2890.xml">
 <!ENTITY RFC4303 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4303.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
@@ -16,30 +16,30 @@
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-weis-ippm-ioam-eth-00" ipr="trust200902">
+<rfc category="std" docName="draft-weis-ippm-ioam-eth-01" ipr="trust200902">
   <front>
-    <title abbrev="IOAM in Ethernet">Ethernet Encapsulation for In-situ OAM
-    Data</title>
+    <title abbrev="EtherType IOAM">EtherType Protocol Identification of
+    In-situ OAM Data</title>
 
     <author fullname="Brian Weis" initials="B.W." surname="Weis">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+      <organization>Independent</organization>
 
       <address>
         <postal>
-          <street>170 W. Tasman Drive</street>
+          <street></street>
 
-          <city>San Jose</city>
+          <city></city>
 
-          <code>95134-1706</code>
+          <code></code>
 
-          <region>California</region>
+          <region></region>
 
           <country>USA</country>
         </postal>
 
-        <phone>+1-408-526-4796</phone>
+        <phone></phone>
 
-        <email>bew@cisco.com</email>
+        <email>bew.stds@gmail.com</email>
       </address>
     </author>
 
@@ -176,11 +176,11 @@
 
       <address>
         <postal>
-          <street/>
+          <street></street>
 
-          <city/>
+          <city></city>
 
-          <code/>
+          <code></code>
 
           <country>Israel</country>
         </postal>
@@ -271,8 +271,9 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
-      outlines how encapsulations using an EtherType to identify IOAM data
-      fields as the next header in a packet.</t>
+      defines an EtherType that identifies IOAM data fields as being the next
+      protocol in a packet, and a header that encapsulates the IOAM data
+      fields.</t>
     </abstract>
   </front>
 
@@ -286,7 +287,7 @@
       defines how IOAM data fields are carried as part of encapsulations where
       the IOAM data follows a header that uses an EtherType to denote the next
       protocol in the packet. Examples of these protocols are GRE <xref
-      target="RFC2784"></xref> and Geneve <xref
+      target="RFC2890"></xref> and Geneve <xref
       target="I-D.ietf-nvo3-geneve"></xref>). This document outlines how IOAM
       data fields are encoded in these protocols.</t>
     </section>
@@ -321,13 +322,13 @@
       </section>
     </section>
 
-    <section title="IOAM Ethertype">
+    <section title="IOAM EtherType">
       <t>When the IOAM data fields are included within an encapsulation that
       identifies the next protocol using an EtherType (e.g., GRE or Geneve)
-      the presence of IOAM data fields are identified with TBD_IOAM. When the
-      Ethernet Encapsulation for In-situ OAM Data is used, an additional IOAM
-      header is also included. This header indicates the type of IOAM data
-      that follows, and the next protocol that follows the IOAM data.</t>
+      the presence of IOAM data fields are identified with TBD_IOAM. When this
+      EtherType is used, an additional IOAM header is also included. This
+      header indicates the type of IOAM data that follows, and the next
+      protocol that follows the IOAM data.</t>
 
       <figure>
         <artwork align="center"><![CDATA[ 0                   1                   2                   3
@@ -350,18 +351,15 @@
           as defined in Section 7.2 of <xref
           target="I-D.ietf-ippm-ioam-data"></xref>.</t>
 
-          <t hangText="IOAM HDR Len:">8 bits Length field contains the length
-          of the variable IOAM data octets in 4-octet units.</t>
+          <t hangText="IOAM HDR Len:">8 bit Length field contains the length
+          of the IOAM header in 4-octet units.</t>
 
           <t hangText="Next Protocol:">16 bits Next Protocol Type field
           contains the protocol type of the packet following IOAM protocol
-          header. When the most significant octet is 0x00, the Protocol Type
-          is taken to be an IP Protocol Number as defined in <xref
-          target="IP-PROT"></xref>. Otherwise, the Protocol Type is defined to
-          be an EtherType value from <xref target="ETYPES"></xref>. An
-          implementation receiving a packet containing a Protocol Type which
-          is not listed in one of those registries SHOULD discard the
-          packet.</t>
+          header. Protocol Type is defined to be an EtherType value from <xref
+          target="ETYPES"></xref>. An implementation receiving a packet
+          containing a Protocol Type which is not listed in one of those
+          registries SHOULD discard the packet.</t>
 
           <t hangText="IOAM Option and Data Space:">IOAM option header and
           data is present as specified by the IOAM-Type field, and is defined
@@ -370,16 +368,14 @@
       and Data Space. For example, if two IOAM options are included, the Next
       Protocol field of the first IOAM option will contain the value of
       TBD_IOAM, while the Next Protocol field of the second IOAM option will
-      contain the Ethertype or IP protocol Number indicating the type of the
-      data packet.</t>
+      contain the EtherType indicating the type of the data packet.</t>
     </section>
 
-    <section title="Usage Examples of the IOAM Ethertype">
-      <t>The Ethernet Encapsulation for In-situ OAM Data can be used with many
-      encapsulations. The following sections show how it can be used with GRE
-      and Geneve.</t>
+    <section title="Usage Examples of the IOAM EtherType">
+      <t>The IOAM EtherType can be used with many encapsulations. The
+      following sections show how it can be used with GRE and Geneve.</t>
 
-      <section title="Example: GRE Encapsulation of In-situ OAM Date Fields">
+      <section title="Example: GRE Encapsulation of IOAM Data Fields">
         <t>When IOAM data fields are carried in GRE, the IOAM encapsulation
         defined above follows the GRE header, as shown in <xref
         target="gre-encap"></xref>.</t>
@@ -389,9 +385,13 @@
             <artwork><![CDATA[ 0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|C|       Reserved0       | Ver | Protocol Type = <TBD_IOAM>  |    G
+|C| |K|S| Reserved0       | Ver | Protocol Type = <TBD_IOAM>    |  |  
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|      Checksum (optional)      |       Reserved1 (Optional)    |  G
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
-|      Checksum (optional)      |       Reserved1 (Optional)    |  E
+|                         Key (optional)                        |  E
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+|                 Sequence Number (Optional)                    |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |   IOAM-Type   |   IOAM HDR len|        Next Protocol          |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
@@ -407,13 +407,13 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
           </figure>The GRE header and fields are defined in <xref
-        target="RFC2784"></xref>. The GRE Protocol Type value is TBD_IOAM.</t>
+        target="RFC2890"></xref>. The GRE Protocol Type value is TBD_IOAM.</t>
       </section>
 
       <section title="Example: Geneve Encapsulation of IOAM Data Fields">
-        <t> When IOAM data fields are carried in Geneve, the IOAM
-        encapsulation defined above follows the Geneve header, as shown in
-        <xref target="geneve-encap"></xref>.<figure anchor="geneve-encap"
+        <t>When IOAM data fields are carried in Geneve, the IOAM encapsulation
+        defined above follows the Geneve header, as shown in <xref
+        target="geneve-encap"></xref>.<figure anchor="geneve-encap"
             title="Geneve Encapsulation Example">
             <artwork align="center"><![CDATA[ 0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -451,7 +451,7 @@
 
       <t>As this document describes new protocol fields within the existing
       GRE encapsulation, these are similar to the security considerations of
-      <xref target="RFC2784"></xref>.</t>
+      <xref target="RFC2890"></xref>.</t>
 
       <t>IOAM data transported in an OAM E2E header SHOULD be integrity
       protected (e.g., with IPsec ESP <xref target="RFC4303"></xref>) to
@@ -476,7 +476,7 @@
 
       &RFC8174;
 
-      &RFC2784;
+      &RFC2890;
 
       &I-D.ietf-ippm-ioam-data;
 
@@ -486,17 +486,6 @@
                  target="https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml">
         <front>
           <title>IANA Ethernet Numbers</title>
-
-          <author></author>
-
-          <date />
-        </front>
-      </reference>
-
-      <reference anchor="IP-PROT"
-                 target="https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml">
-        <front>
-          <title>IANA Protocol Numbers</title>
 
           <author></author>
 

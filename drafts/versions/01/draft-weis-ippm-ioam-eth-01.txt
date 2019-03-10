@@ -1,0 +1,560 @@
+
+
+
+
+ippm                                                             B. Weis
+Internet-Draft                                               Independent
+Intended status: Standards Track                            F. Brockners
+Expires: April 25, 2019                                          C. Hill
+                                                             S. Bhandari
+                                                             V. Govindan
+                                                            C. Pignataro
+                                                                   Cisco
+                                                              H. Gredler
+                                                            RtBrick Inc.
+                                                                J. Leddy
+                                                                 Comcast
+                                                               S. Youell
+                                                                    JMPC
+                                                              T. Mizrahi
+                                        Huawei Network.IO Innovation Lab
+                                                                 A. Kfir
+                                                                B. Gafni
+                                             Mellanox Technologies, Inc.
+                                                             P. Lapukhov
+                                                                Facebook
+                                                              M. Spiegel
+                                                       Barefoot Networks
+                                                        October 22, 2018
+
+
+         EtherType Protocol Identification of In-situ OAM Data
+                      draft-weis-ippm-ioam-eth-01
+
+Abstract
+
+   In-situ Operations, Administration, and Maintenance (IOAM) records
+   operational and telemetry information in the packet while the packet
+   traverses a path between two points in the network.  This document
+   defines an EtherType that identifies IOAM data fields as being the
+   next protocol in a packet, and a header that encapsulates the IOAM
+   data fields.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 1]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on April 25, 2019.
+
+Copyright Notice
+
+   Copyright (c) 2018 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   3
+     2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  IOAM EtherType  . . . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Usage Examples of the IOAM EtherType  . . . . . . . . . . . .   4
+     4.1.  Example: GRE Encapsulation of IOAM Data Fields  . . . . .   4
+     4.2.  Example: Geneve Encapsulation of IOAM Data Fields . . . .   5
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   7
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
+
+1.  Introduction
+
+   In-situ Operations, Administration, and Maintenance (IOAM) records
+   operational and telemetry information in the packet while the packet
+   traverses a particular network domain.  The term "in-situ" refers to
+   the fact that the IOAM data fields are added to the data packets
+   rather than being sent within packets specifically dedicated to OAM.
+   This document defines how IOAM data fields are carried as part of
+   encapsulations where the IOAM data follows a header that uses an
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 2]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+   EtherType to denote the next protocol in the packet.  Examples of
+   these protocols are GRE [RFC2890] and Geneve [I-D.ietf-nvo3-geneve]).
+   This document outlines how IOAM data fields are encoded in these
+   protocols.
+
+2.  Conventions
+
+2.1.  Requirements Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+2.2.  Abbreviations
+
+   Abbreviations used in this document:
+
+   E2E:       Edge-to-Edge
+
+   Geneve:    Generic Network Virtualization Encapsulation
+
+   GRE:       Generic Routing Encapsulation
+
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
+   OAM:       Operations, Administration, and Maintenance
+
+   POT:       Proof of Transit
+
+3.  IOAM EtherType
+
+   When the IOAM data fields are included within an encapsulation that
+   identifies the next protocol using an EtherType (e.g., GRE or Geneve)
+   the presence of IOAM data fields are identified with TBD_IOAM.  When
+   this EtherType is used, an additional IOAM header is also included.
+   This header indicates the type of IOAM data that follows, and the
+   next protocol that follows the IOAM data.
+
+
+
+
+
+
+
+
+
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 3]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+      0                   1                   2                   3
+      0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     |   IOAM-Type   |   IOAM HDR len|        Next Protocol          |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+     !                                                               |
+     !                                                               |
+     ~                 IOAM Option and Data Space                    ~
+     |                                                               |
+     |                                                               |
+     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   The IOAM encapsulation is defined as follows.
+
+   IOAM Type:  8-bit field defining the IOAM Option type, as defined in
+      Section 7.2 of [I-D.ietf-ippm-ioam-data].
+
+   IOAM HDR Len:  8 bit Length field contains the length of the IOAM
+      header in 4-octet units.
+
+   Next Protocol:  16 bits Next Protocol Type field contains the
+      protocol type of the packet following IOAM protocol header.
+      Protocol Type is defined to be an EtherType value from [ETYPES].
+      An implementation receiving a packet containing a Protocol Type
+      which is not listed in one of those registries SHOULD discard the
+      packet.
+
+   IOAM Option and Data Space:  IOAM option header and data is present
+      as specified by the IOAM-Type field, and is defined in Section 4
+      of [I-D.ietf-ippm-ioam-data].
+
+   Multiple IOAM options MAY be included within the IOAM Option and Data
+   Space.  For example, if two IOAM options are included, the Next
+   Protocol field of the first IOAM option will contain the value of
+   TBD_IOAM, while the Next Protocol field of the second IOAM option
+   will contain the EtherType indicating the type of the data packet.
+
+4.  Usage Examples of the IOAM EtherType
+
+   The IOAM EtherType can be used with many encapsulations.  The
+   following sections show how it can be used with GRE and Geneve.
+
+4.1.  Example: GRE Encapsulation of IOAM Data Fields
+
+   When IOAM data fields are carried in GRE, the IOAM encapsulation
+   defined above follows the GRE header, as shown in Figure 1.
+
+
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 4]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |C| |K|S| Reserved0       | Ver | Protocol Type = <TBD_IOAM>    |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |      Checksum (optional)      |       Reserved1 (Optional)    |  G
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  R
+   |                         Key (optional)                        |  E
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
+   |                 Sequence Number (Optional)                    |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |   IOAM-Type   |   IOAM HDR len|        Next Protocol          |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
+   !                                                               |  O
+   !                                                               |  A
+   ~                 IOAM Option and Data Space                    ~  M
+   |                                                               |  |
+   |                                                               |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |                                                               |
+   |             Payload + Padding (L2/L3/ESP/...)                 |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                    Figure 1: GRE Encapsulation Example
+
+   The GRE header and fields are defined in [RFC2890].  The GRE Protocol
+   Type value is TBD_IOAM.
+
+4.2.  Example: Geneve Encapsulation of IOAM Data Fields
+
+   When IOAM data fields are carried in Geneve, the IOAM encapsulation
+   defined above follows the Geneve header, as shown in Figure 2.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 5]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |Ver|  Opt Len  |O|C|    Rsvd.  | Protocol Type = <TBD_IOAM>    |  |G
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |E
+   |        Virtual Network Identifier (VNI)       |    Reserved   |  |N
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |E
+   |                    Variable Length Options                    |  |V
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+E
+   |   IOAM-Type   |   IOAM HDR len|        Next Protocol          |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
+   !                                                               |  O
+   !                                                               |  A
+   ~                 IOAM Option and Data Space                    ~  M
+   |                                                               |  |
+   |                                                               |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |                                                               |
+   |  Inner header + Payload + Padding (L2/L3/ESP/...)             |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                  Figure 2: Geneve Encapsulation Example
+
+   The GENEVE header and fields are defined in [I-D.ietf-nvo3-geneve].
+   The Geneve Protocol Type value is TBD_IOAM.
+
+5.  Security Considerations
+
+   This document describes the encapsulation of IOAM data fields in GRE.
+   Security considerations of the specific IOAM data fields for each
+   case (i.e., Trace, Proof of Transit, and E2E) are described in
+   defined in [I-D.ietf-ippm-ioam-data].
+
+   As this document describes new protocol fields within the existing
+   GRE encapsulation, these are similar to the security considerations
+   of [RFC2890].
+
+   IOAM data transported in an OAM E2E header SHOULD be integrity
+   protected (e.g., with IPsec ESP [RFC4303]) to detect changes made by
+   a device between the sending and receiving OAM endpoints.
+
+6.  IANA Considerations
+
+   A new EtherType value is requested to be added to the [ETYPES] IANA
+   registry.  The description should be "In-situ OAM (IOAM)".
+
+
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 6]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+7.  References
+
+7.1.  Normative References
+
+   [ETYPES]   "IANA Ethernet Numbers",
+              <https://www.iana.org/assignments/ieee-802-numbers/
+              ieee-802-numbers.xhtml>.
+
+   [I-D.ietf-ippm-ioam-data]
+              Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
+              Leddy, J., Youell, S., Mizrahi, T., Mozes, D., Lapukhov,
+              P., Chang, R., daniel.bernier@bell.ca, d., and J. Lemon,
+              "Data Fields for In-situ OAM", draft-ietf-ippm-ioam-
+              data-04 (work in progress), October 2018.
+
+   [I-D.ietf-nvo3-geneve]
+              Gross, J., Ganga, I., and T. Sridhar, "Geneve: Generic
+              Network Virtualization Encapsulation", draft-ietf-
+              nvo3-geneve-11 (work in progress), March 2019.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC2890]  Dommety, G., "Key and Sequence Number Extensions to GRE",
+              RFC 2890, DOI 10.17487/RFC2890, September 2000,
+              <https://www.rfc-editor.org/info/rfc2890>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+7.2.  Informative References
+
+   [RFC4303]  Kent, S., "IP Encapsulating Security Payload (ESP)",
+              RFC 4303, DOI 10.17487/RFC4303, December 2005,
+              <https://www.rfc-editor.org/info/rfc4303>.
+
+Authors' Addresses
+
+   Brian Weis
+   Independent
+   USA
+
+   Email: bew.stds@gmail.com
+
+
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 7]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+   Frank Brockners
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
+
+
+   Craig Hill
+   Cisco Systems, Inc.
+   13600 Dulles Technology Drive
+   Herndon, Virginia  20171
+   United States
+
+   Email: crhill@cisco.com
+
+
+   Shwetha Bhandari
+   Cisco Systems, Inc.
+   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+   Bangalore, KARNATAKA 560 087
+   India
+
+   Email: shwethab@cisco.com
+
+
+   Vengada Prasad Govindan
+   Cisco Systems, Inc.
+
+   Email: venggovi@cisco.com
+
+
+   Carlos Pignataro
+   Cisco Systems, Inc.
+   7200-11 Kit Creek Road
+   Research Triangle Park, NC  27709
+   United States
+
+   Email: cpignata@cisco.com
+
+
+   Hannes Gredler
+   RtBrick Inc.
+
+   Email: hannes@rtbrick.com
+
+
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 8]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+   John Leddy
+   Comcast
+
+   Email: John_Leddy@cable.comcast.com
+
+
+   Stephen Youell
+   JP Morgan Chase
+   25 Bank Street
+   London  E14 5JP
+   United Kingdom
+
+   Email: stephen.youell@jpmorgan.com
+
+
+   Tal Mizrahi
+   Huawei Network.IO Innovation Lab
+   Israel
+
+   Email: tal.mizrahi.phd@gmail.com
+
+
+   Aviv Kfir
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: avivk@mellanox.com
+
+
+   Barak Gafni
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: gbarak@mellanox.com
+
+
+   Petr Lapukhov
+   Facebook
+   1 Hacker Way
+   Menlo Park, CA  94025
+   US
+
+   Email: petr@fb.com
+
+
+
+
+Weis, et al.             Expires April 25, 2019                 [Page 9]
+
+Internet-Draft               EtherType IOAM                 October 2018
+
+
+   Mickey Spiegel
+   Barefoot Networks
+   2185 Park Boulevard
+   Palo Alto, CA  94306
+   US
+
+   Email: mspiegel@barefootnetworks.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Weis, et al.             Expires April 25, 2019                [Page 10]
