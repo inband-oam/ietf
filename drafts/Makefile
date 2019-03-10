@@ -9,6 +9,7 @@ ETHVERSION=01
 EXPORTVERSION=00
 POTVERSION=02
 IPV6VERSION=01
+IPV4VERSION=00
 
 all:	drafts
 
@@ -32,6 +33,8 @@ draft-spiegel-ippm-ioam-rawexport: draft-spiegel-ippm-ioam-rawexport.xml
 	$(XML2RFC) $< -o $@-$(EXPORTVERSION).txt
 draft-brockners-inband-oam-requirements: draft-brockners-inband-oam-requirements.xml 
 	$(XML2RFC) $< -o $@-$(VERSION).txt
+draft-gafni-ippm-ioam-ipv4-options: draft-gafni-ippm-ioam-ipv4-options.xml
+	$(XML2RFC) $< -o $@-$(IPV4VERSION).txt
 data: draft-ietf-ippm-ioam-data.xml
 	cp draft-ietf-ippm-ioam-data-$(DVERSION).txt versions/$(DVERSION)/
 	ID-html-diffs draft-ietf-ippm-ioam-data-$(DVERSION).txt
