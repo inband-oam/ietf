@@ -290,7 +290,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </address>
     </author>
 
-    <date day="3" month="March" year="2019"/>
+    <date day="10" month="March" year="2019"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -410,7 +410,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           necessary data for nodes to participate in proof of transit</t>
 
           <t hangText="RND:">Random Bits generated per packet. Packet fields
-          that donot change during the traversal are given as input to
+          that do not change during the traversal are given as input to
           HMAC-256 algorithm. A minimum of 32 bits (left most) need to be used
           from the output if RND is used to verify the packet integrity. This
           is a standard recommendation by NIST.</t>
@@ -420,6 +420,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           different attacks discussed later.</t>
 
           <t hangText="SFC:">Service Function Chain</t>
+
+          <t hangText="SSSS:">Shamir's Secret Sharing Scheme</t>
 
           <t hangText="SR:">Segment Routing</t>
         </list></t>
@@ -438,10 +440,11 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       using a filter (e.g., 5-tuple classifier), or an identifier which is
       already present in the packet (e.g., path or service identifier, NSH
       Service Path Identifier (SPI), flow-label, etc.)</t>
-	  
-	  <t>The POT is encapsulated in pakets as an IOAM Proof Of Transit Option.
-	  The details and format of the encapsulation and the POT Option format
-	  are specified in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+      <t>The POT information is encapsulated in packets as an IOAM Proof Of
+      Transit Option. The details and format of the encapsulation and the POT
+      Option format are specified in <xref
+      target="I-D.ietf-ippm-ioam-data"/>.</t>
 
       <t>The solution approach is detailed in two steps. Initially the concept
       of the approach is explained. This concept is then further refined to
@@ -453,22 +456,22 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         check whether a packet traversed the identified set of nodes on a path
         correctly or not. Security mechanisms are natively built into the
         generation of the POT data to protect against misuse (e.g.,
-        configuration mistakes). The mechanism for POT leverages "Shamir's 
-		Secret Sharing" scheme <xref target="SSS"/>.</t>
+        configuration mistakes). The mechanism for POT leverages "Shamir's
+        Secret Sharing" scheme <xref target="SSS"/>.</t>
 
         <t>Shamir's secret sharing base idea: A polynomial (represented by its
-        coefficients) of degree k is chosen as a secret by the controller. A 
-		polynomial represents a curve. A set of k+1 points on the 
-		curve are needed to construct the polynomial. Each point of the 
-		polynomial is called a &ldquo;share&rdquo; of the secret. A single 
-		secret is associated with a particular set of k+1 nodes, which 
-		typically represent the path to be verified. k+1 shares of the single 
-		secret (i.e., k+1 points on the curve) are securely distributed from 
-		a Controller to the network nodes. Nodes use their respective share 
-		to update a cumulative value in the POT data of each packet. Only a 
-		verifying node has access to the complete secret. The verifying node 
-		validates the correctness of the received POT data by reconstructing 
-		the curve.</t>
+        coefficients) of degree k is chosen as a secret by the controller. A
+        polynomial represents a curve. A set of k+1 points on the curve define
+        the polynomial and are thus needed to (re-)construct the polynomial.
+        Each of these k+1 points of the polynomial is called a
+        &ldquo;share&rdquo; of the secret. A single secret is associated with
+        a particular set of k+1 nodes, which typically represent the path to
+        be verified. k+1 shares of the single secret (i.e., k+1 points on the
+        curve) are securely distributed from a Controller to the network
+        nodes. Nodes use their respective share to update a cumulative value
+        in the POT data of each packet. Only a verifying node has access to
+        the complete secret. The verifying node validates the correctness of
+        the received POT data by reconstructing the curve.</t>
 
         <t>The polynomial cannot be reconstructed if any of the points are
         missed or tampered. Per Shamir's Secret Sharing Scheme, any lesser
@@ -477,51 +480,61 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         below.</t>
 
         <t>While applicable in theory, a vanilla approach based on Shamir's
-        secret sharing could be easily attacked. If the same polynomial is
-        reused for every packet for a path a passive attacker could reuse the
-        value. As a consequence, one could consider creating a different
+        Secret Sharing Scheme could be easily attacked. If the same polynomial
+        is reused for every packet for a path a passive attacker could reuse
+        the value. As a consequence, one could consider creating a different
         polynomial per packet. Such an approach would be operationally
         complex. It would be complex to configure and recycle so many curves
         and their respective points for each node. Rather than using a single
         polynomial, two polynomials are used for the solution approach: A
-        secret polynomial as described above which is kept constant, and a 
-		per-packet polynomial which is public and generated by the ingress 
-		node (the first node along the path). Operations are performed on the 
-		sum of those two polynomials - creating a third polynomial which is 
-		secret and per packet.</t>
+        secret polynomial as described above which is kept constant, and a
+        per-packet polynomial which is public and generated by the ingress
+        node (the first node along the path). Operations are performed on the
+        sum of those two polynomials - creating a third polynomial which is
+        secret and per packet.</t>
       </section>
 
       <section title="Solution Approach">
         <t>Solution approach: The overall algorithm uses two polynomials:
-        POLY-1 and POLY-2. POLY-1 is secret and constant. A different POLY-1 
-		is used for each path, and its value is known to the controller and to
-		the varifier of the respective path. Each node gets a point on POLY-1 
-		at setup-time and keeps it secret. POLY-2 is public, random and per 
-		packet. Each node generates a point on POLY-2 each time a packet 
-		crosses it. Each node then calculates (point on POLY-1 + point on 
-		POLY-2) to get a (point on POLY-3) and passes it to verifier
-        by adding it to each packet. The verifier constructs POLY-3 from the
-        points given by all the nodes and cross checks whether POLY-3 = POLY-1
-        + POLY-2. Only the verifier knows POLY-1. The solution leverages
-        finite field arithmetic in a field of size &ldquo;prime
-        number&rdquo;.</t>
+        POLY-1 and POLY-2. POLY-1 is secret and constant. A different POLY-1
+        is used for each path, and its value is known to the controller and to
+        the verifier of the respective path. Each node gets a point on POLY-1
+        at setup-time and keeps it secret. POLY-2 is public, random and per
+        packet. Each node generates a point on POLY-2 each time a packet
+        crosses it. Each node then calculates (point on POLY-1 + point on
+        POLY-2) to get a (point on POLY-3) and passes it to verifier by adding
+        it to each packet. The verifier constructs POLY-3 from the points
+        given by all the nodes and cross checks whether POLY-3 = POLY-1 +
+        POLY-2. Only the verifier knows POLY-1. </t>
 
-        <t>Detailed algorithms are discussed next. A simple example is
-        discussed in <xref target="toy-example"/>.</t>
+        <t>The solution leverages finite field arithmetic in a field of size
+        &ldquo;prime number&rdquo;, i.e. all operations are performed "modulo
+        prime number".</t>
+
+        <t>Detailed algorithms are discussed next. A simple example that
+        describes how the algorithms work is discussed in <xref
+        target="toy-example"/>. </t>
+
+        <t>The algorithms themselves do not constrain the ranges of possible
+        values for the different parameters and coefficients used. A
+        deployment of the algorithms will always need to define appropriate
+        ranges. Please refer to the YANG model in <xref target="YANG"/> for
+        details on the units and ranges of possible values of the different
+        parameters and coefficients.</t>
 
         <section title="Setup">
           <t>A controller generates a first polynomial (POLY-1) of degree k
-          and k+1 points on the polynomial, corresponding to the k+1 nodes 
-		  along the path. The constant coefficient of POLY-1 is considered 
-		  the SECRET. The non-constant coefficients are used to
-          generate the Lagrange Polynomial Constants (LPC). Each of the k+1
-          nodes (including verifier) are assigned a point on the polynomial
-          i.e., shares of the SECRET. The verifier is configured with the
-          SECRET. The Controller also generates coefficients (except the
-          constant coefficient, called "RND", which is changed on a per packet
-          basis) of a second polynomial POLY-2 of the same degree. Each node
-          is configured with the LPC of POLY-2. Note that POLY-2 is
-          public.</t>
+          and k+1 points on the polynomial, corresponding to the k+1 nodes
+          along the path. The constant coefficient of POLY-1 is considered the
+          SECRET, which is per the definition of the SSSS algorithm <xref
+          target="SSS"/>. The non-constant coefficients are used to generate
+          the Lagrange Polynomial Constants (LPC). Each of the k+1 nodes
+          (including verifier) are assigned a point on the polynomial i.e.,
+          shares of the SECRET. The verifier is configured with the SECRET.
+          The Controller also generates coefficients (except the constant
+          coefficient, called "RND", which is changed on a per packet basis)
+          of a second polynomial POLY-2 of the same degree. Each node is
+          configured with the LPC of POLY-2. Note that POLY-2 is public.</t>
         </section>
 
         <section title="In Transit">
@@ -531,9 +544,19 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           carried as within the packet POT data. As the packet visits each
           node, the RND is retrieved from the packet and the respective share
           of POLY-2 is calculated. Each node calculates (Share(POLY-1) +
-          Share(POLY-2)) and CML is updated with this sum. This step is
-          performed by each node until the packet completes the path. The
-          verifier also performs the step with its respective share.</t>
+          Share(POLY-2)) and CML is updated with this sum, specifically each
+          node performs</t>
+
+          <t>CML = CML+(((Share(POLY-1)+ Share(POLY-2)) * LPC) mod Prime, with
+          "LPC" being the Lagrange Polynomial Constant and "Prime" being the
+          prime number which defines the finite field arithmetic that all
+          operations are done over. Please also refer to <xref
+          target="enhanced-version"/> below for further details how the
+          operations are performed.</t>
+
+          <t>This step is performed by each node until the packet completes
+          the path. The verifier also performs the step with its respective
+          share.</t>
         </section>
 
         <section title="Verification">
@@ -546,16 +569,20 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
       <section anchor="toy-example" title="Illustrative Example">
         <t>This section shows a simple example to illustrate step by step the
-        approach described above.</t>
+        approach described above. The example assumes a network with 3 nodes.
+        The last node that packets traverse also serves as the verifier. A
+        Controller communicates the required parameters to the individual
+        nodes.</t>
 
-        <section title="Basic Version">
-          <t>Assumption: It is to be verified whether packets passed through 3
-          nodes. A polynomial of degree 2 is chosen for verification.</t>
+        <section title="Baseline">
+          <t>Assumption: It is to be verified whether packets passed through
+          the 3 nodes. A polynomial of degree 2 is chosen for
+          verification.</t>
 
           <t>Choices: Prime = 53. POLY-1(x) = (3x^2 + 3x + 10) mod 53. The
           secret to be re-constructed is the constant coefficient of POLY-1,
           i.e., SECRET=10. It is important to note that all operations are
-          done over a finite field (i.e., modulo prime).</t>
+          done over a finite field (i.e., modulo Prime = 53).</t>
 
           <section title="Secret Shares">
             <t>The shares of the secret are the points on POLY-1 chosen for
@@ -570,8 +597,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
               </list></t>
 
             <t>The three points above are the points on the curve which are
-            considered the shares of the secret. They are assigned to three
-            nodes respectively and are kept secret.</t>
+            considered the shares of the secret. They are assigned by the
+            Controller to three nodes respectively and are kept secret.</t>
           </section>
 
           <section title="Lagrange Polynomials">
@@ -600,7 +627,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             computations are done over a finite arithmetic field ("modulo a
             prime number"), the Lagrange basis polynomial constants are
             computed modulo 53. The Lagrange Polynomial Constant (LPC) would
-            be 10/3 , -5 , 8/3.</t>
+            be 10/3 , -5 , 8/3.LPC are computed by the Controller and
+            communicated to the individual nodes.</t>
 
             <t><list style="empty">
                 <t>LPC(l0) = (10/3) mod 53 = 21</t>
@@ -630,15 +658,15 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             (28 * 21 + 17 * 48 + 47 * 38) mod 53 = 3190 mod 53 = 10</t>
 
             <t>One observes that the secret reconstruction can easily be
-            performed cumulatively hop by hop. CML represents the cumulative
-            value. It is the POT data in the packet that is updated at each
-            hop with the node's respective (yi*LPC(i)), where i is their
-            respective value.</t>
+            performed cumulatively hop by hop, i.e. by every node. CML
+            represents the cumulative value. It is the POT data in the packet
+            that is updated at each hop with the node's respective
+            (yi*LPC(i)), where i is their respective value.</t>
           </section>
 
           <section title="Verification">
             <t>Upon completion of the path, the resulting CML is retrieved by
-            the verifier from the packet POT data. Recall that verifier is
+            the verifier from the packet POT data. Recall that the verifier is
             preconfigured with the original SECRET. It is cross checked with
             the CML by the verifier. Subsequent actions based on the
             verification failing or succeeding could be taken as per the
@@ -646,10 +674,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           </section>
         </section>
 
-        <section anchor="enhanced-version" title="Enhanced Version">
-          <t>As observed previously, the vanilla algorithm that involves a
-          single secret polynomial is not secure. Therefore, the solution is
-          further enhanced with usage of a random second polynomial chosen per
+        <section anchor="enhanced-version" title="Complete Solution">
+          <t>As observed previously, the baseline algorithm that involves a
+          single secret polynomial is not secure. The complete solution
+          leverages a random second polynomial, which is chosen per
           packet.</t>
 
           <section title="Random Polynomial">
@@ -658,9 +686,9 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             is public and need not be kept secret. The nodes can be
             pre-configured with the non-constant coefficients (for example, 7
             and 10 in this case could be configured through the Controller on
-            each node). So precisely only RND value changes per packet and is
-            public and the rest of the non-constant coefficients of POLY-2
-            kept secret.</t>
+            each node). So precisely only the RND value changes per packet and
+            is public and the rest of the non-constant coefficients of POLY-2
+            is kept secret.</t>
           </section>
 
           <section title="Reconstruction">
@@ -715,11 +743,13 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           </section>
         </section>
 
-        <section title="Final Version">
-          <t>The enhanced version of the protocol is still prone to replay and
-          preplay attacks. An attacker could reuse the POT metadata for
-          bypassing the verification. Further details are discussed in 
-          <xref target="Security"/>.</t>
+        <section title="Solution Deployment Considerations">
+          <t>The "complete solution" described above in <xref
+          target="enhanced-version"/> could still be prone to replay or
+          preplay attacks. An attacker could e.g. reuse the POT metadata for
+          bypassing the verification. These threats can be mitigated by
+          appropriate parameterization of the algorithm. Please refer to <xref
+          target="Security"/> for details.</t>
         </section>
       </section>
 
@@ -773,12 +803,12 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         symmetric masking between the nodes.</t>
 
         <t><list style="numbers">
-            <t>For each path the controller provisions all the nodes with 
-			(or asks them to agree on) two secrets per node, that we will refer 
-			to as masks, one for the connection from the upstream node(s), 
-			another for the connection to the downstream node(s). For obvious 
-			reasons, the ingress and egress (verifier) nodes only receive one, for
-            downstream and upstream, respectively.</t>
+            <t>For each path the controller provisions all the nodes with (or
+            asks them to agree on) two secrets per node, that we will refer to
+            as masks, one for the connection from the upstream node(s),
+            another for the connection to the downstream node(s). For obvious
+            reasons, the ingress and egress (verifier) nodes only receive one,
+            for downstream and upstream, respectively.</t>
 
             <t>Any two contiguous nodes in the OPOT stream share the mask for
             the connection between them, in the shape of symmetric keys. Masks
@@ -906,24 +936,27 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       <t>A POT system consists of a number of nodes that participate in POT
       and a Controller, which serves as a control and configuration entity.
       The Controller is to create the required parameters (polynomials, prime
-      number, etc.) and communicate those to the nodes. The sum of all
-      parameters for a specific node is referred to as "POT-profile". This
-      document does not define a specific protocol to be used between
-      Controller and nodes. It only defines the procedures and the associated
-      YANG data model.</t>
+      number, etc.) and communicate the associated values (i.e. prime number,
+      secret-share, LPC, etc.) to the nodes. The sum of all parameters for a
+      specific node is referred to as "POT-profile". For details see the YANG
+      model in <xref target="YANG"/>.This document does not define a specific
+      protocol to be used between Controller and nodes. It only defines the
+      procedures and the associated YANG data model.</t>
 
       <section title="Procedure">
         <t>The Controller creates new POT-profiles at a constant rate and
         communicates the POT-profile to the nodes. The controller labels a
         POT-profile &ldquo;even&rdquo; or &ldquo;odd&rdquo; and the Controller
         cycles between &ldquo;even&rdquo; and &ldquo;odd&rdquo; labeled
-        profiles. The rate at which the POT-profiles are communicated to the
-        nodes is configurable and is more frequent than the speed at which a
-        POT-profile is "used up" (see table above). Once the POT-profile has
-        been successfully communicated to all nodes (e.g., all NETCONF
-        transactions completed, in case NETCONF is used as a protocol), the
-        controller sends an &ldquo;enable POT-profile&rdquo; request to the
-        ingress node.</t>
+        profiles. This means that the parameters for the algorithms are
+        continuously refreshed. Please refer to <xref
+        target="metadata-for-pot"/> for choosing an appropriate refresh rate:
+        The rate at which the POT-profiles are communicated to the nodes is
+        configurable and MUST be more frequent than the speed at which a
+        POT-profile is "used up". Once the POT-profile has been successfully
+        communicated to all nodes (e.g., all NETCONF transactions completed,
+        in case NETCONF is used as a protocol), the controller sends an
+        &ldquo;enable POT-profile&rdquo; request to the ingress node.</t>
 
         <t>All nodes maintain two POT-profiles (an even and an odd
         POT-profile): One POT-profile is currently active and in use; one
@@ -947,7 +980,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         in reality).</t>
       </section>
 
-      <section title="YANG Model">
+      <section anchor="YANG" title="YANG Model">
         <t>This section defines that YANG data model for the information
         exchange between the Controller and the nodes.</t>
 
@@ -1110,17 +1143,15 @@ module ietf-pot-profile {
 
     <section anchor="Security" title="Security Considerations">
       <t>POT is a mechanism that is used for verifying the path through which
-	  a packet was forwarded. The security considerations of IOAM in general
-	  are discussed in <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically,
-	  it is assumed that POT is used in a confined network domain, and 
-	  therefore the potential threats that POT is intended to mitigate should
-	  be viewed accordingly. POT prevents spoofing and tampering; an attacker
-	  cannot maliciously create a bogus POT or modify a legitimate one. 
-	  Furthermore, a legitimate node that takes part in the POT protocol 
-	  cannot masquerade as another node along the path. 
-	  These considerations are discussed in detail in the rest
-	  of this section.</t>
-
+      a packet was forwarded. The security considerations of IOAM in general
+      are discussed in <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically,
+      it is assumed that POT is used in a confined network domain, and
+      therefore the potential threats that POT is intended to mitigate should
+      be viewed accordingly. POT prevents spoofing and tampering; an attacker
+      cannot maliciously create a bogus POT or modify a legitimate one.
+      Furthermore, a legitimate node that takes part in the POT protocol
+      cannot masquerade as another node along the path. These considerations
+      are discussed in detail in the rest of this section.</t>
 
       <section title="Proof of Transit">
         <t>Proof of correctness and security of the solution approach is per
@@ -1184,14 +1215,14 @@ module ietf-pot-profile {
 
       <section title="Anti-Replay">
         <t>A passive attacker could reuse a set of older RND and the
-        intermediate CML values. Thus, an attacker can attack an old 
-		(replayed) RND and CML with a new packet in order to bypass some of 
-		the nodes along the path.</t>
-		
-		<t>Such attacks could be avoided by carefully choosing POLY-2 as a 
-		(SEQ_NO + RND). For example, if 64 bits are being used for POLY-2 
-		then first 16 bits could be a sequence number SEQ_NO and next 48 bits 
-		could be a random number.</t>
+        intermediate CML values. Thus, an attacker can attack an old
+        (replayed) RND and CML with a new packet in order to bypass some of
+        the nodes along the path.</t>
+
+        <t>Such attacks could be avoided by carefully choosing POLY-2 as a
+        (SEQ_NO + RND). For example, if 64 bits are being used for POLY-2 then
+        first 16 bits could be a sequence number SEQ_NO and next 48 bits could
+        be a random number.</t>
 
         <t>Subsequently, the verifier could use the SEQ_NO bits to run classic
         anti-replay techniques like sliding window used in IPSEC. The verifier
@@ -1355,7 +1386,7 @@ module ietf-pot-profile {
       &RFC2119;
 
       &I-D.ietf-ippm-ioam-data;
-	  
+
       &RFC7665;
 
       <reference anchor="SSS"
