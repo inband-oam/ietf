@@ -10,6 +10,7 @@
 <!ENTITY RFC8200 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8200.xml">
 <!ENTITY RFC8250 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8250.xml">
 <!ENTITY RFC1772 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1772.xml">
+<!ENTITY RFC4193 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4193.xml">
 <!ENTITY I-D.draft-ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-ippm-ioam-data-04.xml">
 <!ENTITY I-D.draft-ioametal-ippm-6man-ioam-ipv6-options SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ioametal-ippm-6man-ioam-ipv6-options-01.xml">
 ]>
@@ -70,11 +71,11 @@
 
       <address>
         <postal>
-          <street/>
+          <street></street>
 
-          <city/>
+          <city></city>
 
-          <code/>
+          <code></code>
 
           <country>Israel</country>
         </postal>
@@ -145,7 +146,7 @@
       </address>
     </author>
 
-    <date day="26" month="February" year="2019"/>
+    <date day="10" month="March" year="2019" />
 
     <area>Transport Area, Internet</area>
 
@@ -164,10 +165,11 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. <xref
-      target="I-D.ioametal-ippm-6man-ioam-ipv6-options"/> defines how IOAM
-      data fields are encapsulated in the IPv6 <xref target="RFC8200"/>. This
-      document discusses deployment options for networks which leverage IOAM
-      data fields encapsulated in the IPv6 protocol.</t>
+      target="I-D.ioametal-ippm-6man-ioam-ipv6-options"></xref> defines how
+      IOAM data fields are encapsulated in the IPv6 <xref
+      target="RFC8200"></xref>. This document discusses deployment options for
+      networks which leverage IOAM data fields encapsulated in the IPv6
+      protocol.</t>
 
       <t>Deployment considerations differ, whether the IOAM domain starts and
       ends on hosts or whether the IOAM encapsulating and decapsulating nodes
@@ -179,8 +181,8 @@
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
         "OPTIONAL" in this document are to be interpreted as described in BCP
-        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only
-        when, they appear in all capitals, as shown here.</t>
+        14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when,
+        and only when, they appear in all capitals, as shown here.</t>
       </section>
 
       <section title="Abbreviations">
@@ -218,16 +220,16 @@
           fields is the same.</t>
 
           <t hangText="C2">Given that IOAM data fields increase the total size
-          of the packet, the size of the packet including the IOAM data could 
-		  exceed the PMTU. In particular, the incremental trace IOAM HbH 
-		  Option, which is proposed to support hardware implementations of 
-		  IOAM, changes Option Data Length en-route. Operators of an IOAM 
-		  domain are to ensure that the addition of OAM information does not 
-		  lead to fragmentation of the packet, e.g. by configuring the MTU of 
-		  transit routers and switches to a sufficiently high value. Careful 
-		  control of the MTU in a network is one of the reasons why IOAM is 
-		  considered a domain specific feature, see also 
-		  <xref target="I-D.ietf-ippm-ioam-data"/>. In addition, the PMTU
+          of the packet, the size of the packet including the IOAM data could
+          exceed the PMTU. In particular, the incremental trace IOAM HbH
+          Option, which is proposed to support hardware implementations of
+          IOAM, changes Option Data Length en-route. Operators of an IOAM
+          domain are to ensure that the addition of OAM information does not
+          lead to fragmentation of the packet, e.g. by configuring the MTU of
+          transit routers and switches to a sufficiently high value. Careful
+          control of the MTU in a network is one of the reasons why IOAM is
+          considered a domain specific feature, see also <xref
+          target="I-D.ietf-ippm-ioam-data"></xref>. In addition, the PMTU
           tolerance range in the IOAM domain should be identified (e.g.
           through configuration) and IOAM encapsulation operations and/or IOAM
           data field insertion (in case of incremental tracing) should not be
@@ -240,22 +242,23 @@
           source of the packet that did not insert the OAM information.</t>
 
           <t hangText="C4">OAM data leaks may affect the forwarding behavior
-          and state of network elements outside an IOAM domain. Such leaks
-		  should be mitigated by mechanisms to prevent data leaks or to assure 
-		  that upon leak network elements outside the domain are not affected, 
-		  i.e., continue to process other valid packets.</t>
+          and state of network elements outside an IOAM domain. IOAM domains
+          SHOULD provide a mechanism to prevent data leaks or be able to
+          assure that upon leak network elements outside the domain are not
+          affected i.e they continue to process other valid packets.</t>
 
-          <t hangText="C5">The source of that inserted and leaked the IOAM 
-		  data must be easy to identify for the purpose of troubleshooting, 
-		  due to the high complexity of troubleshooting a source that inserted 
-		  the IOAM data and did not remove it when the packet traversed across 
-		  an AS. Such a troubleshooting process may require coordination 
-		  between multiple operators, complicated configuration verification, 
-		  packet capture analysis, etc.</t>
+          <t hangText="C5">The source of that inserted and leaked the IOAM
+          data must be easy to identify for the purpose of troubleshooting,
+          due to the high complexity of troubleshooting a source that inserted
+          the IOAM data and did not remove it when the packet traversed across
+          an AS. Such a troubleshooting process may require coordination
+          between multiple operators, complicated configuration verification,
+          packet capture analysis, etc.</t>
 
-          <t hangText="C6">Compliance with <xref target="RFC8200"/> would
-          require OAM data to be encapsulated in a tunnel instead of inserting
-		  a header/option into in-flight packets.</t>
+          <t hangText="C6">Compliance with <xref target="RFC8200"></xref>
+          would require OAM data to be encapsulated instead of header/option
+          insertion directly into in-flight packets using the original IPv6
+          header.</t>
         </list></t>
     </section>
 
@@ -264,7 +267,7 @@
       perform the operation of IOAM data field encapsulation and
       decapsulation. IOAM data is carried in IPv6 packets as Hop-by-Hop or
       Destination options, see <xref
-      target="I-D.ioametal-ippm-6man-ioam-ipv6-options"/>.</t>
+      target="I-D.ioametal-ippm-6man-ioam-ipv6-options"></xref>.</t>
     </section>
 
     <section title="IOAM domains bounded by network devices">
@@ -276,7 +279,7 @@
       <section title="Deployment options">
         <t>This section lists out possible deployment options that can be
         employed to meet the requirements listed in <xref
-        target="v6_requirement"/>.</t>
+        target="v6_requirement"></xref>.</t>
 
         <section title="IPv6-in-IPv6 encapsulation">
           <t>Leverage an IPv6-in-IPv6 approach: Preserve the original IP
@@ -304,44 +307,48 @@
               this option and continue processing the header. So presence of
               the options must not cause packet drop in the network elements
               that do not understand the option. In addition <xref
-              target="I-D.ietf-6man-hbh-header-handling"/> should be
+              target="I-D.ietf-6man-hbh-header-handling"></xref> should be
               considered.</t>
             </list></t>
         </section>
 
         <section title="IP-in-IPv6 encapsulation with ULA">
-          <t>The "IP-in-IPv6 encapsulation with ULA" approach can be used to
-          apply IOAM to an IPv6 as well as an IPv4 network. In addition, it
-          fulfills requirement C4 (avoid leaks) by using ULA for the ION.
-          Similar to the IPv6-in-IPv6 encapsulation approach above, the
-          original IP packet is preserved. An IPv6 header including IOAM data
-          fields in an extension header is added in front of it, to forward
-          traffic within and across the IOAM domain. IPv6 addresses for the
-          ION, i.e. the outer IPv6 addresses are assigned from the ULA space.
-          Addressing and routing in the ION are to be configured so that the
-          IP-in-IPv6 encapsulated packets follow the same path as the
-          original, non-encapsulated packet would have taken. Transit across
-          the ION could leverage the transit approach for traffic between BGP
-          border routers, as described in RFC1772, "A.2.3 Encapsulation".</t>
+          <t>The "IP-in-IPv6 encapsulation with ULA" <xref
+          target="RFC4193"></xref> approach can be used to apply IOAM to an
+          IPv6 as well as an IPv4 network. In addition, it fulfills
+          requirement C4 (avoid leaks) by using ULA for the ION. Similar to
+          the IPv6-in-IPv6 encapsulation approach above, the original IP
+          packet is preserved. An IPv6 header including IOAM data fields in an
+          extension header is added in front of it, to forward traffic within
+          and across the IOAM domain. IPv6 addresses for the ION, i.e. the
+          outer IPv6 addresses are assigned from the ULA space. Addressing and
+          routing in the ION are to be configured so that the IP-in-IPv6
+          encapsulated packets follow the same path as the original,
+          non-encapsulated packet would have taken. Transit across the ION
+          could leverage the transit approach for traffic between BGP border
+          routers, as described in <xref target="RFC1772"></xref>, "A.2.3
+          Encapsulation". Assuming that the operational guidelines specified
+          in Section 4 of <xref target="RFC4193"></xref> are properly
+          followed, the probability of leaks in this approach will be almost
+          close to zero.</t>
         </section>
-		
-		<section title="x-in-IPv6 Encapsulation that is used Independently">
-		  <t>In some cases it is desirable to monitor a domain that uses an
-		  overlay network that is deployed independently of the need for IOAM,
-		  e.g., an overlay network that runs Geneve-in-IPv6, or VXLAN-in-IPv6.
-		  In this case IOAM can be encapsulated in as an extension header in
-		  the tunnel (outer) IPv6 header. Thus, the tunnel encapsulating node
-		  is also the IOAM encapsulating node, and the tunnel end point is 
-		  also the IOAM decapsulating node.</t>
-		</section>
-		
+
+        <section title="x-in-IPv6 Encapsulation that is used Independently">
+          <t>In some cases it is desirable to monitor a domain that uses an
+          overlay network that is deployed independently of the need for IOAM,
+          e.g., an overlay network that runs Geneve-in-IPv6, or VXLAN-in-IPv6.
+          In this case IOAM can be encapsulated in as an extension header in
+          the tunnel (outer) IPv6 header. Thus, the tunnel encapsulating node
+          is also the IOAM encapsulating node, and the tunnel end point is
+          also the IOAM decapsulating node.</t>
+        </section>
       </section>
     </section>
 
     <section title="Security Considerations">
       <t>This document discusses the deployment of IOAM with IPv6 options.
       Security considerations of the specific IOAM data fields are described
-      in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+      in <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -354,9 +361,9 @@
       Harichandra Babu, Akshaya Nadahalli, Stefano Previdi, Hemant Singh, Erik
       Nordmark, LJ Wobker, and Andrew Yourtchenko for the comments and advice.
       For the IPv6 encapsulation, this document leverages concepts described
-      in <xref target="I-D.kitamura-ipv6-record-route"/>. The authors would
-      like to acknowledge the work done by the author Hiroshi Kitamura and
-      people involved in writing it.</t>
+      in <xref target="I-D.kitamura-ipv6-record-route"></xref>. The authors
+      would like to acknowledge the work done by the author Hiroshi Kitamura
+      and people involved in writing it.</t>
     </section>
 
     <!---->
@@ -382,32 +389,34 @@
 
       &RFC8250;
 
+      &RFC4193;
+      
       <reference anchor="I-D.kitamura-ipv6-record-route">
         <front>
           <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
           Extension</title>
 
-          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
+          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"></author>
 
-          <date month="November" year="2000"/>
+          <date month="November" year="2000" />
         </front>
 
         <seriesInfo name="Internet-Draft"
-                    value="draft-kitamura-ipv6-record-route-00"/>
+                    value="draft-kitamura-ipv6-record-route-00" />
 
         <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
-                type="TXT"/>
+                type="TXT" />
       </reference>
 
       <reference anchor="I-D.ietf-6man-hbh-header-handling">
         <front>
           <title>IPv6 Hop-by-Hop Options Extension Header</title>
 
-          <author fullname="Fred Baker" initials="F" surname="Baker"/>
+          <author fullname="Fred Baker" initials="F" surname="Baker"></author>
 
-          <author fullname="R. Bonica" initials="R" surname="Bonica"/>
+          <author fullname="R. Bonica" initials="R" surname="Bonica"></author>
 
-          <date day="16" month="March" year="2016"/>
+          <date day="16" month="March" year="2016" />
         </front>
       </reference>
     </references>

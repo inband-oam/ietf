@@ -5,7 +5,7 @@
 ippm,6man                                                    S. Bhandari
 Internet-Draft                                              F. Brockners
 Intended status: Standards Track                                   Cisco
-Expires: August 30, 2019                                      T. Mizrahi
+Expires: September 11, 2019                                   T. Mizrahi
                                         Huawei Network.IO Innovation Lab
                                                                  A. Kfir
                                                                 B. Gafni
@@ -14,7 +14,7 @@ Expires: August 30, 2019                                      T. Mizrahi
                                                        Barefoot Networks
                                                              S. Krishnan
                                                                   Kaloom
-                                                       February 26, 2019
+                                                          March 10, 2019
 
 
       Deployment Considerations for In-situ OAM with IPv6 Options
@@ -25,7 +25,7 @@ Abstract
    In-situ Operations, Administration, and Maintenance (IOAM) records
    operational and telemetry information in the packet while the packet
    traverses a path between two points in the network.  This document
-   outlines how IOAM can be enabled in a network.
+   outlines how IOAM can be enabled in an IPv6 network.
 
 Status of This Memo
 
@@ -35,14 +35,14 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at http://datatracker.ietf.org/drafts/current/.
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 30, 2019.
+   This Internet-Draft will expire on September 11, 2019.
 
 Copyright Notice
 
@@ -53,14 +53,14 @@ Copyright Notice
 
 
 
-Bhandari, et al.         Expires August 30, 2019                [Page 1]
+Bhandari, et al.       Expires September 11, 2019               [Page 1]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
+Internet-Draft       In-situ OAM IPv6 encapsulation           March 2019
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (http://trustee.ietf.org/license-info) in effect on the date of
+   (https://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -80,13 +80,14 @@ Table of Contents
      5.1.  Deployment options  . . . . . . . . . . . . . . . . . . .   5
        5.1.1.  IPv6-in-IPv6 encapsulation  . . . . . . . . . . . . .   5
        5.1.2.  IP-in-IPv6 encapsulation with ULA . . . . . . . . . .   5
+       5.1.3.  x-in-IPv6 Encapsulation that is used Independently  .   6
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   6
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   7
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
 
 1.  Introduction
 
@@ -108,10 +109,9 @@ Table of Contents
 
 
 
-
-Bhandari, et al.         Expires August 30, 2019                [Page 2]
+Bhandari, et al.       Expires September 11, 2019               [Page 2]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
+Internet-Draft       In-situ OAM IPv6 encapsulation           March 2019
 
 
 2.  Conventions
@@ -156,21 +156,23 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
       packets with and without IOAM data fields is the same.
 
    C2 Given that IOAM data fields increase the total size of the packet,
-      the packet size could exceed the PMTU.  In particular, the
-      incremental trace IOAM HbH Option, which is proposed to support
-      hardware implementations of IOAM, changes Option Data Length en-
-      route.  Operators of an IOAM domain are to ensure that the
-      addition of OAM information does not lead to fragmentation of the
-      packet.  Careful control of the MTU in a network is one of the
+      the size of the packet including the IOAM data could exceed the
+      PMTU.  In particular, the incremental trace IOAM HbH Option, which
+      is proposed to support hardware implementations of IOAM, changes
+      Option Data Length en-route.  Operators of an IOAM domain are to
+      ensure that the addition of OAM information does not lead to
+      fragmentation of the packet, e.g. by configuring the MTU of
 
 
 
-Bhandari, et al.         Expires August 30, 2019                [Page 3]
+Bhandari, et al.       Expires September 11, 2019               [Page 3]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
+Internet-Draft       In-situ OAM IPv6 encapsulation           March 2019
 
 
-      reasons why IOAM is considered a domain specific feature, see also
+      transit routers and switches to a sufficiently high value.
+      Careful control of the MTU in a network is one of the reasons why
+      IOAM is considered a domain specific feature, see also
       [I-D.ietf-ippm-ioam-data].  In addition, the PMTU tolerance range
       in the IOAM domain should be identified (e.g.  through
       configuration) and IOAM encapsulation operations and/or IOAM data
@@ -179,28 +181,27 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
 
    C3 Packets with IOAM data or associated ICMP errors, should not
       arrive at destinations which have no knowledge of IOAM.  Consider
-      using IOAM in a transit network: Misleading ICMP errors due to
+      using IOAM in transit devices; misleading ICMP errors due to
       addition and/or presence of OAM data in the packet can confuse a
-      source of the packet that did not insert the OAM information. This
-      is especially critical in the cases where the IOAM domains are 
-      bounded by network devices.
+      source of the packet that did not insert the OAM information.
 
    C4 OAM data leaks may affect the forwarding behavior and state of
       network elements outside an IOAM domain.  IOAM domains SHOULD
-      provide a mechanism to prevent data leaks or be able to assure 
-      that upon leak network elements outside the domain are not 
+      provide a mechanism to prevent data leaks or be able to assure
+      that upon leak network elements outside the domain are not
       affected i.e they continue to process other valid packets.
 
-   C5 Source OAM domain that inserted and leaked OAM data must be easy
-      to identify for purpose of troubleshooting.  For e.g.  It very
-      time consuming to troubleshoot source that inserted the EH but
-      didn't remove when the packet traverses across AS (you have to
-      walk the AS path, contacting each operator, asking them to verify
-      their config, get packet captures etc.)
-      
+   C5 The source of that inserted and leaked the IOAM data must be easy
+      to identify for the purpose of troubleshooting, due to the high
+      complexity of troubleshooting a source that inserted the IOAM data
+      and did not remove it when the packet traversed across an AS.
+      Such a troubleshooting process may require coordination between
+      multiple operators, complicated configuration verification, packet
+      capture analysis, etc.
+
    C6 Compliance with [RFC8200] would require OAM data to be
-      encapsulated instead of header/option insertion directly into 
-      in-flight packets using the original IPv6 header.
+      encapsulated instead of header/option insertion directly into in-
+      flight packets using the original IPv6 header.
 
 4.  IOAM domains bounded by hosts
 
@@ -220,11 +221,9 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
 
 
 
-
-
-Bhandari, et al.         Expires August 30, 2019                [Page 4]
+Bhandari, et al.       Expires September 11, 2019               [Page 4]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
+Internet-Draft       In-situ OAM IPv6 encapsulation           March 2019
 
 
 5.1.  Deployment options
@@ -248,7 +247,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
        the packet does not change.
 
    2.  To simplify debugging in case of leaked IOAM data fields in
-       packets, consider a new IOAM destination option to identify
+       packets, consider a new IOAM E2E destination option to identify
        the Source IOAM domain (AS, v6 prefix).  Insert this option into
        the IOAM destination options EH attached to the outer IPv6
        header.  This additional information would allow for easy
@@ -258,42 +257,51 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
    3.  All the IOAM options are defined with type "00 - skip over this
        option and continue processing the header.  So presence of the
        options must not cause packet drop in the network elements that
-       do not understand the option.  In addition the implications of
+       do not understand the option.  In addition
        [I-D.ietf-6man-hbh-header-handling] should be considered.
 
-5.1.2.  IP-in-IPv6 encapsulation with ULA [RFC4193]
+5.1.2.  IP-in-IPv6 encapsulation with ULA
 
-   The "IP-in-IPv6 encapsulation with ULA" approach can be used to apply
-   IOAM to an IPv6 as well as an IPv4 network.  In addition, it fulfills
-   requirement C4 (avoid leaks) by using ULA for the ION.  Similar to
-   the IPv6-in-IPv6 encapsulation approach above, the original IP packet
-   is preserved.  An IPv6 header including IOAM data fields in an
-   extension header is added in front of it, to forward traffic within
-   and across the IOAM domain.  IPv6 addresses for the ION, i.e. the
-   outer IPv6 addresses are assigned from the ULA space.  Addressing and
-   routing in the ION are to be configured so that the IP-in-IPv6
-   encapsulated packets follow the same path as the original, non-
-   encapsulated packet would have taken.  Transit across the ION could
+   The "IP-in-IPv6 encapsulation with ULA" [RFC4193] approach can be
+   used to apply IOAM to an IPv6 as well as an IPv4 network.  In
+   addition, it fulfills requirement C4 (avoid leaks) by using ULA for
+   the ION.  Similar to the IPv6-in-IPv6 encapsulation approach above,
+   the original IP packet is preserved.  An IPv6 header including IOAM
+   data fields in an extension header is added in front of it, to
+   forward traffic within and across the IOAM domain.  IPv6 addresses
+   for the ION, i.e. the outer IPv6 addresses are assigned from the ULA
+   space.  Addressing and routing in the ION are to be configured so
+   that the IP-in-IPv6 encapsulated packets follow the same path as the
+   original, non-encapsulated packet would have taken.  Transit across
+   the ION could leverage the transit approach for traffic between BGP
 
 
 
-
-Bhandari, et al.         Expires August 30, 2019                [Page 5]
+Bhandari, et al.       Expires September 11, 2019               [Page 5]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
+Internet-Draft       In-situ OAM IPv6 encapsulation           March 2019
 
 
-   leverage the transit approach for traffic between BGP border routers,
-   as described in RFC1772, "A.2.3 Encapsulation". Assuming that the 
-   operational guidelines specified in Section 4 of RFC4193 are properly
-   followed, the probability of leaks in this approach will be almost 
-   close to zero.
+   border routers, as described in [RFC1772], "A.2.3 Encapsulation".
+   Assuming that the operational guidelines specified in Section 4 of
+   [RFC4193] are properly followed, the probability of leaks in this
+   approach will be almost close to zero.
+
+5.1.3.  x-in-IPv6 Encapsulation that is used Independently
+
+   In some cases it is desirable to monitor a domain that uses an
+   overlay network that is deployed independently of the need for IOAM,
+   e.g., an overlay network that runs Geneve-in-IPv6, or VXLAN-in-IPv6.
+   In this case IOAM can be encapsulated in as an extension header in
+   the tunnel (outer) IPv6 header.  Thus, the tunnel encapsulating node
+   is also the IOAM encapsulating node, and the tunnel end point is also
+   the IOAM decapsulating node.
 
 6.  Security Considerations
 
    This document discusses the deployment of IOAM with IPv6 options.
    Security considerations of the specific IOAM data fields are
-   described in [I-D.ietf-ippm-ioam-data]. 
+   described in [I-D.ietf-ippm-ioam-data].
 
 7.  IANA Considerations
 
@@ -321,6 +329,15 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
               "Data Fields for In-situ OAM", draft-ietf-ippm-ioam-
               data-04 (work in progress), October 2018.
 
+
+
+
+
+Bhandari, et al.       Expires September 11, 2019               [Page 6]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation           March 2019
+
+
    [I-D.ioametal-ippm-6man-ioam-ipv6-options]
               Bhandari, S., Brockners, F., Pignataro, C., Gredler, H.,
               Leddy, J., Youell, S., Mizrahi, T., Kfir, A., Gafni, B.,
@@ -330,27 +347,14 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
 
    [RFC1772]  Rekhter, Y. and P. Gross, "Application of the Border
               Gateway Protocol in the Internet", RFC 1772,
-              DOI 10.17487/RFC1772, March 1995, <https://www.rfc-
-              editor.org/info/rfc1772>.
-
-
-
-
-
-Bhandari, et al.         Expires August 30, 2019                [Page 6]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
-
+              DOI 10.17487/RFC1772, March 1995,
+              <https://www.rfc-editor.org/info/rfc1772>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
-              editor.org/info/rfc2119>.
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
 
-   [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
-              Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
-              <https://www.rfc-editor.org/info/rfc4193>.
-              
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -366,15 +370,29 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
               Option Extension", draft-kitamura-ipv6-record-route-00
               (work in progress), November 2000.
 
+   [RFC4193]  Hinden, R. and B. Haberman, "Unique Local IPv6 Unicast
+              Addresses", RFC 4193, DOI 10.17487/RFC4193, October 2005,
+              <https://www.rfc-editor.org/info/rfc4193>.
+
    [RFC8200]  Deering, S. and R. Hinden, "Internet Protocol, Version 6
               (IPv6) Specification", STD 86, RFC 8200,
-              DOI 10.17487/RFC8200, July 2017, <https://www.rfc-
-              editor.org/info/rfc8200>.
+              DOI 10.17487/RFC8200, July 2017,
+              <https://www.rfc-editor.org/info/rfc8200>.
 
    [RFC8250]  Elkins, N., Hamilton, R., and M. Ackermann, "IPv6
               Performance and Diagnostic Metrics (PDM) Destination
               Option", RFC 8250, DOI 10.17487/RFC8250, September 2017,
               <https://www.rfc-editor.org/info/rfc8250>.
+
+
+
+
+
+
+Bhandari, et al.       Expires September 11, 2019               [Page 7]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation           March 2019
+
 
 Authors' Addresses
 
@@ -394,12 +412,6 @@ Authors' Addresses
    Germany
 
    Email: fbrockne@cisco.com
-
-
-
-Bhandari, et al.         Expires August 30, 2019                [Page 7]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
 
 
    Tal Mizrahi
@@ -425,6 +437,17 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
    U.S.A.
 
    Email: gbarak@mellanox.com
+
+
+
+
+
+
+
+
+Bhandari, et al.       Expires September 11, 2019               [Page 8]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation           March 2019
 
 
    Mickey Spiegel
@@ -453,4 +476,29 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2019
 
 
 
-Bhandari, et al.         Expires August 30, 2019                [Page 8]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bhandari, et al.       Expires September 11, 2019               [Page 9]
