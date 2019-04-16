@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced. 
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
+<!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-ioam-nsh.xml">
+<!ENTITY I-D.ioametal-ippm-6man-ioam-ipv6-options SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioametal-ippm-6man-ioam-ipv6-options.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<rfc category="std" docName="draft-mizrahi-ippm-ioam-flags-00" ipr="trust200902">
+
+  <front>
+
+    <title abbrev="IOAM Flags">In-situ OAM Flags</title>
+
+
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
+      <organization abbrev="">Huawei Network.IO Innovation Lab</organization>
+
+      <address>
+        <postal>
+          <street></street>
+
+          <city></city>
+
+          <code></code>
+
+          <country>Israel</country>
+        </postal>
+
+        <email>tal.mizrahi.phd@gmail.com</email>
+      </address>
+    </author>
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Ramesh Sivakolundu" initials="R." surname="Sivakolundu">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>170 West Tasman Dr.</street>
+
+          <city>SAN JOSE, CA 95134</city>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>sramesh@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>7200-11 Kit Creek Road</street>
+
+          <city>Research Triangle Park</city>
+
+          <region>NC</region>
+
+          <code>27709</code>
+
+          <country>United States</country>
+        </postal>
+
+        <email>cpignata@cisco.com</email>
+      </address>
+    </author>
+	
+    <author fullname="Aviv Kfir" initials="A." surname="Kfir">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>avivk@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Barak Gafni" initials="B." surname="Gafni">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>gbarak@mellanox.com</email>
+      </address>
+    </author>
+
+    <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
+      <organization abbrev="">Barefoot Networks</organization>
+
+      <address>
+        <postal>
+          <street>4750 Patrick Henry Drive</street>
+
+          <city>Santa Clara, CA</city>
+
+          <code>95054</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>mspiegel@barefootnetworks.com</email>
+      </address>
+    </author>
+	
+    <author fullname="John Lemon" initials="J." surname="Lemon">
+      <organization abbrev="">Broadcom</organization>
+
+      <address>
+        <postal>
+          <street>270 Innovation Drive</street>
+
+          <city>San Jose</city>
+
+          <region>CA</region>
+
+          <code>95134</code>
+
+          <country>US</country>
+        </postal>
+
+        <email>john.lemon@broadcom.com</email>
+      </address>
+    </author>
+
+    <date day="10" month="March" year="2019" />
+
+
+    <area>TSV</area>
+
+    <workgroup>IPPM</workgroup>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.  
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>IOAM</keyword>
+
+    <keyword>Telemetry</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. This document
+      presents a few use cases of active measurement using IOAM.  
+	  Specifically, the document also defines the Active flag in IOAM Trace 
+	  Options.
+	  </t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction" toc="default">
+      <t>IOAM <xref target="I-D.ietf-ippm-ioam-data"/> is used for 
+	  monitoring traffic in the network by incorporating IOAM data fields 
+	  into in-flight data packets.</t> 
+
+	  <t>Active measurement methods <xref target="RFC7799"/> make use of 
+	  synthetically generated packets in order to facilitate the measurement.
+	  This document presents use cases of active measurement using IOAM, and 
+	  introduces a new IOAM flag, the Active flag, which is used to identify
+	  synthetic packets.</t>
+  
+	</section>
+
+    <section anchor="Conventions" title="Conventions">
+
+      <section title="Requirement Language">
+	
+  	  <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119"></xref>.</t>
+      </section>
+
+      <section title="Terminology">
+      <t>Abbreviations used in this document:</t>
+
+      <t><list hangIndent="11" style="hanging">
+          <t hangText="IOAM:">In-situ Operations, Administration, and
+          Maintenance</t>
+
+          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+        </list></t>
+      </section>
+    </section>
+
+    <section title="Active Measurement with IOAM">
+
+      <section anchor="UseCaseSec" title="Use Cases">  
+
+	  <t>An example of an IOAM deployment scenario is illustrated in
+	  <xref target="NetworkFig"></xref>. The figure depicts two endpoints,
+	  a source and a destination. The data traffic from the source to the
+	  destination is forwarded through a set of network devices, including
+	  an IOAM encapsulating node, which incorporates one or more IOAM 
+	  option, a decapsulating node, which removes the IOAM options, optionally
+	  one or more transit nodes. The IOAM options are encapsulated in one
+	  of the IOAM encapsulation types, e.g., 
+	  <xref target="I-D.ietf-sfc-ioam-nsh"/>, or 
+	  <xref target="I-D.ioametal-ippm-6man-ioam-ipv6-options"/>.</t>
+	  
+       <figure align="center" anchor="NetworkFig" title="Network using IOAM.">
+
+       <artwork align="left">
+         <![CDATA[
+ +--------+     +--------+     +--------+     +--------+     +--------+
+ |        |     |  IOAM  |.....|  IOAM  |.....|  IOAM  |     |        |
+ +--------+     +--------+     +--------+     +--------+     +--------+
+ | L2/L3  |<===>| L2/L3  |<===>| L2/L3  |<===>| L2/L3  |<===>| L2/L3  |
+ +--------+     +--------+     +--------+     +--------+     +--------+
+   Source      Encapsulating    Transit      Decapsulating   Destination
+                   Node           Node           Node
+   
+           ]]></artwork>
+
+     </figure>
+	  
+	  <t>This draft focuses on three possible use cases of active measurement
+	  using IOAM. These use cases are described using the example of 
+	  <xref target="NetworkFig"></xref>.</t>
+	  
+	  
+      <t><list style="symbols">
+         <t>Endpoint active measurement: synthetic probe packets are sent 
+		 between the source and destination, traversing the IOAM domain.
+		 Since the probe packets are sent between the endpoints, these packets
+		 are treated as data packets by the IOAM domain, and do not require
+		 special treatment at the IOAM layer.</t>
+
+         <t>IOAM active measurement using probe packets: probe packets are 
+		 generated and transmitted by the IOAM encapsulating node, and are
+		 expected to be terminated by the decapsulating node. IOAM data related
+		 to probe packets may be exported by one or more nodes along its path,
+		 by an exporting protocol that is outside the scope of this document
+		 (e.g., <xref target="I-D.spiegel-ippm-ioam-rawexport"/>). Probe 
+		 packets include a Trace Option which has its Active flag set, 
+		 indicating that the decapsulating node must terminate them.</t>
+
+         <t>IOAM active measurement using replicated data packets: probe 
+		 packets are created by the encapsulating node by selecting some or 
+		 all of the en route data packets and replicating them. A selected data 
+		 packet that is replicated, and its (possibly truncated) copy is 
+		 forwarded with one or more IOAM option, while the original packet is
+		 forwarded normally, without IOAM options. To the extent possible, the 
+		 original data packet and its replica are forwarded through the same 
+		 path. The replica includes a Trace Option that has its Active flag 
+		 set, indicating that the decapsulating node should terminate it.
+		 </t>
+	  </list></t>
+	  
+	  
+	  
+	  </section>
+	  
+
+      <section title="The Active Flag">  
+
+
+  	    <t>IOAM data may be represented in one of four possible IOAM 
+  	    options: Pre-allocated Trace Option, Incremental Trace Option, Proof 
+  	    of Transit (POT) Option, and Edge-to-Edge Option. This document 
+  	    defines the Active flag, which is a new flag in the Pre-allocated and 
+  	    Incremental Trace options.</t>
+
+	  
+  	    <t>"Active" (A-bit). When set, this indicates that this is an active IOAM 
+  	    packet, where "active" is used in the sense defined in 
+  	    <xref target="RFC7799"></xref>, rather than a data packet. The packet 
+		may be an IOAM probe packet, or a replicated data packet (the second
+		and third use cases of <xref target="UseCaseSec"></xref>).</t> 
+		
+		<t>An IOAM decapsulating node that receives a packet with the Active
+		flag set in one of its Trace options must terminate the packet.</t>
+
+	  </section>
+
+	</section>
+
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This document requests the following IANA Actions.</t>
+
+      <section anchor="IANA-Active-Allocation"
+               title="Allocating the Active Flag">
+        <t>IANA is requested to allocate bit 1 in the 
+		"IOAM Trace Flags Registry" as follows:</t>
+		
+        <t><list style="hanging">
+            <t hangText="Bit 1">"Active" (A-bit)</t>
+          </list></t>
+		  
+		<t>Note that bit 0 is the most significant bit in the Flags Registry.
+		</t>
+
+	  </section>
+
+    </section>
+	  
+    <section anchor="Security" title="Security Considerations">
+      <t>The security considerations of IOAM in general are discussed in 
+	  <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+    </section>
+
+  </middle>
+
+
+  <back>
+    <references title="Normative References">
+      &RFC2119;
+
+      &I-D.ietf-ippm-ioam-data;
+
+	  </references>
+    <references title="Informative References">
+      &RFC7799;
+	  
+	  &I-D.spiegel-ippm-ioam-rawexport;
+	  
+	  &I-D.ioametal-ippm-6man-ioam-ipv6-options;
+	  
+	  &I-D.ietf-sfc-ioam-nsh; 
+
+	  </references>
+  </back>
+</rfc>

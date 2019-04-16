@@ -1,0 +1,392 @@
+
+
+
+
+IPPM                                                          T. Mizrahi
+Internet-Draft                          Huawei Network.IO Innovation Lab
+Intended status: Standards Track                            F. Brockners
+Expires: September 11, 2019                                  S. Bhandari
+                                                          R. Sivakolundu
+                                                            C. Pignataro
+                                                                   Cisco
+                                                                 A. Kfir
+                                                                B. Gafni
+                                             Mellanox Technologies, Inc.
+                                                              M. Spiegel
+                                                       Barefoot Networks
+                                                                J. Lemon
+                                                                Broadcom
+                                                          March 10, 2019
+
+
+                           In-situ OAM Flags
+                    draft-mizrahi-ippm-ioam-flags-00
+
+Abstract
+
+   In-situ Operations, Administration, and Maintenance (IOAM) records
+   operational and telemetry information in the packet while the packet
+   traverses a path between two points in the network.  This document
+   presents a few use cases of active measurement using IOAM.
+   Specifically, the document also defines the Active flag in IOAM Trace
+   Options.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on September 11, 2019.
+
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 1]
+
+Internet-Draft                 IOAM Flags                     March 2019
+
+
+Copyright Notice
+
+   Copyright (c) 2019 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Requirement Language  . . . . . . . . . . . . . . . . . .   3
+     2.2.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  Active Measurement with IOAM  . . . . . . . . . . . . . . . .   3
+     3.1.  Use Cases . . . . . . . . . . . . . . . . . . . . . . . .   3
+     3.2.  The Active Flag . . . . . . . . . . . . . . . . . . . . .   4
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
+     4.1.  Allocating the Active Flag  . . . . . . . . . . . . . . .   5
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .   5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
+
+1.  Introduction
+
+   IOAM [I-D.ietf-ippm-ioam-data] is used for monitoring traffic in the
+   network by incorporating IOAM data fields into in-flight data
+   packets.
+
+   Active measurement methods [RFC7799] make use of synthetically
+   generated packets in order to facilitate the measurement.  This
+   document presents use cases of active measurement using IOAM, and
+   introduces a new IOAM flag, the Active flag, which is used to
+   identify synthetic packets.
+
+
+
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 2]
+
+Internet-Draft                 IOAM Flags                     March 2019
+
+
+2.  Conventions
+
+2.1.  Requirement Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+2.2.  Terminology
+
+   Abbreviations used in this document:
+
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
+   OAM:       Operations, Administration, and Maintenance
+
+3.  Active Measurement with IOAM
+
+3.1.  Use Cases
+
+   An example of an IOAM deployment scenario is illustrated in Figure 1.
+   The figure depicts two endpoints, a source and a destination.  The
+   data traffic from the source to the destination is forwarded through
+   a set of network devices, including an IOAM encapsulating node, which
+   incorporates one or more IOAM option, a decapsulating node, which
+   removes the IOAM options, optionally one or more transit nodes.  The
+   IOAM options are encapsulated in one of the IOAM encapsulation types,
+   e.g., [I-D.ietf-sfc-ioam-nsh], or
+   [I-D.ioametal-ippm-6man-ioam-ipv6-options].
+
+
+ +--------+     +--------+     +--------+     +--------+     +--------+
+ |        |     |  IOAM  |.....|  IOAM  |.....|  IOAM  |     |        |
+ +--------+     +--------+     +--------+     +--------+     +--------+
+ | L2/L3  |<===>| L2/L3  |<===>| L2/L3  |<===>| L2/L3  |<===>| L2/L3  |
+ +--------+     +--------+     +--------+     +--------+     +--------+
+   Source      Encapsulating    Transit      Decapsulating   Destination
+                   Node           Node           Node
+
+
+                       Figure 1: Network using IOAM.
+
+   This draft focuses on three possible use cases of active measurement
+   using IOAM.  These use cases are described using the example of
+   Figure 1.
+
+   o  Endpoint active measurement: synthetic probe packets are sent
+      between the source and destination, traversing the IOAM domain.
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 3]
+
+Internet-Draft                 IOAM Flags                     March 2019
+
+
+      Since the probe packets are sent between the endpoints, these
+      packets are treated as data packets by the IOAM domain, and do not
+      require special treatment at the IOAM layer.
+
+   o  IOAM active measurement using probe packets: probe packets are
+      generated and transmitted by the IOAM encapsulating node, and are
+      expected to be terminated by the decapsulating node.  IOAM data
+      related to probe packets may be exported by one or more nodes
+      along its path, by an exporting protocol that is outside the scope
+      of this document (e.g., [I-D.spiegel-ippm-ioam-rawexport]).  Probe
+      packets include a Trace Option which has its Active flag set,
+      indicating that the decapsulating node must terminate them.
+
+   o  IOAM active measurement using replicated data packets: probe
+      packets are created by the encapsulating node by selecting some or
+      all of the en route data packets and replicating them.  A selected
+      data packet that is replicated, and its (possibly truncated) copy
+      is forwarded with one or more IOAM option, while the original
+      packet is forwarded normally, without IOAM options.  To the extent
+      possible, the original data packet and its replica are forwarded
+      through the same path.  The replica includes a Trace Option that
+      has its Active flag set, indicating that the decapsulating node
+      should terminate it.
+
+3.2.  The Active Flag
+
+   IOAM data may be represented in one of four possible IOAM options:
+   Pre-allocated Trace Option, Incremental Trace Option, Proof of
+   Transit (POT) Option, and Edge-to-Edge Option.  This document defines
+   the Active flag, which is a new flag in the Pre-allocated and
+   Incremental Trace options.
+
+   "Active" (A-bit).  When set, this indicates that this is an active
+   IOAM packet, where "active" is used in the sense defined in
+   [RFC7799], rather than a data packet.  The packet may be an IOAM
+   probe packet, or a replicated data packet (the second and third use
+   cases of Section 3.1).
+
+   An IOAM decapsulating node that receives a packet with the Active
+   flag set in one of its Trace options must terminate the packet.
+
+4.  IANA Considerations
+
+   This document requests the following IANA Actions.
+
+
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 4]
+
+Internet-Draft                 IOAM Flags                     March 2019
+
+
+4.1.  Allocating the Active Flag
+
+   IANA is requested to allocate bit 1 in the "IOAM Trace Flags
+   Registry" as follows:
+
+   Bit 1  "Active" (A-bit)
+
+   Note that bit 0 is the most significant bit in the Flags Registry.
+
+5.  Security Considerations
+
+   The security considerations of IOAM in general are discussed in
+   [I-D.ietf-ippm-ioam-data].
+
+6.  References
+
+6.1.  Normative References
+
+   [I-D.ietf-ippm-ioam-data]
+              Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
+              Leddy, J., Youell, S., Mizrahi, T., Mozes, D., Lapukhov,
+              P., Chang, R., daniel.bernier@bell.ca, d., and J. Lemon,
+              "Data Fields for In-situ OAM", draft-ietf-ippm-ioam-
+              data-05 (work in progress), March 2019.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+6.2.  Informative References
+
+   [I-D.ietf-sfc-ioam-nsh]
+              Brockners, F., Bhandari, S., Govindan, V., Pignataro, C.,
+              Gredler, H., Leddy, J., Youell, S., Mizrahi, T., Mozes,
+              D., Lapukhov, P., and R. Chang, "Network Service Header
+              (NSH) Encapsulation for In-situ OAM (IOAM) Data", draft-
+              ietf-sfc-ioam-nsh-01 (work in progress), March 2019.
+
+   [I-D.ioametal-ippm-6man-ioam-ipv6-options]
+              Bhandari, S., Brockners, F., Pignataro, C., Gredler, H.,
+              Leddy, J., Youell, S., Mizrahi, T., Kfir, A., Gafni, B.,
+              Lapukhov, P., Spiegel, M., Krishnan, S., and R. Asati,
+              "In-situ OAM IPv6 Options", draft-ioametal-ippm-6man-ioam-
+              ipv6-options-02 (work in progress), March 2019.
+
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 5]
+
+Internet-Draft                 IOAM Flags                     March 2019
+
+
+   [I-D.spiegel-ippm-ioam-rawexport]
+              Spiegel, M., Brockners, F., Bhandari, S., and R.
+              Sivakolundu, "In-situ OAM raw data export with IPFIX",
+              draft-spiegel-ippm-ioam-rawexport-01 (work in progress),
+              October 2018.
+
+   [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
+              Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
+              May 2016, <https://www.rfc-editor.org/info/rfc7799>.
+
+Authors' Addresses
+
+   Tal Mizrahi
+   Huawei Network.IO Innovation Lab
+   Israel
+
+   Email: tal.mizrahi.phd@gmail.com
+
+
+   Frank Brockners
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
+
+
+   Shwetha Bhandari
+   Cisco Systems, Inc.
+   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+   Bangalore, KARNATAKA 560 087
+   India
+
+   Email: shwethab@cisco.com
+
+
+   Ramesh Sivakolundu
+   Cisco Systems, Inc.
+   170 West Tasman Dr.
+   SAN JOSE, CA 95134
+   U.S.A.
+
+   Email: sramesh@cisco.com
+
+
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 6]
+
+Internet-Draft                 IOAM Flags                     March 2019
+
+
+   Carlos Pignataro
+   Cisco Systems, Inc.
+   7200-11 Kit Creek Road
+   Research Triangle Park, NC  27709
+   United States
+
+   Email: cpignata@cisco.com
+
+
+   Aviv Kfir
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: avivk@mellanox.com
+
+
+   Barak Gafni
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: gbarak@mellanox.com
+
+
+   Mickey Spiegel
+   Barefoot Networks
+   4750 Patrick Henry Drive
+   Santa Clara, CA  95054
+   US
+
+   Email: mspiegel@barefootnetworks.com
+
+
+   John Lemon
+   Broadcom
+   270 Innovation Drive
+   San Jose, CA  95134
+   US
+
+   Email: john.lemon@broadcom.com
+
+
+
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 7]
