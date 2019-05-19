@@ -377,10 +377,52 @@
 	  </section>
 
     </section>
-	  
+
+    <section anchor="Performance" title="Performance Considerations">
+      <t>Using active measurement with IOAM requires the use of synthetic 
+	  (overhead) traffic. Obviously such overhead has a cost in terms of the
+	  network bandwidth. Therefore, probe packets should be generated at a 
+	  rate that does not significantly affect the network bandwidth. It should 
+	  be possible for active measurement using replicated packets to be 
+	  performed on a subset of the traffic, so as to prevent significant 
+	  overhead.</t>
+    </section>
+
+	
     <section anchor="Security" title="Security Considerations">
       <t>The security considerations of IOAM in general are discussed in 
-	  <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+	  <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically, an attacker
+	  may try to use IOAM active measurement to attack a network that uses
+	  IOAM.</t>
+	  
+	  <t>An attacker may attempt to overload network devices by injecting 
+	  synthetic packets that include an IOAM Trace Option with the Active flag 
+	  set. However, the impact of such synthetic packets is no worse than 
+	  synthetic data packets in which the Active flag is not set.</t>
+	  
+	  <t>An on-path attacker may maliciously set the Active flag of transit
+	  packets that include an IOAM Trace Option. However, this attack does
+	  not increase the load on network devices. It prevents the data packet
+	  from reaching its destination, since the packet is terminated by the
+	  decapsulating device; however, note that an on-path attacker may 
+	  achieve the same goal by changing the destination address of a 
+	  packet.</t>
+	  
+	  <t>An attacker may also attempt to perform an amplification attack by
+	  manipulating the active measurement using replication mechanism. If an 
+	  attacker can inject synthetic packets that are replicated by an attacked
+	  device, or if an attacker can cause an attacked device to replicate more 
+	  packets than it is intended to replicate, than traffic is amplified, 
+	  causing bandwidth degredation. In order to mitigate such attacks, a
+	  network device that deploys active measurement using replication should
+	  be able to limit the bandwidth of replicated traffic in a way that
+	  does not allow potential attackers to manipulate the scale of replicated
+	  traffic.</t>
+	  
+	  <t>IOAM is assumed to be deployed in a restricted administrative domain,
+	  thus limiting the scope of the threats above and their affect. This is
+	  a fundamental assumtion with respect to the security aspects of IOAM, as
+	  further discussed in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
     </section>
 
   </middle>

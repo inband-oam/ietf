@@ -10,6 +10,8 @@ EXPORTVERSION=00
 POTVERSION=02
 IPV6VERSION=01
 IPV4VERSION=00
+FLAGVERSION=00
+PROFILEVERSION=01
 
 all:	drafts
 
@@ -35,6 +37,10 @@ draft-brockners-inband-oam-requirements: draft-brockners-inband-oam-requirements
 	$(XML2RFC) $< -o $@-$(VERSION).txt
 draft-gafni-ippm-ioam-ipv4-options: draft-gafni-ippm-ioam-ipv4-options.xml
 	$(XML2RFC) $< -o $@-$(IPV4VERSION).txt
+draft-mizrahi-ippm-ioam-flags: draft-mizrahi-ippm-ioam-flags.xml
+	$(XML2RFC) $< -o $@-$(FLAGVERSION).txt
+draft-mizrahi-ippm-ioam-profile: draft-mizrahi-ippm-ioam-profile.xml
+	$(XML2RFC) $< -o $@-$(PROFILEVERSION).txt
 data: draft-ietf-ippm-ioam-data.xml
 	cp draft-ietf-ippm-ioam-data-$(DVERSION).txt versions/$(DVERSION)/
 	ID-html-diffs draft-ietf-ippm-ioam-data-$(DVERSION).txt
@@ -48,7 +54,7 @@ encap: draft-brockners-ippm-ioam-vxlan-gpe draft-ietf-sfc-ioam-nsh draft-brockne
 
 carlos: data encap
 
-drafts: draft-ietf-ippm-ioam-data draft-brockners-inband-oam-requirements draft-ietf-sfc-proof-of-transit encap draft-spiegel-ippm-ioam-rawexport
+drafts: draft-ietf-ippm-ioam-data draft-brockners-inband-oam-requirements draft-ietf-sfc-proof-of-transit encap draft-spiegel-ippm-ioam-rawexport draft-mizrahi-ippm-ioam-flags draft-mizrahi-ippm-ioam-profile
 
 .PHONY: clean draft commit
 clean:
