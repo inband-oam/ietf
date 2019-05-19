@@ -84,11 +84,12 @@ Table of Contents
      3.2.  The Active Flag . . . . . . . . . . . . . . . . . . . . .   4
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
      4.1.  Allocating the Active Flag  . . . . . . . . . . . . . . .   5
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
-   6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     6.1.  Normative References  . . . . . . . . . . . . . . . . . .   5
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .   5
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
+   5.  Performance Considerations  . . . . . . . . . . . . . . . . .   5
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   7.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     7.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
+     7.2.  Informative References  . . . . . . . . . . . . . . . . .   6
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -101,7 +102,6 @@ Table of Contents
    document presents use cases of active measurement using IOAM, and
    introduces a new IOAM flag, the Active flag, which is used to
    identify synthetic packets.
-
 
 
 
@@ -235,14 +235,61 @@ Internet-Draft                 IOAM Flags                     March 2019
 
    Note that bit 0 is the most significant bit in the Flags Registry.
 
-5.  Security Considerations
+5.  Performance Considerations
+
+   Using active measurement with IOAM requires the use of synthetic
+   (overhead) traffic.  Obviously such overhead has a cost in terms of
+   the network bandwidth.  Therefore, probe packets should be generated
+   at a rate that does not significantly affect the network bandwidth.
+   It should be possible for active measurement using replicated packets
+   to be performed on a subset of the traffic, so as to prevent
+   significant overhead.
+
+6.  Security Considerations
 
    The security considerations of IOAM in general are discussed in
-   [I-D.ietf-ippm-ioam-data].
+   [I-D.ietf-ippm-ioam-data].  Specifically, an attacker may try to use
+   IOAM active measurement to attack a network that uses IOAM.
 
-6.  References
+   An attacker may attempt to overload network devices by injecting
+   synthetic packets that include an IOAM Trace Option with the Active
+   flag set.  However, the impact of such synthetic packets is no worse
+   than synthetic data packets in which the Active flag is not set.
 
-6.1.  Normative References
+   An on-path attacker may maliciously set the Active flag of transit
+   packets that include an IOAM Trace Option.  However, this attack does
+   not increase the load on network devices.  It prevents the data
+   packet from reaching its destination, since the packet is terminated
+   by the decapsulating device; however, note that an on-path attacker
+   may achieve the same goal by changing the destination address of a
+   packet.
+
+   An attacker may also attempt to perform an amplification attack by
+   manipulating the active measurement using replication mechanism.  If
+   an attacker can inject synthetic packets that are replicated by an
+   attacked device, or if an attacker can cause an attacked device to
+   replicate more packets than it is intended to replicate, than traffic
+   is amplified, causing bandwidth degredation.  In order to mitigate
+   such attacks, a network device that deploys active measurement using
+   replication should be able to limit the bandwidth of replicated
+   traffic in a way that does not allow potential attackers to
+   manipulate the scale of replicated traffic.
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 5]
+
+Internet-Draft                 IOAM Flags                     March 2019
+
+
+   IOAM is assumed to be deployed in a restricted administrative domain,
+   thus limiting the scope of the threats above and their affect.  This
+   is a fundamental assumtion with respect to the security aspects of
+   IOAM, as further discussed in [I-D.ietf-ippm-ioam-data].
+
+7.  References
+
+7.1.  Normative References
 
    [I-D.ietf-ippm-ioam-data]
               Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
@@ -256,7 +303,7 @@ Internet-Draft                 IOAM Flags                     March 2019
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-6.2.  Informative References
+7.2.  Informative References
 
    [I-D.ietf-sfc-ioam-nsh]
               Brockners, F., Bhandari, S., Govindan, V., Pignataro, C.,
@@ -272,16 +319,6 @@ Internet-Draft                 IOAM Flags                     March 2019
               "In-situ OAM IPv6 Options", draft-ioametal-ippm-6man-ioam-
               ipv6-options-02 (work in progress), March 2019.
 
-
-
-
-
-
-Mizrahi, et al.        Expires September 11, 2019               [Page 5]
-
-Internet-Draft                 IOAM Flags                     March 2019
-
-
    [I-D.spiegel-ippm-ioam-rawexport]
               Spiegel, M., Brockners, F., Bhandari, S., and R.
               Sivakolundu, "In-situ OAM raw data export with IPFIX",
@@ -291,6 +328,15 @@ Internet-Draft                 IOAM Flags                     March 2019
    [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
               Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
               May 2016, <https://www.rfc-editor.org/info/rfc7799>.
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 6]
+
+Internet-Draft                 IOAM Flags                     March 2019
+
 
 Authors' Addresses
 
@@ -328,16 +374,6 @@ Authors' Addresses
    Email: sramesh@cisco.com
 
 
-
-
-
-
-
-Mizrahi, et al.        Expires September 11, 2019               [Page 6]
-
-Internet-Draft                 IOAM Flags                     March 2019
-
-
    Carlos Pignataro
    Cisco Systems, Inc.
    7200-11 Kit Creek Road
@@ -345,6 +381,17 @@ Internet-Draft                 IOAM Flags                     March 2019
    United States
 
    Email: cpignata@cisco.com
+
+
+
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 7]
+
+Internet-Draft                 IOAM Flags                     March 2019
 
 
    Aviv Kfir
@@ -389,4 +436,13 @@ Internet-Draft                 IOAM Flags                     March 2019
 
 
 
-Mizrahi, et al.        Expires September 11, 2019               [Page 7]
+
+
+
+
+
+
+
+
+
+Mizrahi, et al.        Expires September 11, 2019               [Page 8]
