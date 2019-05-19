@@ -457,14 +457,6 @@
       layer they want to measure. The different layers could, but do not have
       to share the same IOAM encapsulation and decapsulation.</t>
 
-      <t>Combination with active OAM mechanisms: IOAM should be usable for
-      active network probing, enabling for example a customized version of
-      traceroute. IOAM may also be carried out on cloned or sampled copies of
-      data packets, when the operator prefers not to directly modify data
-      packets for IOAM purposes. Decapsulating IOAM nodes must have the
-      ability to discard active IOAM packets, potentially in addition to
-      retrieving the IOAM information.</t>
-
       <t>IOAM implementation: The IOAM data-field definitions take the
       specifics of devices with hardware data-plane and software data-plane
       into account.</t>
@@ -536,8 +528,18 @@
       roles in different IOAM namespaces.</t>
 
       <section anchor="ioam_namespaces" title="IOAM Namespaces">
-        <t>IOAM data fields are defined within an IOAM namespace. An IOAM
-        namespace is identified by a 16-bit namespace identifier
+        <t>A subset or all of the IOAM option types and associated IOAM data 
+		fields can be associated to an IOAM namespace. Namespaces add further
+		context to IOAM option types and associated IOAM data fields. Any IOAM 
+		namespace MUST interpret the IOAM option types and associated IOAM 
+		data fields per the definition in this document. Namespaces group 
+		nodes to support different deployment approaches of IOAM (see a few 
+		example use-cases below) as well as resolve issues which can occur due 
+		to IOAM data fields not being globally unique (e.g. IOAM node 
+		identifiers do not have to be globally unique). IOAM data fields are 
+		defined within an IOAM namespace.</t>
+		
+		<t>An IOAM namespace is identified by a 16-bit namespace identifier
         (Namespace-ID). Namespace identifiers MUST be present and populated in
         all IOAM option headers. The Namespace-ID value is divided into two
         sub-ranges:</t>
@@ -639,10 +641,11 @@
         in an in-situ OAM-domain would participate in IOAM and thus be IOAM
         transit nodes, IOAM encapsulating or IOAM decapsulating nodes. If not
         all nodes within a domain are IOAM capable, IOAM tracing information
-        will only be collected on those nodes which are IOAM capable. Nodes
-        which are not IOAM capable will forward the packet without any changes
-        to the IOAM data fields. The maximum number of hops and the minimum
-        path MTU of the IOAM domain is assumed to be known.</t>
+		(i.e., node data) will only be collected on those nodes which are IOAM 
+		capable. Nodes which are not IOAM capable will forward the packet 
+		without any changes to the IOAM data fields. The maximum number of 
+		hops and the minimum path MTU of the IOAM domain is assumed to be 
+		known.</t>
 
         <t>To optimize hardware and software implementations tracing is
         defined as two separate options. Any deployment MAY choose to
@@ -811,8 +814,8 @@ The trace option data MUST be 4-octet aligned:
 			  The current document allocates a single flag as follows: 
 			  <list style="hanging">
                   <t hangText="Bit 0">"Overflow" (O-bit) (most significant
-                  bit). This bit is set by the network element if there is not
-                  enough number of octets left to record node data, no field
+                  bit). This bit is set by the network element if there are 
+				  not enough octets left to record node data, no field
                   is added and the overflow "O-bit" must be set to "1" in the
                   header. This is useful for transit nodes to ignore further
                   processing of the option.</t>
@@ -1839,10 +1842,10 @@ IOAM proof of transit option of IOAM POT Type 0:
 
       <section anchor="Flags-Registry-Sec" title="IOAM Trace Flags Registry">
         <t>This registry defines code points for each bit in the 4 bit flags
-        for Pre-allocated trace option and Incremental trace option defined in
-        <xref target="IOAM_tracing_option"></xref>. The meaning of Bit 0
-        (the most significant bit) for trace flags is defined in this document 
-		in <xref target="TraceFlags"></xref> of 
+        for the Pre-allocated trace option and for the Incremental trace 
+		option defined in <xref target="IOAM_tracing_option"></xref>. The 
+		meaning of Bit 0 (the most significant bit) for trace flags is 
+		defined in this document in <xref target="TraceFlags"></xref> of 
 		<xref target="TraceOptionDef"></xref>:</t>
 
         <t><list style="hanging">
@@ -1926,11 +1929,11 @@ IOAM proof of transit option of IOAM POT Type 0:
       <t>The data elements of IOAM can be used for network reconnaissance,
       allowing attackers to collect information about network paths,
       performance, queue states, buffer occupancy and other information. Note
-      that in case IOAM is used in "immediate export" mode (TBD - to be 
-	  updated), the IOAM related trace information would not be available in 
-	  the customer data packets, but would be exported by every IOAM node. 
-	  IOAM data export and securing IOAM data export is outside the scope of 
-	  this document.</t>
+      that in case IOAM is used in "immediate export" mode (reference to be 
+	  added in a future revision), the IOAM related trace information would 
+	  not be available in the customer data packets, but would trigger export 
+	  of packet related IOAM information at every node.  IOAM data export and 
+	  securing IOAM data export is outside the scope of this document.</t>
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
@@ -1958,9 +1961,9 @@ IOAM proof of transit option of IOAM POT Type 0:
       current network domain the network operator is expected to enforce
       policies that prevent IOAM traffic from leaking outside of the IOAM
       domain, and prevent IOAM data from outside the domain to be processed
-      and used within the domain. Note that the Immediate Export mode (TBD
-	  - to be updated) can mitigate the potential threat of IOAM data leaking 
-	  through data packets.</t>
+      and used within the domain. Note that the Immediate Export mode 
+	  (reference to be added in a future revision) can mitigate the potential 
+	  threat of IOAM data leaking through data packets.</t>
     </section>
 
     <section title="Acknowledgements">
