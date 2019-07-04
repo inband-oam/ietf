@@ -60,7 +60,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-05" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-06" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -457,14 +457,6 @@
       layer they want to measure. The different layers could, but do not have
       to share the same IOAM encapsulation and decapsulation.</t>
 
-      <t>Combination with active OAM mechanisms: IOAM should be usable for
-      active network probing, enabling for example a customized version of
-      traceroute. IOAM may also be carried out on cloned or sampled copies of
-      data packets, when the operator prefers not to directly modify data
-      packets for IOAM purposes. Decapsulating IOAM nodes must have the
-      ability to discard active IOAM packets, potentially in addition to
-      retrieving the IOAM information.</t>
-
       <t>IOAM implementation: The IOAM data-field definitions take the
       specifics of devices with hardware data-plane and software data-plane
       into account.</t>
@@ -536,8 +528,18 @@
       roles in different IOAM namespaces.</t>
 
       <section anchor="ioam_namespaces" title="IOAM Namespaces">
-        <t>IOAM data fields are defined within an IOAM namespace. An IOAM
-        namespace is identified by a 16-bit namespace identifier
+        <t>A subset or all of the IOAM option types and associated IOAM data 
+		fields can be associated to an IOAM namespace. Namespaces add further
+		context to IOAM option types and associated IOAM data fields. Any IOAM 
+		namespace MUST interpret the IOAM option types and associated IOAM 
+		data fields per the definition in this document. Namespaces group 
+		nodes to support different deployment approaches of IOAM (see a few 
+		example use-cases below) as well as resolve issues which can occur due 
+		to IOAM data fields not being globally unique (e.g. IOAM node 
+		identifiers do not have to be globally unique). IOAM data fields are 
+		defined within an IOAM namespace.</t>
+		
+		<t>An IOAM namespace is identified by a 16-bit namespace identifier
         (Namespace-ID). Namespace identifiers MUST be present and populated in
         all IOAM option headers. The Namespace-ID value is divided into two
         sub-ranges:</t>
@@ -639,10 +641,11 @@
         in an in-situ OAM-domain would participate in IOAM and thus be IOAM
         transit nodes, IOAM encapsulating or IOAM decapsulating nodes. If not
         all nodes within a domain are IOAM capable, IOAM tracing information
-        will only be collected on those nodes which are IOAM capable. Nodes
-        which are not IOAM capable will forward the packet without any changes
-        to the IOAM data fields. The maximum number of hops and the minimum
-        path MTU of the IOAM domain is assumed to be known.</t>
+		(i.e., node data) will only be collected on those nodes which are IOAM 
+		capable. Nodes which are not IOAM capable will forward the packet 
+		without any changes to the IOAM data fields. The maximum number of 
+		hops and the minimum path MTU of the IOAM domain is assumed to be 
+		known.</t>
 
         <t>To optimize hardware and software implementations tracing is
         defined as two separate options. Any deployment MAY choose to
@@ -805,96 +808,18 @@ The trace option data MUST be 4-octet aligned:
               value and calculate the node length from the IOAM-Trace-Type
               bits.</t>
 
-              <t anchor="TraceFlags" hangText="Flags">4-bit field. The
-              following flags are defined: <list style="hanging">
+              <t anchor="TraceFlags" hangText="Flags">4-bit field. Flags
+			  are allocated by IANA, as specified in 
+			  <xref target="Flags-Registry-Sec"></xref>.
+			  The current document allocates a single flag as follows: 
+			  <list style="hanging">
                   <t hangText="Bit 0">"Overflow" (O-bit) (most significant
-                  bit). This bit is set by the network element if there is not
-                  enough number of octets left to record node data, no field
+                  bit). This bit is set by the network element if there are 
+				  not enough octets left to record node data, no field
                   is added and the overflow "O-bit" must be set to "1" in the
                   header. This is useful for transit nodes to ignore further
                   processing of the option.</t>
 
-                  <t hangText="Bit 1">"Loopback" (L-bit). Loopback mode is
-                  used to send a copy of a packet back towards the source.
-                  Loopback mode assumes that a return path from transit nodes
-                  and destination nodes towards the source exists. The
-                  encapsulating node decides (e.g., using a filter) which
-                  packets loopback mode is enabled for by setting the loopback
-                  bit. The encapsulating node also needs to ensure that
-                  sufficient space is available in the IOAM header for
-                  loopback operation, which includes intermediate nodes adding
-                  trace data on the original path and then again on the return
-                  path. A loopback bit that is set indicates to the transit
-                  nodes processing this option that they are to create a copy
-                  of the received packet and send the copy back to the source
-                  of the packet. The copy has its metadata added after being
-                  copied in order to allow any egress-dependent information to
-                  be set based on the egress of the copy rather than the
-                  original. The original packet continues towards its
-                  destination. The source address of the original packet is
-                  used as the destination address in the copied packet. The
-                  address of the node performing the copy operation is used as
-                  the source address. The L-bit MUST be cleared in the copy of
-                  the packet that a node sends back towards the source. On its
-                  way back towards the source, the copied packet is processed
-                  like any other packet with IOAM information, including
-                  adding any requested data at each transit node (assuming
-                  there is sufficient space). Once the return packet reaches
-                  the IOAM domain boundary, IOAM decapsulation occurs as with
-                  any other packet containing IOAM information. Because any
-                  intermediate node receiving such a packet would not know how
-                  to process the original packet, and because there would be a
-                  risk of the original packet leaking past the initiator of
-                  the IOAM loopback, the initiator of an IOAM loopback MUST be
-                  the initiator of the packet. Once a loopback packet is
-                  received back at the initiator, it is a local matter how it
-                  is recognized as a loopback packet.</t>
-
-                  <t hangText="Bit 2">"Active" (A-bit). When set, this
-                  indicates that this is an active OAM packet, where "active"
-                  is used in the sense defined in <xref
-                  target="RFC7799"></xref>, rather than a data packet. For
-                  example, the packet may be a probe, or it may be a (possibly
-                  truncated) copy of a data packet. At the IOAM decapsulating
-                  node, in addition to processing and/or exporting the
-                  metadata, the packet must be discarded rather than
-                  forwarded. If this bit is not set, then the decapsulating
-                  node should attempt to forward the packet after IOAM
-                  decapsulation.</t>
-
-                  <t hangText="Bit 3">"Immediate Export" (I-bit). Immediate
-                  export mode is used to export IOAM data fields immediately
-                  at every IOAM supported network node, instead of adding the
-                  IOAM data fields to the packet traversing the network. The
-                  various types of IOAM nodes MUST process packets with the
-                  I-bit set as follows:</t>
-
-                  <t><list style="numbers">
-                      <t>An encapsulating IOAM node configured to set the
-                      I-bit encapsulates the packet with the IOAM header and
-                      sets the I-bit, leaving the IOAM header without locally
-                      collected data, and exports the requested IOAM data
-                      immediately. The encapsulating IOAM node is the only
-                      type of node allowed to set the I-bit.</t>
-
-                      <t>A transit node that processes a packet with the I-bit
-                      set is expected to export the requested IOAM data, and
-                      not incorporate it into the IOAM header.</t>
-
-                      <t>A decapsulating IOAM node that processes a packet
-                      with the I-bit set is expected to export the requested
-                      IOAM data, and decapsulate the IOAM header.</t>
-                    </list></t>
-
-                  <t>Note that in case of "Immediate Export" being employed,
-                  no IOAM trace data is added to the packets traversing the
-                  network. As a means to support correlation of exported IOAM
-                  data different nodes in the network, a deployment could
-                  consider attaching an IOAM E2E option in addition to the
-                  trace option, that includes a sequence number. See Bit 1 in
-                  the IOAM-E2E-Types. Please refer to <xref
-                  target="export"></xref> for a discussion of IOAM data export
-                  and associated formats.</t>
                 </list></t>
 
               <t hangText="RemainingLen:">7-bit unsigned integer. This field
@@ -1915,22 +1840,16 @@ IOAM proof of transit option of IOAM POT Type 0:
         via RFC Required process as per <xref target="RFC8126"></xref>.</t>
       </section>
 
-      <section title="IOAM Trace Flags Registry">
+      <section anchor="Flags-Registry-Sec" title="IOAM Trace Flags Registry">
         <t>This registry defines code points for each bit in the 4 bit flags
-        for Pre-allocated trace option and Incremental trace option defined in
-        <xref target="IOAM_tracing_option"></xref>. The meaning of Bit 0 - 2
-        for trace flags are defined in this document in <xref
-        target="TraceFlags"></xref> of <xref
-        target="TraceOptionDef"></xref>:</t>
+        for the Pre-allocated trace option and for the Incremental trace 
+		option defined in <xref target="IOAM_tracing_option"></xref>. The 
+		meaning of Bit 0 (the most significant bit) for trace flags is 
+		defined in this document in <xref target="TraceFlags"></xref> of 
+		<xref target="TraceOptionDef"></xref>:</t>
 
         <t><list style="hanging">
             <t hangText="Bit 0">"Overflow" (O-bit)</t>
-
-            <t hangText="Bit 1">"Loopback" (L-bit)</t>
-
-            <t hangText="Bit 2">"Active" (A-bit)</t>
-
-            <t hangText="Bit 3">"Immediate Export" (I-bit)</t>
           </list></t>
       </section>
 
@@ -2010,10 +1929,11 @@ IOAM proof of transit option of IOAM POT Type 0:
       <t>The data elements of IOAM can be used for network reconnaissance,
       allowing attackers to collect information about network paths,
       performance, queue states, buffer occupancy and other information. Note
-      that in case IOAM is used in "immediate export" mode, the IOAM related
-      trace information would not be available in the customer data packets,
-      but would be exported by every IOAM node. IOAM data export and securing
-      IOAM data export is outside the scope of this document.</t>
+      that in case IOAM is used in "immediate export" mode (reference to be 
+	  added in a future revision), the IOAM related trace information would 
+	  not be available in the customer data packets, but would trigger export 
+	  of packet related IOAM information at every node.  IOAM data export and 
+	  securing IOAM data export is outside the scope of this document.</t>
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
@@ -2041,8 +1961,9 @@ IOAM proof of transit option of IOAM POT Type 0:
       current network domain the network operator is expected to enforce
       policies that prevent IOAM traffic from leaking outside of the IOAM
       domain, and prevent IOAM data from outside the domain to be processed
-      and used within the domain. Another way to prevent the data to get
-      leaked is using the Immediate Export mode of the trace option.</t>
+      and used within the domain. Note that the Immediate Export mode 
+	  (reference to be added in a future revision) can mitigate the potential 
+	  threat of IOAM data leaking through data packets.</t>
     </section>
 
     <section title="Acknowledgements">
