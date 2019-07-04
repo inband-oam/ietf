@@ -9,7 +9,7 @@ Expires: September 11, 2019                                        Cisco
                                                               H. Gredler
                                                             RtBrick Inc.
                                                                 J. Leddy
-                                                                 Comcast
+
                                                                S. Youell
                                                                     JPMC
                                                               T. Mizrahi
@@ -256,14 +256,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    protocol layer they want to measure.  The different layers could, but
    do not have to share the same IOAM encapsulation and decapsulation.
 
-   Combination with active OAM mechanisms: IOAM should be usable for
-   active network probing, enabling for example a customized version of
-   traceroute.  IOAM may also be carried out on cloned or sampled copies
-   of data packets, when the operator prefers not to directly modify
-   data packets for IOAM purposes.  Decapsulating IOAM nodes must have
-   the ability to discard active IOAM packets, potentially in addition
-   to retrieving the IOAM information.
-
    IOAM implementation: The IOAM data-field definitions take the
    specifics of devices with hardware data-plane and software data-plane
    into account.
@@ -273,15 +265,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    This section defines IOAM data types and data fields and associated
    data types required for IOAM.
 
-
-
-
-
-Brockners, et al.      Expires September 11, 2019               [Page 5]
-
-Internet-Draft           In-situ OAM Data Fields              March 2019
-
-
    To accommodate the different uses of IOAM, IOAM data fields fall into
    different categories, as specified below.  In IOAM these categories
    are referred to as IOAM-Types.  A common registry is maintained for
@@ -290,6 +273,14 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    can be encapsulated into a variety of protocols, such as NSH, Geneve,
    IPv6, etc.  The definition of how IOAM data fields are encapsulated
    into other protocols is outside the scope of this document.
+
+
+
+
+Brockners, et al.      Expires September 11, 2019               [Page 5]
+
+Internet-Draft           In-situ OAM Data Fields              March 2019
+
 
    This document defines four IOAM-Types, as specified in this section:
 
@@ -330,14 +321,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    An IOAM transit node updates one or more of the IOAM data fields.  If
    both the pre-allocated and the incremental trace options are present
    in the packet, each IOAM transit node will update at most one of
-
-
-
-Brockners, et al.      Expires September 11, 2019               [Page 6]
-
-Internet-Draft           In-situ OAM Data Fields              March 2019
-
-
    these options.  A transit node cannot add new IOAM options to a
    packet, and cannot change an IOAM Edge-to-Edge Option.
 
@@ -347,13 +330,31 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    defined within an IOAM namespace (see below).  A node can have
    different roles in different IOAM namespaces.
 
+
+
+
+Brockners, et al.      Expires September 11, 2019               [Page 6]
+
+Internet-Draft           In-situ OAM Data Fields              March 2019
+
+
 4.1.  IOAM Namespaces
 
-   IOAM data fields are defined within an IOAM namespace.  An IOAM
-   namespace is identified by a 16-bit namespace identifier (Namespace-
-   ID).  Namespace identifiers MUST be present and populated in all IOAM
-   option headers.  The Namespace-ID value is divided into two sub-
-   ranges:
+   A subset or all of the IOAM option types and associated IOAM data
+   fields can be associated to an IOAM namespace.  Namespaces add
+   further context to IOAM option types and associated IOAM data fields.
+   Any IOAM namespace MUST interpret the IOAM option types and
+   associated IOAM data fields per the definition in this document.
+   Namespaces group nodes to support different deployment approaches of
+   IOAM (see a few example use-cases below) as well as resolve issues
+   which can occur due to IOAM data fields not being globally unique
+   (e.g.  IOAM node identifiers do not have to be globally unique).
+   IOAM data fields are defined within an IOAM namespace.
+
+   An IOAM namespace is identified by a 16-bit namespace identifier
+   (Namespace-ID).  Namespace identifiers MUST be present and populated
+   in all IOAM option headers.  The Namespace-ID value is divided into
+   two sub-ranges:
 
    o  An operator-assigned range from 0x0001 to 0x7FFF
 
@@ -383,9 +384,8 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
 
    IOAM namespaces support several different uses:
 
-   o  Namespaces can be used by an operator to distinguish different
-      operational domains.  Devices at domain edges can filter on
-      Namespace-IDs to provide for proper IOAM domain isolation.
+
+
 
 
 
@@ -393,6 +393,10 @@ Brockners, et al.      Expires September 11, 2019               [Page 7]
 
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
+
+   o  Namespaces can be used by an operator to distinguish different
+      operational domains.  Devices at domain edges can filter on
+      Namespace-IDs to provide for proper IOAM domain isolation.
 
    o  Namespaces provide additional context for IOAM data fields and
       thus ensure that IOAM data is unique and can be interpreted
@@ -438,10 +442,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
          constructed via partial traces from each IOAM header in each of
          the packets in the flow.  Example: An operator could choose to
          group the devices of a domain into two namespaces, in a way
-         that each namespace is represented by one of two IOAM headers
-         in the packet.  Each node would record data only for the IOAM
-         namespace that it belongs to, ignoring the other IOAM header
-         with a namespace to which it doesn't belong.  To retrieve a
 
 
 
@@ -450,6 +450,10 @@ Brockners, et al.      Expires September 11, 2019               [Page 8]
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
 
+         that each namespace is represented by one of two IOAM headers
+         in the packet.  Each node would record data only for the IOAM
+         namespace that it belongs to, ignoring the other IOAM header
+         with a namespace to which it doesn't belong.  To retrieve a
          full view of the deployment, the captured IOAM data fields of
          the two namespaces need to be correlated.
 
@@ -461,11 +465,11 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    in an in-situ OAM-domain would participate in IOAM and thus be IOAM
    transit nodes, IOAM encapsulating or IOAM decapsulating nodes.  If
    not all nodes within a domain are IOAM capable, IOAM tracing
-   information will only be collected on those nodes which are IOAM
-   capable.  Nodes which are not IOAM capable will forward the packet
-   without any changes to the IOAM data fields.  The maximum number of
-   hops and the minimum path MTU of the IOAM domain is assumed to be
-   known.
+   information (i.e., node data) will only be collected on those nodes
+   which are IOAM capable.  Nodes which are not IOAM capable will
+   forward the packet without any changes to the IOAM data fields.  The
+   maximum number of hops and the minimum path MTU of the IOAM domain is
+   assumed to be known.
 
    To optimize hardware and software implementations tracing is defined
    as two separate options.  Any deployment MAY choose to configure and
@@ -495,10 +499,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
       pointer, which specifies where the next IOAM transit node fills in
       its data.
 
-   Incremental Trace Option:  This trace option is defined as a
-      container of node data fields where each node allocates and pushes
-      its node data immediately following the option header.  This type
-
 
 
 Brockners, et al.      Expires September 11, 2019               [Page 9]
@@ -506,6 +506,9 @@ Brockners, et al.      Expires September 11, 2019               [Page 9]
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
 
+   Incremental Trace Option:  This trace option is defined as a
+      container of node data fields where each node allocates and pushes
+      its node data immediately following the option header.  This type
       of trace recording is useful for some of the hardware
       implementations as this eliminates the need for the transit
       network elements to read the full array in the option and allows
@@ -551,9 +554,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
       the information is defined by the operator in a specific
       deployment.  For a specific deployment, all IOAM nodes should
       interpret the generic data the same way.  Examples for generic
-      IOAM data include geo-location information (location of the node
-      at the time the packet was processed), buffer queue fill level or
-
 
 
 
@@ -562,6 +562,8 @@ Brockners, et al.      Expires September 11, 2019              [Page 10]
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
 
+      IOAM data include geo-location information (location of the node
+      at the time the packet was processed), buffer queue fill level or
       cache fill level at the time the packet was processed, or even a
       battery charge level.
 
@@ -580,8 +582,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    incremental trace option have similar formats.  Except where noted
    below, the internal formats and fields of the two trace options are
    identical.
-
-
 
 
 
@@ -692,10 +692,10 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
       follows:
 
       Bit 0  "Overflow" (O-bit) (most significant bit).  This bit is set
-         by the network element if there is not enough number of octets
-         left to record node data, no field is added and the overflow
-         "O-bit" must be set to "1" in the header.  This is useful for
-         transit nodes to ignore further processing of the option.
+         by the network element if there are not enough octets left to
+         record node data, no field is added and the overflow "O-bit"
+         must be set to "1" in the header.  This is useful for transit
+         nodes to ignore further processing of the option.
 
    RemainingLen:  7-bit unsigned integer.  This field specifies the data
       space in multiples of 4-octets remaining for recording the node
@@ -1808,9 +1808,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
 7.4.  IOAM Trace Flags Registry
 
    This registry defines code points for each bit in the 4 bit flags for
-   Pre-allocated trace option and Incremental trace option defined in
-   Section 4.2.  The meaning of Bit 0 (the most significant bit) for
-   trace flags is defined in this document in Paragraph 3 of
+   the Pre-allocated trace option and for the Incremental trace option
+   defined in Section 4.2.  The meaning of Bit 0 (the most significant
+   bit) for trace flags is defined in this document in Paragraph 3 of
    Section 4.2.1:
 
    Bit 0  "Overflow" (O-bit)
@@ -1891,13 +1891,13 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    The data elements of IOAM can be used for network reconnaissance,
    allowing attackers to collect information about network paths,
    performance, queue states, buffer occupancy and other information.
-   Note that in case IOAM is used in "immediate export" mode, the IOAM
-   related trace information would not be available in the customer data
-   packets, but would be exported by every IOAM node.  IOAM data export
-   and securing IOAM data export is outside the scope of this document.
+   Note that in case IOAM is used in "immediate export" mode (reference
+   to be added in a future revision), the IOAM related trace information
+   would not be available in the customer data packets, but would
+   trigger export of packet related IOAM information at every node.
+   IOAM data export and securing IOAM data export is outside the scope
+   of this document.
 
-   IOAM can be used as a means for implementing Denial of Service (DoS)
-   attacks, or for amplifying them.  For example, a malicious attacker
 
 
 
@@ -1906,6 +1906,8 @@ Brockners, et al.      Expires September 11, 2019              [Page 34]
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
 
+   IOAM can be used as a means for implementing Denial of Service (DoS)
+   attacks, or for amplifying them.  For example, a malicious attacker
    can add an IOAM header to packets in order to consume the resources
    of network devices that take part in IOAM or collectors that analyze
    the IOAM data.  Another example is a packet length attack, in which
@@ -1930,9 +1932,9 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    current network domain the network operator is expected to enforce
    policies that prevent IOAM traffic from leaking outside of the IOAM
    domain, and prevent IOAM data from outside the domain to be processed
-   and used within the domain.  Note that the Immediate Export mode can
-   mitigate the potential threat of IOAM data leaking through data
-   packets.
+   and used within the domain.  Note that the Immediate Export mode
+   (reference to be added in a future revision) can mitigate the
+   potential threat of IOAM data leaking through data packets.
 
 9.  Acknowledgements
 
@@ -1951,8 +1953,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    insightful comments received from Joe Clarke, Al Morton, and Mickey
    Spiegel.
 
-   The authors would like to acknowledge the contribution of "Immediate
-   export" of IOAM trace by Barak Gafni.
 
 
 
@@ -1961,6 +1961,9 @@ Brockners, et al.      Expires September 11, 2019              [Page 35]
 
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
+
+   The authors would like to acknowledge the contribution of "Immediate
+   export" of IOAM trace by Barak Gafni.
 
 10.  References
 
@@ -2004,10 +2007,7 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
               of Transit", draft-brockners-proof-of-transit-05 (work in
               progress), May 2018.
 
-   [I-D.ietf-ntp-packet-timestamps]
-              Mizrahi, T., Fabini, J., and A. Morton, "Guidelines for
-              Defining Packet Timestamps", draft-ietf-ntp-packet-
-              timestamps-06 (work in progress), February 2019.
+
 
 
 
@@ -2017,6 +2017,11 @@ Brockners, et al.      Expires September 11, 2019              [Page 36]
 
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
+
+   [I-D.ietf-ntp-packet-timestamps]
+              Mizrahi, T., Fabini, J., and A. Morton, "Guidelines for
+              Defining Packet Timestamps", draft-ietf-ntp-packet-
+              timestamps-06 (work in progress), February 2019.
 
    [I-D.ietf-nvo3-geneve]
               Gross, J., Ganga, I., and T. Sridhar, "Geneve: Generic
@@ -2059,11 +2064,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
               DOI 10.17487/RFC7665, October 2015,
               <https://www.rfc-editor.org/info/rfc7665>.
 
-   [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
-              Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
-              May 2016, <https://www.rfc-editor.org/info/rfc7799>.
-
-
 
 
 
@@ -2073,6 +2073,10 @@ Brockners, et al.      Expires September 11, 2019              [Page 37]
 
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
+
+   [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
+              Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
+              May 2016, <https://www.rfc-editor.org/info/rfc7799>.
 
    [RFC7820]  Mizrahi, T., "UDP Checksum Complement in the One-Way
               Active Measurement Protocol (OWAMP) and Two-Way Active
@@ -2118,10 +2122,6 @@ Authors' Addresses
    Email: cpignata@cisco.com
 
 
-   Hannes Gredler
-   RtBrick Inc.
-
-   Email: hannes@rtbrick.com
 
 
 
@@ -2130,11 +2130,16 @@ Brockners, et al.      Expires September 11, 2019              [Page 38]
 Internet-Draft           In-situ OAM Data Fields              March 2019
 
 
+   Hannes Gredler
+   RtBrick Inc.
+
+   Email: hannes@rtbrick.com
+
+
    John Leddy
-   Comcast
    United States
 
-   Email: John_Leddy@cable.comcast.com
+   Email: john@leddy.net
 
 
    Stephen Youell
@@ -2172,11 +2177,6 @@ Internet-Draft           In-situ OAM Data Fields              March 2019
    4750 Patrick Henry Drive
    Santa Clara, CA  95054
    US
-
-
-
-
-
 
 
 
