@@ -1,6 +1,6 @@
-# In-band OAM IETF DRAFTS
+# In-situ OAM IETF DRAFTS
 
-In-band OAM (or "in situ OAM") is an implementation study to record operational
+In-situ OAM (sometimes also referred to as inband OAM, which was the term originally used before IETF chose "in-situ OAM" for the technology) is a technology to record operational
 information in the packet while the packet traverses a path between two points
 in the network. In-band OAM is to complement current out-of-band OAM (sometimes
 also called "active" OAM) mechanisms based on ICMP or other types of probe
