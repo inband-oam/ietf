@@ -1,0 +1,616 @@
+
+
+
+
+IPPM                                                             H. Song
+Internet-Draft                                                 Futurewei
+Intended status: Standards Track                                B. Gafni
+Expires: February 26, 2020                   Mellanox Technologies, Inc.
+                                                                 T. Zhou
+                                                                   Z. Li
+                                                                  Huawei
+                                                            F. Brockners
+                                                             S. Bhandari
+                                                          R. Sivakolundu
+                                                                   Cisco
+                                                              T. Mizrahi
+                                        Huawei Network.IO Innovation Lab
+                                                         August 25, 2019
+
+
+                      In-situ OAM Direct Exporting
+               draft-ioamteam-ippm-ioam-direct-export-00
+
+Abstract
+
+   In-situ Operations, Administration, and Maintenance (IOAM) is used
+   for recording and collecting operational and telemetry information.
+   Specifically, IOAM allows telemetry data to be pushed into data
+   packets while they traverse the network.  This document introduces a
+   new IOAM option type called the Direct Export (DEX) option, which is
+   used as a trigger for IOAM data to be directly exported to a
+   collector without being pushed into in-flight data packets.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on February 26, 2020.
+
+
+
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 1]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+Copyright Notice
+
+   Copyright (c) 2019 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Requirement Language  . . . . . . . . . . . . . . . . . .   3
+     2.2.  Terminology . . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  The Direct Exporting (DEX) IOAM Option Type . . . . . . . . .   3
+     3.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   3
+     3.2.  The DEX Option Format . . . . . . . . . . . . . . . . . .   5
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+     4.1.  IOAM Type . . . . . . . . . . . . . . . . . . . . . . . .   6
+     4.2.  IOAM DEX Flags  . . . . . . . . . . . . . . . . . . . . .   6
+   5.  Performance Considerations  . . . . . . . . . . . . . . . . .   7
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   7.  Topics for Further Discussion . . . . . . . . . . . . . . . .   7
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
+
+1.  Introduction
+
+   IOAM [I-D.ietf-ippm-ioam-data] is used for monitoring traffic in the
+   network, and for incorporating IOAM data fields into in-flight data
+   packets.
+
+   IOAM makes use of four possible IOAM options, defined in
+   [I-D.ietf-ippm-ioam-data]: Pre-allocated Trace Option, Incremental
+   Trace Option, Proof of Transit (POT) Option, and Edge-to-Edge Option.
+
+   This document defines a new IOAM option type (also known as an IOAM
+   type) called the Direct Export (DEX) option.  This option is used as
+   a trigger for IOAM nodes to export IOAM data to a collector.
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 2]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+   This draft has evolved from combining some of the concepts of PBT-I
+   from [I-D.song-ippm-postcard-based-telemetry] with immediate
+   exporting from [I-D.mizrahi-ippm-ioam-flags].
+
+2.  Conventions
+
+2.1.  Requirement Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+2.2.  Terminology
+
+   Abbreviations used in this document:
+
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
+   OAM:       Operations, Administration, and Maintenance
+
+   DEX:       Direct EXporting
+
+3.  The Direct Exporting (DEX) IOAM Option Type
+
+3.1.  Overview
+
+   The DEX option is used as a trigger for exporting telemetry data to a
+   collector.
+
+   This option is incorporated into data packets by an IOAM
+   encapsulating node, and removed by an IOAM decapsulating node, as
+   illustrated in Figure 1.  The option can be read but not modified by
+   transit nodes.  Note: the terms IOAM encapsulating, decapsulating and
+   transit nodes are as defined in [I-D.ietf-ippm-ioam-data].
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 3]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+                                +-----------+
+                                | Telemetry |
+                                | Data      |
+                                | Collector |
+                                +-----------+
+                                      ^
+                                      |Exported IOAM data
+                                      |
+                                      |
+                                      |
+                +--------------+------+-------+--------------+
+                |              |              |              |
+                |              |              |              |
+  User      +---+----+     +---+----+     +---+----+     +---+----+
+  packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
+  --------->|lating  |====>| Node   |====>| Node   |====>|lating  |---->
+            |Node    |     | A      |     | B      |     |Node    |
+            +--------+     +--------+     +--------+     +--------+
+            Insert DEX       Export         Export       Remove DEX
+            option and      IOAM data      IOAM data     option and
+            export data                                  export data
+
+
+                        Figure 1: DEX Architecture
+
+   The DEX option is used as a trigger to export IOAM data to a
+   collector.  The trigger applies to transit nodes, the decapsulating
+   node, and the encapsulating node:
+
+   o  An IOAM encapsulating node configured to incorporate the DEX
+      option encapsulates the packet with the DEX option, and exports
+      the requested IOAM data immediately.  The IOAM encapsulating node
+      is the only type of node allowed to push the DEX option.
+
+   o  A transit node that processes a packet with the DEX option is
+      expected to export the requested IOAM data.
+
+   o  An IOAM decapsulating node that processes a packet with the DEX
+      option is expected to export the requested IOAM data, and
+      decapsulate the IOAM header.
+
+   As in [I-D.ietf-ippm-ioam-data], the DEX option may be incorporated
+   into all or a subset of the traffic that is forwarded by the
+   encapsulating node.  Moreover, IOAM nodes MAY send exported data for
+   all traversing packets that carry the DEX option, or MAY selectively
+   export data only for a subset of these packets.
+
+
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 4]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+   The DEX option specifies which data fields should be exported to the
+   collector, as specified in Section 3.2.  The format and encapsulation
+   of the packet that contains the exported data is not within the scope
+   of the current document.  For example, the export format can be based
+   on [I-D.spiegel-ippm-ioam-rawexport].
+
+   A transit IOAM node that does not support the DEX option SHOULD
+   ignore it.  A decapsulating node that does not support the DEX option
+   SHOULD remove it, along with any other IOAM options carried in the
+   packet if such exist.
+
+3.2.  The DEX Option Format
+
+   The format of the DEX option is depicted in Figure 2.  The length of
+   the DEX option is either 8 octets or 16 octets, as the Flow ID and
+   the Sequence Number fields (summing up to 8 octets) are optional.  It
+   is assumed that the lower layer protocol indicates the length of the
+   DEX option, thus indicating whether the two optional fields are
+   present.
+
+
+
+       0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |        Namespace-ID           |            Flags              |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |               IOAM-Trace-Type                 |   Reserved    |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                         Flow ID (optional)                    |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                     Sequence Number  (Optional)               |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                        Figure 2: DEX Option Format
+
+   Namespace-ID    A 16-bit identifier of the IOAM namespace, as defined
+                   in [I-D.ietf-ippm-ioam-data].
+
+   Flags           A 16-bit field, comprised of 16 one-bit subfields.
+                   Flags are allocated by IANA, as defined in
+                   Section 4.2.
+
+   IOAM-Trace-Type A 24-bit identifier which specifies which data fields
+                   should be exported.  The format of this field is as
+                   defined in [I-D.ietf-ippm-ioam-data].  Specifically,
+                   bit 23, which corresponds to the Checksum Complement
+                   data field, should be assigned to be zero by the IOAM
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 5]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+                   encapsulating node, and ignored by transit and
+                   decapsulating nodes.  The reason for this is that the
+                   Checksum Complement is intended for in-flight packet
+                   modifications and is not relevant for direct
+                   exporting.
+
+   Reserved        This field SHOULD be ignored by the receiver.
+
+   Flow ID         A 32-bit flow identifier.  If the actual Flow ID is
+                   shorter than 32 bits, it is zero padded in its most
+                   significant bits.  The field is set at the
+                   encapsulating node.  The Flow ID can be uniformly
+                   assigned by a central controller or algorithmically
+                   generated by the encapsulating node.  The latter
+                   approach cannot guarantee the uniqueness of Flow ID,
+                   yet the conflict probability is small due to the
+                   large Flow ID space.  The Flow ID can be used to
+                   correlate the exported data of the same flow from
+                   multiple nodes and from multiple packets.
+
+   Sequence Number A 32-bit sequence number starting from 0 and
+                   increasing by 1 for each following monitored packet
+                   from the same flow at the encapsulating node.  The
+                   Sequence Number, when combined with the Flow ID,
+                   provides a convenient approach to correlate the
+                   exported data from the same user packet.
+
+4.  IANA Considerations
+
+4.1.  IOAM Type
+
+   The "IOAM Type Registry" was defined in Section 7.2 of
+   [I-D.ietf-ippm-ioam-data].  IANA is requested to allocate the
+   following code point from the "IOAM Type Registry" as follows:
+
+   TBD-type   IOAM Direct Export (DEX) Option Type
+
+   If possible, IANA is requested to allocate code point 4 (TBD-type).
+
+4.2.  IOAM DEX Flags
+
+   IANA is requested to define an "IOAM DEX Flags" registry.  This
+   registry includes 16 flag bits.  Allocation should be performed based
+   on the "RFC Required" procedure, as defined in [RFC8126].
+
+
+
+
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 6]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+5.  Performance Considerations
+
+   The DEX option triggers exported packets to be exported to a
+   collector, which in some cases may impact the collector's
+   performance, or the performance along the paths leading to the
+   collector.
+
+   Therefore, rate limiting may be enabled so as to ensure that direct
+   exporting is used at a rate that does not significantly affect the
+   network bandwidth, and does not overload the collector (or the source
+   node in the case of loopback).  It should be possible to use each DEX
+   on a subset of the data traffic.
+
+6.  Security Considerations
+
+   The security considerations of IOAM in general are discussed in
+   [I-D.ietf-ippm-ioam-data].  Specifically, an attacker may try to use
+   the functionality that is defined in this document to attack the
+   network.
+
+   An attacker may attempt to overload network devices by injecting
+   synthetic packets that include the DEX option.  Similarly, an on-path
+   attacker may maliciously incorporate the DEX option into transit
+   packets.
+
+   Forcing DEX, either in synthetic packets or in transit packets may
+   overload the collector or analyzer devices.  Since this mechanism
+   affects multiple devices along the network path, it potentially
+   amplifies the effect on the network bandwidth and on the collector's
+   load.
+
+   In order to mitigate the attacks described above, it should be
+   possible for IOAM-enabled devices to limit the exported IOAM data to
+   a configurable rate.
+
+   IOAM is assumed to be deployed in a restricted administrative domain,
+   thus limiting the scope of the threats above and their affect.  This
+   is a fundamental assumption with respect to the security aspects of
+   IOAM, as further discussed in [I-D.ietf-ippm-ioam-data].
+
+7.  Topics for Further Discussion
+
+   o  Immediate export flag: it was proposed to include an immediate
+      export flag.  It should be considered whether this flag is
+      required, and specifically what happens when this flag is
+      disabled.
+
+
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 7]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+   o  Sequence number vs. timestamp: A timestamp can be considered as an
+      alternative for the sequence number field.  Using a timestamp
+      avoids the needfor a per-flow counter.  On the other hand, a
+      sequence number can be used to indicate the number of dropped
+      packets, which is not possible with a timestamp.
+
+   o  Flags: the current draft does not define any flags.  The flags
+      from [I-D.ietf-ippm-ioam-data] should be further considered in the
+      context of the DEX option.
+
+   o  Action: action bits can be considered as an additional DEX option
+      field.  Action bits can be used for conditional exporting.  For
+      example: export-on-drop or export-on-congestion.
+
+   o  Hop limit: it was proposed to include a hop limit in the DEX
+      option header, allowing each exported packet to include the
+      current value, indicating the current hop along the path.  Similar
+      functionality can be achieved using the Hop_Lim/Node_ID data field
+      [I-D.ietf-ippm-ioam-data]; if this data field is enabled every
+      exported packet includes the current hop limit.  The advantages of
+      using the Hop_Lim/Node_ID data field are that it is already
+      defined, and commonly used due to the necessity of the Node ID.
+      Furthermore, when using this data field it is not necessary for
+      transit nodes to update an explicit Hop Limit field in the DEX
+      option.  The advantages of using an explicit Hop Limit field in
+      the DEX option is that it can potentially save bits on the wire if
+      the Hop_Lim/Node_ID field is not used.  Furthermore, an explicit
+      Hop Limit field counts the number of IOAM-capable hops, while the
+      Hop_Lim data field uses the TTL/Hop Limit value from a lower layer
+      protocol, which may also count IOAM-incapable hops.
+
+8.  References
+
+8.1.  Normative References
+
+   [I-D.ietf-ippm-ioam-data]
+              Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
+              Leddy, J., Youell, S., Mizrahi, T., Mozes, D., Lapukhov,
+              P., Chang, R., daniel.bernier@bell.ca, d., and J. Lemon,
+              "Data Fields for In-situ OAM", draft-ietf-ippm-ioam-
+              data-06 (work in progress), July 2019.
+
+   [I-D.mizrahi-ippm-ioam-flags]
+              Mizrahi, T., Brockners, F., Bhandari, S., Sivakolundu, R.,
+              Pignataro, C., Kfir, A., Gafni, B., Spiegel, M., and J.
+              Lemon, "In-situ OAM Flags", draft-mizrahi-ippm-ioam-
+              flags-00 (work in progress), July 2019.
+
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 8]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+   [I-D.song-ippm-postcard-based-telemetry]
+              Song, H., Zhou, T., Li, Z., Shin, J., and K. Lee,
+              "Postcard-based On-Path Flow Data Telemetry", draft-song-
+              ippm-postcard-based-telemetry-04 (work in progress), June
+              2019.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+8.2.  Informative References
+
+   [I-D.ietf-sfc-ioam-nsh]
+              Brockners, F., Bhandari, S., Govindan, V., Pignataro, C.,
+              Gredler, H., Leddy, J., Youell, S., Mizrahi, T., Mozes,
+              D., Lapukhov, P., and R. Chang, "Network Service Header
+              (NSH) Encapsulation for In-situ OAM (IOAM) Data", draft-
+              ietf-sfc-ioam-nsh-01 (work in progress), March 2019.
+
+   [I-D.ioametal-ippm-6man-ioam-ipv6-options]
+              Bhandari, S., Brockners, F., Pignataro, C., Gredler, H.,
+              Leddy, J., Youell, S., Mizrahi, T., Kfir, A., Gafni, B.,
+              Lapukhov, P., Spiegel, M., Krishnan, S., and R. Asati,
+              "In-situ OAM IPv6 Options", draft-ioametal-ippm-6man-ioam-
+              ipv6-options-02 (work in progress), March 2019.
+
+   [I-D.spiegel-ippm-ioam-rawexport]
+              Spiegel, M., Brockners, F., Bhandari, S., and R.
+              Sivakolundu, "In-situ OAM raw data export with IPFIX",
+              draft-spiegel-ippm-ioam-rawexport-02 (work in progress),
+              July 2019.
+
+   [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
+              Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
+              May 2016, <https://www.rfc-editor.org/info/rfc7799>.
+
+   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
+              Writing an IANA Considerations Section in RFCs", BCP 26,
+              RFC 8126, DOI 10.17487/RFC8126, June 2017,
+              <https://www.rfc-editor.org/info/rfc8126>.
+
+Authors' Addresses
+
+
+
+
+
+
+
+
+Song, et al.            Expires February 26, 2020               [Page 9]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+   Haoyu Song
+   Futurewei
+   2330 Central Expressway
+   Santa Clara  95050
+   USA
+
+   Email: haoyu.song@huawei.com
+
+
+   Barak Gafni
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: gbarak@mellanox.com
+
+
+   Tianran Zhou
+   Huawei
+   156 Beiqing Rd.
+   Beijing  100095
+   China
+
+   Email: zhoutianran@huawei.com
+
+
+   Zhenbin Li
+   Huawei
+   156 Beiqing Rd.
+   Beijing  100095
+   China
+
+   Email: lizhenbin@huawei.com
+
+
+   Frank Brockners
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
+
+
+
+
+
+
+
+
+Song, et al.            Expires February 26, 2020              [Page 10]
+
+Internet-Draft            IOAM Direct Exporting              August 2019
+
+
+   Shwetha Bhandari
+   Cisco Systems, Inc.
+   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+   Bangalore, KARNATAKA 560 087
+   India
+
+   Email: shwethab@cisco.com
+
+
+   Ramesh Sivakolundu
+   Cisco Systems, Inc.
+   170 West Tasman Dr.
+   SAN JOSE, CA 95134
+   U.S.A.
+
+   Email: sramesh@cisco.com
+
+
+   Tal Mizrahi
+   Huawei Network.IO Innovation Lab
+   Israel
+
+   Email: tal.mizrahi.phd@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Song, et al.            Expires February 26, 2020              [Page 11]
