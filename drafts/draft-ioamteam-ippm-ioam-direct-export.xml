@@ -342,7 +342,7 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 		  
 		  <t>A transit IOAM node that does not support the DEX option SHOULD 
 		  ignore it. A decapsulating node that does not support the DEX option
-		  SHOULD remove it, along with any other IOAM options carried in the 
+		  MUST remove it, along with any other IOAM options carried in the 
 		  packet if such exist.</t>
 		  
 
@@ -420,15 +420,30 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 		 
        </list>
      </t>
-	 
+
+
+          <t>Note that if the IOAM-Trace-Type 
+		  <xref target="I-D.ietf-ippm-ioam-data"/> has the Hop_Lim/Node_ID bit 
+		  set, then exported packets include the Hop_Lim/Node_ID data field, 
+		  thus indicating the node from which the packet was exported. 
+		  If the DEX header had an explicit Hop Limit field it would be 
+		  possible for the collector to have the hop information even when the
+		  Hop_Lim/Node_ID bit is not set. Furthermore, an explicit Hop Limit
+		  field would count the number of IOAM-capable hops, while the Hop_Lim data
+		  field uses the TTL/Hop Limit value from a lower layer protocol, which
+		  may also count IOAM-incapable hops. Conversely, including such an 
+		  explicit field in the DEX header would require transit nodes to update 
+		  the DEX header in-flight, thus complicating the transit processing, 
+		  while one of the main goals of the DEX option was to simplify the 
+		  processing of transit nodes. Therefore, the DEX header does not 
+		  include an explicity Hop Limit field, and the Hop_Lim/Node_ID data
+		  field can be used instead.</t>
 
 		</section>
 
 		
 		
     </section>
-
-	
 
 	
     <section anchor="IANA" title="IANA Considerations">
@@ -500,41 +515,7 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 	
         <t><list style="symbols">
 
-          <t>Immediate export flag: it was proposed to include an immediate
-		  export flag. It should be considered whether this flag is required,
-		  and specifically what happens when this flag is disabled.</t>
-		
-		  <t>Sequence number vs. timestamp: A timestamp can be considered as an 
-		  alternative for the sequence number field. Using a timestamp avoids 
-		  the needfor a per-flow counter. On the other hand, a sequence number
-		  can be used to indicate the number of dropped packets, which is not
-		  possible with a timestamp.</t>
-
-		  <t>Flags: the current draft does not define any flags.
-		  The flags from <xref target="I-D.ietf-ippm-ioam-data"/> should be 
-		  further considered in the context of the DEX option.</t>
-
-		  <t>Action: action bits can be considered as an additional
-		  DEX option field. Action bits can be used for 
-		  conditional exporting. For example: export-on-drop or
-		  export-on-congestion.</t>
-
-          <t>Hop limit: it was proposed to include a hop limit in the DEX 
-		  option header, allowing each exported packet to include the current 
-		  value, indicating the current hop along the path. Similar 
-		  functionality can be achieved using the Hop_Lim/Node_ID data field 
-		  <xref target="I-D.ietf-ippm-ioam-data"/>; if this data field is 
-		  enabled every exported packet includes the current hop limit. The
-		  advantages of using the Hop_Lim/Node_ID data field are that it is
-		  already defined, and commonly used due to the necessity of the 
-		  Node ID. Furthermore, when using this data field it is not necessary
-		  for transit nodes to update an explicit Hop Limit field in the DEX
-		  option. The advantages of using an explicit Hop Limit field in the 
-		  DEX option is that it can potentially save bits on the wire if the
-		  Hop_Lim/Node_ID field is not used. Furthermore, an explicit Hop Limit
-		  field counts the number of IOAM-capable hops, while the Hop_Lim data
-		  field uses the TTL/Hop Limit value from a lower layer protocol, which
-		  may also count IOAM-incapable hops.</t>
+          <t>None at this point.</t>
 		  
         </list></t>
 
