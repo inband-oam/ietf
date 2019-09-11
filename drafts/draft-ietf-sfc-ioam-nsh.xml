@@ -60,8 +60,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-sfc-ioam-nsh-01"
-     ipr="trust200902">
+<rfc category="std" docName="draft-ietf-sfc-ioam-nsh-02" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -75,14 +74,15 @@
     <!-- The abbreviated title is used in the page header - it is only necessary if the
          full title is longer than 39 characters -->
 
-    <title abbrev="NSH encapsulation for In-situ OAM">Network Service Header (NSH) Encapsulation for
-    In-situ OAM (IOAM) Data</title>
+    <title abbrev="NSH encapsulation for In-situ OAM">Network Service Header
+    (NSH) Encapsulation for In-situ OAM (IOAM) Data</title>
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
     <!-- Another author who claims to be an editor -->
 
-    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+    <author fullname="Frank Brockners" initials="F." role="editor"
+            surname="Brockners">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
 
       <address>
@@ -106,7 +106,8 @@
       </address>
     </author>
 
-    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+    <author fullname="Shwetha Bhandari" initials="S." role="editor"
+            surname="Bhandari">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
 
       <address>
@@ -123,142 +124,7 @@
       </address>
     </author>
 
-    <author fullname="Vengada Prasad Govindan" initials="V."
-            surname="Govindan">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-
-      <address>
-        <email>venggovi@cisco.com</email>
-      </address>
-    </author>
-
-    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-
-      <address>
-        <postal>
-          <street>7200-11 Kit Creek Road</street>
-
-          <city>Research Triangle Park</city>
-
-          <region>NC</region>
-
-          <code>27709</code>
-
-          <country>United States</country>
-        </postal>
-
-        <email>cpignata@cisco.com</email>
-      </address>
-    </author>
-
-    <author fullname="Hannes Gredler" initials="H." surname="Gredler">
-      <organization>RtBrick Inc.</organization>
-
-      <address>
-        <email>hannes@rtbrick.com</email>
-      </address>
-    </author>
-
-    <author fullname="John Leddy" initials="J." surname="Leddy">
-      <organization abbrev="Comcast">Comcast</organization>
-
-      <address>
-        <email>John_Leddy@cable.comcast.com</email>
-      </address>
-    </author>
-
-    <author fullname="Stephen Youell" initials="S." surname="Youell">
-      <organization abbrev="JPMC">JP Morgan Chase</organization>
-
-      <address>
-        <postal>
-          <street>25 Bank Street</street>
-
-          <city>London</city>
-
-          <code>E14 5JP</code>
-
-          <country>United Kingdom</country>
-        </postal>
-
-        <email>stephen.youell@jpmorgan.com</email>
-      </address>
-    </author>
-
-    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
-      <organization abbrev="">Huawei Network.IO Innovation Lab</organization>
-
-      <address>
-        <postal>
-          <street></street>
-
-          <city></city>
-
-          <code></code>
-
-          <country>Israel</country>
-        </postal>
-
-        <email>tal.mizrahi.phd@gmail.com</email>
-      </address>
-    </author>
-
-    <author fullname="David Mozes" initials="D." surname="Mozes">
-      <organization></organization>
-
-      <address>
-        <postal>
-          <street/>
-
-          <city/>
-
-          <code/>
-
-          <country/>
-        </postal>
-
-        <email>mosesster@gmail.com</email>
-      </address>
-    </author>
-
-    <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
-      <organization abbrev="">Facebook</organization>
-
-      <address>
-        <postal>
-          <street>1 Hacker Way</street>
-
-          <city>Menlo Park, CA</city>
-
-          <code>94025</code>
-
-          <country>US</country>
-        </postal>
-
-        <email>petr@fb.com</email>
-      </address>
-    </author>
-
-    <author fullname="Remy Chang" initials="R." surname="Chang">
-      <organization abbrev="">Barefoot Networks</organization>
-
-      <address>
-        <postal>
-          <street>2185 Park Boulevard</street>
-
-          <city>Palo Alto, CA</city>
-
-          <code>94306</code>
-
-          <country>US</country>
-        </postal>
-
-        <email/>
-      </address>
-    </author>
-
-    <date day="11" month="March" year="2019"/>
+    <date day="11" month="September" year="2019"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -279,6 +145,7 @@
          which is used by the RFC Editor as a nod to the history of the IETF. -->
 
     <keyword>inband</keyword>
+
     <keyword>In-situ</keyword>
 
     <keyword>Telemetry, Tracing</keyword>
@@ -299,27 +166,26 @@
 
   <middle>
     <section title="Introduction" toc="default">
-      <t>In-situ OAM (IOAM), as defined in 
-	  <xref target="I-D.ietf-ippm-ioam-data"/>, records OAM information within 
-	  the packet while the packet traverses a particular network domain. The 
-	  term "in-situ" refers to the fact that the OAM data is added to the data 
-	  packets rather than is being sent within packets specifically dedicated 
-	  to OAM. This document defines how IOAM data fields are transported as 
-	  part of the Network Service Header (NSH) <xref target="RFC8300"/> 
-	  encapsulation for the Service Function Chaining (SFC) 
-	  <xref target="RFC7665"/>. The IOAM data fields are defined in <xref
+      <t>In-situ OAM (IOAM), as defined in <xref
+      target="I-D.ietf-ippm-ioam-data"/>, records OAM information within the
+      packet while the packet traverses a particular network domain. The term
+      "in-situ" refers to the fact that the OAM data is added to the data
+      packets rather than is being sent within packets specifically dedicated
+      to OAM. This document defines how IOAM data fields are transported as
+      part of the Network Service Header (NSH) <xref target="RFC8300"/>
+      encapsulation for the Service Function Chaining (SFC) <xref
+      target="RFC7665"/>. The IOAM data fields are defined in <xref
       target="I-D.ietf-ippm-ioam-data"/>. An implementation of IOAM which
       leverages NSH to carry the IOAM data is available from the FD.io open
       source software project <xref target="FD.io"/>.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
-
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", 
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
-      "MAY", and "OPTIONAL" in this document are to be interpreted as
-      described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> 
-      when, and only when, they appear in all capitals, as shown here.</t>
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP 14
+      <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when,
+      they appear in all capitals, as shown here.</t>
 
       <t>Abbreviations used in this document:</t>
 
@@ -340,10 +206,10 @@
     <section title="IOAM data fields encapsulation in NSH">
       <t>The NSH is defined in <xref target="RFC8300"/>. IOAM data fields are
       carried in NSH using a next protocol header which follows the NSH MD
-      context headers. An IOAM header is added containing the different IOAM data
-      fields defined in <xref target="I-D.ietf-ippm-ioam-data"/>. In an
-      administrative domain where IOAM is used, insertion of the IOAM header in
-      NSH is enabled at the NSH tunnel endpoints, which also serve as IOAM
+      context headers. An IOAM header is added containing the different IOAM
+      data fields defined in <xref target="I-D.ietf-ippm-ioam-data"/>. In an
+      administrative domain where IOAM is used, insertion of the IOAM header
+      in NSH is enabled at the NSH tunnel endpoints, which also serve as IOAM
       encapsulating/decapsulating nodes by means of configuration.</t>
 
       <t><figure>
@@ -381,34 +247,35 @@
       <t>The IOAM related fields in NSH are defined as follows:</t>
 
       <t><list style="empty">
-      <t><list style="hanging">
-          <t hangText="IOAM-Type:">8-bit field defining the IOAM Option type,
-          as defined in Section 7.2 of <xref
-          target="I-D.ietf-ippm-ioam-data"/>.</t>
+          <t><list style="hanging">
+              <t hangText="IOAM-Type:">8-bit field defining the IOAM Option
+              type, as defined in Section 7.2 of <xref
+              target="I-D.ietf-ippm-ioam-data"/>.</t>
 
-          <t hangText="IOAM HDR Len:">8 bit Length field contains the length
-          of the IOAM header in 4-octet units.</t>
+              <t hangText="IOAM HDR Len:">8 bit Length field contains the
+              length of the IOAM header in 4-octet units.</t>
 
-          <t hangText="Reserved bits:">Reserved bits are present for future
-          use. The reserved bits MUST be set to 0x0 upon transmission and
-          ignored upon receipt.</t>
+              <t hangText="Reserved bits:">Reserved bits are present for
+              future use. The reserved bits MUST be set to 0x0 upon
+              transmission and ignored upon receipt.</t>
 
-          <t hangText="Next Protocol:">8-bit unsigned integer that determines
-          the type of header following IOAM protocol. The semantics of this 
-		  field are identical to the Next Protocol field in 
-		  <xref target="RFC8300"/>.</t>
+              <t hangText="Next Protocol:">8-bit unsigned integer that
+              determines the type of header following IOAM protocol. The
+              semantics of this field are identical to the Next Protocol field
+              in <xref target="RFC8300"/>.</t>
 
-          <t hangText="IOAM Option and Data Space:">IOAM option header and
-          data is present as specified by the IOAM-Type field, and is defined
-          in Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+              <t hangText="IOAM Option and Data Space:">IOAM option header and
+              data is present as specified by the IOAM-Type field, and is
+              defined in Section 4 of <xref
+              target="I-D.ietf-ippm-ioam-data"/>.</t>
+            </list></t>
         </list></t>
-      </list></t>
 
-      <t>Multiple IOAM options MAY be included within the NSH
-      encapsulation. For example, if a NSH encapsulation contains two IOAM
-      options before a data payload, the Next Protocol field of the first IOAM
-      option will contain the value of TBD_IOAM, while the Next Protocol field
-      of the second IOAM option will contain the "NSH Next Protocol" number
+      <t>Multiple IOAM options MAY be included within the NSH encapsulation.
+      For example, if a NSH encapsulation contains two IOAM options before a
+      data payload, the Next Protocol field of the first IOAM option will
+      contain the value of TBD_IOAM, while the Next Protocol field of the
+      second IOAM option will contain the "NSH Next Protocol" number
       indicating the type of the data payload.</t>
     </section>
 
@@ -453,8 +320,8 @@
             case this particular deployment would have a maximum path length
             of 15 hops in the IOAM domain, then a maximum of 300 octets of
             IOAM data were to be encapsulated in the packet.</t>
-          </list>Different approaches for encapsulating IOAM data fields in NSH
-        could be considered:</t>
+          </list>Different approaches for encapsulating IOAM data fields in
+        NSH could be considered:</t>
 
         <t><list style="numbers">
             <t>Encapsulation of IOAM data fields as "NSH MD Type 2" (see <xref
@@ -470,10 +337,9 @@
             edge-to-edge) would be specified by its own "next protocol".</t>
 
             <t>Encapsulation of IOAM data fields using the "Next Protocol"
-            field. A single NSH protocol type code point would be allocated for
-            IOAM. A "sub-type" field would then specify what IOAM options type
-            (trace, proof-of-transit, edge-to-edge) is carried.</t>
-
+            field. A single NSH protocol type code point would be allocated
+            for IOAM. A "sub-type" field would then specify what IOAM options
+            type (trace, proof-of-transit, edge-to-edge) is carried.</t>
           </list>The third option has been chosen here. This option avoids the
         additional layer of TLV nesting that the use of NSH MD Type 2 would
         result in. In addition, this option does not constrain IOAM data to a
@@ -521,6 +387,77 @@
       Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker, and
       Andrew Yourtchenko for the comments and advice.</t>
     </section>
+
+    <section title="Contributors">
+      <t>In addition to editors listed on the title page, the following people
+      have contributed to this document:</t>
+
+      <t><figure>
+          <artwork><![CDATA[   Vengada Prasad Govindan
+   Cisco Systems, Inc.
+   Email: venggovi@cisco.com
+
+]]></artwork>
+        </figure><figure>
+          <artwork><![CDATA[   Carlos Pignataro
+   Cisco Systems, Inc.
+   7200-11 Kit Creek Road
+   Research Triangle Park, NC  27709
+   United States
+   Email: cpignata@cisco.com
+
+]]></artwork>
+        </figure><figure>
+          <artwork><![CDATA[   Hannes Gredler
+   RtBrick Inc.
+   Email: hannes@rtbrick.com
+
+]]></artwork>
+        </figure><figure>
+          <artwork><![CDATA[   John Leddy
+   Email: john@leddy.net
+
+]]></artwork>
+        </figure><figure>
+          <artwork><![CDATA[   Stephen Youell
+   JP Morgan Chase
+   25 Bank Street
+   London  E14 5JP
+   United Kingdom
+   Email: stephen.youell@jpmorgan.com
+
+]]></artwork>
+        </figure><figure>
+          <artwork><![CDATA[   Tal Mizrahi
+   Huawei Network.IO Innovation Lab
+   Israel
+   Email: tal.mizrahi.phd@gmail.com
+
+]]></artwork>
+        </figure><figure>
+          <artwork><![CDATA[   David Mozes
+   Email: mosesster@gmail.com
+
+]]></artwork>
+        </figure><figure>
+          <artwork><![CDATA[   Petr Lapukhov
+   Facebook
+   1 Hacker Way
+   Menlo Park, CA  94025
+   US
+   Email: petr@fb.com
+
+]]></artwork>
+        </figure><figure>
+          <artwork><![CDATA[   Remy Chang
+   Barefoot Networks
+   2185 Park Boulevard
+   Palo Alto, CA  94306
+   US
+
+]]></artwork>
+        </figure></t>
+    </section>
   </middle>
 
   <!--  *****BACK MATTER ***** -->
@@ -547,7 +484,6 @@
       &I-D.ietf-ippm-ioam-data;
 
       &RFC8300;
-
     </references>
 
     <references title="Informative References">
