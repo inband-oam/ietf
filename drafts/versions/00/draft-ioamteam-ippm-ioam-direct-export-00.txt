@@ -5,7 +5,7 @@
 IPPM                                                             H. Song
 Internet-Draft                                                 Futurewei
 Intended status: Standards Track                                B. Gafni
-Expires: February 26, 2020                   Mellanox Technologies, Inc.
+Expires: March 13, 2020                      Mellanox Technologies, Inc.
                                                                  T. Zhou
                                                                    Z. Li
                                                                   Huawei
@@ -15,7 +15,7 @@ Expires: February 26, 2020                   Mellanox Technologies, Inc.
                                                                    Cisco
                                                               T. Mizrahi
                                         Huawei Network.IO Innovation Lab
-                                                         August 25, 2019
+                                                      September 10, 2019
 
 
                       In-situ OAM Direct Exporting
@@ -46,16 +46,16 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 26, 2020.
+   This Internet-Draft will expire on March 13, 2020.
 
 
 
 
 
 
-Song, et al.            Expires February 26, 2020               [Page 1]
+Song, et al.             Expires March 13, 2020                 [Page 1]
 
-Internet-Draft            IOAM Direct Exporting              August 2019
+Internet-Draft            IOAM Direct Exporting           September 2019
 
 
 Copyright Notice
@@ -83,14 +83,14 @@ Table of Contents
      3.1.  Overview  . . . . . . . . . . . . . . . . . . . . . . . .   3
      3.2.  The DEX Option Format . . . . . . . . . . . . . . . . . .   5
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
-     4.1.  IOAM Type . . . . . . . . . . . . . . . . . . . . . . . .   6
-     4.2.  IOAM DEX Flags  . . . . . . . . . . . . . . . . . . . . .   6
+     4.1.  IOAM Type . . . . . . . . . . . . . . . . . . . . . . . .   7
+     4.2.  IOAM DEX Flags  . . . . . . . . . . . . . . . . . . . . .   7
    5.  Performance Considerations  . . . . . . . . . . . . . . . . .   7
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
-   7.  Topics for Further Discussion . . . . . . . . . . . . . . . .   7
+   7.  Topics for Further Discussion . . . . . . . . . . . . . . . .   8
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Song, et al.            Expires February 26, 2020               [Page 2]
+Song, et al.             Expires March 13, 2020                 [Page 2]
 
-Internet-Draft            IOAM Direct Exporting              August 2019
+Internet-Draft            IOAM Direct Exporting           September 2019
 
 
    This draft has evolved from combining some of the concepts of PBT-I
@@ -165,9 +165,9 @@ Internet-Draft            IOAM Direct Exporting              August 2019
 
 
 
-Song, et al.            Expires February 26, 2020               [Page 3]
+Song, et al.             Expires March 13, 2020                 [Page 3]
 
-Internet-Draft            IOAM Direct Exporting              August 2019
+Internet-Draft            IOAM Direct Exporting           September 2019
 
 
                                 +-----------+
@@ -221,9 +221,9 @@ Internet-Draft            IOAM Direct Exporting              August 2019
 
 
 
-Song, et al.            Expires February 26, 2020               [Page 4]
+Song, et al.             Expires March 13, 2020                 [Page 4]
 
-Internet-Draft            IOAM Direct Exporting              August 2019
+Internet-Draft            IOAM Direct Exporting           September 2019
 
 
    The DEX option specifies which data fields should be exported to the
@@ -234,7 +234,7 @@ Internet-Draft            IOAM Direct Exporting              August 2019
 
    A transit IOAM node that does not support the DEX option SHOULD
    ignore it.  A decapsulating node that does not support the DEX option
-   SHOULD remove it, along with any other IOAM options carried in the
+   MUST remove it, along with any other IOAM options carried in the
    packet if such exist.
 
 3.2.  The DEX Option Format
@@ -277,9 +277,9 @@ Internet-Draft            IOAM Direct Exporting              August 2019
 
 
 
-Song, et al.            Expires February 26, 2020               [Page 5]
+Song, et al.             Expires March 13, 2020                 [Page 5]
 
-Internet-Draft            IOAM Direct Exporting              August 2019
+Internet-Draft            IOAM Direct Exporting           September 2019
 
 
                    encapsulating node, and ignored by transit and
@@ -309,7 +309,34 @@ Internet-Draft            IOAM Direct Exporting              August 2019
                    provides a convenient approach to correlate the
                    exported data from the same user packet.
 
+   Note that if the IOAM-Trace-Type [I-D.ietf-ippm-ioam-data] has the
+   Hop_Lim/Node_ID bit set, then exported packets include the Hop_Lim/
+   Node_ID data field, thus indicating the node from which the packet
+   was exported.  If the DEX header had an explicit Hop Limit field it
+   would be possible for the collector to have the hop information even
+   when the Hop_Lim/Node_ID bit is not set.  Furthermore, an explicit
+   Hop Limit field would count the number of IOAM-capable hops, while
+   the Hop_Lim data field uses the TTL/Hop Limit value from a lower
+   layer protocol, which may also count IOAM-incapable hops.
+   Conversely, including such an explicit field in the DEX header would
+   require transit nodes to update the DEX header in-flight, thus
+   complicating the transit processing, while one of the main goals of
+   the DEX option was to simplify the processing of transit nodes.
+   Therefore, the DEX header does not include an explicity Hop Limit
+   field, and the Hop_Lim/Node_ID data field can be used instead.
+
 4.  IANA Considerations
+
+
+
+
+
+
+
+Song, et al.             Expires March 13, 2020                 [Page 6]
+
+Internet-Draft            IOAM Direct Exporting           September 2019
+
 
 4.1.  IOAM Type
 
@@ -326,17 +353,6 @@ Internet-Draft            IOAM Direct Exporting              August 2019
    IANA is requested to define an "IOAM DEX Flags" registry.  This
    registry includes 16 flag bits.  Allocation should be performed based
    on the "RFC Required" procedure, as defined in [RFC8126].
-
-
-
-
-
-
-
-Song, et al.            Expires February 26, 2020               [Page 6]
-
-Internet-Draft            IOAM Direct Exporting              August 2019
-
 
 5.  Performance Considerations
 
@@ -369,6 +385,15 @@ Internet-Draft            IOAM Direct Exporting              August 2019
    amplifies the effect on the network bandwidth and on the collector's
    load.
 
+
+
+
+
+Song, et al.             Expires March 13, 2020                 [Page 7]
+
+Internet-Draft            IOAM Direct Exporting           September 2019
+
+
    In order to mitigate the attacks described above, it should be
    possible for IOAM-enabled devices to limit the exported IOAM data to
    a configurable rate.
@@ -380,50 +405,7 @@ Internet-Draft            IOAM Direct Exporting              August 2019
 
 7.  Topics for Further Discussion
 
-   o  Immediate export flag: it was proposed to include an immediate
-      export flag.  It should be considered whether this flag is
-      required, and specifically what happens when this flag is
-      disabled.
-
-
-
-
-
-Song, et al.            Expires February 26, 2020               [Page 7]
-
-Internet-Draft            IOAM Direct Exporting              August 2019
-
-
-   o  Sequence number vs. timestamp: A timestamp can be considered as an
-      alternative for the sequence number field.  Using a timestamp
-      avoids the needfor a per-flow counter.  On the other hand, a
-      sequence number can be used to indicate the number of dropped
-      packets, which is not possible with a timestamp.
-
-   o  Flags: the current draft does not define any flags.  The flags
-      from [I-D.ietf-ippm-ioam-data] should be further considered in the
-      context of the DEX option.
-
-   o  Action: action bits can be considered as an additional DEX option
-      field.  Action bits can be used for conditional exporting.  For
-      example: export-on-drop or export-on-congestion.
-
-   o  Hop limit: it was proposed to include a hop limit in the DEX
-      option header, allowing each exported packet to include the
-      current value, indicating the current hop along the path.  Similar
-      functionality can be achieved using the Hop_Lim/Node_ID data field
-      [I-D.ietf-ippm-ioam-data]; if this data field is enabled every
-      exported packet includes the current hop limit.  The advantages of
-      using the Hop_Lim/Node_ID data field are that it is already
-      defined, and commonly used due to the necessity of the Node ID.
-      Furthermore, when using this data field it is not necessary for
-      transit nodes to update an explicit Hop Limit field in the DEX
-      option.  The advantages of using an explicit Hop Limit field in
-      the DEX option is that it can potentially save bits on the wire if
-      the Hop_Lim/Node_ID field is not used.  Furthermore, an explicit
-      Hop Limit field counts the number of IOAM-capable hops, while the
-      Hop_Lim data field uses the TTL/Hop Limit value from a lower layer
-      protocol, which may also count IOAM-incapable hops.
+   o  None at this point.
 
 8.  References
 
@@ -442,19 +424,11 @@ Internet-Draft            IOAM Direct Exporting              August 2019
               Lemon, "In-situ OAM Flags", draft-mizrahi-ippm-ioam-
               flags-00 (work in progress), July 2019.
 
-
-
-
-Song, et al.            Expires February 26, 2020               [Page 8]
-
-Internet-Draft            IOAM Direct Exporting              August 2019
-
-
    [I-D.song-ippm-postcard-based-telemetry]
               Song, H., Zhou, T., Li, Z., Shin, J., and K. Lee,
               "Postcard-based On-Path Flow Data Telemetry", draft-song-
-              ippm-postcard-based-telemetry-04 (work in progress), June
-              2019.
+              ippm-postcard-based-telemetry-05 (work in progress),
+              September 2019.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -462,6 +436,19 @@ Internet-Draft            IOAM Direct Exporting              August 2019
               <https://www.rfc-editor.org/info/rfc2119>.
 
 8.2.  Informative References
+
+
+
+
+
+
+
+
+
+Song, et al.             Expires March 13, 2020                 [Page 8]
+
+Internet-Draft            IOAM Direct Exporting           September 2019
+
 
    [I-D.ietf-sfc-ioam-nsh]
               Brockners, F., Bhandari, S., Govindan, V., Pignataro, C.,
@@ -494,18 +481,6 @@ Internet-Draft            IOAM Direct Exporting              August 2019
 
 Authors' Addresses
 
-
-
-
-
-
-
-
-Song, et al.            Expires February 26, 2020               [Page 9]
-
-Internet-Draft            IOAM Direct Exporting              August 2019
-
-
    Haoyu Song
    Futurewei
    2330 Central Expressway
@@ -522,6 +497,13 @@ Internet-Draft            IOAM Direct Exporting              August 2019
    U.S.A.
 
    Email: gbarak@mellanox.com
+
+
+
+
+Song, et al.             Expires March 13, 2020                 [Page 9]
+
+Internet-Draft            IOAM Direct Exporting           September 2019
 
 
    Tianran Zhou
@@ -551,17 +533,6 @@ Internet-Draft            IOAM Direct Exporting              August 2019
    Email: fbrockne@cisco.com
 
 
-
-
-
-
-
-
-Song, et al.            Expires February 26, 2020              [Page 10]
-
-Internet-Draft            IOAM Direct Exporting              August 2019
-
-
    Shwetha Bhandari
    Cisco Systems, Inc.
    Cessna Business Park, Sarjapura Marathalli Outer Ring Road
@@ -578,6 +549,17 @@ Internet-Draft            IOAM Direct Exporting              August 2019
    U.S.A.
 
    Email: sramesh@cisco.com
+
+
+
+
+
+
+
+
+Song, et al.             Expires March 13, 2020                [Page 10]
+
+Internet-Draft            IOAM Direct Exporting           September 2019
 
 
    Tal Mizrahi
@@ -613,4 +595,22 @@ Internet-Draft            IOAM Direct Exporting              August 2019
 
 
 
-Song, et al.            Expires February 26, 2020              [Page 11]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Song, et al.             Expires March 13, 2020                [Page 11]
