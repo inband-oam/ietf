@@ -13,9 +13,9 @@ https://github.com/CiscoDevNet/iOAM
 
 ## IOAM Data Fields
 
- - https://tools.ietf.org/html/draft-ietf-ippm-ioam-data-06
+ - https://tools.ietf.org/html/draft-ietf-ippm-ioam-data-07
  - https://tools.ietf.org/html/draft-mizrahi-ippm-ioam-flags-00
- - https://tools.ietf.org/html/draft-song-ippm-postcard-based-telemetry-04
+ - https://tools.ietf.org/html/draft-song-ippm-postcard-based-telemetry-05
 
 ## YANG/Operations
 
@@ -30,25 +30,25 @@ https://github.com/CiscoDevNet/iOAM
 
 ### IPv6
 
- - https://tools.ietf.org/html/draft-ioametal-ippm-6man-ioam-ipv6-options-01
- - https://tools.ietf.org/html/draft-ioametal-ippm-6man-ioam-ipv6-deployment-00
+ - https://tools.ietf.org/html/draft-ioametal-ippm-6man-ioam-ipv6-options-02
+ - https://tools.ietf.org/html/draft-ioametal-ippm-6man-ioam-ipv6-deployment-01
 
 ### Protocols which use Ethertype for next protocol (e.g. GRE)
- - https://tools.ietf.org/html/draft-weis-ippm-ioam-eth-01
+ - https://tools.ietf.org/html/draft-weis-ippm-ioam-eth-02
 
 ### NSH
- - https://tools.ietf.org/html/draft-ietf-sfc-ioam-nsh-01
+ - https://tools.ietf.org/html/draft-ietf-sfc-ioam-nsh-02
 
 ### Geneve
- - https://tools.ietf.org/html/draft-brockners-ippm-ioam-geneve-02
+ - https://tools.ietf.org/html/draft-brockners-ippm-ioam-geneve-03
 
 ### Segment Routing for IPv6
- - https://tools.ietf.org/html/draft-gandhi-spring-ioam-sr-mpls-01
+ - https://tools.ietf.org/html/draft-gandhi-spring-ioam-sr-mpls-02
  - https://tools.ietf.org/html/draft-ali-spring-ioam-srv6-01
 
 ### VXLAN
  - https://tools.ietf.org/html/draft-brockners-ippm-ioam-vxlan-gpe-02
 
 ## Proof of Transit
- - https://tools.ietf.org/html/draft-ietf-sfc-proof-of-transit-02
+ - https://tools.ietf.org/html/draft-ietf-sfc-proof-of-transit-03
 
