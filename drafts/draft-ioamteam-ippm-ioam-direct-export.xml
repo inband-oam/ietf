@@ -510,14 +510,21 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 		  <xref target="I-D.ietf-ippm-ioam-data"/> has the Hop_Lim/Node_ID bit 
 		  set, then exported packets include the Hop_Lim/Node_ID data field, 
 		  which contains the TTL/Hop Limit value from a lower layer protocol.
-		  The main advantage of the Hop Count approach is that it counts the 
-		  number of IOAM-capable nodes without relying on the lower layer TTL, 
-		  and thus it explicitly allows to detect a case where an IOAM-capable 
-		  node fails to export packets to the collector.
 		  The main advantage of the Hop_Lim/Node_ID approach is that it 
 		  provides information about the current hop count without requiring 
 		  each transit node to modify the DEX option, thus simplifying the data 
 		  plane functionality of Direct Exporting.
+		  The main advantage of the Hop Count approach is that it counts the 
+		  number of IOAM-capable nodes without relying on the lower layer TTL, 
+		  especially when the lower layer cannot prvide the accurate TTL 
+	          information, e.g., Layer 2 ethernet and hierarchical VPN. It also
+	          explicitly allows to detect a case where an IOAM-capable node fails 
+		  to export packets to the collector. 
+		  It's also suggested to use a flag to indicate an optional Hop Count 
+		  field enables to control the tradeoff. On one hand it addresses the
+	          use cases when the Hop_Lim/Node_ID cannot cover, and on the other hand
+		  it does not require transit switches to update the option if it's not 
+	          supported or disabled.
 		  Thus, further discussion is required about the tradeoff between the 
 		  two alternatives.</t>
 		  
