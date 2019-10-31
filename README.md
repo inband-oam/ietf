@@ -18,6 +18,11 @@ https://github.com/CiscoDevNet/iOAM
  - https://tools.ietf.org/html/draft-ioamteam-ippm-ioam-direct-export-00
  - https://tools.ietf.org/html/draft-song-ippm-postcard-based-telemetry-05
 
+## IOAM Deployment
+
+ - https://tools.ietf.org/html/draft-brockners-opsawg-ioam-deployment-00
+
+
 ## YANG/Operations
 
  - https://tools.ietf.org/html/draft-zhou-ippm-ioam-yang-04
