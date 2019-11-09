@@ -64,7 +64,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-03"
+<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-04"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -191,7 +191,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </address>
     </author>
 
-    <date day="11" month="September" year="2019"/>
+    <date day="9" month="November" year="2019"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -982,6 +982,9 @@ module: ietf-pot-profile
            +--rw validator?           boolean
            +--rw validator-key?       uint64
            +--rw bitmask?             uint64
+           +--rw opot-masks
+              +--rw downstream-mask*   uint64
+              +--rw upstream-mask*     uint64
 <CODE ENDS>
 ]]></artwork>
             </figure></t>
@@ -1103,7 +1106,38 @@ module ietf-pot-profile {
            the size of the random value generation.
            32-bits of mask is default.";
       }
+
+      uses opot-profile;
+
     }
+  }
+
+  grouping opot-profile {
+   description "Grouping containing OPoT related data.";
+
+   container opot-masks {
+     description "Masking information for OPoT support.";
+
+     must "count(downstream-mask) = count(upstream-mask)";
+
+     leaf-list downstream-mask {
+       description "Secret stream used to demask the PoT metadata.
+       The mask is used between nodes adjacent in the path 
+       and MUST have a length equal to the sum of the ones 
+       of RND and CML.";
+       max-elements 2;
+       type uint64;
+     }
+
+     leaf-list upstream-mask {
+       description "Secret stream used to mask the PoT metadata.
+       The mask is used between nodes adjacent in the path 
+       and MUST have a length equal to the sum of the ones 
+       of RND and CML.";
+       max-elements 2;
+       type uint64; 
+     }
+   }
   }
 
   container pot-profiles {
