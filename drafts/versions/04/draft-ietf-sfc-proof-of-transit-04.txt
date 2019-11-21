@@ -99,12 +99,12 @@ Table of Contents
        5.2.1.  Main Parameters . . . . . . . . . . . . . . . . . . .  16
        5.2.2.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  16
        5.2.3.  YANG Model  . . . . . . . . . . . . . . . . . . . . .  17
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  21
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  21
-     7.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  21
-     7.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  22
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  22
+     7.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  22
+     7.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  23
      7.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  23
-     7.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  23
+     7.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  24
      7.5.  Tampering . . . . . . . . . . . . . . . . . . . . . . . .  24
 
 
@@ -114,18 +114,18 @@ Brockners, et al.         Expires May 24, 2020                  [Page 2]
 Internet-Draft              Proof of Transit               November 2019
 
 
-     7.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  24
-     7.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  24
-     7.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  24
-     7.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  25
-       7.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  25
-       7.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  25
+     7.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  25
+     7.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  25
+     7.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  25
+     7.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  26
+       7.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  26
+       7.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  26
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  26
    9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  26
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  27
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  27
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  27
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  27
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  28
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
 
 1.  Introduction
 
@@ -954,12 +954,34 @@ Brockners, et al.         Expires May 24, 2020                 [Page 17]
 Internet-Draft              Proof of Transit               November 2019
 
 
-     description "This module contains a collection of YANG
-                  definitions for proof of transit configuration
-                  parameters. The model is meant for proof of
-                  transit and is targeted for communicating the
-                  POT-Profile between a controller and nodes
-                  participating in proof of transit.";
+     description
+        "This module contains a collection of YANG
+         definitions for proof of transit configuration
+         parameters. The model is meant for proof of
+         transit and is targeted for communicating the
+         POT-Profile between a controller and nodes
+         participating in proof of transit.
+
+         Copyright (c) 2018 IETF Trust and the persons identified as
+         authors of the code.  All rights reserved.
+         Redistribution and use in source and binary forms, with or
+         without modification, is permitted pursuant to, and subject
+         to the license terms contained in, the Simplified BSD License
+         set forth in Section 4.c of the IETF Trust's Legal Provisions
+         Relating to IETF Documents
+         (http://trustee.ietf.org/license-info).
+
+         This version of this YANG module is part of RFC XXXX; see
+         the RFC itself for full legal notices.
+
+         Copyright (c) 2018 IETF Trust and the persons identified as
+         authors of the code.  All rights reserved.
+
+         The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
+         NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
+         'MAY', and 'OPTIONAL' in this document are to be interpreted as
+         described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
+         they appear in all capitals, as shown here.";
 
      revision 2016-06-15 {
        description
@@ -980,6 +1002,14 @@ Internet-Draft              Proof of Transit               November 2019
 
      grouping pot-profile {
        description "A grouping for proof of transit profiles.";
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 18]
+
+Internet-Draft              Proof of Transit               November 2019
+
+
        list pot-profile-list {
          key "pot-profile-index";
          ordered-by user;
@@ -1002,14 +1032,6 @@ Internet-Draft              Proof of Transit               November 2019
          leaf secret-share {
            type uint64;
            mandatory true;
-
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 18]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
            description
              "Share of the secret of polynomial-1 used
               in computation for the node. If POLY-1
@@ -1036,6 +1058,14 @@ Internet-Draft              Proof of Transit               November 2019
          }
 
          leaf validator {
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 19]
+
+Internet-Draft              Proof of Transit               November 2019
+
+
            type boolean;
            default "false";
            description
@@ -1058,14 +1088,6 @@ Internet-Draft              Proof of Transit               November 2019
            description
              "Number of bits as mask used in controlling
               the size of the random value generation.
-
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 19]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
               32-bits of mask is default.";
          }
 
@@ -1077,27 +1099,35 @@ Internet-Draft              Proof of Transit               November 2019
      grouping opot-profile {
       description "Grouping containing OPoT related data.";
 
+
       container opot-masks {
+        must "count(downstream-mask) = count(upstream-mask)";
         description "Masking information for OPoT support.";
 
-        must "count(downstream-mask) = count(upstream-mask)";
-
         leaf-list downstream-mask {
+          type uint64;
+          max-elements 2;
           description "Secret stream used to demask the PoT metadata.
           The mask is used between nodes adjacent in the path
           and MUST have a length equal to the sum of the ones
           of RND and CML.";
-          max-elements 2;
-          type uint64;
         }
 
         leaf-list upstream-mask {
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 20]
+
+Internet-Draft              Proof of Transit               November 2019
+
+
+          type uint64;
+          max-elements 2;
           description "Secret stream used to mask the PoT metadata.
           The mask is used between nodes adjacent in the path
           and MUST have a length equal to the sum of the ones
           of RND and CML.";
-          max-elements 2;
-          type uint64;
         }
       }
      }
@@ -1114,14 +1144,6 @@ Internet-Draft              Proof of Transit               November 2019
             metadata at a node";
 
          leaf pot-profile-name {
-
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 20]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
            type string;
            mandatory true;
            description
@@ -1143,6 +1165,18 @@ Internet-Draft              Proof of Transit               November 2019
    /*** module: end ***/
    }
    <CODE ENDS>
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 21]
+
+Internet-Draft              Proof of Transit               November 2019
+
 
 6.  IANA Considerations
 
@@ -1171,13 +1205,6 @@ Internet-Draft              Proof of Transit               November 2019
    below conditions are met it is impossible for an attacker to bypass
    one or multiple nodes without getting caught.
 
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 21]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
    o  If there are k+1 nodes in the path, the polynomials (POLY-1, POLY-
       2) should be of degree k.  Also k+1 points of POLY-1 are chosen
       and assigned to each node respectively.  The verifier can re-
@@ -1199,6 +1226,14 @@ Internet-Draft              Proof of Transit               November 2019
 
    If symmetric masking is used to assure OPOT (Section 3.5), the nodes
    need to keep two additional secrets: the downstream and upstream
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 22]
+
+Internet-Draft              Proof of Transit               November 2019
+
+
    masks, that have to be managed under the same conditions as the
    secrets mentioned above.  And it is equally recommended to employ a
    different set of mask pairs across different paths, traffic profiles
@@ -1226,14 +1261,6 @@ Internet-Draft              Proof of Transit               November 2019
       constant coefficient is a sequence number than CML values become
       quite predictable and the scheme would be broken.  If symmetric
       masking is used for OPOT, inter-packet analysis could be applied
-
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 22]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
       to guess mask values, which requires a proper refresh rate for
       masks, at least as high as the one used for LPCs.
 
@@ -1255,6 +1282,13 @@ Internet-Draft              Proof of Transit               November 2019
    Packets arriving with a higher SEQ_NO than current buffer could be
    flagged legitimate.  Packets arriving with a lower SEQ_NO than
    current buffer could be flagged as suspicious.
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 23]
+
+Internet-Draft              Proof of Transit               November 2019
+
 
    For all practical purposes in the rest of the document RND means
    SEQ_NO + RND to keep it simple.
@@ -1283,13 +1317,6 @@ Internet-Draft              Proof of Transit               November 2019
    o  The left most bits of the output are truncated to desired length
       to generate RND.  It is recommended to use a minimum of 32 bits.
 
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 23]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
    o  The verifier regenerates the HMAC from the packet fields and
       compares with RND.  To ensure the POT data is in fact that of the
       packet.
@@ -1308,6 +1335,16 @@ Internet-Draft              Proof of Transit               November 2019
    an attacker could not update the CML with a previously observed
    value.  This could subsequently be detected by using timestamps
    within the RND value as discussed above.
+
+
+
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 24]
+
+Internet-Draft              Proof of Transit               November 2019
+
 
 7.6.  Recycling
 
@@ -1338,14 +1375,6 @@ Internet-Draft              Proof of Transit               November 2019
    communication protocol such as for example NETCONF over SSH should be
    chosen for Controller to node communication.
 
-
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 24]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
    The Controller only interacts with the nodes during the initial
    configuration and thereafter at regular intervals at which the
    operator chooses to switch to a new set of secrets.  In case 64 bits
@@ -1362,6 +1391,16 @@ Internet-Draft              Proof of Transit               November 2019
    mask pairs.  The use of OPOT SHOULD be configurable as part of the
    required level of assurance through the Controller management
    interface.
+
+
+
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 25]
+
+Internet-Draft              Proof of Transit               November 2019
+
 
 7.9.  Verification Scope
 
@@ -1393,15 +1432,6 @@ Internet-Draft              Proof of Transit               November 2019
    packet traversed a specific set of "nodes".  This set could be all
    nodes within a path, but could also be a subset of nodes in a path.
    Consequently, the POT approach isn't suited to detect whether
-
-
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 25]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
    "stealth" nodes which do not participate in proof-of-transit have
    been inserted into a path.
 
@@ -1417,6 +1447,16 @@ Internet-Draft              Proof of Transit               November 2019
    In addition to editors and authors listed on the title page, the
    following people have contributed substantially to this document and
    should be considered coauthors:
+
+
+
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 26]
+
+Internet-Draft              Proof of Transit               November 2019
+
 
       Carlos Pignataro
       Cisco Systems, Inc.
@@ -1443,21 +1483,6 @@ Internet-Draft              Proof of Transit               November 2019
       Email: a.aguadom@fi.upm.es
 
 
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 26]
-
-Internet-Draft              Proof of Transit               November 2019
-
-
       Diego R. Lopez
       Telefonica I+D
       Editor Jose Manuel Lara, 9 (1-B)
@@ -1477,6 +1502,17 @@ Internet-Draft              Proof of Transit               November 2019
               P., remy@barefootnetworks.com, r., daniel.bernier@bell.ca,
               d., and J. Lemon, "Data Fields for In-situ OAM", draft-
               ietf-ippm-ioam-data-08 (work in progress), October 2019.
+
+
+
+
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 27]
+
+Internet-Draft              Proof of Transit               November 2019
+
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1499,20 +1535,6 @@ Internet-Draft              Proof of Transit               November 2019
               plane-18 (work in progress), August 2018.
 
 Authors' Addresses
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires May 24, 2020                 [Page 27]
-
-Internet-Draft              Proof of Transit               November 2019
-
 
    Frank Brockners (editor)
    Cisco Systems, Inc.
@@ -1537,6 +1559,15 @@ Internet-Draft              Proof of Transit               November 2019
    Israel
 
    Email: tal.mizrahi.phd@gmail.com
+
+
+
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 28]
+
+Internet-Draft              Proof of Transit               November 2019
 
 
    Sashank Dara
@@ -1565,4 +1596,29 @@ Internet-Draft              Proof of Transit               November 2019
 
 
 
-Brockners, et al.         Expires May 24, 2020                 [Page 28]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.         Expires May 24, 2020                 [Page 29]
