@@ -1100,9 +1100,12 @@ The trace option data MUST be 4-octet aligned:
               <t hangText="queue depth:">4-octet unsigned integer field. This
               field indicates the current length of the egress interface queue
               of the interface from where the packet is forwarded out. The
-              queue depth is expressed as the current number of memory buffers
-              used by the queue (a packet may consume one or more memory
-              buffers, depending on its size). <figure>
+              queue depth is the current number of memory used by the queue, 
+	      SHOULD be expressed using octets as the measuring unit. This is to enable interop and data analysis across buffer implemenetations, which vary between product generations and across vendors.
+	      As a note, a packet may consume one or more memory cells in the buffer, 
+	      hence actual usage of the buffer memory may be higher than the sum of 
+	      the length of the packets in the queues. 
+		      <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       queue depth                             |
