@@ -11,7 +11,7 @@ POTVERSION=02
 IPV6VERSION=01
 IPV4VERSION=00
 FLAGVERSION=00
-FLAGIETFVERSION=00
+FLAGIETFVERSION=01
 PROFILEVERSION=01
 DEXVERSION=0
 
@@ -41,9 +41,9 @@ draft-gafni-ippm-ioam-ipv4-options: draft-gafni-ippm-ioam-ipv4-options.xml
 	$(XML2RFC) $< -o $@-$(IPV4VERSION).txt
 draft-mizrahi-ippm-ioam-flags: draft-mizrahi-ippm-ioam-flags.xml
 	$(XML2RFC) $< -o $@-$(FLAGVERSION).txt
-draft-mizrahi-ippm-ioam-flags: draft-ietf-ippm-ioam-flags.xml
+draft-ietf-ippm-ioam-flags: draft-ietf-ippm-ioam-flags.xml
 	$(XML2RFC) $< -o $@-$(FLAGIETFVERSION).txt
-draft-mizrahi-ippm-ioam-flags: draft-ioamteam-ippm-ioam-direct-export.xml
+draft-ioamteam-ippm-ioam-direct-export: draft-ioamteam-ippm-ioam-direct-export.xml
 	$(XML2RFC) $< -o $@-$(DEXVERSION).txt
 draft-mizrahi-ippm-ioam-profile: draft-mizrahi-ippm-ioam-profile.xml
 	$(XML2RFC) $< -o $@-$(PROFILEVERSION).txt
