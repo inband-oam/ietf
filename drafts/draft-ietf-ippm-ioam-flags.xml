@@ -21,7 +21,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-flags-00" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-flags-01" ipr="trust200902">
 
   <front>
 
@@ -347,14 +347,19 @@
 	  <t>The active flag indicates that a packet is used for active 
 	  measurement. An IOAM decapsulating node that receives a packet with 
 	  the Active flag set in one of its Trace options must terminate the 
-	  packet.</t>
+	  packet.
+	  The active flag is intended to simplify the implementation of 
+	  decapsulating nodes by indicating that the packet should not be forwarded 
+	  further. It is not intended as a replacement for existing active OAM
+	  protocols, which may run in higher layers and make use of the active
+	  flag.</t>
 
  	  <t>An example of an IOAM deployment scenario is illustrated in
 	  <xref target="NetworkFig"></xref>. The figure depicts two endpoints,
 	  a source and a destination. The data traffic from the source to the
 	  destination is forwarded through a set of network devices, including
 	  an IOAM encapsulating node, which incorporates one or more IOAM 
-	  option, a decapsulating node, which removes the IOAM options, optionally
+	  options, a decapsulating node, which removes the IOAM options, optionally
 	  one or more transit nodes. The IOAM options are encapsulated in one
 	  of the IOAM encapsulation types, e.g., 
 	  <xref target="I-D.ietf-sfc-ioam-nsh"/>, or 
@@ -371,6 +376,8 @@
  +--------+     +--------+     +--------+     +--------+     +--------+
    Source      Encapsulating    Transit      Decapsulating   Destination
                    Node           Node           Node
+				   
+				 <-----------  IOAM domain  ----------->
    
            ]]></artwork>
 
@@ -386,14 +393,17 @@
 		 between the source and destination, traversing the IOAM domain.
 		 Since the probe packets are sent between the endpoints, these packets
 		 are treated as data packets by the IOAM domain, and do not require
-		 special treatment at the IOAM layer.</t>
+		 special treatment at the IOAM layer. Specifically, the active flag
+		 is not used in this case, and the IOAM layer needs not be aware that
+		 an active measurement mechanism is used at a higher layer.</t>
 
-         <t>IOAM active measurement using probe packets: probe packets are 
-		 generated and transmitted by the IOAM encapsulating node, and are
-		 expected to be terminated by the decapsulating node. IOAM data related
-		 to probe packets may be exported by one or more nodes along its path,
-		 by an exporting protocol that is outside the scope of this document
-		 (e.g., <xref target="I-D.spiegel-ippm-ioam-rawexport"/>). Probe 
+         <t>IOAM active measurement using probe packets within the IOAM domain: 
+		 probe packets are generated and transmitted by the IOAM encapsulating 
+		 node, and are expected to be terminated by the decapsulating node. 
+		 IOAM data related to probe packets may be exported by one or more 
+		 nodes along its path, by an exporting protocol that is outside the 
+		 scope of this document (e.g., 
+		 <xref target="I-D.spiegel-ippm-ioam-rawexport"/>). Probe 
 		 packets include a Trace Option which has its Active flag set, 
 		 indicating that the decapsulating node must terminate them.</t>
 
@@ -406,6 +416,10 @@
 		 original data packet and its replica are forwarded through the same 
 		 path. The replica includes a Trace Option that has its Active flag 
 		 set, indicating that the decapsulating node should terminate it.
+		 It should be noted that the current document defines the role of the
+		 active flag in allowing the decapsulating node to terminate the 
+		 packet, but the replication functionality in this context is outside
+		 the scope of this document.
 		 </t>
 	  </list></t>
 	  
@@ -478,7 +492,11 @@
 		 amplification; if an attacker causes transit switches to replicate
 		 more packets than they are intended to replicate, either by setting 
 		 the Active flag or by sending synthetic packets, then traffic is
-		 amplified, causing bandwidth degredation.</t>
+		 amplified, causing bandwidth degredation. As mentioned in 
+		 <xref target="UseCaseSec"/>, the specification of the replication
+		 mechanism is not within the scope of this document. A specification
+		 that defines the replication functionality should also address the
+		 security aspects of this mechanism.</t>
       </list></t>
 	  
 	  
