@@ -209,8 +209,8 @@
 	  Specifically, IOAM allows telemetry data to be pushed into data packets
 	  while they traverse the network. This document introduces a new IOAM 
 	  option type called the Direct Export (DEX) option, which is used as 
-	  a trigger for IOAM data to be directly exported to a collector without 
-	  being pushed into in-flight data packets.</t>
+	  a trigger for IOAM data to be directly exported without being pushed 
+	  into in-flight data packets.</t>
     </abstract>
   </front>
 
@@ -225,10 +225,12 @@
 	  Pre-allocated Trace Option, Incremental Trace 
 	  Option, Proof of Transit (POT) Option, and Edge-to-Edge Option.</t>
 	  
-	  <t>This document defines a new IOAM option type (also known as an IOAM type) 
-	  called the Direct Export (DEX) option. This option
-	  is used as a trigger for IOAM nodes to export IOAM
-	  data to a collector.</t>
+	  <t>This document defines a new IOAM option type (also known as an IOAM 
+	  type) called the Direct Export (DEX) option. This option is used as a 
+	  trigger for IOAM nodes to export IOAM data to a receiving entity. The
+	  "receiving entity" in this context can be, for example, an external 
+	  collector, analyzer, controller, encapsulating node, decapsulating node, 
+	  or a software module in one of the IOAM nodes.</t>
 
 	  <t>This draft has evolved from combining some of the concepts of 
 	  PBT-I from <xref target="I-D.song-ippm-postcard-based-telemetry"/> with 
@@ -267,7 +269,7 @@
 
         <section title="Overview">
 	      <t>The DEX option is used as a trigger for exporting telemetry data
-		  to a collector.</t>
+		  to a receiving entity.</t>
 		  
 		  <t>This option is incorporated into data packets by an IOAM 
 		  encapsulating node, and removed by an IOAM decapsulating node,
@@ -280,11 +282,6 @@
 
        <artwork align="left">
          <![CDATA[
-                              +-----------+
-                              | Telemetry |
-                              | Data      |
-                              | Collector |
-                              +-----------+
                                     ^
                                     |Exported IOAM data
                                     |
@@ -307,9 +304,9 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
      </figure>
 
 		  
-		  <t>The DEX option is used as a trigger to export IOAM data to a
-		  collector. The trigger applies to transit nodes, the decapsulating
-		  node, and the encapsulating node:</t>
+		  <t>The DEX option is used as a trigger to export IOAM data. The 
+		  trigger applies to transit nodes, the decapsulating node, and the 
+		  encapsulating node:</t>
 		  
           <t><list style="symbols">
                       <t>An IOAM encapsulating node configured to incorporate 
@@ -333,8 +330,8 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 		  option, or MAY selectively export data only for a subset of these 
 		  packets.</t>
 		  
-		  <t>The DEX option specifies which data fields should be exported to
-		  the collector, as specified in <xref target="OptionSec"/>.
+		  <t>The DEX option specifies which data fields should be exported, 
+		  as specified in <xref target="OptionSec"/>.
 		  The format and encapsulation of the packet that contains the exported 
 		  data is not within the scope of the current document. For example, 
 		  the export format can be based on 
@@ -455,12 +452,12 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 
     <section anchor="Performance" title="Performance Considerations">
       <t>The DEX option triggers exported packets to be exported to a 
-	  collector, which in some cases may impact the collector's performance, 
-	  or the performance along the paths leading to the collector.</t>
+	  receiving entity. In some cases this may impact the receiving entity's 
+	  performance,  or the performance along the paths leading to it.</t>
 	  
 	  <t>Therefore, rate limiting may be enabled so as to ensure that 
 	  direct exporting is used at a rate that does not significantly affect 
-	  the network bandwidth, and does not overload the collector (or the 
+	  the network bandwidth, and does not overload the receiving entity (or the 
 	  source node in the case of loopback). It should be possible to use 
 	  each DEX on a subset of the data traffic.</t>
     </section>
@@ -478,9 +475,9 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 	  packets.</t>
 	  
 	  <t>Forcing DEX, either in synthetic packets or in transit packets may 
-	  overload the collector or analyzer devices. Since this mechanism affects 
-	  multiple devices along the network path, it potentially amplifies the 
-	  effect on the network bandwidth and on the collector's load.</t>
+	  overload the receiving entity. Since this mechanism affects multiple 
+	  devices along the network path, it potentially amplifies the effect on 
+	  the network bandwidth and on the receiving entity's load.</t>
 	  
 	  
 	  <t>In order to mitigate the attacks described above, it should be 
@@ -519,7 +516,7 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 		  especially when the lower layer cannot prvide the accurate TTL
 		  information, e.g., Layer 2 Ethernet or hierarchical VPN. It also 
 		  explicitly allows to detect a case where an IOAM-capable node fails 
-		  to export packets to the collector. In order to facilitate the Hop 
+		  to export packets. In order to facilitate the Hop 
 		  Count approach it is possible to use a flag to indicate an optional Hop Count 
 		  field, which enables to control the tradeoff. On one hand it addresses the 
 		  use cases that the Hop_Lim/Node_ID cannot cover, and on the other hand
