@@ -311,22 +311,22 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
           <t><list style="symbols">
                       <t>An IOAM encapsulating node configured to incorporate 
 					  the DEX option encapsulates the packet with the DEX 
-					  option, and exports the requested IOAM data
+					  option, and MAY export the requested IOAM data
                       immediately. The IOAM encapsulating node is the only
                       type of node allowed to push the DEX option.</t>
 
                       <t>A transit node that processes a packet with the DEX 
-					  option is expected to export the requested IOAM data.</t>
+					  option MAY export the requested IOAM data.</t>
 
                       <t>An IOAM decapsulating node that processes a packet
-                      with the DEX option is expected to export the requested
-                      IOAM data, and decapsulate the IOAM header.</t>
+                      with the DEX option MAY export the requested
+                      IOAM data, and MUST decapsulate the IOAM header.</t>
           </list></t>
 
 		  <t>As in <xref target="I-D.ietf-ippm-ioam-data"/>, the DEX option 
 		  may be incorporated into all or a subset of the traffic that is 
 		  forwarded by the encapsulating node. Moreover, IOAM nodes MAY
-		  send exported data for all traversing packets that carry the DEX 
+		  export data for all traversing packets that carry the DEX 
 		  option, or MAY selectively export data only for a subset of these 
 		  packets.</t>
 		  
@@ -459,7 +459,8 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 	  direct exporting is used at a rate that does not significantly affect 
 	  the network bandwidth, and does not overload the receiving entity (or the 
 	  source node in the case of loopback). It should be possible to use 
-	  each DEX on a subset of the data traffic.</t>
+	  each DEX on a subset of the data traffic, and to load balance the 
+	  exported data among multiple receiving entities.</t>
     </section>
 
 	
@@ -472,7 +473,8 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 	  <t>An attacker may attempt to overload network devices by injecting 
 	  synthetic packets that include the DEX option. Similarly, an on-path 
 	  attacker may maliciously incorporate the DEX option into transit 
-	  packets.</t>
+	  packets, or maliciously remove it from packets in which it is 
+	  incorporated.</t>
 	  
 	  <t>Forcing DEX, either in synthetic packets or in transit packets may 
 	  overload the receiving entity. Since this mechanism affects multiple 
