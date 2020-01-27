@@ -5,7 +5,7 @@
 IPPM                                                          T. Mizrahi
 Internet-Draft                               Huawei Smart Platforms iLab
 Intended status: Standards Track                            F. Brockners
-Expires: June 18, 2020                                       S. Bhandari
+Expires: July 29, 2020                                       S. Bhandari
                                                           R. Sivakolundu
                                                             C. Pignataro
                                                                    Cisco
@@ -16,7 +16,7 @@ Expires: June 18, 2020                                       S. Bhandari
                                                        Barefoot Networks
                                                                 J. Lemon
                                                                 Broadcom
-                                                       December 16, 2019
+                                                        January 26, 2020
 
 
                            In-situ OAM Flags
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on June 18, 2020.
+   This Internet-Draft will expire on July 29, 2020.
 
 
 
@@ -53,14 +53,14 @@ Status of This Memo
 
 
 
-Mizrahi, et al.           Expires June 18, 2020                 [Page 1]
+Mizrahi, et al.           Expires July 29, 2020                 [Page 1]
 
-Internet-Draft                 IOAM Flags                  December 2019
+Internet-Draft                 IOAM Flags                   January 2020
 
 
 Copyright Notice
 
-   Copyright (c) 2019 IETF Trust and the persons identified as the
+   Copyright (c) 2020 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -84,11 +84,11 @@ Table of Contents
    5.  Active Measurement with IOAM  . . . . . . . . . . . . . . . .   4
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
    7.  Performance Considerations  . . . . . . . . . . . . . . . . .   6
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
      9.2.  Informative References  . . . . . . . . . . . . . . . . .   8
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Mizrahi, et al.           Expires June 18, 2020                 [Page 2]
+Mizrahi, et al.           Expires July 29, 2020                 [Page 2]
 
-Internet-Draft                 IOAM Flags                  December 2019
+Internet-Draft                 IOAM Flags                   January 2020
 
 
 2.  Conventions
@@ -165,9 +165,9 @@ Internet-Draft                 IOAM Flags                  December 2019
 
 
 
-Mizrahi, et al.           Expires June 18, 2020                 [Page 3]
+Mizrahi, et al.           Expires July 29, 2020                 [Page 3]
 
-Internet-Draft                 IOAM Flags                  December 2019
+Internet-Draft                 IOAM Flags                   January 2020
 
 
    The encapsulating node generates synthetic packets with an IOAM trace
@@ -221,31 +221,29 @@ Internet-Draft                 IOAM Flags                  December 2019
 
 
 
-Mizrahi, et al.           Expires June 18, 2020                 [Page 4]
+Mizrahi, et al.           Expires July 29, 2020                 [Page 4]
 
-Internet-Draft                 IOAM Flags                  December 2019
+Internet-Draft                 IOAM Flags                   January 2020
 
 
    The active flag indicates that a packet is used for active
    measurement.  An IOAM decapsulating node that receives a packet with
    the Active flag set in one of its Trace options must terminate the
-   packet.
+   packet.  The active flag is intended to simplify the implementation
+   of decapsulating nodes by indicating that the packet should not be
+   forwarded further.  It is not intended as a replacement for existing
+   active OAM protocols, which may run in higher layers and make use of
+   the active flag.
 
    An example of an IOAM deployment scenario is illustrated in Figure 1.
    The figure depicts two endpoints, a source and a destination.  The
    data traffic from the source to the destination is forwarded through
    a set of network devices, including an IOAM encapsulating node, which
-   incorporates one or more IOAM option, a decapsulating node, which
+   incorporates one or more IOAM options, a decapsulating node, which
    removes the IOAM options, optionally one or more transit nodes.  The
    IOAM options are encapsulated in one of the IOAM encapsulation types,
    e.g., [I-D.ietf-sfc-ioam-nsh], or
    [I-D.ioametal-ippm-6man-ioam-ipv6-options].
-
-
-
-Mizrahi, et al.           Expires June 18, 2020                 [Page 4]
-
-Internet-Draft                 IOAM Flags                  December 2019
 
 
  +--------+     +--------+     +--------+     +--------+     +--------+
@@ -256,7 +254,7 @@ Internet-Draft                 IOAM Flags                  December 2019
    Source      Encapsulating    Transit      Decapsulating   Destination
                    Node           Node           Node
 
-                                 <-----------  IOAM domain  ----------->
+                <------------  IOAM domain  ----------->
 
 
                        Figure 1: Network using IOAM.
@@ -269,27 +267,31 @@ Internet-Draft                 IOAM Flags                  December 2019
       between the source and destination, traversing the IOAM domain.
       Since the probe packets are sent between the endpoints, these
       packets are treated as data packets by the IOAM domain, and do not
-      require special treatment at the IOAM layer.
+      require special treatment at the IOAM layer.  Specifically, the
+      active flag is not used in this case, and the IOAM layer needs not
+      be aware that an active measurement mechanism is used at a higher
+      layer.
 
-   o  IOAM active measurement using probe packets: probe packets are
-      generated and transmitted by the IOAM encapsulating node, and are
-      expected to be terminated by the decapsulating node.  IOAM data
-      related to probe packets may be exported by one or more nodes
-      along its path, by an exporting protocol that is outside the scope
-      of this document (e.g., [I-D.spiegel-ippm-ioam-rawexport]).  Probe
-      packets include a Trace Option which has its Active flag set,
-      indicating that the decapsulating node must terminate them.
+   o  IOAM active measurement using probe packets within the IOAM
+      domain: probe packets are generated and transmitted by the IOAM
+
+
+
+Mizrahi, et al.           Expires July 29, 2020                 [Page 5]
+
+Internet-Draft                 IOAM Flags                   January 2020
+
+
+      encapsulating node, and are expected to be terminated by the
+      decapsulating node.  IOAM data related to probe packets may be
+      exported by one or more nodes along its path, by an exporting
+      protocol that is outside the scope of this document (e.g.,
+      [I-D.spiegel-ippm-ioam-rawexport]).  Probe packets include a Trace
+      Option which has its Active flag set, indicating that the
+      decapsulating node must terminate them.
 
    o  IOAM active measurement using replicated data packets: probe
       packets are created by the encapsulating node by selecting some or
-
-
-
-Mizrahi, et al.           Expires June 18, 2020                 [Page 5]
-
-Internet-Draft                 IOAM Flags                  December 2019
-
-
       all of the en route data packets and replicating them.  A selected
       data packet that is replicated, and its (possibly truncated) copy
       is forwarded with one or more IOAM option, while the original
@@ -297,7 +299,10 @@ Internet-Draft                 IOAM Flags                  December 2019
       possible, the original data packet and its replica are forwarded
       through the same path.  The replica includes a Trace Option that
       has its Active flag set, indicating that the decapsulating node
-      should terminate it.
+      should terminate it.  It should be noted that the current document
+      defines the role of the active flag in allowing the decapsulating
+      node to terminate the packet, but the replication functionality in
+      this context is outside the scope of this document.
 
 6.  IANA Considerations
 
@@ -325,27 +330,26 @@ Internet-Draft                 IOAM Flags                  December 2019
    mechanisms on a subset of the data traffic; an encapsulating node
    needs to be able to set the Loopback and Active flag selectively, in
    a way that considers the effect on the network performance.
+
+
+
+Mizrahi, et al.           Expires July 29, 2020                 [Page 6]
+
+Internet-Draft                 IOAM Flags                   January 2020
+
+
    Similarly, transit and decapsulating nodes need to be able to
    selectively loop back packets with the Loopback flag, and to
-   selectively export packets to the collector.  Specifically, rate
-   limiting may be enabled so as to ensure that the mechanisms are used
-   at a rate that does not significantly affect the network bandwidth,
-   and does not overload the collector (or the source node in the case
-   of loopback).
+   selectively export packets.  Specifically, rate limiting may be
+   enabled so as to ensure that the mechanisms are used at a rate that
+   does not significantly affect the network bandwidth, and does not
+   overload the receiving entity (or the source node in the case of
+   loopback).
 
 8.  Security Considerations
 
    The security considerations of IOAM in general are discussed in
    [I-D.ietf-ippm-ioam-data].  Specifically, an attacker may try to use
-
-
-
-
-Mizrahi, et al.           Expires June 18, 2020                 [Page 6]
-
-Internet-Draft                 IOAM Flags                  December 2019
-
-
    the functionality that is defined in this document to attack the
    network.
 
@@ -374,11 +378,22 @@ Internet-Draft                 IOAM Flags                  December 2019
       transit switches to replicate more packets than they are intended
       to replicate, either by setting the Active flag or by sending
       synthetic packets, then traffic is amplified, causing bandwidth
-      degredation.
+      degredation.  As mentioned in Section 5, the specification of the
+      replication mechanism is not within the scope of this document.  A
+      specification that defines the replication functionality should
+      also address the security aspects of this mechanism.
 
    In order to mitigate the attacks described above, as described in
    Section 7 it should be possible for IOAM-enabled devices to
    selectively apply the mechanisms that use the flags defined in this
+
+
+
+Mizrahi, et al.           Expires July 29, 2020                 [Page 7]
+
+Internet-Draft                 IOAM Flags                   January 2020
+
+
    document to a subset of the traffic, and to limit the performance of
    synthetically generated packets to a configurable rate; specifically,
    network devices should be able to limit the rate of: (i) looped-back
@@ -394,14 +409,6 @@ Internet-Draft                 IOAM Flags                  December 2019
 
    IOAM is assumed to be deployed in a restricted administrative domain,
    thus limiting the scope of the threats above and their affect.  This
-
-
-
-Mizrahi, et al.           Expires June 18, 2020                 [Page 7]
-
-Internet-Draft                 IOAM Flags                  December 2019
-
-
    is a fundamental assumtion with respect to the security aspects of
    IOAM, as further discussed in [I-D.ietf-ippm-ioam-data].
 
@@ -435,6 +442,14 @@ Internet-Draft                 IOAM Flags                  December 2019
               "In-situ OAM IPv6 Options", draft-ioametal-ippm-6man-ioam-
               ipv6-options-02 (work in progress), March 2019.
 
+
+
+
+Mizrahi, et al.           Expires July 29, 2020                 [Page 8]
+
+Internet-Draft                 IOAM Flags                   January 2020
+
+
    [I-D.spiegel-ippm-ioam-rawexport]
               Spiegel, M., Brockners, F., Bhandari, S., and R.
               Sivakolundu, "In-situ OAM raw data export with IPFIX",
@@ -446,17 +461,6 @@ Internet-Draft                 IOAM Flags                  December 2019
               May 2016, <https://www.rfc-editor.org/info/rfc7799>.
 
 Authors' Addresses
-
-
-
-
-
-
-
-Mizrahi, et al.           Expires June 18, 2020                 [Page 8]
-
-Internet-Draft                 IOAM Flags                  December 2019
-
 
    Tal Mizrahi
    Huawei Smart Platforms iLab
@@ -492,6 +496,16 @@ Internet-Draft                 IOAM Flags                  December 2019
    Email: sramesh@cisco.com
 
 
+
+
+
+
+
+Mizrahi, et al.           Expires July 29, 2020                 [Page 9]
+
+Internet-Draft                 IOAM Flags                   January 2020
+
+
    Carlos Pignataro
    Cisco Systems, Inc.
    7200-11 Kit Creek Road
@@ -499,19 +513,6 @@ Internet-Draft                 IOAM Flags                  December 2019
    United States
 
    Email: cpignata@cisco.com
-
-
-
-
-
-
-
-
-
-
-Mizrahi, et al.           Expires June 18, 2020                 [Page 9]
-
-Internet-Draft                 IOAM Flags                  December 2019
 
 
    Aviv Kfir
@@ -556,13 +557,4 @@ Internet-Draft                 IOAM Flags                  December 2019
 
 
 
-
-
-
-
-
-
-
-
-
-Mizrahi, et al.           Expires June 18, 2020                [Page 10]
+Mizrahi, et al.           Expires July 29, 2020                [Page 10]
