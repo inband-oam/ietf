@@ -22,6 +22,7 @@
 <!ENTITY RFC7384 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7384.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
+<!ENTITY I-D.ioamteam-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioamteam-ippm-ioam-direct-export.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
 <!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-6man-pdm-option.xml">
@@ -1983,21 +1984,26 @@ be 4-octet aligned:
       <t>As discussed in <xref target="RFC7276"/>, a successful attack on an
       OAM protocol in general, and specifically on IOAM, can prevent the
       detection of failures or anomalies, or create a false illusion of
-      nonexistent ones.</t>
+      nonexistent ones. In particular, these threats are applicable by 
+	  compromising the integrity of IOAM data, either by maliciously modifying 
+	  IOAM options in transit, or by injecting packets with maliciously 
+	  generated IOAM options</t>
 
       <t>The Proof of Transit Option-Type (Section <xref
       target="IOAM_proof_of_transit_option"/>) is used for verifying the path
       of data packets. The security considerations of POT are further
       discussed in <xref target="I-D.ietf-sfc-proof-of-transit"/>.</t>
 
-      <t>The data elements of IOAM can be used for network reconnaissance,
+      <t>From a confidentiality perspective, although IOAM options do not 
+	  contain user data, they can be used for network reconnaissance,
       allowing attackers to collect information about network paths,
       performance, queue states, buffer occupancy and other information. Note
-      that in case IOAM is used in "immediate export" mode (reference to be
-      added in a future revision), the IOAM related trace information would
-      not be available in the customer data packets, but would trigger export
-      of packet related IOAM information at every node. IOAM data export and
-      securing IOAM data export is outside the scope of this document.</t>
+      that in case IOAM is used in "Direct Exporting" mode 
+	  <xref target="I-D.ioamteam-ippm-ioam-direct-export"/>, the IOAM related 
+	  trace information would not be available in the customer data packets, 
+	  but would trigger export of packet related IOAM information at every 
+	  node. IOAM data export and securing IOAM data export is outside the scope 
+	  of this document.</t>
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
@@ -2021,13 +2027,17 @@ be 4-octet aligned:
 
       <t>Notably, IOAM is expected to be deployed in specific network domains,
       thus confining the potential attack vectors to within the network
-      domain. Indeed, in order to limit the scope of threats to within the
-      current network domain the network operator is expected to enforce
-      policies that prevent IOAM traffic from leaking outside of the IOAM
-      domain, and prevent IOAM data from outside the domain to be processed
-      and used within the domain. Note that the Immediate Export mode
-      (reference to be added in a future revision) can mitigate the potential
-      threat of IOAM data leaking through data packets.</t>
+      domain. A limited administrative domain provides the operator with the 
+	  means to select, monitor, and control the access of all the network 
+	  devices, making these devices trusted by the operator. Indeed, in order 
+	  to limit the scope of threats above to within the current network domain 
+	  the network operator is expected to enforce policies that prevent IOAM 
+	  traffic from leaking outside of the IOAM domain, and prevent IOAM data 
+	  from outside the domain to be processed and used within the domain. 
+	  Note that the "Direct Exporting" mode 
+	  <xref target="I-D.ioamteam-ippm-ioam-direct-export"/> can mitigate the 
+	  potential threat of IOAM data leaking through data packets, limiting the
+	  leakage threat to exported packets.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -2153,6 +2163,8 @@ be 4-octet aligned:
 
       &I-D.ietf-sfc-proof-of-transit;
 
+      &I-D.ioamteam-ippm-ioam-direct-export;
+	  
       &I-D.spiegel-ippm-ioam-rawexport;
     </references>
   </back>
