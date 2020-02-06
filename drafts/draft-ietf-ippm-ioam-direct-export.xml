@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced. 
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
+<!ENTITY RFC8126 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
+<!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-ioam-nsh.xml">
+<!ENTITY I-D.ioametal-ippm-6man-ioam-ipv6-options SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioametal-ippm-6man-ioam-ipv6-options.xml">
+<!ENTITY I-D.song-ippm-postcard-based-telemetry SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.song-ippm-postcard-based-telemetry.xml">
+<!ENTITY I-D.mizrahi-ippm-ioam-flags SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.mizrahi-ippm-ioam-flags.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<?rfc strict="yes" ?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes" ?>
+<?rfc compact="yes" ?>
+<?rfc subcompact="no" ?>
+<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-00" ipr="trust200902">
+
+  <front>
+
+    <title abbrev="IOAM Direct Exporting">In-situ OAM Direct Exporting</title>
+
+    <author fullname="Haoyu Song" initials="H." surname="Song">
+      <organization abbrev="">Futurewei</organization>
+
+      <address>
+        <postal>
+          <street>2330 Central Expressway</street>
+
+          <city>Santa Clara</city>
+
+          <code>95050</code>
+
+          <country>USA</country>
+        </postal>
+
+        <email>haoyu.song@huawei.com</email>
+      </address>
+    </author>
+	
+    <author fullname="Barak Gafni" initials="B." surname="Gafni">
+      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>350 Oakmead Parkway, Suite 100</street>
+
+          <city>Sunnyvale, CA</city>
+
+          <code>94085</code>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>gbarak@mellanox.com</email>
+      </address>
+    </author>
+
+
+    <author fullname="Tianran Zhou" initials="T." surname="Zhou">
+      <organization abbrev="">Huawei</organization>
+
+      <address>
+        <postal>
+          <street>156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>zhoutianran@huawei.com</email>
+      </address>
+    </author>
+	
+	
+    <author fullname="Zhenbin Li" initials="Z." surname="Li">
+      <organization abbrev="">Huawei</organization>
+
+      <address>
+        <postal>
+          <street>156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>lizhenbin@huawei.com</email>
+      </address>
+    </author>
+	
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
+          Road</street>
+
+          <city>Bangalore, KARNATAKA 560 087</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwethab@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Ramesh Sivakolundu" initials="R." surname="Sivakolundu">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>170 West Tasman Dr.</street>
+
+          <city>SAN JOSE, CA 95134</city>
+
+          <country>U.S.A.</country>
+        </postal>
+
+        <email>sramesh@cisco.com</email>
+      </address>
+    </author>
+
+	
+	
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi" role="editor">
+      <organization abbrev="">Huawei Smart Platforms iLab</organization>
+
+      <address>
+        <postal>
+          <street>8-2 Matam</street>
+
+          <city>Haifa</city>
+
+          <code>3190501</code>
+
+          <country>Israel</country>
+        </postal>
+
+        <email>tal.mizrahi.phd@gmail.com</email>
+      </address>
+    </author>
+
+
+    <date year="2020" />
+
+
+    <area>TSV</area>
+
+    <workgroup>IPPM</workgroup>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.  
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>IOAM</keyword>
+
+    <keyword>Telemetry</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) is used
+      for recording and collecting operational and telemetry information. 
+	  Specifically, IOAM allows telemetry data to be pushed into data packets
+	  while they traverse the network. This document introduces a new IOAM 
+	  option type called the Direct Export (DEX) option, which is used as 
+	  a trigger for IOAM data to be directly exported without being pushed 
+	  into in-flight data packets.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction" toc="default">
+      <t>IOAM <xref target="I-D.ietf-ippm-ioam-data"/> is used for 
+	  monitoring traffic in the network, and for incorporating IOAM data 
+	  fields into in-flight data packets.</t> 
+
+	  <t>IOAM makes use of four possible IOAM options, defined in
+	  <xref target="I-D.ietf-ippm-ioam-data"/>: 
+	  Pre-allocated Trace Option, Incremental Trace 
+	  Option, Proof of Transit (POT) Option, and Edge-to-Edge Option.</t>
+	  
+	  <t>This document defines a new IOAM option type (also known as an IOAM 
+	  type) called the Direct Export (DEX) option. This option is used as a 
+	  trigger for IOAM nodes to export IOAM data to a receiving entity (or 
+	  entities). A "receiving entity" in this context can be, for example, an 
+	  external collector, analyzer, controller, decapsulating node, or a 
+	  software module in one of the IOAM nodes.</t>
+
+	  <t>This draft has evolved from combining some of the concepts of 
+	  PBT-I from <xref target="I-D.song-ippm-postcard-based-telemetry"/> with 
+	  immediate exporting from <xref target="I-D.mizrahi-ippm-ioam-flags"/>.
+	  </t>
+	  
+	</section>
+
+    <section anchor="Conventions" title="Conventions">
+
+      <section title="Requirement Language">
+	
+  	  <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119"></xref>.</t>
+      </section>
+
+      <section title="Terminology">
+      <t>Abbreviations used in this document:</t>
+
+      <t><list hangIndent="11" style="hanging">
+          <t hangText="IOAM:">In-situ Operations, Administration, and
+          Maintenance</t>
+
+          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="DEX:">Direct EXporting</t>
+		  
+        </list></t>
+      </section>
+    </section>
+
+
+    <section title="The Direct Exporting (DEX) IOAM Option Type">  
+
+        <section title="Overview">
+	      <t>The DEX option is used as a trigger for exporting telemetry data
+		  to a receiving entity (or entities).</t>
+		  
+		  <t>This option is incorporated into data packets by an IOAM 
+		  encapsulating node, and removed by an IOAM decapsulating node,
+		  as illustrated in <xref target="DEXArch"/>.
+		  The option can be read but not modified by transit nodes.
+		  Note: the terms IOAM encapsulating, decapsulating and transit nodes are 
+		  as defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+
+     <figure align="center" anchor="DEXArch" title="DEX Architecture">
+       <artwork align="left">
+         <![CDATA[
+                                    ^
+                                    |Exported IOAM data
+                                    |
+                                    |
+                                    |
+              +--------------+------+-------+--------------+
+              |              |              |              |
+              |              |              |              |
+User      +---+----+     +---+----+     +---+----+     +---+----+
+packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
+--------->|lating  |====>| Node   |====>| Node   |====>|lating  |---->
+          |Node    |     | A      |     | B      |     |Node    |
+          +--------+     +--------+     +--------+     +--------+
+          Insert DEX       Export         Export       Remove DEX
+          option and      IOAM data      IOAM data     option and
+          export data                                  export data
+		  
+           ]]></artwork>
+
+     </figure>
+
+		  
+		  <t>The DEX option is used as a trigger to export IOAM data. The 
+		  trigger applies to transit nodes, the decapsulating node, and the 
+		  encapsulating node:</t>
+		  
+          <t><list style="symbols">
+                      <t>An IOAM encapsulating node configured to incorporate 
+					  the DEX option encapsulates the packet with the DEX 
+					  option, and MAY export the requested IOAM data
+                      immediately. The IOAM encapsulating node is the only
+                      type of node allowed to push the DEX option.</t>
+
+                      <t>A transit node that processes a packet with the DEX 
+					  option MAY export the requested IOAM data.</t>
+
+                      <t>An IOAM decapsulating node that processes a packet
+                      with the DEX option MAY export the requested
+                      IOAM data, and MUST decapsulate the IOAM header.</t>
+          </list></t>
+
+		  <t>As in <xref target="I-D.ietf-ippm-ioam-data"/>, the DEX option 
+		  may be incorporated into all or a subset of the traffic that is 
+		  forwarded by the encapsulating node. Moreover, IOAM nodes MAY
+		  export data for all traversing packets that carry the DEX 
+		  option, or MAY selectively export data only for a subset of these 
+		  packets.</t>
+		  
+		  <t>The DEX option specifies which data fields should be exported, 
+		  as specified in <xref target="OptionSec"/>.
+		  The format and encapsulation of the packet that contains the exported 
+		  data is not within the scope of the current document. For example, 
+		  the export format can be based on 
+		  <xref target="I-D.spiegel-ippm-ioam-rawexport"/>.</t>
+		  
+		  <t>A transit IOAM node that does not support the DEX option SHOULD 
+		  ignore it. A decapsulating node that does not support the DEX option
+		  MUST remove it, along with any other IOAM options carried in the 
+		  packet if such exist.</t>
+		  
+
+		</section>
+
+
+        <section anchor="OptionSec" title="The DEX Option Format">
+
+	      <t>The format of the DEX option is depicted in 
+		  <xref target="OptionFormat"/>. The length of the DEX option
+		  is either 8 octets or 16 octets, as the Flow ID and the
+		  Sequence Number fields (summing up to 8 octets) are optional. 
+		  It is assumed that the lower layer protocol indicates 
+		  the length of the DEX option, thus indicating whether the two 
+		  optional fields are present.</t>
+		
+     <figure align="center" anchor="OptionFormat" title="DEX Option Format">
+
+       <artwork align="left">
+         <![CDATA[
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |        Namespace-ID           |            Flags              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |               IOAM-Trace-Type                 |   Reserved    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                         Flow ID (optional)                    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                     Sequence Number  (Optional)               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+           ]]></artwork>
+
+     </figure>
+
+
+     <t>
+       <list hangIndent="16"  style="hanging">
+
+         <t hangText="Namespace-ID">A 16-bit identifier of the IOAM namespace, 
+		 as defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+	   
+         <t hangText="Flags">A 16-bit field, comprised of 16 one-bit subfields.
+		 Flags are allocated by IANA, as defined in 
+		 <xref target="IANAflags"/>.</t>
+
+         <t hangText="IOAM-Trace-Type">A 24-bit identifier which specifies 
+		 which data fields should be exported. The format of this field is
+		 as defined in <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically,
+		 bit 23, which corresponds to the Checksum Complement data field, 
+		 should be assigned to be zero by the IOAM encapsulating node,
+		 and ignored by transit and decapsulating nodes. The reason for this 
+		 is that the Checksum Complement is intended for in-flight packet 
+		 modifications and is not relevant for direct exporting.</t>
+
+         <t hangText="Reserved">This field SHOULD be ignored by the 
+		 receiver.</t>
+
+         <t hangText="Flow ID">A 32-bit flow identifier. If the actual Flow ID 
+		 is shorter than 32 bits, it is zero padded in its most significant 
+		 bits. The field is set at the encapsulating node.  The Flow
+         ID can be uniformly assigned by a central controller or
+         algorithmically generated by the encapsulating node.  The latter approach
+         cannot guarantee the uniqueness of Flow ID, yet the conflict
+         probability is small due to the large Flow ID space. The Flow ID 
+		 can be used to correlate the exported data of the same flow from 
+		 multiple nodes and from multiple packets.</t>
+
+         <t hangText="Sequence Number">A 32-bit sequence number starting from 0 
+		 and increasing by 1 for each following monitored packet from the same
+		 flow at the encapsulating node. The Sequence Number, when combined 
+		 with the Flow ID, provides a convenient approach to correlate the 
+		 exported data from the same user packet.</t>
+		 
+       </list>
+     </t>
+
+
+		</section>
+
+		
+		
+    </section>
+
+	
+    <section anchor="IANA" title="IANA Considerations">
+	
+      <section anchor="IANAtype" title="IOAM Type">
+        <t>The "IOAM Type Registry" was defined in Section 7.2 of 
+		<xref target="I-D.ietf-ippm-ioam-data"/>.
+		IANA is requested to allocate the following code point from the 
+		"IOAM Type Registry" as follows:</t>
+		
+        <t><list hangIndent="11" style="hanging">
+			<t hangText="TBD-type">IOAM Direct Export (DEX) Option Type</t>
+        </list></t>
+		  
+		<t>If possible, IANA is requested to allocate code point 4 (TBD-type).</t>
+      </section>
+
+      <section anchor="IANAflags" title="IOAM DEX Flags">
+        <t>IANA is requested to define an "IOAM DEX Flags" registry. This
+		registry includes 16 flag bits. Allocation should be performed based on 
+		the "RFC Required" procedure, as defined in <xref
+        target="RFC8126"></xref>.</t>
+      </section>
+	  
+    </section>
+
+    <section anchor="Performance" title="Performance Considerations">
+      <t>The DEX option triggers exported packets to be exported to a 
+	  receiving entity (or entities). In some cases this may impact the 
+	  receiving entity's performance,  or the performance along the paths 
+	  leading to it.</t>
+	  
+	  <t>Therefore, rate limiting may be enabled so as to ensure that 
+	  direct exporting is used at a rate that does not significantly affect 
+	  the network bandwidth, and does not overload the receiving entity (or the 
+	  source node in the case of loopback). It should be possible to use 
+	  each DEX on a subset of the data traffic, and to load balance the 
+	  exported data among multiple receiving entities.</t>
+    </section>
+
+	
+    <section anchor="Security" title="Security Considerations">
+      <t>The security considerations of IOAM in general are discussed in 
+	  <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically, an attacker
+	  may try to use the functionality that is defined in this document 
+	  to attack the network.</t>
+	  
+	  <t>An attacker may attempt to overload network devices by injecting 
+	  synthetic packets that include the DEX option. Similarly, an on-path 
+	  attacker may maliciously incorporate the DEX option into transit 
+	  packets, or maliciously remove it from packets in which it is 
+	  incorporated.</t>
+	  
+	  <t>Forcing DEX, either in synthetic packets or in transit packets may 
+	  overload the receiving entity (or entities). Since this mechanism affects 
+	  multiple devices along the network path, it potentially amplifies the 
+	  effect on the network bandwidth and on the receiving entity's load.</t>
+	  
+	  
+	  <t>In order to mitigate the attacks described above, it should be 
+	  possible for IOAM-enabled devices to limit the exported IOAM data
+	  to a configurable rate.</t>
+	  
+	  <t>IOAM is assumed to be deployed in a restricted administrative domain,
+	  thus limiting the scope of the threats above and their affect. This is
+	  a fundamental assumption with respect to the security aspects of IOAM, as
+	  further discussed in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+    </section>
+
+	
+    <section title="Topics for Further Discussion">  
+	
+        <t><list style="symbols">
+
+		
+		  <t>Hop Limit / Hop Count: in order to help correlate and order the 
+		  exported packets, it is possible to include a 1-octet 
+		  Hop Count field in the DEX header (presumably by claiming some space 
+		  from the Flags field). Its value starts from 0 at the encapsulating 
+		  node and is incremented by each IOAM transit node that supports
+		  the DEX option. The Hop Count field value is also included in the 
+		  exported packet. An alternative approach is to use the 
+		  Hop_Lim/Node_ID data field; if the IOAM-Trace-Type 
+		  <xref target="I-D.ietf-ippm-ioam-data"/> has the Hop_Lim/Node_ID bit 
+		  set, then exported packets include the Hop_Lim/Node_ID data field, 
+		  which contains the TTL/Hop Limit value from a lower layer protocol.
+		  The main advantage of the Hop_Lim/Node_ID approach is that it 
+		  provides information about the current hop count without requiring 
+		  each transit node to modify the DEX option, thus simplifying the data 
+		  plane functionality of Direct Exporting.
+		  The main advantage of the Hop Count approach is that it counts the 
+		  number of IOAM-capable nodes without relying on the lower layer TTL, 
+		  especially when the lower layer cannot prvide the accurate TTL
+		  information, e.g., Layer 2 Ethernet or hierarchical VPN. It also 
+		  explicitly allows to detect a case where an IOAM-capable node fails 
+		  to export packets. In order to facilitate the Hop 
+		  Count approach it is possible to use a flag to indicate an optional Hop Count 
+		  field, which enables to control the tradeoff. On one hand it addresses the 
+		  use cases that the Hop_Lim/Node_ID cannot cover, and on the other hand
+		  it does not require transit switches to update the option if it is not 
+		  supported or disabled.
+		  Further discussion is required about the tradeoff between the 
+		  two alternatives.</t>
+		  
+        </list></t>
+
+	</section>
+	
+	
+  </middle>
+
+
+  <back>
+    <references title="Normative References">
+      &RFC2119;
+
+      &I-D.ietf-ippm-ioam-data;
+	  
+
+	  </references>
+    <references title="Informative References">
+	  &RFC8126;
+	  
+	  &I-D.spiegel-ippm-ioam-rawexport;
+	  
+	  &I-D.song-ippm-postcard-based-telemetry;
+	  
+	  &I-D.mizrahi-ippm-ioam-flags;
+	  
+	  </references>
+  </back>
+</rfc>

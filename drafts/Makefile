@@ -12,8 +12,9 @@ IPV6VERSION=01
 IPV4VERSION=00
 FLAGVERSION=00
 FLAGIETFVERSION=01
-PROFILEVERSION=01
-DEXVERSION=0
+PROFILEVERSION=02
+DEXVERSION=00
+DEXIETFVERSION=00
 
 all:	drafts
 
@@ -45,6 +46,8 @@ draft-ietf-ippm-ioam-flags: draft-ietf-ippm-ioam-flags.xml
 	$(XML2RFC) $< -o $@-$(FLAGIETFVERSION).txt
 draft-ioamteam-ippm-ioam-direct-export: draft-ioamteam-ippm-ioam-direct-export.xml
 	$(XML2RFC) $< -o $@-$(DEXVERSION).txt
+draft-ietf-ippm-ioam-direct-export: draft-ietf-ippm-ioam-direct-export.xml
+	$(XML2RFC) $< -o $@-$(DEXIETFVERSION).txt
 draft-mizrahi-ippm-ioam-profile: draft-mizrahi-ippm-ioam-profile.xml
 	$(XML2RFC) $< -o $@-$(PROFILEVERSION).txt
 data: draft-ietf-ippm-ioam-data.xml
