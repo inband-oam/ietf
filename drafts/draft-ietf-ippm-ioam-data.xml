@@ -1997,13 +1997,16 @@ be 4-octet aligned:
       <t>From a confidentiality perspective, although IOAM options do not 
 	  contain user data, they can be used for network reconnaissance,
       allowing attackers to collect information about network paths,
-      performance, queue states, buffer occupancy and other information. Note
+      performance, queue states, buffer occupancy and other information. 
+	  Moreover, if IOAM data leaks from the IOAM domain it may enable 
+	  reconnaissance beyond the scope of the IOAM domain. Note
       that in case IOAM is used in "Direct Exporting" mode 
 	  <xref target="I-D.ioamteam-ippm-ioam-direct-export"/>, the IOAM related 
 	  trace information would not be available in the customer data packets, 
 	  but would trigger export of packet related IOAM information at every 
-	  node. IOAM data export and securing IOAM data export is outside the scope 
-	  of this document.</t>
+	  node, thus restricting the potential threat to the management plane 
+	  and mitigating the leakage threat. IOAM data exporting and the way it
+	  is secured is outside the scope of this document.</t>
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
@@ -2025,19 +2028,30 @@ be 4-octet aligned:
       authenticates authorized users and verifies the integrity of
       configuration procedures.</t>
 
-      <t>Notably, IOAM is expected to be deployed in specific network domains,
-      thus confining the potential attack vectors to within the network
-      domain. A limited administrative domain provides the operator with the 
-	  means to select, monitor, and control the access of all the network 
-	  devices, making these devices trusted by the operator. Indeed, in order 
-	  to limit the scope of threats above to within the current network domain 
-	  the network operator is expected to enforce policies that prevent IOAM 
-	  traffic from leaking outside of the IOAM domain, and prevent IOAM data 
-	  from outside the domain to be processed and used within the domain. 
-	  Note that the "Direct Exporting" mode 
-	  <xref target="I-D.ioamteam-ippm-ioam-direct-export"/> can mitigate the 
-	  potential threat of IOAM data leaking through data packets, limiting the
-	  leakage threat to exported packets.</t>
+	  <t>The current document does not define a specific IOAM encapsulation.
+	  It should be noted that some IOAM encapsulation types may introduce
+	  specific security considerations. A specification that defines an IOAM
+	  encapsulation is expected to address the respective 
+	  encapsulation-specific security considerations.</t>
+	  
+      <t>Notably, in most cases IOAM is expected to be deployed in specific 
+	  network domains, thus confining the potential attack vectors to within 
+	  the network domain. A limited administrative domain provides the operator 
+	  with the means to select, monitor, and control the access of all the 
+	  network devices, making these devices trusted by the operator. Indeed, in 
+	  order to limit the scope of threats above to within the current network 
+	  domain the network operator is expected to enforce policies that prevent 
+	  IOAM traffic from leaking outside of the IOAM domain, and prevent IOAM 
+	  data from outside the domain to be processed and used within the domain. 
+	  </t>
+	  
+	  <t>The security considerations of a system that deploys IOAM, much like 
+	  any system, should be reviewed on a per-deployment-scenario basis, based
+	  on a systems-specific threat analysis, which may lead to specific 
+	  security solutions that are beyond the scope of the current document.
+	  For example, in an IOAM deployment that is not confined to a single LAN, 
+	  but spans multiple inter-connected sites, the inter-site links may be 
+	  secured (e.g., by IPsec) in order to avoid external threats.</t>
     </section>
 
     <section title="Acknowledgements">
