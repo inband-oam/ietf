@@ -328,10 +328,10 @@
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
       discusses the data fields and associated data types for in-situ OAM.
-      In-situ OAM data fields can be embedded into a variety of transports
-      such as NSH, Segment Routing, Geneve, native IPv6 (via extension
-      header), or IPv4. In-situ OAM can be used to complement OAM mechanisms
-      based on e.g. ICMP or other types of probe packets.</t>
+      In-situ OAM data fields can be embedded into a variety of protocols such
+      as NSH, Segment Routing, Geneve, native IPv6 (via extension header), or
+      IPv4. In-situ OAM can be used to complement OAM mechanisms based on e.g.
+      ICMP or other types of probe packets.</t>
     </abstract>
   </front>
 
@@ -343,20 +343,19 @@
       network domain. The term "in-situ" refers to the fact that the OAM data
       is added to the data packets rather than is being sent within packets
       specifically dedicated to OAM. IOAM is to complement mechanisms such as
-      Ping or Traceroute, or more recent active probing mechanisms as
-      described in <xref target="I-D.lapukhov-dataplane-probe"></xref>. In
-      terms of "active" or "passive" OAM, "in-situ" OAM can be considered a
-      hybrid OAM type. "In-situ" mechanisms do not require extra packets to be
-      sent. IOAM adds information to the already available data packets and
-      therefore cannot be considered passive. In terms of the classification
-      given in <xref target="RFC7799"></xref> IOAM could be portrayed as
-      Hybrid Type 1. IOAM mechanisms can be leveraged where mechanisms using
-      e.g. ICMP do not apply or do not offer the desired results, such as
-      proving that a certain traffic flow takes a pre-defined path, SLA
-      verification for the live data traffic, detailed statistics on traffic
-      distribution paths in networks that distribute traffic across multiple
-      paths, or scenarios in which probe traffic is potentially handled
-      differently from regular data traffic by the network devices.</t>
+      Ping or Traceroute. In terms of "active" or "passive" OAM, "in-situ" OAM
+      can be considered a hybrid OAM type. "In-situ" mechanisms do not require
+      extra packets to be sent. IOAM adds information to the already available
+      data packets and therefore cannot be considered passive. In terms of the
+      classification given in <xref target="RFC7799"></xref> IOAM could be
+      portrayed as Hybrid Type 1. IOAM mechanisms can be leveraged where
+      mechanisms using e.g. ICMP do not apply or do not offer the desired
+      results, such as proving that a certain traffic flow takes a pre-defined
+      path, SLA verification for the live data traffic, detailed statistics on
+      traffic distribution paths in networks that distribute traffic across
+      multiple paths, or scenarios in which probe traffic is potentially
+      handled differently from regular data traffic by the network
+      devices.</t>
 
       <t>IOAM usecases and mechanisms have expanded as this document matured
       and have resulted in additional flags and options that may result in
@@ -409,10 +408,10 @@
       guiding principles which are described in this section.</t>
 
       <t>Scope: This document defines the data fields and associated data
-      types for in-situ OAM. The in-situ OAM data field can be transported by
-      a variety of transport protocols, including NSH, Segment Routing,
-      Geneve, IPv6, or IPv4. Specification details for these different
-      transport protocols are outside the scope of this document.</t>
+      types for in-situ OAM. The in-situ OAM data field can be encapsulated in
+      a variety of protocols, including NSH, Segment Routing, Geneve, IPv6, or
+      IPv4. Specification details for these different protocols are outside
+      the scope of this document.</t>
 
       <t>Deployment domain (or scope) of in-situ OAM deployment: IOAM is a
       network domain focused feature, with "network domain" being a set of
@@ -424,17 +423,16 @@
       encapsulations for IOAM must specify mechanisms to ensure that IOAM data
       stays within an IOAM domain. In addition, the operator of such a domain
       is expected to put provisions in place to ensure that IOAM data does not
-      leak beyond the edge of an IOAM domain, e.g. using for example packet
+      leak beyond the edge of an IOAM domain using for example packet
       filtering methods. The operator should consider the potential
       operational impact of IOAM to mechanisms such as ECMP processing (e.g.
       load-balancing schemes based on packet length could be impacted by the
       increased packet size due to IOAM), path MTU (i.e. ensure that the MTU
       of all links within a domain is sufficiently large to support the
       increased packet size due to IOAM) and ICMP message handling (i.e. in
-      case of a native IPv6 transport, IOAM support for ICMPv6 Echo
-      Request/Reply could desired which would translate into ICMPv6 extensions
-      to enable IOAM-Data-Fields to be copied from an Echo Request message to
-      an Echo Reply message).</t>
+      case of IPv6, IOAM support for ICMPv6 Echo Request/Reply is desired
+      which would translate into ICMPv6 extensions to enable IOAM-Data-Fields
+      to be copied from an Echo Request message to an Echo Reply message).</t>
 
       <t>IOAM control points: IOAM-Data-Fields are added to or removed from
       the live user traffic by the devices which form the edge of a domain.
@@ -832,16 +830,16 @@ The trace option data MUST be 4-octet aligned:
               field. <vspace blankLines="1" />If IOAM-Trace-Type bit 22 is not
               set, then NodeLen specifies the actual length added by each
               node. If IOAM-Trace-Type bit 22 is set, then the actual length
-              added by a node would be (NodeLen + Opaque Data Length). <vspace
-              blankLines="1" />For example, if 3 IOAM-Trace-Type bits are set
-              and none of them are wide, then NodeLen would be 3. If 3
-              IOAM-Trace-Type bits are set and 2 of them are wide, then
-              NodeLen would be 5. <vspace blankLines="1" />An IOAM
-              encapsulating node must set NodeLen. <vspace blankLines="1" />A
-              node receiving an IOAM Pre-allocated or Incremental Trace-Option
-              may rely on the NodeLen value, or it may ignore the NodeLen
-              value and calculate the node length from the IOAM-Trace-Type
-              bits (see below).</t>
+              added by a node would be (NodeLen + length of the "Opaque State
+              Snapshot" field) in 4 octet units. <vspace blankLines="1" />For
+              example, if 3 IOAM-Trace-Type bits are set and none of them are
+              wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are set
+              and 2 of them are wide, then NodeLen would be 5. <vspace
+              blankLines="1" />An IOAM encapsulating node must set NodeLen.
+              <vspace blankLines="1" />A node receiving an IOAM Pre-allocated
+              or Incremental Trace-Option may rely on the NodeLen value, or it
+              may ignore the NodeLen value and calculate the node length from
+              the IOAM-Trace-Type bits (see below).</t>
 
               <t anchor="TraceFlags" hangText="Flags">4-bit field. Flags are
               allocated by IANA, as specified in <xref
@@ -858,13 +856,12 @@ The trace option data MUST be 4-octet aligned:
               <t hangText="RemainingLen:">7-bit unsigned integer. This field
               specifies the data space in multiples of 4-octets remaining for
               recording the node data, before the node data list is considered
-              to have overflowed. When RemainingLen reaches 0, nodes are no
-              longer allowed to add node data. Given that the sender knows the
-              minimum path MTU, the sender MAY set the initial value of
-              RemainingLen according to the number of node data bytes allowed
-              before exceeding the MTU. Subsequent nodes can carry out a
-              simple comparison between RemainingLen and NodeLen, along with
-              the length of the "Opaque State Snapshot" if applicable, to
+              to have overflowed. Given that the sender knows the minimum path
+              MTU, the sender MAY set the initial value of RemainingLen
+              according to the number of node data bytes allowed before
+              exceeding the MTU. Subsequent nodes can carry out a simple
+              comparison between RemainingLen and NodeLen, along with the
+              length of the "Opaque State Snapshot" if applicable, to
               determine whether or not data can be added by this node. When
               node data is added, the node MUST decrease RemainingLen by the
               amount of data added. In the pre-allocated trace option,
@@ -1486,9 +1483,9 @@ IOAM proof of transit option of IOAM POT Type 0:
               configured parameters.</t>
             </list>Note: Larger or smaller sizes of "Random" and "Cumulative"
           data are feasible and could be required for certain deployments
-          (e.g. in case of space constraints in the transport protocol used).
-          Future versions of this document will address different sizes of
-          data for "proof of transit".</t>
+          (e.g. in case of space constraints in the encapsulation protocols
+          used). Future document may address different sizes of data for
+          "proof of transit".</t>
         </section>
       </section>
 
