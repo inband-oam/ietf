@@ -64,7 +64,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-03"
+<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-04"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -191,7 +191,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </address>
     </author>
 
-    <date day="11" month="September" year="2019"/>
+    <date day="21" month="November" year="2019"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -982,6 +982,9 @@ module: ietf-pot-profile
            +--rw validator?           boolean
            +--rw validator-key?       uint64
            +--rw bitmask?             uint64
+           +--rw opot-masks
+              +--rw downstream-mask*   uint64
+              +--rw upstream-mask*     uint64
 <CODE ENDS>
 ]]></artwork>
             </figure></t>
@@ -1005,12 +1008,34 @@ module ietf-pot-profile {
   contact "WG Web:   <https://tools.ietf.org/wg/sfc/>
            WG List:  <mailto:sfc@ietf.org>";
 
-  description "This module contains a collection of YANG
-               definitions for proof of transit configuration
-               parameters. The model is meant for proof of
-               transit and is targeted for communicating the
-               POT-Profile between a controller and nodes
-               participating in proof of transit.";
+  description 
+     "This module contains a collection of YANG
+      definitions for proof of transit configuration
+      parameters. The model is meant for proof of
+      transit and is targeted for communicating the
+      POT-Profile between a controller and nodes
+      participating in proof of transit.
+
+      Copyright (c) 2018 IETF Trust and the persons identified as
+      authors of the code.  All rights reserved.
+      Redistribution and use in source and binary forms, with or
+      without modification, is permitted pursuant to, and subject
+      to the license terms contained in, the Simplified BSD License
+      set forth in Section 4.c of the IETF Trust's Legal Provisions
+      Relating to IETF Documents
+      (http://trustee.ietf.org/license-info).
+
+      This version of this YANG module is part of RFC XXXX; see
+      the RFC itself for full legal notices.
+
+      Copyright (c) 2018 IETF Trust and the persons identified as
+      authors of the code.  All rights reserved.
+
+      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
+      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
+      'MAY', and 'OPTIONAL' in this document are to be interpreted as
+      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
+      they appear in all capitals, as shown here.";
 
   revision 2016-06-15 {
     description
@@ -1103,7 +1128,38 @@ module ietf-pot-profile {
            the size of the random value generation.
            32-bits of mask is default.";
       }
+
+      uses opot-profile;
+
     }
+  }
+
+  grouping opot-profile {
+   description "Grouping containing OPoT related data.";
+
+
+   container opot-masks {
+     must "count(downstream-mask) = count(upstream-mask)";
+     description "Masking information for OPoT support.";
+
+     leaf-list downstream-mask {
+       type uint64;
+       max-elements 2;
+       description "Secret stream used to demask the PoT metadata.
+       The mask is used between nodes adjacent in the path 
+       and MUST have a length equal to the sum of the ones 
+       of RND and CML.";
+     }
+
+     leaf-list upstream-mask {
+       type uint64; 
+       max-elements 2;
+       description "Secret stream used to mask the PoT metadata.
+       The mask is used between nodes adjacent in the path 
+       and MUST have a length equal to the sum of the ones 
+       of RND and CML.";
+     }
+   }
   }
 
   container pot-profiles {
@@ -1377,7 +1433,8 @@ module ietf-pot-profile {
 
     <section title="Contributors">
       <t>In addition to editors and authors listed on the title page, the
-      following people have contributed to this document:</t>
+      following people have contributed substantially to this document and
+      should be considered coauthors:</t>
 
       <t><figure>
           <artwork><![CDATA[   Carlos Pignataro

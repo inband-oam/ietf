@@ -5,7 +5,7 @@
 IPPM                                                             H. Song
 Internet-Draft                                                 Futurewei
 Intended status: Standards Track                                B. Gafni
-Expires: April 14, 2020                      Mellanox Technologies, Inc.
+Expires: August 9, 2020                      Mellanox Technologies, Inc.
                                                                  T. Zhou
                                                                    Z. Li
                                                                   Huawei
@@ -15,11 +15,11 @@ Expires: April 14, 2020                      Mellanox Technologies, Inc.
                                                                    Cisco
                                                          T. Mizrahi, Ed.
                                              Huawei Smart Platforms iLab
-                                                        October 12, 2019
+                                                        February 6, 2020
 
 
                       In-situ OAM Direct Exporting
-               draft-ioamteam-ippm-ioam-direct-export-00
+                 draft-ietf-ippm-ioam-direct-export-00
 
 Abstract
 
@@ -28,8 +28,8 @@ Abstract
    Specifically, IOAM allows telemetry data to be pushed into data
    packets while they traverse the network.  This document introduces a
    new IOAM option type called the Direct Export (DEX) option, which is
-   used as a trigger for IOAM data to be directly exported to a
-   collector without being pushed into in-flight data packets.
+   used as a trigger for IOAM data to be directly exported without being
+   pushed into in-flight data packets.
 
 Status of This Memo
 
@@ -46,21 +46,21 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 14, 2020.
+   This Internet-Draft will expire on August 9, 2020.
 
 
 
 
 
 
-Song, et al.             Expires April 14, 2020                 [Page 1]
+Song, et al.             Expires August 9, 2020                 [Page 1]
 
-Internet-Draft            IOAM Direct Exporting             October 2019
+Internet-Draft            IOAM Direct Exporting            February 2020
 
 
 Copyright Notice
 
-   Copyright (c) 2019 IETF Trust and the persons identified as the
+   Copyright (c) 2020 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -85,12 +85,12 @@ Table of Contents
    4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
      4.1.  IOAM Type . . . . . . . . . . . . . . . . . . . . . . . .   6
      4.2.  IOAM DEX Flags  . . . . . . . . . . . . . . . . . . . . .   6
-   5.  Performance Considerations  . . . . . . . . . . . . . . . . .   7
+   5.  Performance Considerations  . . . . . . . . . . . . . . . . .   6
    6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
    7.  Topics for Further Discussion . . . . . . . . . . . . . . . .   7
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
@@ -105,14 +105,18 @@ Table of Contents
 
    This document defines a new IOAM option type (also known as an IOAM
    type) called the Direct Export (DEX) option.  This option is used as
-   a trigger for IOAM nodes to export IOAM data to a collector.
+   a trigger for IOAM nodes to export IOAM data to a receiving entity
 
 
 
-Song, et al.             Expires April 14, 2020                 [Page 2]
+Song, et al.             Expires August 9, 2020                 [Page 2]
 
-Internet-Draft            IOAM Direct Exporting             October 2019
+Internet-Draft            IOAM Direct Exporting            February 2020
 
+
+   (or entities).  A "receiving entity" in this context can be, for
+   example, an external collector, analyzer, controller, decapsulating
+   node, or a software module in one of the IOAM nodes.
 
    This draft has evolved from combining some of the concepts of PBT-I
    from [I-D.song-ippm-postcard-based-telemetry] with immediate
@@ -141,7 +145,7 @@ Internet-Draft            IOAM Direct Exporting             October 2019
 3.1.  Overview
 
    The DEX option is used as a trigger for exporting telemetry data to a
-   collector.
+   receiving entity (or entities).
 
    This option is incorporated into data packets by an IOAM
    encapsulating node, and removed by an IOAM decapsulating node, as
@@ -161,20 +165,11 @@ Internet-Draft            IOAM Direct Exporting             October 2019
 
 
 
-
-
-
-
-Song, et al.             Expires April 14, 2020                 [Page 3]
+Song, et al.             Expires August 9, 2020                 [Page 3]
 
-Internet-Draft            IOAM Direct Exporting             October 2019
+Internet-Draft            IOAM Direct Exporting            February 2020
 
 
-                                +-----------+
-                                | Telemetry |
-                                | Data      |
-                                | Collector |
-                                +-----------+
                                       ^
                                       |Exported IOAM data
                                       |
@@ -195,42 +190,41 @@ Internet-Draft            IOAM Direct Exporting             October 2019
 
                         Figure 1: DEX Architecture
 
-   The DEX option is used as a trigger to export IOAM data to a
-   collector.  The trigger applies to transit nodes, the decapsulating
-   node, and the encapsulating node:
+   The DEX option is used as a trigger to export IOAM data.  The trigger
+   applies to transit nodes, the decapsulating node, and the
+   encapsulating node:
 
    o  An IOAM encapsulating node configured to incorporate the DEX
-      option encapsulates the packet with the DEX option, and exports
+      option encapsulates the packet with the DEX option, and MAY export
       the requested IOAM data immediately.  The IOAM encapsulating node
       is the only type of node allowed to push the DEX option.
 
-   o  A transit node that processes a packet with the DEX option is
-      expected to export the requested IOAM data.
+   o  A transit node that processes a packet with the DEX option MAY
+      export the requested IOAM data.
 
    o  An IOAM decapsulating node that processes a packet with the DEX
-      option is expected to export the requested IOAM data, and
-      decapsulate the IOAM header.
+      option MAY export the requested IOAM data, and MUST decapsulate
+      the IOAM header.
 
    As in [I-D.ietf-ippm-ioam-data], the DEX option may be incorporated
    into all or a subset of the traffic that is forwarded by the
-   encapsulating node.  Moreover, IOAM nodes MAY send exported data for
-   all traversing packets that carry the DEX option, or MAY selectively
+   encapsulating node.  Moreover, IOAM nodes MAY export data for all
+   traversing packets that carry the DEX option, or MAY selectively
    export data only for a subset of these packets.
 
+   The DEX option specifies which data fields should be exported, as
+   specified in Section 3.2.  The format and encapsulation of the packet
+   that contains the exported data is not within the scope of the
+   current document.  For example, the export format can be based on
+   [I-D.spiegel-ippm-ioam-rawexport].
 
 
 
 
-Song, et al.             Expires April 14, 2020                 [Page 4]
+Song, et al.             Expires August 9, 2020                 [Page 4]
 
-Internet-Draft            IOAM Direct Exporting             October 2019
+Internet-Draft            IOAM Direct Exporting            February 2020
 
-
-   The DEX option specifies which data fields should be exported to the
-   collector, as specified in Section 3.2.  The format and encapsulation
-   of the packet that contains the exported data is not within the scope
-   of the current document.  For example, the export format can be based
-   on [I-D.spiegel-ippm-ioam-rawexport].
 
    A transit IOAM node that does not support the DEX option SHOULD
    ignore it.  A decapsulating node that does not support the DEX option
@@ -274,19 +268,19 @@ Internet-Draft            IOAM Direct Exporting             October 2019
                    defined in [I-D.ietf-ippm-ioam-data].  Specifically,
                    bit 23, which corresponds to the Checksum Complement
                    data field, should be assigned to be zero by the IOAM
-
-
-
-Song, et al.             Expires April 14, 2020                 [Page 5]
-
-Internet-Draft            IOAM Direct Exporting             October 2019
-
-
                    encapsulating node, and ignored by transit and
                    decapsulating nodes.  The reason for this is that the
                    Checksum Complement is intended for in-flight packet
                    modifications and is not relevant for direct
                    exporting.
+
+
+
+
+Song, et al.             Expires August 9, 2020                 [Page 5]
+
+Internet-Draft            IOAM Direct Exporting            February 2020
+
 
    Reserved        This field SHOULD be ignored by the receiver.
 
@@ -327,29 +321,27 @@ Internet-Draft            IOAM Direct Exporting             October 2019
    registry includes 16 flag bits.  Allocation should be performed based
    on the "RFC Required" procedure, as defined in [RFC8126].
 
-
-
-
-
-
-
-Song, et al.             Expires April 14, 2020                 [Page 6]
-
-Internet-Draft            IOAM Direct Exporting             October 2019
-
-
 5.  Performance Considerations
 
    The DEX option triggers exported packets to be exported to a
-   collector, which in some cases may impact the collector's
-   performance, or the performance along the paths leading to the
-   collector.
+   receiving entity (or entities).  In some cases this may impact the
+   receiving entity's performance, or the performance along the paths
+   leading to it.
 
    Therefore, rate limiting may be enabled so as to ensure that direct
    exporting is used at a rate that does not significantly affect the
-   network bandwidth, and does not overload the collector (or the source
-   node in the case of loopback).  It should be possible to use each DEX
-   on a subset of the data traffic.
+
+
+
+Song, et al.             Expires August 9, 2020                 [Page 6]
+
+Internet-Draft            IOAM Direct Exporting            February 2020
+
+
+   network bandwidth, and does not overload the receiving entity (or the
+   source node in the case of loopback).  It should be possible to use
+   each DEX on a subset of the data traffic, and to load balance the
+   exported data among multiple receiving entities.
 
 6.  Security Considerations
 
@@ -361,13 +353,14 @@ Internet-Draft            IOAM Direct Exporting             October 2019
    An attacker may attempt to overload network devices by injecting
    synthetic packets that include the DEX option.  Similarly, an on-path
    attacker may maliciously incorporate the DEX option into transit
-   packets.
+   packets, or maliciously remove it from packets in which it is
+   incorporated.
 
    Forcing DEX, either in synthetic packets or in transit packets may
-   overload the collector or analyzer devices.  Since this mechanism
+   overload the receiving entity (or entities).  Since this mechanism
    affects multiple devices along the network path, it potentially
-   amplifies the effect on the network bandwidth and on the collector's
-   load.
+   amplifies the effect on the network bandwidth and on the receiving
+   entity's load.
 
    In order to mitigate the attacks described above, it should be
    possible for IOAM-enabled devices to limit the exported IOAM data to
@@ -386,14 +379,6 @@ Internet-Draft            IOAM Direct Exporting             October 2019
       the Flags field).  Its value starts from 0 at the encapsulating
       node and is incremented by each IOAM transit node that supports
       the DEX option.  The Hop Count field value is also included in the
-
-
-
-Song, et al.             Expires April 14, 2020                 [Page 7]
-
-Internet-Draft            IOAM Direct Exporting             October 2019
-
-
       exported packet.  An alternative approach is to use the Hop_Lim/
       Node_ID data field; if the IOAM-Trace-Type
       [I-D.ietf-ippm-ioam-data] has the Hop_Lim/Node_ID bit set, then
@@ -401,6 +386,14 @@ Internet-Draft            IOAM Direct Exporting             October 2019
       contains the TTL/Hop Limit value from a lower layer protocol.  The
       main advantage of the Hop_Lim/Node_ID approach is that it provides
       information about the current hop count without requiring each
+
+
+
+Song, et al.             Expires August 9, 2020                 [Page 7]
+
+Internet-Draft            IOAM Direct Exporting            February 2020
+
+
       transit node to modify the DEX option, thus simplifying the data
       plane functionality of Direct Exporting.  The main advantage of
       the Hop Count approach is that it counts the number of IOAM-
@@ -408,14 +401,13 @@ Internet-Draft            IOAM Direct Exporting             October 2019
       when the lower layer cannot prvide the accurate TTL information,
       e.g., Layer 2 Ethernet or hierarchical VPN.  It also explicitly
       allows to detect a case where an IOAM-capable node fails to export
-      packets to the collector.  In order to facilitate the Hop Count
-      approach it is possible to use a flag to indicate an optional Hop
-      Count field, which enables to control the tradeoff.  On one hand
-      it addresses the use cases that the Hop_Lim/Node_ID cannot cover,
-      and on the other hand it does not require transit switches to
-      update the option if it is not supported or disabled.  Further
-      discussion is required about the tradeoff between the two
-      alternatives.
+      packets.  In order to facilitate the Hop Count approach it is
+      possible to use a flag to indicate an optional Hop Count field,
+      which enables to control the tradeoff.  On one hand it addresses
+      the use cases that the Hop_Lim/Node_ID cannot cover, and on the
+      other hand it does not require transit switches to update the
+      option if it is not supported or disabled.  Further discussion is
+      required about the tradeoff between the two alternatives.
 
 8.  References
 
@@ -424,9 +416,16 @@ Internet-Draft            IOAM Direct Exporting             October 2019
    [I-D.ietf-ippm-ioam-data]
               Brockners, F., Bhandari, S., Pignataro, C., Gredler, H.,
               Leddy, J., Youell, S., Mizrahi, T., Mozes, D., Lapukhov,
-              P., Chang, R., daniel.bernier@bell.ca, d., and J. Lemon,
-              "Data Fields for In-situ OAM", draft-ietf-ippm-ioam-
-              data-07 (work in progress), September 2019.
+              P., remy@barefootnetworks.com, r., daniel.bernier@bell.ca,
+              d., and J. Lemon, "Data Fields for In-situ OAM", draft-
+              ietf-ippm-ioam-data-08 (work in progress), October 2019.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+8.2.  Informative References
 
    [I-D.mizrahi-ippm-ioam-flags]
               Mizrahi, T., Brockners, F., Bhandari, S., Sivakolundu, R.,
@@ -437,47 +436,25 @@ Internet-Draft            IOAM Direct Exporting             October 2019
    [I-D.song-ippm-postcard-based-telemetry]
               Song, H., Zhou, T., Li, Z., Shin, J., and K. Lee,
               "Postcard-based On-Path Flow Data Telemetry", draft-song-
-              ippm-postcard-based-telemetry-05 (work in progress),
-              September 2019.
+              ippm-postcard-based-telemetry-06 (work in progress),
+              October 2019.
 
 
 
 
 
 
-Song, et al.             Expires April 14, 2020                 [Page 8]
+
+Song, et al.             Expires August 9, 2020                 [Page 8]
 
-Internet-Draft            IOAM Direct Exporting             October 2019
+Internet-Draft            IOAM Direct Exporting            February 2020
 
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
-
-8.2.  Informative References
-
-   [I-D.ietf-sfc-ioam-nsh]
-              Brockners, F. and S. Bhandari, "Network Service Header
-              (NSH) Encapsulation for In-situ OAM (IOAM) Data", draft-
-              ietf-sfc-ioam-nsh-02 (work in progress), September 2019.
-
-   [I-D.ioametal-ippm-6man-ioam-ipv6-options]
-              Bhandari, S., Brockners, F., Pignataro, C., Gredler, H.,
-              Leddy, J., Youell, S., Mizrahi, T., Kfir, A., Gafni, B.,
-              Lapukhov, P., Spiegel, M., Krishnan, S., and R. Asati,
-              "In-situ OAM IPv6 Options", draft-ioametal-ippm-6man-ioam-
-              ipv6-options-02 (work in progress), March 2019.
 
    [I-D.spiegel-ippm-ioam-rawexport]
               Spiegel, M., Brockners, F., Bhandari, S., and R.
               Sivakolundu, "In-situ OAM raw data export with IPFIX",
               draft-spiegel-ippm-ioam-rawexport-02 (work in progress),
               July 2019.
-
-   [RFC7799]  Morton, A., "Active and Passive Metrics and Methods (with
-              Hybrid Types In-Between)", RFC 7799, DOI 10.17487/RFC7799,
-              May 2016, <https://www.rfc-editor.org/info/rfc7799>.
 
    [RFC8126]  Cotton, M., Leiba, B., and T. Narten, "Guidelines for
               Writing an IANA Considerations Section in RFCs", BCP 26,
@@ -493,17 +470,6 @@ Authors' Addresses
    USA
 
    Email: haoyu.song@huawei.com
-
-
-
-
-
-
-
-
-Song, et al.             Expires April 14, 2020                 [Page 9]
-
-Internet-Draft            IOAM Direct Exporting             October 2019
 
 
    Barak Gafni
@@ -533,6 +499,13 @@ Internet-Draft            IOAM Direct Exporting             October 2019
    Email: lizhenbin@huawei.com
 
 
+
+
+Song, et al.             Expires August 9, 2020                 [Page 9]
+
+Internet-Draft            IOAM Direct Exporting            February 2020
+
+
    Frank Brockners
    Cisco Systems, Inc.
    Hansaallee 249, 3rd Floor
@@ -551,17 +524,6 @@ Internet-Draft            IOAM Direct Exporting             October 2019
    Email: shwethab@cisco.com
 
 
-
-
-
-
-
-
-Song, et al.             Expires April 14, 2020                [Page 10]
-
-Internet-Draft            IOAM Direct Exporting             October 2019
-
-
    Ramesh Sivakolundu
    Cisco Systems, Inc.
    170 West Tasman Dr.
@@ -573,6 +535,8 @@ Internet-Draft            IOAM Direct Exporting             October 2019
 
    Tal Mizrahi (editor)
    Huawei Smart Platforms iLab
+   8-2 Matam
+   Haifa  3190501
    Israel
 
    Email: tal.mizrahi.phd@gmail.com
@@ -593,24 +557,4 @@ Internet-Draft            IOAM Direct Exporting             October 2019
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Song, et al.             Expires April 14, 2020                [Page 11]
+Song, et al.             Expires August 9, 2020                [Page 10]
