@@ -60,7 +60,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-07" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-08" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -274,7 +274,7 @@
       </address>
     </author>
 
-    <author fullname="John Lemon" initials="J." surname="Lemon">
+    <author fullname="Jennifer Lemon" initials="J." surname="Lemon">
       <organization abbrev="">Broadcom</organization>
 
       <address>
@@ -290,7 +290,7 @@
           <country>US</country>
         </postal>
 
-        <email>john.lemon@broadcom.com</email>
+        <email>jennifer.lemon@broadcom.com</email>
       </address>
     </author>
 
@@ -539,7 +539,25 @@
         IOAM-Data-Fields of an IOAM Edge-to-Edge Option-Type.</t>
 
         <t>An "IOAM decapsulating node" removes IOAM-Option-Type(s) from
-        packets.</t>
+        packets. </t>
+
+        <t>The role of an IOAM-encapsulating, IOAM-transit or
+        IOAM-decapsulating node is always performed within a specific
+        IOAM-Namespace. This means that an IOAM node which is e.g. an
+        IOAM-decapsulating node for IOAM-Namespace "A" but not for
+        IOAM-Namespace "B" will only remove the IOAM-Option-Types for
+        IOAM-Namespace "A" from the packet. An IOAM decapsulating node
+        situated at the edge of an IOAM domain MUST remove all
+        IOAM-Option-Types and associated encapsulation headers for all
+        IOAM-Namespaces from the packet.</t>
+
+        <t>IOAM-Namespaces allow for a namespace-specific definition and
+        interpretation of IOAM-Data-Fields. An interface-id could for example
+        point to a physical interface (e.g., to understand which physical
+        interface of an aggregated link is used when receiving or transmitting
+        a packet) whereas in another case it could refer to a logical
+        interface (e.g., in case of tunnels). Please refer to <xref
+        target="ioam_namespaces"/> for details on IOAM-Namespaces.</t>
       </section>
 
       <section anchor="ioam_namespaces" title="IOAM-Namespaces">
@@ -724,13 +742,9 @@
         <t>Every node data entry holds information for a particular IOAM
         transit node that is traversed by a packet. The IOAM decapsulating
         node removes the IOAM-Option-Type(s) and processes and/or exports the
-        associated data. IOAM-Data-Fields are defined in the context of an
-        IOAM-Namespace. This allows for a namespace-specific definition and
-        interpretation. For example: In one case an interface-id could point
-        to a physical interface (e.g., to understand which physical interface
-        of an aggregated link is used when receiving or transmitting a packet)
-        whereas in another case it could refer to a logical interface (e.g.,
-        in case of tunnels).</t>
+        associated data. Like all IOAM-Data-Fields, the IOAM-Data-Fields of
+        the IOAM-Trace-Option-Types are defined in the context of an
+        IOAM-Namespace.</t>
 
         <t>IOAM tracing can collect the following types of information:</t>
 
@@ -2003,10 +2017,10 @@ be 4-octet aligned:
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
       add an IOAM header to packets in order to consume the resources of
-      network devices that take part in IOAM or collectors that analyze the
-      IOAM data. Another example is a packet length attack, in which an
-      attacker pushes headers associated with IOAM Option-Types into data
-      packets, causing these packets to be increased beyond the MTU size,
+      network devices that take part in IOAM or entities that receive, collect 
+	  or analyze the IOAM data. Another example is a packet length attack, in 
+	  which an attacker pushes headers associated with IOAM Option-Types into 
+	  data packets, causing these packets to be increased beyond the MTU size,
       resulting in fragmentation or in packet drops.</t>
 
       <t>Since IOAM options may include timestamps, if network devices use

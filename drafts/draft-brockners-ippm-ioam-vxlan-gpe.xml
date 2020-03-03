@@ -31,6 +31,7 @@
 <!ENTITY I-D.ietf-sfc-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-nsh.xml">
 <!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
 <!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.ietf-lisp-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lisp-gpe.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
 <!ENTITY I-D.SPUD SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
@@ -60,7 +61,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-brockners-ippm-ioam-vxlan-gpe-02"
+<rfc category="std" docName="draft-brockners-ippm-ioam-vxlan-gpe-03"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -161,7 +162,6 @@
     </author>
 
     <author fullname="John Leddy" initials="J." surname="Leddy">
-
       <address>
         <email>john@leddy.net</email>
       </address>
@@ -190,11 +190,11 @@
 
       <address>
         <postal>
-          <street></street>
+          <street/>
 
-          <city></city>
+          <city/>
 
-          <code></code>
+          <code/>
 
           <country>Israel</country>
         </postal>
@@ -275,7 +275,7 @@
       </address>
     </author>
 
-    <date day="5" month="July" year="2019"/>
+    <date day="4" month="November" year="2019"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -351,12 +351,13 @@
 
     <section title="IOAM Data Field Encapsulation in VXLAN-GPE">
       <t>VXLAN-GPE is defined in <xref target="I-D.ietf-nvo3-vxlan-gpe"/>.
-      IOAM data fields are carried in VXLAN-GPE using a next protocol value
-      of TBD_IOAM. An IOAM header is added containing the different IOAM data
+      IOAM data fields are carried in VXLAN-GPE using a next protocol value of
+      TBD_IOAM. An IOAM header is added containing the different IOAM data
       fields defined in <xref target="I-D.ietf-ippm-ioam-data"/>. In an
-      administrative domain where IOAM is used, insertion of the IOAM header in
-      VXLAN-GPE is enabled at the VXLAN-GPE tunnel endpoints, which also serve
-      as IOAM encapsulating/decapsulating nodes by means of configuration.</t>
+      administrative domain where IOAM is used, insertion of the IOAM header
+      in VXLAN-GPE is enabled at the VXLAN-GPE tunnel endpoints, which also
+      serve as IOAM encapsulating/decapsulating nodes by means of
+      configuration.</t>
 
       <t/>
 
@@ -408,8 +409,8 @@
           <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
           IOAM HDR in 4-octet units not including the first 4 octects.</t>
 
-          <t hangText="Reserved:">8-bit reserved field MUST be set to
-          zero upon transmission and ignored upon receipt.</t>
+          <t hangText="Reserved:">8-bit reserved field MUST be set to zero
+          upon transmission and ignored upon receipt.</t>
 
           <t hangText="Next Protocol:">8-bit unsigned integer that determines
           the type of header following IOAM protocol. The value is from the
@@ -458,8 +459,8 @@
         <t><list style="numbers">
             <t>Use a single GPE protocol type for all IOAM types: IOAM would
             receive a single GPE protocol type code point. A "sub-type" field
-            would then specify what IOAM options type (trace, proof-of-transit,
-            edge-to-edge) is carried.</t>
+            would then specify what IOAM options type (trace,
+            proof-of-transit, edge-to-edge) is carried.</t>
 
             <t>Use one GPE protocol type per IOAM options type: Each IOAM data
             field option (trace, proof-of-transit, and edge-to-edge) would be
@@ -480,39 +481,57 @@
         indicates that the packet contains an OAM message instead of data
         payload. Packets that carry IOAM data fields in addition to regular
         data payload / customer traffic must not set the O bit. Packets that
-        carry only IOAM data fields without any payload must set the O bit.</t>
+        carry only IOAM data fields without any payload must set the O
+        bit.</t>
       </section>
 
       <section title="Transit devices">
         <t>If IOAM is deployed in domains where UDP port numbers are not
-           controlled and do not have a domain-wide meaning, such as on the
-           global Internet, transit devices MUST NOT attempt to modify the
-           IOAM data contained in the IOAM header following the VXLAN-GPE 
-           header. In case UDP port numbers are not controlled there might
-           be UDP packets specifying the same UDP port number that VXLAN-GPE
-           utilizes, i.e. 4790, but with a payload that is not VXLAN-GPE.
-           The scenario and associated reasoning is discussed in
-           <xref target="RFC7605"/>
-           which states that "it is important to recognize that any
-           interpretation of port numbers -- except at the endpoints -- may
-           be incorrect, because port numbers are meaningful only at the endpoints."
-        </t>
+        controlled and do not have a domain-wide meaning, such as on the
+        global Internet, transit devices MUST NOT attempt to modify the IOAM
+        data contained in the IOAM header following the VXLAN-GPE header. In
+        case UDP port numbers are not controlled there might be UDP packets
+        specifying the same UDP port number that VXLAN-GPE utilizes, i.e.
+        4790, but with a payload that is not VXLAN-GPE. The scenario and
+        associated reasoning is discussed in <xref target="RFC7605"/> which
+        states that "it is important to recognize that any interpretation of
+        port numbers -- except at the endpoints -- may be incorrect, because
+        port numbers are meaningful only at the endpoints."</t>
       </section>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to allocate a protocol number for the following
-      VXLAN-GPE "Next Protocols" related to IOAM:</t>
+      <section title="VXLAN-GPE Next Protocol Value">
+        <t>IANA is requested to allocate a value in the VXLAN-GPE "Next
+        Protocol" registry for IOAM, which is defined in <xref
+        target="I-D.ietf-nvo3-vxlan-gpe"/>.</t>
 
-      <t><figure>
-          <artwork><![CDATA[              +---------------+-------------+---------------+
-              | Next Protocol | Description | Reference     |
-              +---------------+-------------+---------------+
-              | x             | TBD_IOAM    | This document |
-              +---------------+-------------+---------------+
+        <t><figure>
+            <artwork><![CDATA[             +---------------+-------------+---------------+
+             | Next Protocol | Description | Reference     |
+             +---------------+-------------+---------------+
+             | 0x81          | IOAM        | This document |
+             +---------------+-------------+---------------+
 
 ]]></artwork>
-        </figure></t>
+          </figure></t>
+      </section>
+
+      <section title="LISP-GPE Next Protocol Value">
+        <t>IANA is requested to allocate a value in the LISP-GPE "Next
+        Protocol" registry for IOAM, which is defined in <xref
+        target="I-D.ietf-lisp-gpe"/>.</t>
+
+        <t><figure>
+            <artwork><![CDATA[             +---------------+-------------+---------------+
+             | Next Protocol | Description | Reference     |
+             +---------------+-------------+---------------+
+             | 0x81          | IOAM        | This document |
+             +---------------+-------------+---------------+
+
+]]></artwork>
+          </figure></t>
+      </section>
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -559,6 +578,8 @@
 
       &I-D.ietf-nvo3-vxlan-gpe;
 
+      &I-D.ietf-lisp-gpe;
+
       &RFC2784;
 
       &RFC3232;
@@ -579,8 +600,6 @@
 
     <references title="Informative References">
       &RFC7665;
-
-      &I-D.draft-ietf-sfc-proof-of-transit;
 
       <reference anchor="FD.io" target="https://fd.io/">
         <front>

@@ -13,9 +13,15 @@ https://github.com/CiscoDevNet/iOAM
 
 ## IOAM Data Fields
 
- - https://tools.ietf.org/html/draft-ietf-ippm-ioam-data-07
- - https://tools.ietf.org/html/draft-mizrahi-ippm-ioam-flags-00
+ - https://tools.ietf.org/html/draft-ietf-ippm-ioam-data-08
+ - https://tools.ietf.org/html/draft-ietf-ippm-ioam-flags-00
+ - https://tools.ietf.org/html/draft-ioamteam-ippm-ioam-direct-export-00
  - https://tools.ietf.org/html/draft-song-ippm-postcard-based-telemetry-05
+
+## IOAM Deployment
+
+ - https://tools.ietf.org/html/draft-brockners-opsawg-ioam-deployment-00
+
 
 ## YANG/Operations
 
@@ -30,7 +36,7 @@ https://github.com/CiscoDevNet/iOAM
 
 ### IPv6
 
- - https://tools.ietf.org/html/draft-ioametal-ippm-6man-ioam-ipv6-options-02
+ - https://tools.ietf.org/html/draft-ietf-ippm-ioam-ipv6-options-00
  - https://tools.ietf.org/html/draft-ioametal-ippm-6man-ioam-ipv6-deployment-01
 
 ### Protocols which use Ethertype for next protocol (e.g. GRE)
