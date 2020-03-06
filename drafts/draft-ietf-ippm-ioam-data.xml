@@ -1552,20 +1552,22 @@ be 4-octet aligned:
                 node e.g. by n-tuple based classification of packets.</t>
 
                 <t hangText="Bit 2">When set indicates presence of timestamp
-                seconds. This indicates the time at which the packet entered
-                the IOAM domain. It is up to the administrator to define the
-                location of the domain boundary within the node at the edge
-                of the IOAM domain. Some possibilities are: 1) the time at
-                which the packet was received by the node, 2) the time at
-                which the packet was transmitted by the node, 3) when a
-                tunnel encapsulation is used, the point at which the packet
-                is encapsulated into the tunnel. This 4-octet field has three
-                possible formats; based on either PTP <xref
-                target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>, or POSIX
-                <xref target="POSIX"/>. The three timestamp formats are
-                specified in <xref target="TimestampSec"/>. In all three
-                cases, the Timestamp Seconds field contains the 32 most
-                significant bits of the timestamp format that is specified in
+                seconds, representing the time at which the packet entered
+                the IOAM domain. Within the IOAM encapsulating node, the time
+                that the timestamp is retrieved can depend on the
+                implementation. Some possibilities are: 1) the time at which
+                the packet was received by the node, 2) the time at which the
+                packet was transmitted by the node, 3) when a tunnel
+                encapsulation is used, the point at which the packet is
+                encapsulated into the tunnel. Each implementation should
+                document when the E2E timestamp that is going to be put in the
+                packet is retrieved. This 4-octet field has three possible
+                formats; based on either PTP <xref target="IEEE1588v2"/>,
+                NTP <xref target="RFC5905"/>, or POSIX <xref target="POSIX"/>.
+                The three timestamp formats are specified in
+                <xref target="TimestampSec"/>. In all three cases, the
+                Timestamp Seconds field contains the 32 most significant bits
+                of the timestamp format that is specified in
                 <xref target="TimestampSec"/>. If a node is not capable of
                 populating this field, it assigns the value 0xFFFFFFFF. Note
                 that this is a legitimate value that is valid for 1 second in
@@ -1574,13 +1576,14 @@ be 4-octet aligned:
                 in order to detect the error indication.</t>
 
                 <t hangText="Bit 3">When set indicates presence of timestamp
-                subseconds for the transmission of the frame. This 4-octet
-                field has three possible formats; based on either PTP <xref
-                target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>, or POSIX
-                <xref target="POSIX"/>. The three timestamp formats are
-                specified in <xref target="TimestampSec"/>. In all three
-                cases, the Timestamp Subseconds field contains the 32 least
-                significant bits of the timestamp format that is specified in
+                subseconds, representing the time at which the packet entered
+                the IOAM domain. This 4-octet field has three possible
+                formats; based on either PTP <xref target="IEEE1588v2"/>,
+                NTP <xref target="RFC5905"/>, or POSIX <xref target="POSIX"/>.
+                The three timestamp formats are specified in
+                <xref target="TimestampSec"/>. In all three cases, the
+                Timestamp Subseconds field contains the 32 least significant
+                bits of the timestamp format that is specified in
                 <xref target="TimestampSec"/>. If a node is not capable of
                 populating this field, it assigns the value 0xFFFFFFFF. Note
                 that this is a legitimate value in the NTP format, valid for
