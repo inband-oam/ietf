@@ -73,7 +73,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="bcp" docName="draft-brockners-opsawg-ioam-deployment-00"
+<rfc category="bcp" docName="draft-brockners-opsawg-ioam-deployment-01"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -153,7 +153,7 @@
       </address>
     </author>
 
-    <date day="30" month="October" year="2019"/>
+    <date day="9" month="March" year="2020"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -198,16 +198,14 @@
       particular network domain. The term "in-situ" refers to the fact that
       the OAM data is added to the data packets rather than is being sent
       within packets specifically dedicated to OAM. IOAM is to complement
-      mechanisms such as Ping or Traceroute, or more recent active probing
-      mechanisms as described in <xref
-      target="I-D.lapukhov-dataplane-probe"/>. In terms of "active" or
-      "passive" OAM, "in-situ" OAM can be considered a hybrid OAM type.
-      "In-situ" mechanisms do not require extra packets to be sent. IOAM adds
-      information to the already available data packets and therefore cannot
-      be considered passive. In terms of the classification given in <xref
-      target="RFC7799"/> IOAM could be portrayed as Hybrid Type 1. IOAM
-      mechanisms can be leveraged where mechanisms using e.g. ICMP do not
-      apply or do not offer the desired results, such as proving that a
+      mechanisms such as Ping, Traceroute, or other active probing mechanisms.
+      In terms of "active" or "passive" OAM, "in-situ" OAM can be considered a
+      hybrid OAM type. "In-situ" mechanisms do not require extra packets to be
+      sent. IOAM adds information to the already available data packets and
+      therefore cannot be considered passive. In terms of the classification
+      given in <xref target="RFC7799"/> IOAM could be portrayed as Hybrid Type
+      1. IOAM mechanisms can be leveraged where mechanisms using e.g. ICMP do
+      not apply or do not offer the desired results, such as proving that a
       certain traffic flow takes a pre-defined path, SLA verification for the
       live data traffic, detailed statistics on traffic distribution paths in
       networks that distribute traffic across multiple paths, or scenarios in
@@ -228,6 +226,8 @@
 
           <t hangText="Geneve:">Generic Network Virtualization Encapsulation
           <xref target="I-D.ietf-nvo3-geneve"/></t>
+
+          <t hangText="GRE">Generic Routing Encapsulation</t>
 
           <t hangText="IOAM:">In-situ Operations, Administration, and
           Maintenance</t>
@@ -503,8 +503,39 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       </section>
 
       <section title="GRE">
-        <t>IOAM encapsulation for NSH is defined in <xref
-        target="I-D.weis-ippm-ioam-eth"/>.</t>
+        <t>IOAM encapsulation for GRE is outlined as part of the "EtherType
+        Protocol Identification of In-situ OAM Data" in <xref
+        target="I-D.weis-ippm-ioam-eth"/>, though no example protocol header
+        stacks are provided in the document. When used with GRE, the
+        IOAM-Option-Types (the below diagram uses "IOAM" as shorthand for
+        IOAM-Option-Types) are sequenced in behind the GRE header that follows
+        the "outer" IP header. <xref target="GRE-example"/> shows two example
+        protocol header stacks that use GRE along with IOAM.</t>
+
+        <figure align="center" anchor="GRE-example"
+                title="GRE with IOAM example">
+          <artwork align="left"><![CDATA[sh
+        Example 1                     Example 2
+
+   |      ...       |            |       ...      |  
+   +----------------+            +----------------+
+   | TCP/UDP header |            |    IP, ...     |  
+   +----------------+            +----------------+
+   |    IP header   |            |   Eth. header  |
+   +----------------+            +----------------+
+   |      IOAM      |            |      IOAM      |
+   +----------------+            +----------------+
+   |    GRE header  |            |    GRE header  |
+   +----------------+            +----------------+
+   |    IP header   |            |    IP header   |
+   +----------------+            +----------------+
+   |     Layer 2    |            |     Layer 2    |
+   +----------------+            +----------------+
+   |     Layer 1    |            |     Layer 1    |      
+   +----------------+            +----------------+
+
+]]></artwork>
+        </figure>
       </section>
 
       <section title="Geneve">
@@ -669,12 +700,19 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       <section title="IOAM Layering">
         <t>If several encapsulation protocols (e.g., in case of tunneling) are
         stacked on top of each other, IOAM-Data-Fields could be present in
-        different protocol fields at different layers. The behavior follows
-        the ships-in-the-night model, i.e. IOAM-Data-Fields in one layer are
-        independent from IOAM-Data-Fields in another layer. Layering allows
+        different protocol fields at different layers. Layering allows
         operators to instrument the protocol layer they want to measure. The
+        behavior follows the ships-in-the-night model, i.e. IOAM-Data-Fields
+        in one layer are independent from IOAM-Data-Fields in another layer.
+        Or in other words: Even though the term "layering" often implies some
+        form of hierarchy and relationship, in IOAM, layers are independent
+        from each other and don't assume any relationship among them. The
         different layers could, but do not have to share the same IOAM
-        encapsulation mechanisms.</t>
+        encapsulation mechanisms. Similarly, the sematics of the
+        IOAM-Data-Fields, can, do not have to be associated to across
+        different layers. For example, a node which inserts node-id
+        information into two different layers could use "node-id=10" for one
+        layer and "node-id=1000" for the second layer.</t>
 
         <t><xref target="IOAM-layering"/> shows an example of IOAM layering.
         The figure shows a Geneve tunnel carried over IPv6 which starts at
@@ -686,7 +724,8 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
         (from Geneve). The use of IOAM at both layers as shown in the example
         here could be used to reveal which nodes of an underlay (here the IPv6
         network) are traversed by tunneled packet in an overlay (here the
-        Geneve network).</t>
+        Geneve network) - which assumes that the IOAM information encapsulated
+        by nodes A and D into Geneve and IPv6 is associated to each other.</t>
 
         <figure align="center" anchor="IOAM-layering"
                 title="IOAM layering example">
@@ -807,18 +846,22 @@ packets  |Encapsu-|                                   |Decapsu-|
         packet as opposed to regular user data traffic. Active mode is
         expected to be used for active measurement using IOAM. Example
         use-cases include:<list style="symbols">
-            <t>Endpoint active measurement: Synthetic probe packets are sent
-            between the source and destination, traversing the IOAM domain.
-            Since the probe packets are sent between the endpoints, these
-            packets are treated as data packets by the IOAM domain, and do not
-            require special treatment at the IOAM layer.</t>
+            <t>Endpoint detailed active measurement: Synthetic probe packets
+            are sent between the source and destination, traversing the IOAM
+            domain. These probe packets include a Trace Option-Type (i.e.,
+            either incremental or pre-allocated). Since the probe packets are
+            sent between the endpoints, these packets are treated as data
+            packets by the IOAM domain, and do not require special treatment
+            at the IOAM layer.The encapsulating node can choose to set the
+            Active flag, providing an explicit indication that these probe
+            packets are meant for telemetry collection.</t>
 
             <t>IOAM active measurement using probe packets: Probe packets are
             generated and transmitted by the IOAM encapsulating node, and are
             expected to be terminated by the decapsulating node. Probe packets
             include a Trace Option-Type (i.e., either incremental or
             pre-allocated) which has its Active flag set, indicating that the
-            decapsulating node must terminate them.</t>
+            decapsulating node must terminate them. </t>
 
             <t>IOAM active measurement using replicated data packets: Probe
             packets are created by the encapsulating node by selecting some or
