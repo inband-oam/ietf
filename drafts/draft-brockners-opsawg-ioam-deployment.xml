@@ -153,7 +153,7 @@
       </address>
     </author>
 
-    <date day="8" month="March" year="2020"/>
+    <date day="9" month="March" year="2020"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -198,16 +198,14 @@
       particular network domain. The term "in-situ" refers to the fact that
       the OAM data is added to the data packets rather than is being sent
       within packets specifically dedicated to OAM. IOAM is to complement
-      mechanisms such as Ping or Traceroute, or more recent active probing
-      mechanisms as described in <xref
-      target="I-D.lapukhov-dataplane-probe"/>. In terms of "active" or
-      "passive" OAM, "in-situ" OAM can be considered a hybrid OAM type.
-      "In-situ" mechanisms do not require extra packets to be sent. IOAM adds
-      information to the already available data packets and therefore cannot
-      be considered passive. In terms of the classification given in <xref
-      target="RFC7799"/> IOAM could be portrayed as Hybrid Type 1. IOAM
-      mechanisms can be leveraged where mechanisms using e.g. ICMP do not
-      apply or do not offer the desired results, such as proving that a
+      mechanisms such as Ping, Traceroute, or other active probing mechanisms.
+      In terms of "active" or "passive" OAM, "in-situ" OAM can be considered a
+      hybrid OAM type. "In-situ" mechanisms do not require extra packets to be
+      sent. IOAM adds information to the already available data packets and
+      therefore cannot be considered passive. In terms of the classification
+      given in <xref target="RFC7799"/> IOAM could be portrayed as Hybrid Type
+      1. IOAM mechanisms can be leveraged where mechanisms using e.g. ICMP do
+      not apply or do not offer the desired results, such as proving that a
       certain traffic flow takes a pre-defined path, SLA verification for the
       live data traffic, detailed statistics on traffic distribution paths in
       networks that distribute traffic across multiple paths, or scenarios in
@@ -228,6 +226,8 @@
 
           <t hangText="Geneve:">Generic Network Virtualization Encapsulation
           <xref target="I-D.ietf-nvo3-geneve"/></t>
+
+          <t hangText="GRE">Generic Routing Encapsulation</t>
 
           <t hangText="IOAM:">In-situ Operations, Administration, and
           Maintenance</t>
@@ -846,18 +846,22 @@ packets  |Encapsu-|                                   |Decapsu-|
         packet as opposed to regular user data traffic. Active mode is
         expected to be used for active measurement using IOAM. Example
         use-cases include:<list style="symbols">
-            <t>Endpoint active measurement: Synthetic probe packets are sent
-            between the source and destination, traversing the IOAM domain.
-            Since the probe packets are sent between the endpoints, these
-            packets are treated as data packets by the IOAM domain, and do not
-            require special treatment at the IOAM layer.</t>
+            <t>Endpoint detailed active measurement: Synthetic probe packets
+            are sent between the source and destination, traversing the IOAM
+            domain. These probe packets include a Trace Option-Type (i.e.,
+            either incremental or pre-allocated). Since the probe packets are
+            sent between the endpoints, these packets are treated as data
+            packets by the IOAM domain, and do not require special treatment
+            at the IOAM layer.The encapsulating node can choose to set the
+            Active flag, providing an explicit indication that these probe
+            packets are meant for telemetry collection.</t>
 
             <t>IOAM active measurement using probe packets: Probe packets are
             generated and transmitted by the IOAM encapsulating node, and are
             expected to be terminated by the decapsulating node. Probe packets
             include a Trace Option-Type (i.e., either incremental or
             pre-allocated) which has its Active flag set, indicating that the
-            decapsulating node must terminate them.</t>
+            decapsulating node must terminate them. </t>
 
             <t>IOAM active measurement using replicated data packets: Probe
             packets are created by the encapsulating node by selecting some or
