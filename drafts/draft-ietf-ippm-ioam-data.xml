@@ -675,17 +675,18 @@
       </section>
 
       <section anchor="IOAM_tracing_option" title="IOAM Trace Option-Types">
-        <t>"IOAM tracing data" is expected to be collected at every IOAM
-        transit node that a packet traverses to ensure visibility into the
-        entire path a packet takes within an IOAM-Domain. I.e., in a typical
-        deployment all nodes in an IOAM-Domain would participate in IOAM and
-        thus be IOAM transit nodes, IOAM encapsulating or IOAM decapsulating
-        nodes. If not all nodes within a domain are IOAM capable, IOAM tracing
-        information (i.e., node data, see below) will only be collected on
-        those nodes which are IOAM capable. Nodes which are not IOAM capable
-        will forward the packet without any changes to the IOAM-Data-Fields.
-        The maximum number of hops and the minimum path MTU of the IOAM domain
-        is assumed to be known.</t>
+      <t>"IOAM tracing data" is expected to be either collected at every IOAM
+      transit node that a packet traverses to ensure visibility into the entire
+      path a packet takes within an IOAM-Domain. I.e., in a typical deployment
+      all nodes in an IOAM-Domain would participate in IOAM and thus be IOAM
+      transit nodes, IOAM encapsulating or IOAM decapsulating nodes. If not all
+      nodes within a domain support IOAM functionality as defined in this
+      document, IOAM tracing information (i.e., node data, see below) will only
+      be collected on those nodes which support IOAM functionality as defined in
+      this document. Nodes which do not support IOAM functionality as defined in
+      this document will forward the packet without any changes to the
+      IOAM-Data-Fields. The maximum number of hops and the minimum path MTU of
+      the IOAM domain is assumed to be known.</t>
 
         <t>To optimize hardware and software implementations IOAM tracing is
         defined as two separate options. Any deployment MAY choose to
@@ -900,8 +901,8 @@ The trace option data MUST be 4-octet aligned:
               of the IOAM-Trace-Type field, as follows:<list hangIndent="9"
                   style="hanging">
                   <t hangText="Bit 0">(Most significant bit) When set
-                  indicates presence of Hop_Lim and node_id in the node
-                  data.</t>
+                  indicates presence of Hop_Lim and node_id (short format)
+		  in the node data.</t>
 
                   <t hangText="Bit 1">When set indicates presence of
                   ingress_if_id and egress_if_id (short format) in the node
@@ -1011,7 +1012,7 @@ The trace option data MUST be 4-octet aligned:
           IOAM-Data-Fields is shown below:</t>
 
           <t><list style="hanging">
-              <t hangText="Hop_Lim and node_id:">4-octet field defined as
+              <t hangText="Hop_Lim and node_id short format:">4-octet field defined as
               follows: <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1022,12 +1023,14 @@ The trace option data MUST be 4-octet aligned:
                   to the Hop Limit value in the packet at the node that
                   records this data. Hop Limit information is used to identify
                   the location of the node in the communication path. This is
-                  copied from the lower layer, e.g., TTL value in IPv4 header
-                  or hop limit field from IPv6 header of the packet when the
-                  packet is ready for transmission. The semantics of the
-                  Hop_Lim field depend on the lower layer protocol that IOAM
-                  is encapsulated over, and therefore its specific semantics
-                  are outside the scope of this memo.</t>
+                  copied from the lower layer, e.g., TTL value in IPv4 header or
+                  hop limit field from IPv6 header of the packet when the packet
+                  is ready for transmission. The semantics of the Hop_Lim field
+                  depend on the lower layer protocol that IOAM is encapsulated
+                  into, and therefore its specific semantics are outside the
+                  scope of this memo. The value of this field MUST be set to
+                  0xff when the lower level does not have a TTL/Hop limit
+                  equivalent field.</t>
 
                   <t hangText="node_id:">3-octet unsigned integer. Node
                   identifier field to uniquely identify a node within the
@@ -1142,8 +1145,10 @@ The trace option data MUST be 4-octet aligned:
                   copied from the lower layer for e.g. TTL value in IPv4
                   header or hop limit field from IPv6 header of the packet.
                   The semantics of the Hop_Lim field depend on the lower layer
-                  protocol that IOAM is encapsulated over, and therefore its
-                  specific semantics are outside the scope of this memo.</t>
+                  protocol that IOAM is encapsulated into, and therefore its
+                  specific semantics are outside the scope of this memo.  The
+                  value of this field MUST be set to 0xff when the lower level
+                  does not have a TTL/Hop limit equivalent field.</t>
 
                   <t hangText="node_id:">7-octet unsigned integer. Node
                   identifier field to uniquely identify a node within the
@@ -1187,9 +1192,12 @@ The trace option data MUST be 4-octet aligned:
               <t hangText="buffer occupancy:">4-octet unsigned integer field.
               This field indicates the current status of the occupancy of the
               common buffer pool used by a set of queues. The units of this
-              field depend on the equipment type and deployment and has to be
-              interpreted within the context of an IOAM-Namespace and/or
-              node-id if used. <figure>
+              field may be implementation specific. Hence, the units may need
+              to be interpreted within the context of an IOAM-Namespace and/or
+              node-id if used. The authors acknowledge that in some operational
+              cases there is a need for the units to be consistent across a
+              packet path through the network, hence recommend the
+              implementations to use standard unit such as Bytes. <figure>
                   <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       buffer occupancy                        |
