@@ -146,10 +146,18 @@
     </author>
 
     <author fullname="John Leddy" initials="J." surname="Leddy">
-      <organization abbrev="Comcast">Comcast</organization>
-
       <address>
-        <email>John_Leddy@cable.comcast.com</email>
+        <postal>
+          <street/>
+
+          <city/>
+
+          <code/>
+
+          <country>United States</country>
+        </postal>
+
+        <email>john@leddy.net</email>
       </address>
     </author>
 
@@ -244,24 +252,25 @@
     </author>
 
     <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
-      <organization abbrev="">Barefoot Networks</organization>
+      <organization abbrev="">Barefoot Networks, an Intel
+      company</organization>
 
       <address>
         <postal>
-          <street>2185 Park Boulevard</street>
+          <street>4750 Patrick Henry Drive</street>
 
-          <city>Palo Alto, CA</city>
+          <city>Santa Clara, CA</city>
 
-          <code>94306</code>
+          <code>95054</code>
 
           <country>US</country>
         </postal>
 
-        <email>mspiegel@barefootnetworks.com</email>
+        <email>mickey.spiegel@intel.com</email>
       </address>
     </author>
 
-    <date day="11" month="September" year="2019"/>
+    <date day="17" month="March" year="2020"/>
 
     <area>Transport Area</area>
 
@@ -408,6 +417,36 @@
 ]]></artwork>
           </figure>The GRE header and fields are defined in <xref
         target="RFC2890"/>. The GRE Protocol Type value is TBD_IOAM.</t>
+
+        <t><xref target="GRE-example"/> shows two example protocol header
+        stacks that use GRE along with IOAM. IOAM-Option-Types (the below
+        diagram uses "IOAM" as shorthand for IOAM-Option-Types) are sequenced
+        in behind the GRE header that follows the "outer" IP header.</t>
+
+        <t><figure align="center" anchor="GRE-example"
+            title="GRE with IOAM examples">
+            <artwork align="left"><![CDATA[
+        Example 1                     Example 2
+
+   |      ...       |            |       ...      |  
+   +----------------+            +----------------+
+   | TCP/UDP header |            |    IP, ...     |  
+   +----------------+            +----------------+
+   |    IP header   |            |   Eth. header  |
+   +----------------+            +----------------+
+   |      IOAM      |            |      IOAM      |
+   +----------------+            +----------------+
+   |    GRE header  |            |    GRE header  |
+   +----------------+            +----------------+
+   |    IP header   |            |    IP header   |
+   +----------------+            +----------------+
+   |     Layer 2    |            |     Layer 2    |
+   +----------------+            +----------------+
+   |     Layer 1    |            |     Layer 1    |      
+   +----------------+            +----------------+
+
+]]></artwork>
+          </figure></t>
       </section>
 
       <section title="Example: Geneve Encapsulation of IOAM Data Fields">
