@@ -20,7 +20,7 @@
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-ioametal-ippm-6man-ioam-ipv6-deployment-02"
+<rfc category="std" docName="draft-ioametal-ippm-6man-ioam-ipv6-deployment-03"
      ipr="trust200902">
   <front>
     <title abbrev="In-situ OAM IPv6 encapsulation">Deployment Considerations
@@ -72,11 +72,11 @@
 
       <address>
         <postal>
-          <street></street>
+          <street/>
 
-          <city></city>
+          <city/>
 
-          <code></code>
+          <code/>
 
           <country>Israel</country>
         </postal>
@@ -122,7 +122,8 @@
     </author>
 
     <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
-      <organization abbrev="">Barefoot Networks</organization>
+      <organization abbrev="">Barefoot Networks, an Intel
+      company</organization>
 
       <address>
         <postal>
@@ -135,7 +136,7 @@
           <country>US</country>
         </postal>
 
-        <email>mspiegel@barefootnetworks.com</email>
+        <email>mickey.spiegel@intel.com</email>
       </address>
     </author>
 
@@ -163,7 +164,7 @@
       </address>
     </author>
 
-    <date day="26" month="September" year="2019" />
+    <date day="29" month="March" year="2020"/>
 
     <area>Transport Area, Internet</area>
 
@@ -182,11 +183,10 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. <xref
-      target="I-D.ioametal-ippm-6man-ioam-ipv6-options"></xref> defines how
-      IOAM data fields are encapsulated in the IPv6 <xref
-      target="RFC8200"></xref>. This document discusses deployment options for
-      networks which leverage IOAM data fields encapsulated in the IPv6
-      protocol.</t>
+      target="I-D.ioametal-ippm-6man-ioam-ipv6-options"/> defines how IOAM
+      data fields are encapsulated in the IPv6 <xref target="RFC8200"/>. This
+      document discusses deployment options for networks which leverage IOAM
+      data fields encapsulated in the IPv6 protocol.</t>
 
       <t>Deployment considerations differ, whether the IOAM domain starts and
       ends on hosts or whether the IOAM encapsulating and decapsulating nodes
@@ -198,8 +198,8 @@
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
         "OPTIONAL" in this document are to be interpreted as described in BCP
-        14 <xref target="RFC2119"></xref> <xref target="RFC8174"></xref> when,
-        and only when, they appear in all capitals, as shown here.</t>
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only
+        when, they appear in all capitals, as shown here.</t>
       </section>
 
       <section title="Abbreviations">
@@ -246,10 +246,10 @@
           transit routers and switches to a sufficiently high value. Careful
           control of the MTU in a network is one of the reasons why IOAM is
           considered a domain specific feature, see also <xref
-          target="I-D.ietf-ippm-ioam-data"></xref>. In addition, the PMTU
-          tolerance range in the IOAM domain should be identified (e.g.
-          through configuration) and IOAM encapsulation operations and/or IOAM
-          data field insertion (in case of incremental tracing) should not be
+          target="I-D.ietf-ippm-ioam-data"/>. In addition, the PMTU tolerance
+          range in the IOAM domain should be identified (e.g. through
+          configuration) and IOAM encapsulation operations and/or IOAM data
+          field insertion (in case of incremental tracing) should not be
           performed if it exceeds the packet size beyond PMTU.</t>
 
           <t hangText="C3">Packets with IOAM data or associated ICMP errors,
@@ -272,8 +272,8 @@
           between multiple operators, complicated configuration verification,
           packet capture analysis, etc.</t>
 
-          <t hangText="C6">Compliance with <xref target="RFC8200"></xref>
-          would require OAM data to be encapsulated instead of header/option
+          <t hangText="C6">Compliance with <xref target="RFC8200"/> would
+          require OAM data to be encapsulated instead of header/option
           insertion directly into in-flight packets using the original IPv6
           header.</t>
         </list></t>
@@ -284,7 +284,7 @@
       perform the operation of IOAM data field encapsulation and
       decapsulation. IOAM data is carried in IPv6 packets as Hop-by-Hop or
       Destination options, see <xref
-      target="I-D.ioametal-ippm-6man-ioam-ipv6-options"></xref>.</t>
+      target="I-D.ioametal-ippm-6man-ioam-ipv6-options"/>.</t>
     </section>
 
     <section title="IOAM domains bounded by network devices">
@@ -296,7 +296,7 @@
       <section title="Deployment options">
         <t>This section lists out possible deployment options that can be
         employed to meet the requirements listed in <xref
-        target="v6_requirement"></xref>.</t>
+        target="v6_requirement"/>.</t>
 
         <section title="IPv6-in-IPv6 encapsulation">
           <t>Leverage an IPv6-in-IPv6 approach: Preserve the original IP
@@ -321,50 +321,49 @@
               with leaked IOAM information. Note that leaked packets with IOAM
               data fields would only occur in case a router would be
               misconfigured. <xref
-              target="I-D.ioametal-ippm-6man-ioam-ipv6-options"></xref>
-              requires that by default, packets with extension headers which
-              carry IOAM data fields are dropped unless the router's
-              interfaces are explicitly configured for IOAM.</t>
+              target="I-D.ioametal-ippm-6man-ioam-ipv6-options"/> requires
+              that by default, packets with extension headers which carry IOAM
+              data fields are dropped unless the router's interfaces are
+              explicitly configured for IOAM.</t>
 
               <t>All the IOAM options are defined with type "00 - skip over
               this option and continue processing the header. So presence of
               the options must not cause packet drop in the network elements
               that do not understand the option. In addition <xref
-              target="I-D.ietf-6man-hbh-header-handling"></xref> should be
+              target="I-D.ietf-6man-hbh-header-handling"/> should be
               considered.</t>
             </list></t>
         </section>
 
         <section title="IP-in-IPv6 encapsulation with ULA">
-          <t>The "IP-in-IPv6 encapsulation with ULA" <xref
-          target="RFC4193"></xref> approach can be used to apply IOAM to an
-          IPv6 as well as an IPv4 network. In addition, it fulfills
-          requirement C4 (avoid leaks) by using ULA for the ION. Similar to
-          the IPv6-in-IPv6 encapsulation approach above, the original IP
-          packet is preserved. An IPv6 header including IOAM data fields in an
-          extension header is added in front of it, to forward traffic within
-          and across the IOAM domain. IPv6 addresses for the ION, i.e. the
-          outer IPv6 addresses are assigned from the ULA space. Addressing and
-          routing in the ION are to be configured so that the IP-in-IPv6
-          encapsulated packets follow the same path as the original,
-          non-encapsulated packet would have taken. This would create an
-          internal IPv6 forwarding topology using the IOAM domain's interior
-          ULA address space which is parallel with the forwarding topology
-          that exists with the non-IOAM address space (the topology and
-          address space that would be followed by packets that do not have
-          supplemental IOAM information). Establishment and maintenance of the
-          parallel IOAM ULA forwarding topology could be automated, e.g.
-          similar to how LDP <xref target="RFC5036"></xref> is used in MPLS to
-          establish and maintain an LSP forwarding topology that is parallel
-          to the network's IGP forwarding topology.</t>
+          <t>The "IP-in-IPv6 encapsulation with ULA" <xref target="RFC4193"/>
+          approach can be used to apply IOAM to an IPv6 as well as an IPv4
+          network. In addition, it fulfills requirement C4 (avoid leaks) by
+          using ULA for the ION. Similar to the IPv6-in-IPv6 encapsulation
+          approach above, the original IP packet is preserved. An IPv6 header
+          including IOAM data fields in an extension header is added in front
+          of it, to forward traffic within and across the IOAM domain. IPv6
+          addresses for the ION, i.e. the outer IPv6 addresses are assigned
+          from the ULA space. Addressing and routing in the ION are to be
+          configured so that the IP-in-IPv6 encapsulated packets follow the
+          same path as the original, non-encapsulated packet would have taken.
+          This would create an internal IPv6 forwarding topology using the
+          IOAM domain's interior ULA address space which is parallel with the
+          forwarding topology that exists with the non-IOAM address space (the
+          topology and address space that would be followed by packets that do
+          not have supplemental IOAM information). Establishment and
+          maintenance of the parallel IOAM ULA forwarding topology could be
+          automated, e.g. similar to how LDP <xref target="RFC5036"/> is used
+          in MPLS to establish and maintain an LSP forwarding topology that is
+          parallel to the network's IGP forwarding topology.</t>
 
           <t>Transit across the ION could leverage the transit approach for
           traffic between BGP border routers, as described in <xref
-          target="RFC1772"></xref>, "A.2.3 Encapsulation". Assuming that the
+          target="RFC1772"/>, "A.2.3 Encapsulation". Assuming that the
           operational guidelines specified in Section 4 of <xref
-          target="RFC4193"></xref> are properly followed, the probability of
-          leaks in this approach will be almost close to zero. If the packets
-          do leak through IOAM egress device misconfiguration or partial IOAM
+          target="RFC4193"/> are properly followed, the probability of leaks
+          in this approach will be almost close to zero. If the packets do
+          leak through IOAM egress device misconfiguration or partial IOAM
           egress device failure, the packets' ULA destination address is
           invalid outside of the IOAM domain. There is no exterior destination
           to be reached, and the packets will be dropped when they encounter
@@ -388,7 +387,7 @@
     <section title="Security Considerations">
       <t>This document discusses the deployment of IOAM with IPv6 options.
       Security considerations of the specific IOAM data fields are described
-      in <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
+      in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -401,9 +400,9 @@
       Harichandra Babu, Akshaya Nadahalli, Stefano Previdi, Hemant Singh, Erik
       Nordmark, LJ Wobker, and Andrew Yourtchenko for the comments and advice.
       For the IPv6 encapsulation, this document leverages concepts described
-      in <xref target="I-D.kitamura-ipv6-record-route"></xref>. The authors
-      would like to acknowledge the work done by the author Hiroshi Kitamura
-      and people involved in writing it.</t>
+      in <xref target="I-D.kitamura-ipv6-record-route"/>. The authors would
+      like to acknowledge the work done by the author Hiroshi Kitamura and
+      people involved in writing it.</t>
     </section>
 
     <!---->
@@ -438,27 +437,27 @@
           <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
           Extension</title>
 
-          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"></author>
+          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
 
-          <date month="November" year="2000" />
+          <date month="November" year="2000"/>
         </front>
 
         <seriesInfo name="Internet-Draft"
-                    value="draft-kitamura-ipv6-record-route-00" />
+                    value="draft-kitamura-ipv6-record-route-00"/>
 
         <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
-                type="TXT" />
+                type="TXT"/>
       </reference>
 
       <reference anchor="I-D.ietf-6man-hbh-header-handling">
         <front>
           <title>IPv6 Hop-by-Hop Options Extension Header</title>
 
-          <author fullname="Fred Baker" initials="F" surname="Baker"></author>
+          <author fullname="Fred Baker" initials="F" surname="Baker"/>
 
-          <author fullname="R. Bonica" initials="R" surname="Bonica"></author>
+          <author fullname="R. Bonica" initials="R" surname="Bonica"/>
 
-          <date day="16" month="March" year="2016" />
+          <date day="16" month="March" year="2016"/>
         </front>
       </reference>
     </references>
