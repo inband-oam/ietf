@@ -318,7 +318,8 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
-      outlines how IOAM data fields are encapsulated in Geneve.</t>
+      proposes a new Geneve tunnel option and outlines how IOAM data 
+      fields are carried in the option data field.</t>
     </abstract>
   </front>
 
@@ -328,8 +329,10 @@
       the packet traverses a particular network domain. The term "in-situ"
       refers to the fact that the IOAM data fields are added to the data
       packets rather than is being sent within packets specifically dedicated
-      to OAM. This document defines how IOAM data fields are transported as
-      part of the Geneve <xref target="I-D.ietf-nvo3-geneve"/> encapsulation.
+      to OAM. This document proposes a new Geneve tunnel option and defines 
+      how IOAM data fields are transported as
+      part of the tunnel option in the Geneve <xref target="I-D.ietf-nvo3-geneve"/> 
+      encapsulation.
       The IOAM data fields are defined in <xref
       target="I-D.ietf-ippm-ioam-data"/>.</t>
     </section>
@@ -415,7 +418,7 @@
           target="I-D.ietf-ippm-ioam-data"/>.</t>
 
           <t hangText="R (3 bits):">Option control flags reserved for future
-          use. MUST be zero on transmission and ignored on receipt.</t>
+          use. The flags MUST be set to zero on transmission and ignored on receipt.</t>
 
           <t hangText="Length:">5-bit unsigned integer. Length of the IOAM HDR
           in 4-octet units.</t>
@@ -423,9 +426,10 @@
           <t hangText="IOAM Option and Data Space:">IOAM option header and
           data is present as defined by the Type field, and is defined in
           Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-        </list>Multiple IOAM options MAY be included within the Geneve
-      encapsulation. For example, if a Geneve encapsulation contains two IOAM
-      options before a data payload, there would be two fields with TBD_IOAM
+        </list>Multiple distinct IOAM Option-Types MAY be included within the same 
+        Geneve encapsulation. Each IOAM Option-Type MUST occur at most once within 
+        the same Geneve encapsulation. For example, if a Geneve 
+      encapsulation contains two IOAM Option-Types before a data payload, there would be two fields with TBD_IOAM
       Option Class each, differentiated by the Type field which specifies the
       type of the IOAM data included.</t>
     </section>
@@ -550,8 +554,8 @@
     <section title="Acknowledgements">
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
       Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-      Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker, and
-      Andrew Yourtchenko for the comments and advice.</t>
+      Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
+      Andrew Yourtchenko and Nagendra Kumar Nainar for the comments and advice.</t>
     </section>
   </middle>
 

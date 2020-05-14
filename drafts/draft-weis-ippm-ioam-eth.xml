@@ -16,7 +16,7 @@
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-weis-ippm-ioam-eth-03" ipr="trust200902">
+<rfc category="std" docName="draft-weis-ippm-ioam-eth-04" ipr="trust200902">
   <front>
     <title abbrev="EtherType IOAM">EtherType Protocol Identification of
     In-situ OAM Data</title>
@@ -293,8 +293,10 @@
       traverses a particular network domain. The term "in-situ" refers to the
       fact that the IOAM data fields are added to the data packets rather than
       being sent within packets specifically dedicated to OAM. This document
-      defines how IOAM data fields are carried as part of encapsulations where
-      the IOAM data follows a header that uses an EtherType to denote the next
+      proposes a new Ethertype for IOAM and defines how IOAM data fields are 
+      carried as part of encapsulations where
+      the IOAM data fields follows an encapsulation header that uses an EtherType to 
+      denote the next
       protocol in the packet. Examples of these protocols are GRE <xref
       target="RFC2890"/> and Geneve <xref target="I-D.ietf-nvo3-geneve"/>).
       This document outlines how IOAM data fields are encoded in these
@@ -336,8 +338,8 @@
       identifies the next protocol using an EtherType (e.g., GRE or Geneve)
       the presence of IOAM data fields are identified with TBD_IOAM. When this
       EtherType is used, an additional IOAM header is also included. This
-      header indicates the type of IOAM data that follows, and the next
-      protocol that follows the IOAM data.</t>
+      header indicates the type of IOAM data fields that follows, and the next
+      protocol that follows the IOAM data fields.</t>
 
       <figure>
         <artwork align="center"><![CDATA[ 0                   1                   2                   3
@@ -419,8 +421,8 @@
         target="RFC2890"/>. The GRE Protocol Type value is TBD_IOAM.</t>
 
         <t><xref target="GRE-example"/> shows two example protocol header
-        stacks that use GRE along with IOAM. IOAM-Option-Types (the below
-        diagram uses "IOAM" as shorthand for IOAM-Option-Types) are sequenced
+        stacks that use GRE along with IOAM. IOAM Option-Types (the below
+        diagram uses "IOAM" as shorthand for IOAM Option-Types) are sequenced
         in behind the GRE header that follows the "outer" IP header.</t>
 
         <t><figure align="center" anchor="GRE-example"
@@ -500,10 +502,14 @@
 
     <section anchor="IANA" title="IANA Considerations">
       <t>A new EtherType value is requested to be added to the <xref
-      target="ETYPES"/> IANA registry. The description should be "In-situ OAM
+      target="ETYPES"/> IANA registry by IEEE Registration Authority. The description should be "In-situ OAM
       (IOAM)".</t>
     </section>
 
+    <section anchor="Acknowledgments" title="Acknowledgements">
+      <t>We would like to thank Nagendra Kumar Nainar for the contribution.
+      </t>
+    </section>
     <!-- <section anchor="Acknowledgements" title="Acknowledgements"> -->
 
     <!-- </section> -->
