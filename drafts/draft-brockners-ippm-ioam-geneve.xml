@@ -32,6 +32,7 @@
 <!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
 <!ENTITY I-D.ietf-nvo3-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-geneve.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.weis-ippm-ioam-eth SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.weis-ippm-ioam-eth.xml">
 <!ENTITY I-D.SPUD SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
@@ -60,7 +61,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-brockners-ippm-ioam-geneve-04"
+<rfc category="std" docName="draft-brockners-ippm-ioam-geneve-05"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -132,7 +133,7 @@
       </address>
     </author>
 
-    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro" role="editor">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
 
       <address>
@@ -149,6 +150,26 @@
         </postal>
 
         <email>cpignata@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Nagendra Kumar Nainar" initials="N." surname="Nainar" role="editor">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>7200-11 Kit Creek Road</street>
+
+          <city>Research Triangle Park</city>
+
+          <region>NC</region>
+
+          <code>27709</code>
+
+          <country>United States</country>
+        </postal>
+
+        <email>naikumar@cisco.com</email>
       </address>
     </author>
 
@@ -361,8 +382,16 @@
     </section>
 
     <section title="IOAM Data Field Encapsulation in Geneve">
-      <t>Geneve is defined in <xref target="I-D.ietf-nvo3-geneve"/>. IOAM data
-      fields are carried in the Geneve header as a tunnel option, using a
+      <t>Geneve is defined in <xref target="I-D.ietf-nvo3-geneve"/>. When 
+      Geneve encapsulation header is used, IOAM data fields can either be carried 
+      after the Geneve header, identified by the next protocol field or can be 
+      carried in the Geneve header itself as a tunnel option. The former approach is 
+      defined in <xref target="I-D.weis-ippm-ioam-eth"/> while the latter approach 
+      is defined in this document. 
+      </t>
+
+      <t>
+      IOAM data fields are carried using a
       single Geneve Option Class TBD_IOAM. The different IOAM data fields
       defined in <xref target="I-D.ietf-ippm-ioam-data"/> are added as TLVs
       using that Geneve Option Class. In an administrative domain where IOAM
@@ -415,7 +444,7 @@
 
           <t hangText="Type:">8-bit field defining the IOAM Option type, as
           defined in Section 7.2 of <xref
-          target="I-D.ietf-ippm-ioam-data"/>.</t>
+          target="I-D.ietf-ippm-ioam-data"/>. The 'C' bit MUST be set to zero.</t>
 
           <t hangText="R (3 bits):">Option control flags reserved for future
           use. The flags MUST be set to zero on transmission and ignored on receipt.</t>
@@ -500,7 +529,7 @@
       </section>
 
       <section title="IOAM and the use of the Geneve O-bit">
-        <t><xref target="I-D.ietf-nvo3-geneve"/> defines an "O bit" for OAM
+        <t><xref target="I-D.ietf-nvo3-geneve"/> defines an "O bit" for Control
         packets. Per <xref target="I-D.ietf-nvo3-geneve"/> the O bit indicates
         that the packet contains a control message instead of data payload.
         Packets that carry IOAM data fields in addition to regular data
@@ -520,6 +549,17 @@
         important to recognize that any interpretation of port numbers --
         except at the endpoints -- may be incorrect, because port numbers are
         meaningful only at the endpoints."</t>
+      </section>
+
+      <section title="Additional Encapsulation Consideration">
+        <t>Geneve encapsulation header supports carrying IOAM data fields either 
+        as part of the tunnel option or as the protocol data unit that follows the Geneve
+        header. An operator may choose to enable either of the options but it is 
+        not recommended to include both in the same data packet.
+        </t>
+
+        <t>
+        </t>
       </section>
     </section>
 
@@ -581,6 +621,8 @@
       &I-D.ietf-ippm-ioam-data;
 
       &I-D.ietf-nvo3-geneve;
+
+      &I-D.weis-ippm-ioam-eth;
 
       &RFC2784;
 
