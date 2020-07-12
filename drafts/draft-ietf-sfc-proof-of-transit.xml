@@ -5,6 +5,7 @@
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced. 
      An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
@@ -13,6 +14,7 @@
 <!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-ioam-nsh.xml">
 <!ENTITY I-D.brockners-inband-oam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-data.xml">
 <!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
 <!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
@@ -64,7 +66,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-04"
+<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-06"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -191,7 +193,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </address>
     </author>
 
-    <date day="21" month="November" year="2019"/>
+    <date day="16" month="June" year="2020"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -220,7 +222,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       <t>Several technologies such as Traffic Engineering (TE), Service
       Function Chaining (SFC), and policy based routing are used to steer
       traffic through a specific, user-defined path. This document defines
-      mechanisms to securely prove that traffic transited said defined path.
+      mechanisms to securely prove that traffic transited a defined path.
       These mechanisms allow to securely verify whether, within a given path,
       all packets traversed all the nodes that they are supposed to visit.</t>
     </abstract>
@@ -330,11 +332,11 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
     <section title="Proof of Transit">
       <t>This section discusses methods and algorithms to provide for a "proof
-      of transit" for packets traversing a specific path. A path which is to
-      be verified consists of a set of nodes. Transit of the data packets
-      through those nodes is to be proven. Besides the nodes, the setup also
-      includes a Controller that creates secrets and secrets shares and
-      configures the nodes for POT operations.</t>
+      of transit" (POT) for packets traversing a specific path. A path which
+      is to be verified consists of a set of nodes. Transit of the data
+      packets through those nodes is to be proven. Besides the nodes, the
+      setup also includes a Controller that creates secrets and secrets shares
+      and configures the nodes for POT operations.</t>
 
       <t>The methods how traffic is identified and associated to a specific
       path is outside the scope of this document. Identification could be done
@@ -342,10 +344,13 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       already present in the packet (e.g., path or service identifier, NSH
       Service Path Identifier (SPI), flow-label, etc.)</t>
 
-      <t>The POT information is encapsulated in packets as an IOAM Proof Of
-      Transit Option. The details and format of the encapsulation and the POT
-      Option format are specified in <xref
-      target="I-D.ietf-ippm-ioam-data"/>.</t>
+      <t>When used in the context of IOAM, the POT information MUST be
+      encapsulated in packets as an IOAM Proof of Transit Option-Type. The
+      details and format of the encapsulation and the IOAM POT Option-Type
+      format are specified in <xref target="I-D.ietf-ippm-ioam-data"/>. When
+      used in conjunction with NSH <xref target="RFC8300"/>, the POT
+      Option-Type MUST be carried as specified in <xref
+      target="I-D.ietf-sfc-ioam-nsh"/>.</t>
 
       <t>The solution approach is detailed in two steps. Initially the concept
       of the approach is explained. This concept is then further refined to
@@ -1498,7 +1503,11 @@ module ietf-pot-profile {
 
       &I-D.ietf-ippm-ioam-data;
 
+      &I-D.ietf-sfc-ioam-nsh;
+
       &RFC7665;
+
+      &RFC8300;
 
       <reference anchor="SSS"
                  target="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">

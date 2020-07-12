@@ -21,7 +21,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-flags-00" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-flags-01" ipr="trust200902">
 
   <front>
 
@@ -197,7 +197,7 @@
       </address>
     </author>
 
-    <date year="2019" />
+    <date year="2020" />
 
 
     <area>TSV</area>
@@ -290,22 +290,40 @@
 
 	
 	<section anchor="LoopbackSec" title="Loopback in IOAM">
- 	    <t>Loopback is used for trigerring each transit device along
+ 	    <t>Loopback is used for triggering each transit device along
 		the path to loop back a copy of the data packet. 
-		Loopback mode assumes that a return path from transit nodes
- 	    and destination nodes towards the source exists.
 		Loopback allows an IOAM encapsulating node to trace the path to a 
 		given destination, and to receive per-hop data about both the
-		forward and the return path.
+		forward and the return path. Loopback is intended to provide an 
+		accelerated alternative to Traceroute, that allows the encapsulating
+		node to receive responses from multiple transit nodes along the path 
+		in less then one round-trip-time.
 		</t>
+
+        <t>Loopback mode assumes that a return path from transit nodes
+ 	    and destination nodes towards the source (encapsulating node) exists.
+		Specifically, loopback is only applicable in encapsulations in 
+		which the identity of the encapsulating node is available in the
+		encapsulation header. If an encapsulating node receives a looped 
+		back packet that was not originated from the current encapsulating 
+		node, the packet is dropped.
+		</t>
+
 		
-		<t>The encapsulating node decides (e.g., using a filter) which
- 	    packets loopback mode is enabled for by setting the loopback
- 	    bit. The encapsulating node also needs to ensure that
+		<t>The encapsulating node generates synthetic packets with an IOAM
+		trace option that has the loopback flag set. These packets are
+		generated either proactively or on-demand, i.e., when a failure is 
+		detected. The encapsulating node also needs to ensure that
  	    sufficient space is available in the IOAM header for
  	    loopback operation, which includes transit nodes adding
  	    trace data on the original path and then again on the return
- 	    path.</t>
+ 	    path. An IOAM trace option that has the loopback bit set MUST have
+		the value '1' in the most significant bit of IOAM-Trace-Type, and
+		'0' in the rest of the bits of IOAM-Trace-Type. Thus, every 
+		transit node that processes this trace option only adds a single 
+		data field, which is the Hop_Lim and node_id data field. The 
+		reason for allowing a single data field per hop is to minimize
+		the impact of amplification attacks.</t>
 		
 		<t>A loopback bit that is set indicates to the transit
  	    nodes processing this option that they are to create a copy
@@ -313,7 +331,10 @@
  	    of the packet. The copy has its data fields added after being
  	    copied in order to allow any egress-dependent information to
  	    be set based on the egress of the copy rather than the
- 	    original. The original packet continues towards its
+ 	    original. The copy is also truncated, i.e., any payload that 
+		resides after the IOAM option(s) is removed before transmitting the
+		looped back packet back towards the encapsulating node.
+		The original packet continues towards its
  	    destination. The source address of the original packet is
  	    used as the destination address in the copied packet. The
  	    address of the node performing the copy operation is used as
@@ -347,21 +368,25 @@
 	  <t>The active flag indicates that a packet is used for active 
 	  measurement. An IOAM decapsulating node that receives a packet with 
 	  the Active flag set in one of its Trace options must terminate the 
-	  packet.</t>
+	  packet.
+	  The active flag is intended to simplify the implementation of 
+	  decapsulating nodes by indicating that the packet should not be forwarded 
+	  further. It is not intended as a replacement for existing active OAM
+	  protocols, which may run in higher layers and make use of the active
+	  flag.</t>
 
  	  <t>An example of an IOAM deployment scenario is illustrated in
 	  <xref target="NetworkFig"></xref>. The figure depicts two endpoints,
 	  a source and a destination. The data traffic from the source to the
 	  destination is forwarded through a set of network devices, including
 	  an IOAM encapsulating node, which incorporates one or more IOAM 
-	  option, a decapsulating node, which removes the IOAM options, optionally
+	  options, a decapsulating node, which removes the IOAM options, optionally
 	  one or more transit nodes. The IOAM options are encapsulated in one
 	  of the IOAM encapsulation types, e.g., 
 	  <xref target="I-D.ietf-sfc-ioam-nsh"/>, or 
 	  <xref target="I-D.ioametal-ippm-6man-ioam-ipv6-options"/>.</t>
 	  
        <figure align="center" anchor="NetworkFig" title="Network using IOAM.">
-
        <artwork align="left">
          <![CDATA[
  +--------+     +--------+     +--------+     +--------+     +--------+
@@ -371,7 +396,9 @@
  +--------+     +--------+     +--------+     +--------+     +--------+
    Source      Encapsulating    Transit      Decapsulating   Destination
                    Node           Node           Node
-   
+
+                <------------  IOAM domain  ----------->
+
            ]]></artwork>
 
      </figure>
@@ -386,14 +413,17 @@
 		 between the source and destination, traversing the IOAM domain.
 		 Since the probe packets are sent between the endpoints, these packets
 		 are treated as data packets by the IOAM domain, and do not require
-		 special treatment at the IOAM layer.</t>
+		 special treatment at the IOAM layer. Specifically, the active flag
+		 is not used in this case, and the IOAM layer needs not be aware that
+		 an active measurement mechanism is used at a higher layer.</t>
 
-         <t>IOAM active measurement using probe packets: probe packets are 
-		 generated and transmitted by the IOAM encapsulating node, and are
-		 expected to be terminated by the decapsulating node. IOAM data related
-		 to probe packets may be exported by one or more nodes along its path,
-		 by an exporting protocol that is outside the scope of this document
-		 (e.g., <xref target="I-D.spiegel-ippm-ioam-rawexport"/>). Probe 
+         <t>IOAM active measurement using probe packets within the IOAM domain: 
+		 probe packets are generated and transmitted by the IOAM encapsulating 
+		 node, and are expected to be terminated by the decapsulating node. 
+		 IOAM data related to probe packets may be exported by one or more 
+		 nodes along its path, by an exporting protocol that is outside the 
+		 scope of this document (e.g., 
+		 <xref target="I-D.spiegel-ippm-ioam-rawexport"/>). Probe 
 		 packets include a Trace Option which has its Active flag set, 
 		 indicating that the decapsulating node must terminate them.</t>
 
@@ -406,6 +436,10 @@
 		 original data packet and its replica are forwarded through the same 
 		 path. The replica includes a Trace Option that has its Active flag 
 		 set, indicating that the decapsulating node should terminate it.
+		 It should be noted that the current document defines the role of the
+		 active flag in allowing the decapsulating node to terminate the 
+		 packet, but the replication functionality in this context is outside
+		 the scope of this document.
 		 </t>
 	  </list></t>
 	  
@@ -440,10 +474,10 @@
 	  set the Loopback and Active flag selectively, in a way that considers the 
 	  effect on the network performance. Similarly, transit and decapsulating 
 	  nodes need to be able to selectively loop back packets with the Loopback 
-	  flag, and to selectively export packets to the collector.
+	  flag, and to selectively export packets.
 	  Specifically, rate limiting may be enabled so as to ensure that 
 	  the mechanisms are used at a rate that does not significantly affect 
-	  the network bandwidth, and does not overload the collector (or the 
+	  the network bandwidth, and does not overload the receiving entity (or the 
 	  source node in the case of loopback). </t>
     </section>
 
@@ -478,7 +512,11 @@
 		 amplification; if an attacker causes transit switches to replicate
 		 more packets than they are intended to replicate, either by setting 
 		 the Active flag or by sending synthetic packets, then traffic is
-		 amplified, causing bandwidth degredation.</t>
+		 amplified, causing bandwidth degredation. As mentioned in 
+		 <xref target="UseCaseSec"/>, the specification of the replication
+		 mechanism is not within the scope of this document. A specification
+		 that defines the replication functionality should also address the
+		 security aspects of this mechanism.</t>
       </list></t>
 	  
 	  
@@ -488,8 +526,16 @@
 	  this document to a subset of the traffic, and to limit the performance of
 	  synthetically generated packets to a configurable rate; specifically, 
 	  network devices should be able to limit the rate of: (i) looped-back 
-	  traffic, (ii) replicated active packets, and (iii) packets that are 
-	  exported to a collector.</t>
+	  traffic (at transit nodes), (ii) replicated active packets (at 
+	  encapsulating nodes), (iii) packets that are exported to a collector
+	  (from either encapsulating nodes or transit nodes), and 
+	  (iv) synthetically generated packets (at encapsulating nodes).</t>
+	  
+	  <t>Furthermore, as defined in <xref target="LoopbackSec"/>, transit nodes
+	  that process a packet with the Loopback flag only add a single data
+	  field, and truncate any payload that follows the IOAM option(s), 
+	  thus significanly limiting the possible impact of an amplification 
+	  attack.</t>
 	  
 	  <t>IOAM is assumed to be deployed in a restricted administrative domain,
 	  thus limiting the scope of the threats above and their affect. This is
