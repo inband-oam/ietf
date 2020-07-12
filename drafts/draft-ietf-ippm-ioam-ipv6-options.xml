@@ -276,14 +276,13 @@
         <t>Abbreviations used in this document:</t>
 
         <t><list hangIndent="11" style="hanging">
-            <t hangText="E2E:">Edge-to-Edge</t>
-
-            <t hangText="IOAM:">In-situ Operations, Administration, and
-            Maintenance</t>
-
             <t hangText="OAM:">Operations, Administration, and Maintenance</t>
 
+            <t hangText="IOAM:">In-situ OAM</t>
+
             <t hangText="POT:">Proof of Transit</t>
+
+            <t hangText="E2E:">Edge-to-Edge</t>
           </list></t>
       </section>
     </section>
@@ -324,17 +323,16 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
 .                                                               .  I
-.                     Option Data                               .  O
+.                                                               .  O
 .                                                               .  A
 .                                                               .  M
 .                                                               .  .
-.                                                               .  O
+.                          Option Data                          .  O
 .                                                               .  P
 .                                                               .  T
 .                                                               .  I
 .                                                               .  O
 .                                                               .  N
-.                                                               .  |
 |                                                               |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 
@@ -342,11 +340,11 @@
         </figure></t>
 
       <t><list style="hanging">
-          <t hangText="Option Type:">8-bit identifier of the type of
-          option.</t>
+          <t hangText="Option Type:">8-bit option type identifier as defined
+          in <xref linkend="iana"/>.</t>
 
-          <t hangText="Opt Data Len:">8-bit unsigned integer. Length of the
-          Reserved and Option Data field of this option, in octets.</t>
+          <t hangText="Opt Data Len:">8-bit unsigned integer. Length of this
+          option, in octets, not including the first 2 octets.</t>
 
           <t hangText="Reserved:">8-bit field MUST be set to zero upon
           transmission and ignored upon reception.</t>
@@ -360,10 +358,10 @@
 
       <t>In-situ OAM Options are inserted as Option data as follows:<list
           style="numbers">
-          <t>Pre-allocated Tracing Option: The in-situ OAM Preallocated
-          Tracing option defined in <xref
-          target="I-D.ietf-ippm-ioam-data"></xref> is represented as a IPv6
-          option in hop by hop extension header: <list style="hanging">
+          <t>Pre-allocated Trace Option: The in-situ OAM Preallocated
+          Trace option defined in <xref
+          target="I-D.ietf-ippm-ioam-data"></xref> is represented as an IPv6
+          option in Hop-by-Hop extension header: <list style="hanging">
               <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
               type of option. xxxxx=TBD.</t>
 
@@ -371,9 +369,9 @@
               Type.</t>
             </list></t>
 
-          <t>Incremental Tracing Option: The in-situ OAM Incremental Tracing
+          <t>Incremental Trace Option: The in-situ OAM Incremental Trace
           option defined in <xref target="I-D.ietf-ippm-ioam-data"></xref> is
-          represented as a IPv6 option in hop by hop extension header: <list
+          represented as an IPv6 option in Hop-by-Hop extension header: <list
               style="hanging">
               <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
               type of option. xxxxx=TBD.</t>
@@ -382,8 +380,8 @@
             </list></t>
 
           <t>Proof of Transit Option: The in-situ OAM POT option defined in
-          <xref target="I-D.ietf-ippm-ioam-data"></xref> is represented as a
-          IPv6 option in hop by hop extension header: <list style="hanging">
+          <xref target="I-D.ietf-ippm-ioam-data"></xref> is represented as an
+          IPv6 option in Hop-by-Hop extension header: <list style="hanging">
               <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
               type of option. xxxxx=TBD.</t>
 
@@ -391,8 +389,8 @@
             </list></t>
 
           <t>Edge to Edge Option: The in-situ OAM E2E option defined in <xref
-          target="I-D.ietf-ippm-ioam-data"></xref> is represented as a IPv6
-          option in IPv6 option in destination options extension header: <list
+          target="I-D.ietf-ippm-ioam-data"></xref> is represented as an IPv6
+          option in Destination extension header: <list
               style="hanging">
               <t hangText="Option Type:">000xxxxx 8-bit identifier of the IOAM
               type of option. xxxxx=TBD.</t>
@@ -403,10 +401,10 @@
       requirements. Specifically, they all require 4n alignment. This ensures
       that fields specified in <xref target="I-D.ietf-ippm-ioam-data"></xref>
       are aligned at a multiple-of-4 offset from the start of the Hop-by-Hop
-      Options header. In addition, to maintain IPv6 extension header 8-octet
-      alignment and avoid the need to add or remove padding at every hop, the
-      Trace-Type for Incremental Tracing Option in IPv6 MUST be selected such
-      that the IOAM node data length is a multiple of 8-octets.</t>
+      and Destination Options header. In addition, to maintain IPv6 extension
+      header 8-octet alignment and avoid the need to add or remove padding at
+      every hop, the Trace-Type for Incremental Trace Option in IPv6 MUST be
+      selected such that the IOAM node data length is a multiple of 8-octets.</t>
 
       <t></t>
 
@@ -418,15 +416,15 @@
     <section title="Security Considerations">
       <t>This document describes the encapsulation of IOAM data fields in
       IPv6. Security considerations of the specific IOAM data fields for each
-      case (i.e., Trace, Proof of Transit, and E2E) are described in defined
+      case (i.e., Trace, Proof of Transit, and E2E) are described and defined
       in <xref target="I-D.ietf-ippm-ioam-data"></xref>.</t>
 
-      <t>As this document describes new options for IPv6 , these are similar
+      <t>As this document describes new options for IPv6, these are similar
       to the security considerations of <xref target="RFC8200"></xref> and the
       new weakness documented in <xref target="RFC8250"></xref>.</t>
     </section>
 
-    <section anchor="IANA" title="IANA Considerations">
+    <section id="iana" anchor="IANA" title="IANA Considerations">
       <t>This draft requests the following IPv6 Option Type assignments from
       the Destination Options and Hop-by-Hop Options sub-registry of Internet
       Protocol Version 6 (IPv6) Parameters.</t>
@@ -449,10 +447,10 @@
       <t>The authors would like to thank Tom Herbert, Eric Vyncke, Nalini
       Elkins, Srihari Raghavan, Ranganathan T S, Karthik Babu Harichandra
       Babu, Akshaya Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark,
-      LJ Wobker, Mark Smith, and Andrew Yourtchenko for the comments and
-      advice. For the IPv6 encapsulation, this document leverages concepts
-      described in <xref target="I-D.kitamura-ipv6-record-route"></xref>. The
-      authors would like to acknowledge the work done by the author Hiroshi
+      LJ Wobker, Mark Smith, Andrew Yourtchenko and Justin Iurman for the
+      comments and advice. For the IPv6 encapsulation, this document leverages
+      concepts described in <xref target="I-D.kitamura-ipv6-record-route"></xref>.
+      The authors would like to acknowledge the work done by the author Hiroshi
       Kitamura and people involved in writing it.</t>
     </section>
 
