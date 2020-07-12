@@ -5,6 +5,7 @@
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
 <!ENTITY RFC7605 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7605.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
@@ -13,7 +14,6 @@
 <!ENTITY RFC2460 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2460.xml">
 <!ENTITY RFC7276 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7276.xml">
 <!ENTITY RFC7112 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7112.xml">
-<!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
 <!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
 <!ENTITY RFC3232 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3232.xml">
@@ -32,6 +32,7 @@
 <!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-6man-segment-routing-header.xml">
 <!ENTITY I-D.ietf-nvo3-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-geneve.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.weis-ippm-ioam-eth SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.weis-ippm-ioam-eth.xml">
 <!ENTITY I-D.SPUD SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.hildebrand-spud-prototype.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
@@ -161,6 +162,26 @@
           <city>Research Triangle Park</city>
           <region>NC</region>
           <code>27709</code>
+          <country>United States</country>
+        </postal>
+
+        <email>naikumar@cisco.com</email>
+      </address>
+    </author>
+
+    <author fullname="Nagendra Kumar Nainar" initials="N." surname="Nainar" role="editor">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>7200-11 Kit Creek Road</street>
+
+          <city>Research Triangle Park</city>
+
+          <region>NC</region>
+
+          <code>27709</code>
+
           <country>United States</country>
         </postal>
 
@@ -334,7 +355,8 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
-      outlines how IOAM data fields are encapsulated in Geneve.</t>
+      proposes a new Geneve tunnel option and outlines how IOAM data 
+      fields are carried in the option data field.</t>
     </abstract>
   </front>
 
@@ -344,8 +366,10 @@
       the packet traverses a particular network domain. The term "in-situ"
       refers to the fact that the IOAM data fields are added to the data
       packets rather than is being sent within packets specifically dedicated
-      to OAM. This document defines how IOAM data fields are transported as
-      part of the Geneve <xref target="I-D.ietf-nvo3-geneve"/> encapsulation.
+      to OAM. This document proposes a new Geneve tunnel option and defines 
+      how IOAM data fields are transported as
+      part of the tunnel option in the Geneve <xref target="I-D.ietf-nvo3-geneve"/> 
+      encapsulation.
       The IOAM data fields are defined in <xref
       target="I-D.ietf-ippm-ioam-data"/>.</t>
     </section>
@@ -374,8 +398,16 @@
     </section>
 
     <section title="IOAM Data Field Encapsulation in Geneve">
-      <t>Geneve is defined in <xref target="I-D.ietf-nvo3-geneve"/>. IOAM data
-      fields are carried in the Geneve header as a tunnel option, using a
+      <t>Geneve is defined in <xref target="I-D.ietf-nvo3-geneve"/>. When 
+      Geneve encapsulation header is used, IOAM data fields can either be carried 
+      after the Geneve header, identified by the next protocol field or can be 
+      carried in the Geneve header itself as a tunnel option. The former approach is 
+      defined in <xref target="I-D.weis-ippm-ioam-eth"/> while the latter approach 
+      is defined in this document. 
+      </t>
+
+      <t>
+      IOAM data fields are carried using a
       single Geneve Option Class TBD_IOAM. The different IOAM data fields
       defined in <xref target="I-D.ietf-ippm-ioam-data"/> are added as TLVs
       using that Geneve Option Class. In an administrative domain where IOAM
@@ -428,10 +460,10 @@
 
           <t hangText="Type:">8-bit field defining the IOAM Option type, as
           defined in Section 7.2 of <xref
-          target="I-D.ietf-ippm-ioam-data"/>.</t>
+          target="I-D.ietf-ippm-ioam-data"/>. The 'C' bit MUST be set to zero.</t>
 
           <t hangText="R (3 bits):">Option control flags reserved for future
-          use. MUST be zero on transmission and ignored on receipt.</t>
+          use. The flags MUST be set to zero on transmission and ignored on receipt.</t>
 
           <t hangText="Length:">5-bit unsigned integer. Length of the IOAM HDR
           in 4-octet units.</t>
@@ -439,9 +471,10 @@
           <t hangText="IOAM Option and Data Space:">IOAM option header and
           data is present as defined by the Type field, and is defined in
           Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-        </list>Multiple IOAM options MAY be included within the Geneve
-      encapsulation. For example, if a Geneve encapsulation contains two IOAM
-      options before a data payload, there would be two fields with TBD_IOAM
+        </list>Multiple distinct IOAM Option-Types MAY be included within the same 
+        Geneve encapsulation. Each IOAM Option-Type MUST occur at most once within 
+        the same Geneve encapsulation. For example, if a Geneve 
+      encapsulation contains two IOAM Option-Types before a data payload, there would be two fields with TBD_IOAM
       Option Class each, differentiated by the Type field which specifies the
       type of the IOAM data included.</t>
     </section>
@@ -512,7 +545,7 @@
       </section>
 
       <section title="IOAM and the use of the Geneve O-bit">
-        <t><xref target="I-D.ietf-nvo3-geneve"/> defines an "O bit" for OAM
+        <t><xref target="I-D.ietf-nvo3-geneve"/> defines an "O bit" for Control
         packets. Per <xref target="I-D.ietf-nvo3-geneve"/> the O bit indicates
         that the packet contains a control message instead of data payload.
         Packets that carry IOAM data fields in addition to regular data
@@ -532,6 +565,17 @@
         important to recognize that any interpretation of port numbers --
         except at the endpoints -- may be incorrect, because port numbers are
         meaningful only at the endpoints."</t>
+      </section>
+
+      <section title="Additional Encapsulation Consideration">
+        <t>Geneve encapsulation header supports carrying IOAM data fields either 
+        as part of the tunnel option or as the protocol data unit that follows the Geneve
+        header. An operator may choose to enable either of the options but it is 
+        not recommended to include both in the same data packet.
+        </t>
+
+        <t>
+        </t>
       </section>
     </section>
 
@@ -566,8 +610,8 @@
     <section title="Acknowledgements">
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
       Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-      Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker, and
-      Andrew Yourtchenko for the comments and advice.</t>
+      Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
+      Andrew Yourtchenko and Nagendra Kumar Nainar for the comments and advice.</t>
     </section>
   </middle>
 
@@ -593,6 +637,8 @@
       &I-D.ietf-ippm-ioam-data;
 
       &I-D.ietf-nvo3-geneve;
+
+      &I-D.weis-ippm-ioam-eth;
 
       &RFC2784;
 

@@ -19,6 +19,7 @@
 <!ENTITY RFC3232 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3232.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-proof-of-transit.xml">
 <!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
 <!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
 <!ENTITY I-D.brockners-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-proof-of-transit.xml">
@@ -60,7 +61,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-sfc-ioam-nsh-03" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-sfc-ioam-nsh-04" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -124,7 +125,7 @@
       </address>
     </author>
 
-    <date day="19" month="March" year="2020"/>
+    <date day="16" month="June" year="2020"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -207,10 +208,13 @@
       <t>The NSH is defined in <xref target="RFC8300"/>. IOAM-Data-Fields are
       carried in NSH using a next protocol header which follows the NSH MD
       context headers. An IOAM header is added containing the different
-      IOAM-Data-Fields defined in <xref target="I-D.ietf-ippm-ioam-data"/>. In
-      an administrative domain where IOAM is used, insertion of the IOAM
-      header in NSH is enabled at the NSH tunnel endpoints, which also serve
-      as IOAM encapsulating/decapsulating nodes by means of configuration.</t>
+      IOAM-Data-Fields. The IOAM-Data-Fields MUST follow the definitions in
+      <xref target="I-D.ietf-ippm-ioam-data"/>. If "proof-of-transit" is used
+      in conjunction with NSH, the implementation of proof of transit MUST
+      follow <xref target="I-D.ietf-sfc-proof-of-transit"/>. In an
+      administrative domain where IOAM is used, insertion of the IOAM header
+      in NSH is enabled at the NSH tunnel endpoints, which also serve as IOAM
+      encapsulating/decapsulating nodes by means of configuration.</t>
 
       <t><figure>
           <artwork><![CDATA[ 0                   1                   2                   3
@@ -379,7 +383,9 @@
       malicious configuration and use, which could include injecting malicious
       IOAM packets into a domain. For additional IOAM related security
       considerations, see Section 8 in <xref
-      target="I-D.ietf-ippm-ioam-data"/>.</t>
+      target="I-D.ietf-ippm-ioam-data"/>. For proof of transit related
+      security considerations, see Section 7 in <xref
+      target="I-D.ietf-sfc-proof-of-transit"/>.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -483,6 +489,8 @@
       &RFC8174;
 
       &I-D.ietf-ippm-ioam-data;
+
+      &I-D.ietf-sfc-proof-of-transit;
 
       &RFC8300;
     </references>
