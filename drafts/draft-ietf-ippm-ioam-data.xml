@@ -1012,7 +1012,36 @@ The trace option data MUST be 4-octet aligned:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
               </figure></t>
           </section>
+          <section title="Checksum Complement">
+            <t>The "Checksum Complement" field is a 4-octet node data which
+            contains a 4-octet Checksum Complement field. The Checksum
+            Complement is useful when IOAM is transported over encapsulations
+            that make use of a UDP transport, such as VXLAN-GPE or Geneve.
+            Without the Checksum Complement, nodes adding IOAM node data must
+            update the UDP Checksum field. When the Checksum Complement is
+            present, an IOAM encapsulating node or IOAM transit node adding
+            node data MUST carry out one of the following two alternatives in
+            order to maintain the correctness of the UDP Checksum value: <list
+                style="numbers">
+                <t>Recompute the UDP Checksum field.</t>
 
+                <t>Use the Checksum Complement to make a checksum-neutral
+                update in the UDP payload; the Checksum Complement is assigned
+                a value that complements the rest of the node data fields that
+                were added by the current node, causing the existing UDP
+                Checksum field to remain correct.</t>
+              </list> IOAM decapsulating nodes MUST recompute the UDP Checksum
+            field, since they do not know whether previous hops modified the
+            UDP Checksum field or the Checksum Complement field. <vspace
+            blankLines="1"/> Checksum Complement fields are used in a similar
+            manner in <xref target="RFC7820"/> and <xref target="RFC7821"/>.
+            <figure>
+                <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                   Checksum Complement                         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
+              </figure></t>
+          </section>
           <section title="Hop_Lim and node_id wide">
             <t>The "Hop_Lim and node_id wide" field is an 8-octet field
             defined as follows: <figure>
@@ -1078,36 +1107,7 @@ The trace option data MUST be 4-octet aligned:
 ]]></artwork>
               </figure></t>
           </section>
-          <section title="Checksum Complement">
-            <t>The "Checksum Complement" field is a 4-octet node data which
-            contains a 4-octet Checksum Complement field. The Checksum
-            Complement is useful when IOAM is transported over encapsulations
-            that make use of a UDP transport, such as VXLAN-GPE or Geneve.
-            Without the Checksum Complement, nodes adding IOAM node data must
-            update the UDP Checksum field. When the Checksum Complement is
-            present, an IOAM encapsulating node or IOAM transit node adding
-            node data MUST carry out one of the following two alternatives in
-            order to maintain the correctness of the UDP Checksum value: <list
-                style="numbers">
-                <t>Recompute the UDP Checksum field.</t>
 
-                <t>Use the Checksum Complement to make a checksum-neutral
-                update in the UDP payload; the Checksum Complement is assigned
-                a value that complements the rest of the node data fields that
-                were added by the current node, causing the existing UDP
-                Checksum field to remain correct.</t>
-              </list> IOAM decapsulating nodes MUST recompute the UDP Checksum
-            field, since they do not know whether previous hops modified the
-            UDP Checksum field or the Checksum Complement field. <vspace
-            blankLines="1"/> Checksum Complement fields are used in a similar
-            manner in <xref target="RFC7820"/> and <xref target="RFC7821"/>.
-            <figure>
-                <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                   Checksum Complement                         |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
-              </figure></t>
-          </section>
           <section title="buffer occupancy">
             <t>The "buffer occupancy" field is a 4-octet unsigned integer
             field. This field indicates the current status of the occupancy of
