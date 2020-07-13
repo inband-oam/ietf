@@ -291,7 +291,7 @@
       connections between devices or an overlay network using virtual
       connections / tunnels for connectivity between said devices. A network
       domain is defined by its perimeter or edge. Designers of protocol
-      encapsulations for IOAM must specify mechanisms to ensure that IOAM data
+      encapsulations for IOAM specify mechanisms to ensure that IOAM data
       stays within an IOAM domain. In addition, the operator of such a domain
       is expected to put provisions in place to ensure that IOAM data does not
       leak beyond the edge of an IOAM domain using,for example, packet
@@ -726,7 +726,7 @@ The trace option data MUST be 4-octet aligned:
               example, if 3 IOAM-Trace-Type bits are set and none of them are
               wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are set
               and 2 of them are wide, then NodeLen would be 5. <vspace
-              blankLines="1"/>An IOAM encapsulating node must set NodeLen.
+              blankLines="1"/>An IOAM encapsulating node MUST set NodeLen.
               <vspace blankLines="1"/>A node receiving an IOAM Pre-allocated
               or Incremental Trace-Option may rely on the NodeLen value, or it
               may ignore the NodeLen value and calculate the node length from
@@ -816,7 +816,7 @@ The trace option data MUST be 4-octet aligned:
                   <t hangText="Bit 12-21">Undefined. An IOAM encapsulating
                   node MUST set the value of each of these bits to 0. If an
                   IOAM transit node receives a packet with one or more of
-                  these bits set to 1, it must either: <list style="numbers">
+                  these bits set to 1, it MUST either: <list style="numbers">
                       <t>Add corresponding node data filled with the reserved
                       value 0xFFFFFFFF, after the node data fields for the
                       IOAM-Trace-Type bits defined above, such that the total
@@ -830,7 +830,7 @@ The trace option data MUST be 4-octet aligned:
                   <t hangText="Bit 22">When set, indicates presence of
                   variable length Opaque State Snapshot field.</t>
 
-                  <t hangText="Bit 23">Reserved: Must be set to zero upon
+                  <t hangText="Bit 23">Reserved: MUST be set to zero upon
                   transmission and ignored upon receipt.</t>
                 </list></t>
 
@@ -840,7 +840,7 @@ The trace option data MUST be 4-octet aligned:
               IOAM-Trace-Type can be restricted by configuration knobs.</t>
 
               <t hangText="Reserved:">8-bits. An IOAM encapsulating node MUST
-              set the value to zero upon transmission. IOAM transit nodes must
+              set the value to zero upon transmission. IOAM transit nodes MUST
               ignore the received value.</t>
 
               <t hangText="Node data List [n]:">Variable-length field. This is
@@ -978,7 +978,7 @@ The trace option data MUST be 4-octet aligned:
             nanoseconds then the top bit 'O' is set to indicate overflow and
             value set to 0x80000000. When this field is part of the data field
             but a node populating the field is not able to fill it, the field
-            position in the field must be filled with value 0xFFFFFFFF to mean
+            position in the field MUST be filled with value 0xFFFFFFFF to mean
             not populated.<figure>
                 <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1017,8 +1017,9 @@ The trace option data MUST be 4-octet aligned:
             contains a 4-octet Checksum Complement field. The Checksum
             Complement is useful when IOAM is transported over encapsulations
             that make use of a UDP transport, such as VXLAN-GPE or Geneve.
-            Without the Checksum Complement, nodes adding IOAM node data must
-            update the UDP Checksum field. When the Checksum Complement is
+            Without the Checksum Complement, nodes adding IOAM node data 
+            update the UDP Checksum field following the recommendation of the
+	    encapsulation protocols. When the Checksum Complement is
             present, an IOAM encapsulating node or IOAM transit node adding
             node data MUST carry out one of the following two alternatives in
             order to maintain the correctness of the UDP Checksum value: <list
@@ -1162,7 +1163,7 @@ The trace option data MUST be 4-octet aligned:
                 Schema ID.</t>
               </list>When this field is part of the data field but a node
             populating the field has no opaque state data to report, the
-            Length must be set to 0 and the Schema ID must be set to 0xFFFFFF
+            Length MUST be set to 0 and the Schema ID MUST be set to 0xFFFFFF
             to mean no schema.</t>
           </section>
         </section>
@@ -1341,7 +1342,7 @@ IOAM proof of transit Option-Type IOAM-Data-Fields MUST be
                 drive computation, indicates which POT-profile is used. The
                 two profiles are numbered 0, 1.</t>
 
-                <t hangText="Bit 1-7">Reserved: Must be set to zero upon
+                <t hangText="Bit 1-7">Reserved: MUST be set to zero upon
                 transmission and ignored upon receipt.</t>
               </list></t>
 
@@ -1509,7 +1510,7 @@ be 4-octet aligned:
                 in order to detect the error indication.</t>
 
                 <t hangText="Bit 4-15">Undefined. An IOAM encapsulating node
-                Must set the value of these bits to zero upon transmission and
+                MUST set the value of these bits to zero upon transmission and
                 ignore upon receipt.</t>
               </list></t>
 
