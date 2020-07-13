@@ -205,7 +205,7 @@
       differently from regular data traffic by the network devices.</t>
 
       <t>IOAM use cases and mechanisms have expanded as this document matured,
-      resulting in additional flags and options that may trigger creation of
+      resulting in additional flags and options that could trigger creation of
       additional packets dedicated to OAM. The term IOAM continues to be used
       for such mechanisms, in addition to the "in-situ" mechanisms that
       motivated this terminology.</t>
@@ -291,11 +291,11 @@
       connections between devices or an overlay network using virtual
       connections / tunnels for connectivity between said devices. A network
       domain is defined by its perimeter or edge. Designers of protocol
-      encapsulations for IOAM must specify mechanisms to ensure that IOAM data
+      encapsulations for IOAM specify mechanisms to ensure that IOAM data
       stays within an IOAM domain. In addition, the operator of such a domain
       is expected to put provisions in place to ensure that IOAM data does not
       leak beyond the edge of an IOAM domain using,for example, packet
-      filtering methods. The operator should consider the potential
+      filtering methods. The operator has to consider the potential
       operational impact of IOAM to mechanisms such as ECMP processing (e.g.
       load-balancing schemes based on packet length could be impacted by the
       increased packet size due to IOAM), path MTU (i.e. ensure that the MTU
@@ -478,7 +478,7 @@
             overlapping IOAM-Domains or in case of a layered IOAM
             deployment.</t>
 
-            <t>whether IOAM-Option-Type(s) should be removed from the packet,
+            <t>whether IOAM-Option-Type(s) has to be removed from the packet,
             e.g. at a domain edge or domain boundary.</t>
           </list></t>
 
@@ -494,7 +494,7 @@
             interpreted properly by management stations or network
             controllers. While, for example, the node identifier field
             (node_id, see below) does not need to be unique in a deployment
-            (e.g. an operator may wish to use different node identifiers for
+            (e.g. if an operator wishes to use different node identifiers for
             different IOAM layers, even within the same device; or node
             identifiers might not be unique for other organizational reasons,
             such as after a merger of two formerly separated organizations),
@@ -598,7 +598,7 @@
             encapsulating node allocates space for the Incremental Trace
             Option-Type. Based on operational state and configuration, the
             IOAM encapsulating node sets the fields in the Option-Type that
-            control what IOAM-Data-Fields should be collected and how large
+            control what IOAM-Data-Fields have to be collected and how large
             the node data list can grow. IOAM transit nodes push their node
             data to the node data list, decrease the remaining length
             available to subsequent nodes and adjust the lengths and possibly
@@ -643,7 +643,7 @@
 
             <t>Generic data: Format-free information where syntax and semantic
             of the information is defined by the operator in a specific
-            deployment. For a specific IOAM-Namespace, all IOAM nodes should
+            deployment. For a specific IOAM-Namespace, all IOAM nodes have to
             interpret the generic data the same way. Examples for generic IOAM
             data include geo-location information (location of the node at the
             time the packet was processed), buffer queue fill level or cache
@@ -726,10 +726,10 @@ The trace option data MUST be 4-octet aligned:
               example, if 3 IOAM-Trace-Type bits are set and none of them are
               wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are set
               and 2 of them are wide, then NodeLen would be 5. <vspace
-              blankLines="1"/>An IOAM encapsulating node must set NodeLen.
+              blankLines="1"/>An IOAM encapsulating node MUST set NodeLen.
               <vspace blankLines="1"/>A node receiving an IOAM Pre-allocated
-              or Incremental Trace-Option may rely on the NodeLen value, or it
-              may ignore the NodeLen value and calculate the node length from
+              or Incremental Trace-Option relies on the NodeLen value, or it
+              can ignore the NodeLen value and calculate the node length from
               the IOAM-Trace-Type bits (see below).</t>
 
               <t anchor="TraceFlags" hangText="Flags">4-bit field. Flags are
@@ -816,7 +816,7 @@ The trace option data MUST be 4-octet aligned:
                   <t hangText="Bit 12-21">Undefined. An IOAM encapsulating
                   node MUST set the value of each of these bits to 0. If an
                   IOAM transit node receives a packet with one or more of
-                  these bits set to 1, it must either: <list style="numbers">
+                  these bits set to 1, it MUST either: <list style="numbers">
                       <t>Add corresponding node data filled with the reserved
                       value 0xFFFFFFFF, after the node data fields for the
                       IOAM-Trace-Type bits defined above, such that the total
@@ -830,7 +830,7 @@ The trace option data MUST be 4-octet aligned:
                   <t hangText="Bit 22">When set, indicates presence of
                   variable length Opaque State Snapshot field.</t>
 
-                  <t hangText="Bit 23">Reserved: Must be set to zero upon
+                  <t hangText="Bit 23">Reserved: MUST be set to zero upon
                   transmission and ignored upon receipt.</t>
                 </list></t>
 
@@ -840,7 +840,7 @@ The trace option data MUST be 4-octet aligned:
               IOAM-Trace-Type can be restricted by configuration knobs.</t>
 
               <t hangText="Reserved:">8-bits. An IOAM encapsulating node MUST
-              set the value to zero upon transmission. IOAM transit nodes must
+              set the value to zero upon transmission. IOAM transit nodes MUST
               ignore the received value.</t>
 
               <t hangText="Node data List [n]:">Variable-length field. This is
@@ -947,7 +947,7 @@ The trace option data MUST be 4-octet aligned:
             format that is specified in <xref target="TimestampSec"/>. If a
             node is not capable of populating this field, it assigns the value
             0xFFFFFFFF. Note that this is a legitimate value that is valid for
-            1 second in approximately 136 years; the analyzer should correlate
+            1 second in approximately 136 years; the analyzer has to correlate
             several packets or compare the timestamp value to its own
             time-of-day in order to detect the error indication.</t>
           </section>
@@ -966,7 +966,7 @@ The trace option data MUST be 4-octet aligned:
             this field, it assigns the value 0xFFFFFFFF. Note that this is a
             legitimate value in the NTP format, valid for approximately 233
             picoseconds in every second. If the NTP format is used the
-            analyzer should correlate several packets in order to detect the
+            analyzer has to correlate several packets in order to detect the
             error indication.</t>
           </section>
 
@@ -978,7 +978,7 @@ The trace option data MUST be 4-octet aligned:
             nanoseconds then the top bit 'O' is set to indicate overflow and
             value set to 0x80000000. When this field is part of the data field
             but a node populating the field is not able to fill it, the field
-            position in the field must be filled with value 0xFFFFFFFF to mean
+            position in the field MUST be filled with value 0xFFFFFFFF to mean
             not populated.<figure>
                 <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1004,7 +1004,7 @@ The trace option data MUST be 4-octet aligned:
             This field indicates the current length of the egress interface
             queue of the interface from where the packet is forwarded out. The
             queue depth is expressed as the current amount of memory buffers
-            used by the queue (a packet may consume one or more memory
+            used by the queue (a packet could consume one or more memory
             buffers, depending on its size). <figure>
                 <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1017,8 +1017,9 @@ The trace option data MUST be 4-octet aligned:
             contains a 4-octet Checksum Complement field. The Checksum
             Complement is useful when IOAM is transported over encapsulations
             that make use of a UDP transport, such as VXLAN-GPE or Geneve.
-            Without the Checksum Complement, nodes adding IOAM node data must
-            update the UDP Checksum field. When the Checksum Complement is
+            Without the Checksum Complement, nodes adding IOAM node data 
+            update the UDP Checksum field following the recommendation of the
+	    encapsulation protocols. When the Checksum Complement is
             present, an IOAM encapsulating node or IOAM transit node adding
             node data MUST carry out one of the following two alternatives in
             order to maintain the correctness of the UDP Checksum value: <list
@@ -1112,8 +1113,8 @@ The trace option data MUST be 4-octet aligned:
             <t>The "buffer occupancy" field is a 4-octet unsigned integer
             field. This field indicates the current status of the occupancy of
             the common buffer pool used by a set of queues. The units of this
-            field may be implementation specific. Hence, the units may need to
-            be interpreted within the context of an IOAM-Namespace and/or
+            field are implementation specific. Hence, the units are
+            interpreted within the context of an IOAM-Namespace and/or
             node-id if used. The authors acknowledge that in some operational
             cases there is a need for the units to be consistent across a
             packet path through the network, hence RECOMMEND the
@@ -1135,7 +1136,7 @@ The trace option data MUST be 4-octet aligned:
             specification of this mechanism is beyond the scope of this
             document. A 24-bit "Schema Id" field, interpreted within the
             context of an IOAM-Namespace, indicates which particular schema is
-            used, and should be configured on the network element by the
+            used, and has to be configured on the network element by the
             operator.<figure>
                 <artwork><![CDATA[    0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -1162,7 +1163,7 @@ The trace option data MUST be 4-octet aligned:
                 Schema ID.</t>
               </list>When this field is part of the data field but a node
             populating the field has no opaque state data to report, the
-            Length must be set to 0 and the Schema ID must be set to 0xFFFFFF
+            Length MUST be set to 0 and the Schema ID MUST be set to 0xFFFFFF
             to mean no schema.</t>
           </section>
         </section>
@@ -1341,7 +1342,7 @@ IOAM proof of transit Option-Type IOAM-Data-Fields MUST be
                 drive computation, indicates which POT-profile is used. The
                 two profiles are numbered 0, 1.</t>
 
-                <t hangText="Bit 1-7">Reserved: Must be set to zero upon
+                <t hangText="Bit 1-7">Reserved: MUST be set to zero upon
                 transmission and ignored upon receipt.</t>
               </list></t>
 
@@ -1404,7 +1405,7 @@ IOAM proof of transit option of IOAM POT Type 0:
             </list>Note: Larger or smaller sizes of "Random" and "Cumulative"
           data are feasible and could be required for certain deployments
           (e.g. in case of space constraints in the encapsulation protocols
-          used). Future documents may address different sizes of data for
+          used). Future documents could introduce different sizes of data for
           "proof of transit".</t>
         </section>
       </section>
@@ -1477,7 +1478,7 @@ be 4-octet aligned:
                 received by the node, 2) the time at which the packet was
                 transmitted by the node, 3) when a tunnel encapsulation is
                 used, the point at which the packet is encapsulated into the
-                tunnel. Each implementation should document when the E2E
+                tunnel. Each implementation has to document when the E2E
                 timestamp that is going to be put in the packet is retrieved.
                 This 4-octet field has three possible formats; based on either
                 PTP <xref target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>,
@@ -1488,7 +1489,7 @@ be 4-octet aligned:
                 <xref target="TimestampSec"/>. If a node is not capable of
                 populating this field, it assigns the value 0xFFFFFFFF. Note
                 that this is a legitimate value that is valid for 1 second in
-                approximately 136 years; the analyzer should correlate several
+                approximately 136 years; the analyzer has to correlate several
                 packets or compare the timestamp value to its own time-of-day
                 in order to detect the error indication.</t>
 
@@ -1505,11 +1506,11 @@ be 4-octet aligned:
                 populating this field, it assigns the value 0xFFFFFFFF. Note
                 that this is a legitimate value in the NTP format, valid for
                 approximately 233 picoseconds in every second. If the NTP
-                format is used the analyzer should correlate several packets
+                format is used the analyzer has to correlate several packets
                 in order to detect the error indication.</t>
 
                 <t hangText="Bit 4-15">Undefined. An IOAM encapsulating node
-                Must set the value of these bits to zero upon transmission and
+                MUST set the value of these bits to zero upon transmission and
                 ignore upon receipt.</t>
               </list></t>
 
@@ -1581,10 +1582,10 @@ be 4-octet aligned:
 
         <t>Synchronization Aspects: <list hangIndent="10" style="empty">
             <t>It is assumed that nodes that run this protocol are
-            synchronized among themselves. Nodes may be synchronized to a
+            synchronized among themselves. Nodes MAY be synchronized to a
             global reference time. Note that if PTP <xref
             target="IEEE1588v2"/> is used for synchronization, the timestamp
-            may be derived from the PTP-synchronized clock, allowing the
+            MAY be derived from the PTP-synchronized clock, allowing the
             timestamp to be measured with respect to the clock of an PTP
             Grandmaster clock.</t>
 
@@ -1647,14 +1648,14 @@ be 4-octet aligned:
         <t>Synchronization Aspects: <list hangIndent="10" style="empty">
             <t>Nodes that use this timestamp format will typically be
             synchronized to UTC using NTP <xref target="RFC5905"/>. Thus, the
-            timestamp may be derived from the NTP-synchronized clock, allowing
+            timestamp MAY be derived from the NTP-synchronized clock, allowing
             the timestamp to be measured with respect to the clock of an NTP
             server.</t>
 
             <t>The NTP timestamp format is affected by leap seconds; it
             represents the number of seconds since the epoch minus the number
             of leap seconds that have occurred since the epoch. The value of a
-            timestamp during or slightly after a leap second may be
+            timestamp during or slightly after a leap second could be
             temporarily inaccurate.</t>
           </list></t>
       </section>
@@ -1713,16 +1714,16 @@ be 4-octet aligned:
         <t>Synchronization Aspects: <list hangIndent="10" style="empty">
             <t>It is assumed that nodes that use this timestamp format run the
             Linux operating system, and hence use the POSIX time. In some
-            cases nodes may be synchronized to UTC using a synchronization
+            cases nodes MAY be synchronized to UTC using a synchronization
             mechanism that is outside the scope of this document, such as NTP
-            <xref target="RFC5905"/>. Thus, the timestamp may be derived from
+            <xref target="RFC5905"/>. Thus, the timestamp MAY be derived from
             the NTP-synchronized clock, allowing the timestamp to be measured
             with respect to the clock of an NTP server.</t>
 
             <t>The POSIX-based timestamp format is affected by leap seconds;
             it represents the number of seconds since the epoch minus the
             number of leap seconds that have occurred since the epoch. The
-            value of a timestamp during or slightly after a leap second may be
+            value of a timestamp during or slightly after a leap second could be
             temporarily inaccurate.</t>
           </list></t>
       </section>
@@ -1943,7 +1944,7 @@ be 4-octet aligned:
       contain user data, they can be used for network reconnaissance, allowing
       attackers to collect information about network paths, performance, queue
       states, buffer occupancy and other information. Moreover, if IOAM data
-      leaks from the IOAM domain it may enable reconnaissance beyond the scope
+      leaks from the IOAM domain it could enable reconnaissance beyond the scope
       of the IOAM domain. Note that in case IOAM is used in "Direct Exporting"
       mode <xref target="I-D.ioamteam-ippm-ioam-direct-export"/>, the IOAM
       related trace information would not be available in the customer data
@@ -1961,19 +1962,19 @@ be 4-octet aligned:
       data packets, causing these packets to be increased beyond the MTU size,
       resulting in fragmentation or in packet drops.</t>
 
-      <t>Since IOAM options may include timestamps, if network devices use
+      <t>Since IOAM options can include timestamps, if network devices use
       synchronization protocols then any attack on the time protocol <xref
       target="RFC7384"/> can compromise the integrity of the timestamp-related
       data fields.</t>
 
-      <t>At the management plane, attacks may be implemented by misconfiguring
+      <t>At the management plane, attacks can be set up by misconfiguring
       or by maliciously configuring IOAM-enabled nodes in a way that enables
-      other attacks. Thus, IOAM configuration should be secured in a way that
+      other attacks. Thus, IOAM configuration has to be secured in a way that
       authenticates authorized users and verifies the integrity of
       configuration procedures.</t>
 
       <t>The current document does not define a specific IOAM encapsulation.
-      It should be noted that some IOAM encapsulation types may introduce
+      It has to be noted that some IOAM encapsulation types can introduce
       specific security considerations. A specification that defines an IOAM
       encapsulation is expected to address the respective
       encapsulation-specific security considerations.</t>
@@ -1990,11 +1991,11 @@ be 4-octet aligned:
       and used within the domain.</t>
 
       <t>The security considerations of a system that deploys IOAM, much like
-      any system, should be reviewed on a per-deployment-scenario basis, based
-      on a systems-specific threat analysis, which may lead to specific
+      any system, has to be reviewed on a per-deployment-scenario basis, based
+      on a systems-specific threat analysis, which can lead to specific
       security solutions that are beyond the scope of the current document.
       For example, in an IOAM deployment that is not confined to a single LAN,
-      but spans multiple inter-connected sites, the inter-site links may be
+      but spans multiple inter-connected sites, the inter-site links can be
       secured (e.g., by IPsec) in order to avoid external threats.</t>
     </section>
 
