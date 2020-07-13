@@ -411,9 +411,11 @@
         present in the packet, each IOAM transit node based on configuration and
 	available implementation of IOAM populates IOAM trace data in
 	either Pre-allocated or Incremental Trace Option-Type but not both.
-	A transit node MUST NOT add new
-        IOAM-Option-Types to a packet, and MUST NOT change the
-        IOAM-Data-Fields of an IOAM Edge-to-Edge Option-Type.</t>
+        A transit node MUST ignore IOAM-Option-Types that it does not
+        understand. A transit node MUST NOT add new IOAM-Option-Types to a
+        packet, MUST NOT remove IOAM-Option-Types from a packet, and
+        MUST NOT change the IOAM-Data-Fields of an IOAM Edge-to-Edge
+        Option-Type.</t>
 
         <t>An "IOAM decapsulating node" removes IOAM-Option-Type(s) from
         packets.</t>
@@ -423,7 +425,10 @@
         IOAM-Namespace. This means that an IOAM node which is e.g. an
         IOAM-decapsulating node for IOAM-Namespace "A" but not for
         IOAM-Namespace "B" will only remove the IOAM-Option-Types for
-        IOAM-Namespace "A" from the packet. An IOAM decapsulating node
+        IOAM-Namespace "A" from the packet. Note that this applies even
+        for IOAM-Option-Types that the node does not understand, for
+        example an IOAM-Option-Type other than the four described above,
+        that is added in a future revision. An IOAM decapsulating node
         situated at the edge of an IOAM domain MUST remove all
         IOAM-Option-Types and associated encapsulation headers for all
         IOAM-Namespaces from the packet.</t>
@@ -761,10 +766,13 @@ The trace option data MUST be 4-octet aligned:
               determine whether or not data can be added by this node. When
               node data is added, the node MUST decrease RemainingLen by the
               amount of data added. In the pre-allocated trace option,
-              RemainingLength is used to derive the offset in data space to
+              RemainingLen is used to derive the offset in data space to
               record the node data element. Specifically, the recording of the
               node data element would start from RemainingLen - NodeLen -
-              sizeof(opaque snapshot) in 4 octet units.</t>
+              sizeof(opaque snapshot) in 4 octet units. If RemainingLen
+              in a pre-allocated trace option exceeds the length of the
+              option, as specified in the preceding header, then the node
+              MUST NOT add any fields.</t>
 
               <t anchor="IOAMTraceType" hangText="IOAM-Trace-Type:">A 24-bit
               identifier which specifies which data types are used in this
@@ -1338,7 +1346,10 @@ IOAM proof of transit Option-Type IOAM-Data-Fields MUST be
             document defines POT Type 0:<list style="hanging">
                 <t hangText="0:">POT data is a 16 Octet field as described
                 below.</t>
-              </list></t>
+              </list>
+            If a node receives an IOAM POT Type value that it does not
+            understand, the node MUST NOT change the contents of the
+            IOAM-Data-Fields.</t>
 
             <t hangText="IOAM POT flags:">8-bit. Following flags are
             defined:<list style="hanging">
