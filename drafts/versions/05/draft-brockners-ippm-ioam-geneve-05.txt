@@ -1,0 +1,616 @@
+
+
+
+
+ippm                                                   F. Brockners, Ed.
+Internet-Draft                                               S. Bhandari
+Intended status: Standards Track                             V. Govindan
+Expires: September 30, 2020                            C. Pignataro, Ed.
+                                                          N. Nainar, Ed.
+                                                                   Cisco
+                                                              H. Gredler
+                                                            RtBrick Inc.
+                                                                J. Leddy
+
+                                                               S. Youell
+                                                                    JMPC
+                                                              T. Mizrahi
+                                        Huawei Network.IO Innovation Lab
+                                                             P. Lapukhov
+                                                                Facebook
+                                                                B. Gafni
+                                                                 A. Kfir
+                                             Mellanox Technologies, Inc.
+                                                              M. Spiegel
+                                     Barefoot Networks, an Intel company
+                                                          March 29, 2020
+
+
+               Geneve encapsulation for In-situ OAM Data
+                  draft-brockners-ippm-ioam-geneve-05
+
+Abstract
+
+   In-situ Operations, Administration, and Maintenance (IOAM) records
+   operational and telemetry information in the packet while the packet
+   traverses a path between two points in the network.  This document
+   proposes a new Geneve tunnel option and outlines how IOAM data fields
+   are carried in the option data field.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 1]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on September 30, 2020.
+
+Copyright Notice
+
+   Copyright (c) 2020 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+Table of Contents
+
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
+     2.1.  Requirement Language  . . . . . . . . . . . . . . . . . .   3
+     2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
+   3.  IOAM Data Field Encapsulation in Geneve . . . . . . . . . . .   3
+   4.  Considerations  . . . . . . . . . . . . . . . . . . . . . . .   5
+     4.1.  Discussion of the encapsulation approach  . . . . . . . .   5
+     4.2.  IOAM and the use of the Geneve O-bit  . . . . . . . . . .   6
+     4.3.  Transit devices . . . . . . . . . . . . . . . . . . . . .   6
+     4.4.  Additional Encapsulation Consideration  . . . . . . . . .   7
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
+   8.  Normative References  . . . . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   8
+
+1.  Introduction
+
+   In-situ OAM (IOAM) records OAM information within the packet while
+   the packet traverses a particular network domain.  The term "in-situ"
+   refers to the fact that the IOAM data fields are added to the data
+   packets rather than is being sent within packets specifically
+   dedicated to OAM.  This document proposes a new Geneve tunnel option
+   and defines how IOAM data fields are transported as part of the
+   tunnel option in the Geneve [I-D.ietf-nvo3-geneve] encapsulation.
+   The IOAM data fields are defined in [I-D.ietf-ippm-ioam-data].
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 2]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+2.  Conventions
+
+2.1.  Requirement Language
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+   document are to be interpreted as described in [RFC2119].
+
+2.2.  Abbreviations
+
+   Abbreviations used in this document:
+
+   IOAM:      In-situ Operations, Administration, and Maintenance
+
+   OAM:       Operations, Administration, and Maintenance
+
+   Geneve:    Generic Network Virtualization Encapsulation
+
+3.  IOAM Data Field Encapsulation in Geneve
+
+   Geneve is defined in [I-D.ietf-nvo3-geneve].  When Geneve
+   encapsulation header is used, IOAM data fields can either be carried
+   after the Geneve header, identified by the next protocol field or can
+   be carried in the Geneve header itself as a tunnel option.  The
+   former approach is defined in [I-D.weis-ippm-ioam-eth] while the
+   latter approach is defined in this document.
+
+   IOAM data fields are carried using a single Geneve Option Class
+   TBD_IOAM.  The different IOAM data fields defined in
+   [I-D.ietf-ippm-ioam-data] are added as TLVs using that Geneve Option
+   Class.  In an administrative domain where IOAM is used, insertion of
+   the IOAM header in Geneve is enabled at the Geneve tunnel endpoints,
+   which also serve as IOAM encapsulating/decapsulating nodes by means
+   of configuration.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 3]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+   |Ver|  Opt Len  |O|C|    Rsvd.  |          Protocol Type        |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ Hdr
+   |        Virtual Network Identifier (VNI)       |    Reserved   |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
+   |  Option Class  =  TBD_IOAM    |     Type      |R|R|R| Length  |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
+   !                                                               |  O
+   !                                                               |  A
+   ~                 IOAM Option and Data Space                    ~  M
+   |                                                               |  |
+   |                                                               |  |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
+   |                                                               |
+   |                                                               |
+   |                 Payload + Padding (L2/L3/ESP/...)             |
+   |                                                               |
+   |                                                               |
+   |                                                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+                Figure 1: IOAM data encapsulation in Geneve
+
+   The Geneve header and fields are defined in [I-D.ietf-nvo3-geneve].
+   The Geneve Option Class value for use with IOAM is TBD_IOAM.
+
+   The fields related to the encapsulation of IOAM data fields in Geneve
+   are defined as follows:
+
+   Option Class:  16-bit unsigned integer that determines the IOAM
+      option class.  The value is from the IANA registry setup for
+      Geneve option classes as defined in [I-D.ietf-nvo3-geneve].
+
+   Type:  8-bit field defining the IOAM Option type, as defined in
+      Section 7.2 of [I-D.ietf-ippm-ioam-data].  The 'C' bit MUST be set
+      to zero.
+
+   R (3 bits):  Option control flags reserved for future use.  The flags
+      MUST be set to zero on transmission and ignored on receipt.
+
+   Length:  5-bit unsigned integer.  Length of the IOAM HDR in 4-octet
+      units.
+
+   IOAM Option and Data Space:  IOAM option header and data is present
+      as defined by the Type field, and is defined in Section 4 of
+      [I-D.ietf-ippm-ioam-data].
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 4]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+   Multiple distinct IOAM Option-Types MAY be included within the same
+   Geneve encapsulation.  Each IOAM Option-Type MUST occur at most once
+   within the same Geneve encapsulation.  For example, if a Geneve
+   encapsulation contains two IOAM Option-Types before a data payload,
+   there would be two fields with TBD_IOAM Option Class each,
+   differentiated by the Type field which specifies the type of the IOAM
+   data included.
+
+4.  Considerations
+
+   This section summarizes a set of considerations on the overall
+   approach taken for IOAM data encapsulation in Geneve, as well as
+   deployment considerations.
+
+4.1.  Discussion of the encapsulation approach
+
+   This section is to support the working group discussion in selecting
+   the most appropriate approach for encapsulating IOAM data fields in
+   Geneve.
+
+   An encapsulation of IOAM data fields in Geneve should be friendly to
+   an implementation in both hardware as well as software forwarders and
+   support a wide range of deployment cases, including large networks
+   that desire to leverage multiple IOAM data fields at the same time.
+
+      Hardware and software friendly implementation: Hardware forwarders
+      benefit from an encapsulation that minimizes iterative look-ups of
+      fields within the packet: Any operation which looks up the value
+      of a field within the packet, based on which another lookup is
+      performed, consumes additional gates and time in an implementation
+      - both of which are desired to be kept to a minimum.  This means
+      that flat TLV structures are to be preferred over nested TLV
+      structures.  IOAM data fields are grouped into three option
+      categories: Trace, proof-of-transit, and edge-to-edge.  Each of
+      these three options defines a TLV structure.  A hardware-friendly
+      encapsulation approach avoids grouping these three option
+      categories into yet another TLV structure, but would rather carry
+      the options as a serial sequence.
+
+      Total length of the IOAM data fields: The total length of IOAM
+      data can grow quite large in case multiple different IOAM data
+      fields are used and large path-lengths need to be considered.  If
+      for example an operator would consider using the IOAM trace option
+      and capture node-id, app_data, egress/ingress interface-id,
+      timestamp seconds, timestamps nanoseconds at every hop, then a
+      total of 20 octets would be added to the packet at every hop.  In
+      case this particular deployment would have a maximum path length
+
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 5]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+      of 15 hops in the IOAM domain, then a maximum of 300 octets of
+      IOAM data were to be encapsulated in the packet.
+
+   Concerns with the current encapsulation approach:
+
+      Hardware support: Using Geneve tunnel options to encapsulate IOAM
+      data fields leads to a nested TLV structure.  Each IOAM data field
+      option (trace, proof-of-transit, and edge-to-edge) represents a
+      type, with the different IOAM data fields being TLVs within this
+      the particular option type.  Nested TLVs require iterative look-
+      ups, a fact that creates potential challenges for implementations
+      in hardware.  It would be desirable to offer a way to encapsulate
+      IOAM in a way that keeps TLV nesting to a minimum.
+
+      Length: Geneve tunnel option length is a 5-bit field in the
+      current specification [I-D.ietf-nvo3-geneve] resulting in a
+      maximum option length of 128 (2^5 x 4) octets which constrains the
+      use of IOAM to either small domains or a few IOAM data fields
+      only.  Support for large domains with a variety of IOAM data
+      fields would be desirable.
+
+4.2.  IOAM and the use of the Geneve O-bit
+
+   [I-D.ietf-nvo3-geneve] defines an "O bit" for Control packets.  Per
+   [I-D.ietf-nvo3-geneve] the O bit indicates that the packet contains a
+   control message instead of data payload.  Packets that carry IOAM
+   data fields in addition to regular data payload / customer traffic
+   must not set the O bit.  Packets that carry only IOAM data fields
+   without any payload must set the O bit.
+
+4.3.  Transit devices
+
+   If IOAM is deployed in domains where UDP port numbers are not
+   controlled and do not have a domain-wide meaning, such as on the
+   global Internet, transit devices MUST NOT attempt to modify the IOAM
+   data contained in the IOAM option class.  In case UDP port numbers
+   are not controlled there might be UDP packets, which leverage the UDP
+   port number that Geneve utilizes, i.e. 6081, but the payload of these
+   packets isn't Geneve.  The scenario and associated reasoning is
+   discussed in [RFC7605] which states that "it is important to
+   recognize that any interpretation of port numbers -- except at the
+   endpoints -- may be incorrect, because port numbers are meaningful
+   only at the endpoints."
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 6]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+4.4.  Additional Encapsulation Consideration
+
+   Geneve encapsulation header supports carrying IOAM data fields either
+   as part of the tunnel option or as the protocol data unit that
+   follows the Geneve header.  An operator may choose to enable either
+   of the options but it is not recommended to include both in the same
+   data packet.
+
+5.  IANA Considerations
+
+   IANA is requested to allocate a Geneve "option class" numbers for
+   IOAM:
+
+                 +---------------+-------------+---------------+
+                 | Option Class  | Description | Reference     |
+                 +---------------+-------------+---------------+
+                 | x             | TBD_IOAM    | This document |
+                 +---------------+-------------+---------------+
+
+
+6.  Security Considerations
+
+   The security considerations of Geneve are discussed in
+   [I-D.ietf-nvo3-geneve], and the security considerations of IOAM in
+   general are discussed in [I-D.ietf-ippm-ioam-data].
+
+   IOAM is considered a "per domain" feature, where one or several
+   operators decide on leveraging and configuring IOAM according to
+   their needs.  Still, operators need to properly secure the IOAM
+   domain to avoid malicious configuration and use, which could include
+   injecting malicious IOAM packets into a domain.
+
+7.  Acknowledgements
+
+   The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
+   Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
+   Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
+   Andrew Yourtchenko and Nagendra Kumar Nainar for the comments and
+   advice.
+
+8.  Normative References
+
+   [I-D.ietf-ippm-ioam-data]
+              Brockners, F., Bhandari, S., and T. Mizrahi, "Data Fields
+              for In-situ OAM", draft-ietf-ippm-ioam-data-10 (work in
+              progress), July 2020.
+
+
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 7]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+   [I-D.ietf-nvo3-geneve]
+              Gross, J., Ganga, I., and T. Sridhar, "Geneve: Generic
+              Network Virtualization Encapsulation", draft-ietf-
+              nvo3-geneve-16 (work in progress), March 2020.
+
+   [I-D.weis-ippm-ioam-eth]
+              Weis, B., Brockners, F., Hill, C., Bhandari, S., Govindan,
+              V., Pignataro, C., Gredler, H., Leddy, J., Youell, S.,
+              Mizrahi, T., Kfir, A., Gafni, B., Lapukhov, P., and M.
+              Spiegel, "EtherType Protocol Identification of In-situ OAM
+              Data", draft-weis-ippm-ioam-eth-04 (work in progress), May
+              2020.
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC2784]  Farinacci, D., Li, T., Hanks, S., Meyer, D., and P.
+              Traina, "Generic Routing Encapsulation (GRE)", RFC 2784,
+              DOI 10.17487/RFC2784, March 2000,
+              <https://www.rfc-editor.org/info/rfc2784>.
+
+   [RFC3232]  Reynolds, J., Ed., "Assigned Numbers: RFC 1700 is Replaced
+              by an On-line Database", RFC 3232, DOI 10.17487/RFC3232,
+              January 2002, <https://www.rfc-editor.org/info/rfc3232>.
+
+   [RFC7605]  Touch, J., "Recommendations on Using Assigned Transport
+              Port Numbers", BCP 165, RFC 7605, DOI 10.17487/RFC7605,
+              August 2015, <https://www.rfc-editor.org/info/rfc7605>.
+
+Authors' Addresses
+
+   Frank Brockners (editor)
+   Cisco Systems, Inc.
+   Hansaallee 249, 3rd Floor
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
+   Germany
+
+   Email: fbrockne@cisco.com
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 8]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+   Shwetha Bhandari
+   Cisco Systems, Inc.
+   Cessna Business Park, Sarjapura Marathalli Outer Ring Road
+   Bangalore, KARNATAKA 560 087
+   India
+
+   Email: shwethab@cisco.com
+
+
+   Vengada Prasad Govindan
+   Cisco Systems, Inc.
+
+   Email: venggovi@cisco.com
+
+
+   Carlos Pignataro (editor)
+   Cisco Systems, Inc.
+   7200-11 Kit Creek Road
+   Research Triangle Park, NC  27709
+   United States
+
+   Email: cpignata@cisco.com
+
+
+   Nagendra Kumar Nainar (editor)
+   Cisco Systems, Inc.
+   7200-11 Kit Creek Road
+   Research Triangle Park, NC  27709
+   United States
+
+   Email: naikumar@cisco.com
+
+
+   Hannes Gredler
+   RtBrick Inc.
+
+   Email: hannes@rtbrick.com
+
+
+   John Leddy
+   United States
+
+   Email: john@leddy.net
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 30, 2020               [Page 9]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+   Stephen Youell
+   JP Morgan Chase
+   25 Bank Street
+   London  E14 5JP
+   United Kingdom
+
+   Email: stephen.youell@jpmorgan.com
+
+
+   Tal Mizrahi
+   Huawei Network.IO Innovation Lab
+   Israel
+
+   Email: tal.mizrahi.phd@gmail.com
+
+
+   Petr Lapukhov
+   Facebook
+   1 Hacker Way
+   Menlo Park, CA  94025
+   US
+
+   Email: petr@fb.com
+
+
+   Barak Gafni
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: gbarak@mellanox.com
+
+
+   Aviv Kfir
+   Mellanox Technologies, Inc.
+   350 Oakmead Parkway, Suite 100
+   Sunnyvale, CA  94085
+   U.S.A.
+
+   Email: avivk@mellanox.com
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 30, 2020              [Page 10]
+
+Internet-Draft      In-situ OAM Geneve encapsulation          March 2020
+
+
+   Mickey Spiegel
+   Barefoot Networks, an Intel company
+   4750 Patrick Henry Drive
+   Santa Clara, CA  95054
+   US
+
+   Email: mickey.spiegel@intel.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.      Expires September 30, 2020              [Page 11]
