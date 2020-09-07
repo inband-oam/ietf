@@ -73,7 +73,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="bcp" docName="draft-brockners-opsawg-ioam-deployment-02"
+<rfc category="bcp" docName="draft-brockners-opsawg-ioam-deployment-03"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -153,7 +153,7 @@
       </address>
     </author>
 
-    <date day="17" month="March" year="2020"/>
+    <date day="7" month="September" year="2020"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -833,11 +833,18 @@ packets  |Encapsu-|                                   |Decapsu-|
       </section>
 
       <section title="IOAM Loopback Mode">
-        <t>IOAM Loopback is used for triggering each transit device along the
-        path to loop back a copy of the data packet. Loopback allows an IOAM
-        encapsulating node to trace the path to a given destination, and to
-        receive per-hop data about both the forward and the return path. For
-        details on IOAM loopback, please refer to <xref
+        <t>IOAM Loopback is used to trigger each transit device along the path
+        of a packet to send a copy of the data packet back to the source.
+        Loopback allows an IOAM encapsulating node to trace the path to a
+        given destination, and to receive per-hop data about both the forward
+        and the return path. Loopback is enabled by the encapsulating node
+        setting the loopback flag. Looped-back packets use the source address
+        of the original packet as destination address and the address of the
+        node which performs the loopback operation as source address. Nodes
+        which loop back a packet clear the loopback flag before sending the
+        copy back towards the source. Loopack applies to IOAM deployments
+        where the encapsulating node is either a host or the start of a
+        tunnel: For details on IOAM loopback, please refer to <xref
         target="I-D.ietf-ippm-ioam-flags"/>.</t>
       </section>
 
@@ -932,6 +939,10 @@ packets  |Encapsu-|                                   |Decapsu-|
       target="IOAM-proof-of-transit"/>) is used for verifying the path of data
       packets. The security considerations of POT are further discussed in
       <xref target="I-D.ietf-sfc-proof-of-transit"/>.</t>
+
+      <t>Security considerations related to the use of IOAM flags, in
+      particular the loopback flag are found in <xref
+      target="I-D.ietf-ippm-ioam-flags"/>.</t>
 
       <t>The data elements of IOAM can be used for network reconnaissance,
       allowing attackers to collect information about network paths,
@@ -1052,36 +1063,11 @@ packets  |Encapsu-|                                   |Decapsu-|
 
       &RFC7799;
 
-      &RFC7820;
-
-      &RFC7821;
-
       &RFC7384;
 
       &RFC7276;
 
-      &I-D.lapukhov-dataplane-probe;
-
-      <reference anchor="I-D.kitamura-ipv6-record-route">
-        <front>
-          <title>Record Route for IPv6 (PR6) Hop-by-Hop Option
-          Extension</title>
-
-          <author fullname="Hiroshi Kitamura" initials="H" surname="Kitamura"/>
-
-          <date month="November" year="2000"/>
-        </front>
-
-        <seriesInfo name="Internet-Draft"
-                    value="draft-kitamura-ipv6-record-route-00"/>
-
-        <format target="https://tools.ietf.org/id/draft-kitamura-ipv6-record-route-00.txt"
-                type="TXT"/>
-      </reference>
-
       &RFC8300;
-
-      &I-D.ietf-ntp-packet-timestamps;
 
       &I-D.ietf-nvo3-vxlan-gpe;
 
