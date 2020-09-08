@@ -13,6 +13,15 @@
 <!ENTITY RFC2460 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2460.xml">
 <!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
 <!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY RFC3688 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3688.xml">
+<!ENTITY RFC6020 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6020.xml">
+<!ENTITY RFC6241 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6241.xml">
+<!ENTITY RFC6242 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6242.xml">
+<!ENTITY RFC8040 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8040.xml">
+<!ENTITY RFC5246 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
+<!ENTITY RFC8341 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8341.xml">
+<!ENTITY RFC7950 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7950.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-ioam-nsh.xml">
 <!ENTITY I-D.brockners-inband-oam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-data.xml">
@@ -66,7 +75,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-06"
+<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-07"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -136,11 +145,11 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
       <address>
         <postal>
-          <street/>
+          <street></street>
 
-          <city/>
+          <city></city>
 
-          <code/>
+          <code></code>
 
           <country>Israel</country>
         </postal>
@@ -154,24 +163,24 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
       <address>
         <postal>
-          <street/>
+          <street></street>
 
           <city>BANGALORE</city>
 
           <region>Bangalore, KARNATAKA</region>
 
-          <code/>
+          <code></code>
 
           <country>INDIA</country>
         </postal>
 
-        <phone/>
+        <phone></phone>
 
-        <facsimile/>
+        <facsimile></facsimile>
 
         <email>sashank@seconize.co</email>
 
-        <uri/>
+        <uri></uri>
       </address>
     </author>
 
@@ -193,7 +202,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </address>
     </author>
 
-    <date day="16" month="June" year="2020"/>
+    <date day="16" month="June" year="2020" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -224,7 +233,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       traffic through a specific, user-defined path. This document defines
       mechanisms to securely prove that traffic transited a defined path.
       These mechanisms allow to securely verify whether, within a given path,
-      all packets traversed all the nodes that they are supposed to visit.</t>
+      all packets traversed all the nodes that they are supposed to visit. The
+      document defines the data model through Unified Modeling Language (UML)
+      class diagrams and formally specifies it using a NDMA- compliant YANG
+      model to enable these mechanisms.</t>
     </abstract>
   </front>
 
@@ -232,10 +244,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
     <section title="Introduction">
       <t>Several deployments use Traffic Engineering, policy routing, Segment
       Routing (SR), and Service Function Chaining (SFC) <xref
-      target="RFC7665"/> to steer packets through a specific set of nodes. In
-      certain cases, regulatory obligations or a compliance policy require
-      operators to prove that all packets that are supposed to follow a
-      specific path are indeed being forwarded across and exact set of
+      target="RFC7665"></xref> to steer packets through a specific set of
+      nodes. In certain cases, regulatory obligations or a compliance policy
+      require operators to prove that all packets that are supposed to follow
+      a specific path are indeed being forwarded across and exact set of
       pre-determined nodes.</t>
 
       <t>If a packet flow is supposed to go through a series of service
@@ -279,14 +291,22 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       update the POT data of the packets as the packets pass through the node.
       When the verifier receives a packet, it uses its key along with data
       found in the packet to validate whether the packet traversed the path
-      correctly.</t>
+      correctly. This document defines a data model and specifies it formally
+      using the YANG 1.1 <xref target="RFC7950"></xref> data modeling language
+      to support enabling the POT solution.</t>
+
+      <t>Note to RFC Editor: Please replace the date 2020-09-09 in <xref
+      target="YANG"></xref> of the draft with the date of publication of this
+      draft as a RFC. Also, replace reference to RFC XXXX, and
+      draft-ietf-sfc-proof-of-transit with the RFC numbers assigned to the
+      drafts.</t>
     </section>
 
-    <section anchor="Conventions" title="Conventions">
+    <section anchor="Terminology" title="Terminology">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref
-      target="RFC2119"/>.</t>
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in
+      BCP<xref target="RFC2119"></xref> <xref target="RFC8174"></xref></t>
 
       <t>Abbreviations used in this document:</t>
 
@@ -300,8 +320,6 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           <t hangText="LISP:">Locator/ID Separation Protocol</t>
 
           <t hangText="LPC:">Lagrange Polynomial Constants</t>
-
-          <t hangText="MTU:">Maximum Transmit Unit</t>
 
           <t hangText="NFV:">Network Function Virtualization</t>
 
@@ -347,10 +365,10 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       <t>When used in the context of IOAM, the POT information MUST be
       encapsulated in packets as an IOAM Proof of Transit Option-Type. The
       details and format of the encapsulation and the IOAM POT Option-Type
-      format are specified in <xref target="I-D.ietf-ippm-ioam-data"/>. When
-      used in conjunction with NSH <xref target="RFC8300"/>, the POT
-      Option-Type MUST be carried as specified in <xref
-      target="I-D.ietf-sfc-ioam-nsh"/>.</t>
+      format are specified in <xref target="I-D.ietf-ippm-ioam-data"></xref>.
+      When used in conjunction with NSH <xref target="RFC8300"></xref>, the
+      POT Option-Type MUST be carried as specified in <xref
+      target="I-D.ietf-sfc-ioam-nsh"></xref>.</t>
 
       <t>The solution approach is detailed in two steps. Initially the concept
       of the approach is explained. This concept is then further refined to
@@ -363,7 +381,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         correctly or not. Security mechanisms are natively built into the
         generation of the POT data to protect against misuse (e.g.,
         configuration mistakes). The mechanism for POT leverages "Shamir's
-        Secret Sharing" scheme <xref target="SSS"/>.</t>
+        Secret Sharing" scheme <xref target="SSS"></xref>.</t>
 
         <t>Shamir's secret sharing base idea: A polynomial (represented by its
         coefficients) of degree k is chosen as a secret by the controller. A
@@ -419,26 +437,26 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
         <t>Detailed algorithms are discussed next. A simple example that
         describes how the algorithms work is discussed in <xref
-        target="toy-example"/>.</t>
+        target="toy-example"></xref>.</t>
 
         <t>The algorithms themselves do not constrain the ranges of possible
         values for the different parameters and coefficients used. A
         deployment of the algorithms will always need to define appropriate
-        ranges. Please refer to the YANG model in <xref target="YANG"/> for
-        details on the units and ranges of possible values of the different
-        parameters and coefficients.</t>
+        ranges. Please refer to the YANG model in <xref target="YANG"></xref>
+        for details on the units and ranges of possible values of the
+        different parameters and coefficients.</t>
 
         <section title="Setup">
           <t>A controller generates a first polynomial (POLY-1) of degree k
           and k+1 points on the polynomial, corresponding to the k+1 nodes
           along the path. The constant coefficient of POLY-1 is considered the
           SECRET, which is per the definition of the SSSS algorithm <xref
-          target="SSS"/>. The k+1 points are used to derive the Lagrange Basis
-          Polynomials. The Lagrange Polynomial Constants (LPC) are retrieved
-          from the constant coefficients of the Lagrange Basis Polynomials.
-          Each of the k+1 nodes (including verifier) are assigned a point on
-          the polynomial i.e., shares of the SECRET. The verifier is
-          configured with the SECRET. The Controller also generates
+          target="SSS"></xref>. The k+1 points are used to derive the Lagrange
+          Basis Polynomials. The Lagrange Polynomial Constants (LPC) are
+          retrieved from the constant coefficients of the Lagrange Basis
+          Polynomials. Each of the k+1 nodes (including verifier) are assigned
+          a point on the polynomial i.e., shares of the SECRET. The verifier
+          is configured with the SECRET. The Controller also generates
           coefficients (except the constant coefficient, called "RND", which
           is changed on a per packet basis) of a second polynomial POLY-2 of
           the same degree. Each node is configured with the LPC of POLY-2.
@@ -459,7 +477,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           "LPC" being the Lagrange Polynomial Constant and "Prime" being the
           prime number which defines the finite field arithmetic that all
           operations are done over. Please also refer to <xref
-          target="enhanced-version"/> below for further details how the
+          target="enhanced-version"></xref> below for further details how the
           operations are performed.</t>
 
           <t>This step is performed by each node until the packet completes
@@ -538,7 +556,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 ]]></artwork>
             </figure>
 
-            <t/>
+            <t></t>
           </section>
 
           <section title="LPC Computation">
@@ -669,11 +687,11 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
         <section title="Solution Deployment Considerations">
           <t>The "complete solution" described above in <xref
-          target="enhanced-version"/> could still be prone to replay or
+          target="enhanced-version"></xref> could still be prone to replay or
           preplay attacks. An attacker could e.g. reuse the POT metadata for
           bypassing the verification. These threats can be mitigated by
           appropriate parameterization of the algorithm. Please refer to <xref
-          target="Security"/> for details.</t>
+          target="Security"></xref> for details.</t>
         </section>
       </section>
 
@@ -690,7 +708,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         domain than the verifier. Note that building the trust relationship
         between the Controller and the nodes is outside the scope of this
         document. Techniques such as those described in <xref
-        target="I-D.ietf-anima-autonomic-control-plane"/> might be
+        target="I-D.ietf-anima-autonomic-control-plane"></xref> might be
         applied.</t>
 
         <t>To optimize the overall data amount of exchanged and the processing
@@ -745,7 +763,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
             <t>Whenever a packet is received at an intermediate node, the
             CML+RND sequence is deciphered (by XORing, though other ciphering
             schemas MAY be possible) with the upstream mask before applying
-            the procedures described in <xref target="enhanced-version"/>.</t>
+            the procedures described in <xref
+            target="enhanced-version"></xref>.</t>
 
             <t>Once the new values of CML+RND are produced, they are ciphered
             (by XORing, though other ciphering schemas MAY be possible) with
@@ -852,8 +871,9 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </texttable>
 
       <t>If the symmetric masking method for ordered POT is used (<xref
-      target="mask-opot"/>), the masks used between nodes adjacent in the path
-      MUST have a length equal to the sum of the ones of RND and CML.</t>
+      target="mask-opot"></xref>), the masks used between nodes adjacent in
+      the path MUST have a length equal to the sum of the ones of RND and
+      CML.</t>
     </section>
 
     <section title="Node Configuration">
@@ -863,9 +883,9 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       number, etc.) and communicate the associated values (i.e. prime number,
       secret-share, LPC, etc.) to the nodes. The sum of all parameters for a
       specific node is referred to as "POT-Profile". For details see the YANG
-      model in <xref target="YANG"/>.This document does not define a specific
-      protocol to be used between Controller and nodes. It only defines the
-      procedures and the associated YANG data model.</t>
+      model in <xref target="YANG"></xref>.This document does not define a
+      specific protocol to be used between Controller and nodes. It only
+      defines the procedures and the associated YANG data model.</t>
 
       <section anchor="Procedure" title="Procedure">
         <t>The Controller creates new POT-Profiles at a constant rate and
@@ -874,9 +894,9 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         cycles between &ldquo;even&rdquo; and &ldquo;odd&rdquo; labeled
         profiles. This means that the parameters for the algorithms are
         continuously refreshed. Please refer to <xref
-        target="metadata-for-pot"/> for choosing an appropriate refresh rate:
-        The rate at which the POT-Profiles are communicated to the nodes is
-        configurable and MUST be more frequent than the speed at which a
+        target="metadata-for-pot"></xref> for choosing an appropriate refresh
+        rate: The rate at which the POT-Profiles are communicated to the nodes
+        is configurable and MUST be more frequent than the speed at which a
         POT-Profile is "used up". Once the POT-Profile has been successfully
         communicated to all nodes (e.g., all NETCONF transactions completed,
         in case NETCONF is used as a protocol), the controller sends an
@@ -914,8 +934,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           <t>The main parameters for the information exchange between the
           Controller and the node used in the YANG model are as follows:<list
               style="symbols">
-              <t>pot-profile-index: <xref target="Procedure"/> details that
-              two POT-Profiles are used. Only one of the POT-Profiles is
+              <t>pot-profile-index: <xref target="Procedure"></xref> details
+              that two POT-Profiles are used. Only one of the POT-Profiles is
               active at a given point in time, allowing the Controller to
               refresh the non-active one for future use. pot-profile-index
               defines which of the POT-Profiles (the "even" or "odd"
@@ -948,7 +968,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
               <t>bitmask?: Number of bits as mask used in controlling the size
               of the random value generation. 32-bits of mask is default. See
-              <xref target="metadata-for-pot"/> for details.</t>
+              <xref target="metadata-for-pot"></xref> for details.</t>
             </list></t>
         </section>
 
@@ -972,8 +992,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
               <t>Ellipsis ("...") stands for contents of subtrees that are not
               shown.</t>
             </list> <figure>
-              <artwork><![CDATA[<CODE BEGINS>
-module: ietf-pot-profile
+              <artwork><![CDATA[module: ietf-pot-profile
   +--rw pot-profiles
      +--rw pot-profile-set* [pot-profile-name]
         +--rw pot-profile-name        string
@@ -990,7 +1009,7 @@ module: ietf-pot-profile
            +--rw opot-masks
               +--rw downstream-mask*   uint64
               +--rw upstream-mask*     uint64
-<CODE ENDS>
+
 ]]></artwork>
             </figure></t>
         </section>
@@ -999,19 +1018,21 @@ module: ietf-pot-profile
           <t><!--     We need to add the leaves for defining the upstream and downstream masks
      in symmetric OPOT, and maybe some flag to activate OPOT (though it could be 
      implicit by means of the masks)--><figure>
-              <artwork><![CDATA[<CODE BEGINS> file "ietf-pot-profile@2016-06-15.yang"
+              <artwork><![CDATA[<CODE BEGINS> file "ietf-pot-profile@2020-09-08.yang"
 module ietf-pot-profile {
 
-  yang-version 1;
 
   namespace "urn:ietf:params:xml:ns:yang:ietf-pot-profile";
 
-  prefix ietf-pot-profile;
+  prefix "pot";
 
   organization "IETF SFC Working Group";  
 
   contact "WG Web:   <https://tools.ietf.org/wg/sfc/>
-           WG List:  <mailto:sfc@ietf.org>";
+           WG List:  <mailto:sfc@ietf.org>"
+           Author  : Frank Brockners <fbrockne@cisco.com>
+           Author  : Shwetha Bhandari <shwethab@cisco.com>
+           Author  : Tal Mizrahi <tal.mizrahi.phd@gmail.com>;
 
   description 
      "This module contains a collection of YANG
@@ -1021,32 +1042,43 @@ module ietf-pot-profile {
       POT-Profile between a controller and nodes
       participating in proof of transit.
 
-      Copyright (c) 2018 IETF Trust and the persons identified as
-      authors of the code.  All rights reserved.
+      Copyright (c) 2020 IETF Trust and the persons identified
+      as authors of the code. All rights reserved.
+      Redistribution and use in source and binary forms, with
+      or without modification, is permitted pursuant to, and
+      subject to the license terms contained in, the Simplified
+      BSD License set forth in Section 4.c of the IETF Trust's
+      Legal Provisions Relating to IETF Documents
+      (https://trustee.ietf.org/license-info).
+     
       Redistribution and use in source and binary forms, with or
-      without modification, is permitted pursuant to, and subject
-      to the license terms contained in, the Simplified BSD License
-      set forth in Section 4.c of the IETF Trust's Legal Provisions
+      without modification, is permitted pursuant to, and subject to
+      the license terms contained in, the Simplified BSD License set
+      forth in Section 4.c of the IETF Trust's Legal Provisions
       Relating to IETF Documents
-      (http://trustee.ietf.org/license-info).
-
-      This version of this YANG module is part of RFC XXXX; see
-      the RFC itself for full legal notices.
-
-      Copyright (c) 2018 IETF Trust and the persons identified as
-      authors of the code.  All rights reserved.
-
-      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL
-      NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED',
-      'MAY', and 'OPTIONAL' in this document are to be interpreted as
-      described in BCP 14 (RFC 2119) (RFC 8174) when, and only when,
-      they appear in all capitals, as shown here.";
+      (https://trustee.ietf.org/license-info).
+      This version of this YANG module is part of RFC XXXX
+      (https://www.rfc-editor.org/info/rfcXXXX); see the RFC
+      itself for full legal notices.
+      The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
+      'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
+      'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
+      are to be interpreted as described in BCP 14 (RFC 2119)
+      (RFC 8174) when, and only when, they appear in all
+      capitals, as shown here.";
+ 
+   revision "2020-09-08" {
+    description
+      "Addressing WGLC comments";
+    reference
+      "draft-ietf-sfc-proof-of-transit";
+  }
 
   revision 2016-06-15 {
     description
       "Initial revision.";
     reference
-      "";
+      "draft-ietf-sfc-proof-of-transit";
   }
 
   typedef profile-index-range {
@@ -1207,24 +1239,44 @@ module ietf-pot-profile {
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>This document does not require any actions from IANA.</t>
+      <t>This document registers a URI in the IETF XML registry <xref
+      target="RFC3688"></xref>. Following the format in IETF XML Registry
+      <xref target="RFC3688"></xref>, the following registration is requested
+      to be made.</t>
+
+      <t>URI: urn:ietf:params:xml:ns:yang:ietf-pot-profile</t>
+
+      <t>Registrant Contact: The IESG.</t>
+
+      <t>XML: N/A, the requested URI is an XML namespace.</t>
+
+      <t>This document registers a YANG module in the YANG Module Names
+      registry YANG <xref target="RFC6020"></xref>.</t>
+
+      <t>name: ietf-pot-profile</t>
+
+      <t>namespace: urn:ietf:params:xml:ns:yang:ietf-pot-profile</t>
+
+      <t>prefix: pot</t>
+
+      <t>reference: RFC XXXX</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
       <t>POT is a mechanism that is used for verifying the path through which
       a packet was forwarded. The security considerations of IOAM in general
-      are discussed in <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically,
-      it is assumed that POT is used in a confined network domain, and
-      therefore the potential threats that POT is intended to mitigate should
-      be viewed accordingly. POT prevents spoofing and tampering; an attacker
-      cannot maliciously create a bogus POT or modify a legitimate one.
-      Furthermore, a legitimate node that takes part in the POT protocol
-      cannot masquerade as another node along the path. These considerations
-      are discussed in detail in the rest of this section.</t>
+      are discussed in <xref target="I-D.ietf-ippm-ioam-data"></xref>.
+      Specifically, it is assumed that POT is used in a confined network
+      domain, and therefore the potential threats that POT is intended to
+      mitigate should be viewed accordingly. POT prevents spoofing and
+      tampering; an attacker cannot maliciously create a bogus POT or modify a
+      legitimate one. Furthermore, a legitimate node that takes part in the
+      POT protocol cannot masquerade as another node along the path. These
+      considerations are discussed in detail in the rest of this section.</t>
 
       <section title="Proof of Transit">
         <t>Proof of correctness and security of the solution approach is per
-        Shamir&rsquo;s Secret Sharing Scheme <xref target="SSS"/>.
+        Shamir&rsquo;s Secret Sharing Scheme <xref target="SSS"></xref>.
         Cryptographically speaking it achieves information-theoretic security
         i.e., it cannot be broken by an attacker even with unlimited computing
         power. As long as the below conditions are met it is impossible for an
@@ -1250,11 +1302,11 @@ module ietf-pot-profile {
         chains.</t>
 
         <t>If symmetric masking is used to assure OPOT (<xref
-        target="mask-opot"/>), the nodes need to keep two additional secrets:
-        the downstream and upstream masks, that have to be managed under the
-        same conditions as the secrets mentioned above. And it is equally
-        recommended to employ a different set of mask pairs across different
-        paths, traffic profiles or service chains.</t>
+        target="mask-opot"></xref>), the nodes need to keep two additional
+        secrets: the downstream and upstream masks, that have to be managed
+        under the same conditions as the secrets mentioned above. And it is
+        equally recommended to employ a different set of mask pairs across
+        different paths, traffic profiles or service chains.</t>
       </section>
 
       <section title="Cryptanalysis">
@@ -1353,11 +1405,11 @@ module ietf-pot-profile {
         <t>The solution approach is flexible for recycling long term secrets
         like POLY-1. All the nodes could be periodically updated with shares
         of new SECRET as best practice. The table above could be consulted for
-        refresh cycles (see <xref target="metadata-for-pot"/>).</t>
+        refresh cycles (see <xref target="metadata-for-pot"></xref>).</t>
 
-        <t>If symmetric masking is used for OPOT (<xref target="mask-opot"/>),
-        mask values must be periodically updated as well, at least as
-        frequently as the other secrets are.</t>
+        <t>If symmetric masking is used for OPOT (<xref
+        target="mask-opot"></xref>), mask values must be periodically updated
+        as well, at least as frequently as the other secrets are.</t>
       </section>
 
       <section title="Redundant Nodes and Failover">
@@ -1383,16 +1435,16 @@ module ietf-pot-profile {
         are used for the data fields "CML" and "RND" which are carried within
         the data packet, the regular intervals are expected to be quite long
         (e.g., at 100 Gbps, a profile would only be used up after 3100 years)
-        - see <xref target="metadata-for-pot"/> above, thus even a "headless"
-        operation without a Controller can be considered feasible. In such a
-        case, the Controller would only be used for the initial configuration
-        of the POT-Profiles.</t>
+        - see <xref target="metadata-for-pot"></xref> above, thus even a
+        "headless" operation without a Controller can be considered feasible.
+        In such a case, the Controller would only be used for the initial
+        configuration of the POT-Profiles.</t>
 
-        <t>If OPOT (<xref target="mask-opot"/>) is applied using symmetric
-        masking, the Controller will be required to perform a a periodic
-        refresh of the mask pairs. The use of OPOT SHOULD be configurable as
-        part of the required level of assurance through the Controller
-        management interface.</t>
+        <t>If OPOT (<xref target="mask-opot"></xref>) is applied using
+        symmetric masking, the Controller will be required to perform a a
+        periodic refresh of the mask pairs. The use of OPOT SHOULD be
+        configurable as part of the required level of assurance through the
+        Controller management interface.</t>
       </section>
 
       <section title="Verification Scope">
@@ -1412,9 +1464,9 @@ module ietf-pot-profile {
 
           <t>In case the order in which a data packet traversed a particular
           set of nodes needs to be verified as well, the alternate schemes
-          related to OPOT (<xref target="mask-opot"/>) have to be considered.
-          Since these schemes introduce at least additional control
-          requirements, the selection of order verification SHOULD be
+          related to OPOT (<xref target="mask-opot"></xref>) have to be
+          considered. Since these schemes introduce at least additional
+          control requirements, the selection of order verification SHOULD be
           configurable the Controller management interface.</t>
         </section>
 
@@ -1427,13 +1479,35 @@ module ietf-pot-profile {
           been inserted into a path.</t>
         </section>
       </section>
+
+      <section title="POT Yang module">
+        <t>The YANG module specified in <xref target="YANG"></xref> of this
+        document defines a schema for data that is designed to be accessed via
+        network management protocols such as NETCONF <xref
+        target="RFC6241"></xref> or RESTCONF <xref target="RFC8040"></xref>.
+        The lowest NETCONF <xref target="RFC6241"></xref> layer is the secure
+        transport layer, and the mandatory-to-implement secure transport is
+        Secure Shell (SSH) <xref target="RFC6242"></xref>. The lowest RESTCONF
+        layer is HTTPS, and the mandatory-to- implement secure transport is
+        TLS <xref target="RFC5246"></xref>.</t>
+
+        <t>The NETCONF Access Control Module (NACM) <xref
+        target="RFC8341"></xref> provides the means to restrict access for
+        particular NETCONF or RESTCONF users to a preconfigured subset of all
+        available NETCONF or RESTCONF protocol operations and content. There
+        are a number of nodes defined in this YANG module which are
+        read/writeable. These data nodes may be considered sensitive and
+        vulnerable to attacks in some network environments. Ability to read
+        from or write into these nodes without proper protection can have a
+        negative effect on the devices that support this feature.</t>
+      </section>
     </section>
 
     <section title="Acknowledgements">
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
       Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-      Nadahalli, Erik Nordmark, and Andrew Yourtchenko for the comments and
-      advice.</t>
+      Nadahalli, Erik Nordmark, Andrew Yourtchenko and Tom Petch for the
+      comments and advice.</t>
     </section>
 
     <section title="Contributors">
@@ -1501,28 +1575,46 @@ module ietf-pot-profile {
     <references title="Normative References">
       &RFC2119;
 
-      &I-D.ietf-ippm-ioam-data;
+      &RFC3688;
 
-      &I-D.ietf-sfc-ioam-nsh;
+      &RFC6020;
 
       &RFC7665;
 
+      &RFC7950;
+
+      &RFC8174;
+
       &RFC8300;
+
+      &I-D.ietf-ippm-ioam-data;
+
+      &I-D.ietf-sfc-ioam-nsh;
 
       <reference anchor="SSS"
                  target="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">
         <front>
           <title>Shamir's Secret Sharing</title>
 
-          <author fullname="Wikipedia"/>
+          <author fullname="Wikipedia"></author>
 
-          <date/>
+          <date />
         </front>
       </reference>
     </references>
 
     <references title="Informative References">
       &I-D.draft-ietf-anima-autonomic-control-plane;
+
+      &RFC5246;
+
+      &RFC6241;
+
+      &RFC6242;
+
+      &RFC8040;
+
+      &RFC8341;
     </references>
   </back>
 </rfc>
