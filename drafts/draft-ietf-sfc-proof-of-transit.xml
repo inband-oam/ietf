@@ -383,7 +383,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
         configuration mistakes). The mechanism for POT leverages "Shamir's
         Secret Sharing" scheme <xref target="SSS"></xref>.</t>
 
-        <t>Shamir's secret sharing base idea: A polynomial (represented by its
+        <t>Shamir's Secret Sharing base idea: A polynomial (represented by its
         coefficients) of degree k is chosen as a secret by the controller. A
         polynomial represents a curve. A set of k+1 points on the curve define
         the polynomial and are thus needed to (re-)construct the polynomial.
@@ -450,17 +450,17 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
           <t>A controller generates a first polynomial (POLY-1) of degree k
           and k+1 points on the polynomial, corresponding to the k+1 nodes
           along the path. The constant coefficient of POLY-1 is considered the
-          SECRET, which is per the definition of the SSSS algorithm <xref
-          target="SSS"></xref>. The k+1 points are used to derive the Lagrange
-          Basis Polynomials. The Lagrange Polynomial Constants (LPC) are
-          retrieved from the constant coefficients of the Lagrange Basis
-          Polynomials. Each of the k+1 nodes (including verifier) are assigned
-          a point on the polynomial i.e., shares of the SECRET. The verifier
-          is configured with the SECRET. The Controller also generates
-          coefficients (except the constant coefficient, called "RND", which
-          is changed on a per packet basis) of a second polynomial POLY-2 of
-          the same degree. Each node is configured with the LPC of POLY-2.
-          Note that POLY-2 is public.</t>
+          SECRET, which is per the definition of the Shamir's Secret Sharing
+          algorithm <xref target="SSS"></xref>. The k+1 points are used to
+          derive the Lagrange Basis Polynomials. The Lagrange Polynomial
+          Constants (LPC) are retrieved from the constant coefficients of the
+          Lagrange Basis Polynomials. Each of the k+1 nodes (including
+          verifier) are assigned a point on the polynomial i.e., shares of the
+          SECRET. The verifier is configured with the SECRET. The Controller
+          also generates coefficients (except the constant coefficient, called
+          "RND", which is changed on a per packet basis) of a second
+          polynomial POLY-2 of the same degree. Each node is configured with
+          the LPC of POLY-2. Note that POLY-2 is public.</t>
         </section>
 
         <section title="In Transit">
@@ -883,9 +883,8 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       number, etc.) and communicate the associated values (i.e. prime number,
       secret-share, LPC, etc.) to the nodes. The sum of all parameters for a
       specific node is referred to as "POT-Profile". For details see the YANG
-      model in <xref target="YANG"></xref>.This document does not define a
-      specific protocol to be used between Controller and nodes. It only
-      defines the procedures and the associated YANG data model.</t>
+      model in <xref target="YANG"></xref>. This document defines the
+      procedures and the associated YANG data model.</t>
 
       <section anchor="Procedure" title="Procedure">
         <t>The Controller creates new POT-Profiles at a constant rate and
@@ -1264,7 +1263,7 @@ module ietf-pot-profile {
 
       <section title="Proof of Transit">
         <t>Proof of correctness and security of the solution approach is per
-        Shamir&rsquo;s Secret Sharing Scheme <xref target="SSS"></xref>.
+        Shamir's Secret Sharing Scheme <xref target="SSS"></xref>.
         Cryptographically speaking it achieves information-theoretic security
         i.e., it cannot be broken by an attacker even with unlimited computing
         power. As long as the below conditions are met it is impossible for an
@@ -1445,7 +1444,7 @@ module ietf-pot-profile {
         need to be securely verified.</t>
 
         <section title="Node Ordering">
-          <t>POT using Shamir's secret sharing scheme as discussed in this
+          <t>POT using Shamir's Secret Sharing scheme as discussed in this
           document provides for a means to verify that a set of nodes has been
           visited by a data packet. It does not verify the order in which the
           data packet visited the nodes.</t>
@@ -1494,8 +1493,8 @@ module ietf-pot-profile {
     <section title="Acknowledgements">
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
       Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-      Nadahalli, Erik Nordmark, Andrew Yourtchenko, Tom Petch and Mohamed
-      Boucadair for the comments and advice.</t>
+      Nadahalli, Erik Nordmark, Andrew Yourtchenko, Tom Petch, Mohamed
+      Boucadair and Dhruv Dhody for the comments and advice.</t>
     </section>
 
     <section title="Contributors">
@@ -1565,8 +1564,6 @@ module ietf-pot-profile {
 
       &RFC3688;
 
-      &RFC6020;
-
       &RFC7665;
 
       &RFC7950;
@@ -1579,15 +1576,16 @@ module ietf-pot-profile {
 
       &I-D.ietf-sfc-ioam-nsh;
 
-      <reference anchor="SSS"
-                 target="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">
+      <reference anchor="SSS">
         <front>
-          <title>Shamir's Secret Sharing</title>
+          <title>How to share a secret</title>
 
-          <author fullname="Wikipedia"></author>
+          <author fullname=" Shamir, A."></author>
 
-          <date />
+          <date year="1979" />
         </front>
+
+        <seriesInfo name="" value="Communications of the ACM (22): 612-613" />
       </reference>
     </references>
 

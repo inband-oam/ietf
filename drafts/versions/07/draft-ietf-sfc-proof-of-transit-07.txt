@@ -37,7 +37,7 @@ Status of This Memo
    Internet-Drafts are working documents of the Internet Engineering
    Task Force (IETF).  Note that other groups may also distribute
    working documents as Internet-Drafts.  The list of current Internet-
-   Drafts is at https://datatracker.ietf.org/drafts/current/.
+   Drafts is at http://datatracker.ietf.org/drafts/current/.
 
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
@@ -65,7 +65,7 @@ Copyright Notice
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
-   (https://trustee.ietf.org/license-info) in effect on the date of
+   (http://trustee.ietf.org/license-info) in effect on the date of
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -104,7 +104,7 @@ Table of Contents
        5.2.1.  Main Parameters . . . . . . . . . . . . . . . . . . .  16
        5.2.2.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  17
        5.2.3.  YANG Model  . . . . . . . . . . . . . . . . . . . . .  18
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  23
 
 
@@ -116,32 +116,31 @@ Internet-Draft              Proof of Transit                   June 2020
 
      7.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  23
      7.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  24
-     7.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  25
+     7.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  24
      7.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  25
-     7.5.  Tampering . . . . . . . . . . . . . . . . . . . . . . . .  26
+     7.5.  Tampering . . . . . . . . . . . . . . . . . . . . . . . .  25
      7.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  26
      7.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  26
      7.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  26
      7.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  27
        7.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  27
        7.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  27
-     7.10. POT Yang module . . . . . . . . . . . . . . . . . . . . .  28
+     7.10. POT Yang module . . . . . . . . . . . . . . . . . . . . .  27
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  28
    9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  28
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  29
      10.2.  Informative References . . . . . . . . . . . . . . . . .  30
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  30
 
 1.  Introduction
 
    Several deployments use Traffic Engineering, policy routing, Segment
    Routing (SR), and Service Function Chaining (SFC) [RFC7665] to steer
    packets through a specific set of nodes.  In certain cases,
-   regulatory obligations or a compliance policy require operators to
-   prove that all packets that are supposed to follow a specific path
-   are indeed being forwarded across and exact set of pre-determined
-   nodes.
+   compliance policies require operators to prove that all packets that
+   are supposed to follow a specific path are indeed being forwarded
+   across an exact set of pre-determined nodes.
 
    If a packet flow is supposed to go through a series of service
    functions or network nodes, it has to be proven that indeed all
@@ -162,6 +161,7 @@ Internet-Draft              Proof of Transit                   June 2020
    evolution to Network Function Virtualization (NFV) and modern service
    chaining concepts (using technologies such as Locator/ID Separation
    Protocol (LISP), Network Service Header (NSH), Segment Routing (SR),
+   etc.) blurs the line between the different trust domains, because the
 
 
 
@@ -170,7 +170,6 @@ Brockners, et al.       Expires December 18, 2020               [Page 3]
 Internet-Draft              Proof of Transit                   June 2020
 
 
-   etc.) blurs the line between the different trust domains, because the
    hand-off-points are no longer clearly defined physical interfaces,
    but are virtual interfaces.  As a consequence, different trust layers
    should not to be mixed in the same device.  For an NFV scenario a
@@ -212,12 +211,13 @@ Internet-Draft              Proof of Transit                   June 2020
 
    Abbreviations used in this document:
 
-   HMAC:      Hash based Message Authentication Code.  For example,
-              HMAC-SHA256 generates 256 bits of MAC
+   HMAC:      Hashed Message Authentication Code.  For example, HMAC-
+              SHA256 generates 256 bits of MAC
 
    IOAM:      In-situ Operations, Administration, and Maintenance
 
    LISP:      Locator/ID Separation Protocol
+
 
 
 
@@ -299,7 +299,7 @@ Internet-Draft              Proof of Transit                   June 2020
    configuration mistakes).  The mechanism for POT leverages "Shamir's
    Secret Sharing" scheme [SSS].
 
-   Shamir's secret sharing base idea: A polynomial (represented by its
+   Shamir's Secret Sharing base idea: A polynomial (represented by its
    coefficients) of degree k is chosen as a secret by the controller.  A
    polynomial represents a curve.  A set of k+1 points on the curve
    define the polynomial and are thus needed to (re-)construct the
@@ -374,17 +374,17 @@ Internet-Draft              Proof of Transit                   June 2020
    A controller generates a first polynomial (POLY-1) of degree k and
    k+1 points on the polynomial, corresponding to the k+1 nodes along
    the path.  The constant coefficient of POLY-1 is considered the
-   SECRET, which is per the definition of the SSSS algorithm [SSS].  The
-   k+1 points are used to derive the Lagrange Basis Polynomials.  The
-   Lagrange Polynomial Constants (LPC) are retrieved from the constant
-   coefficients of the Lagrange Basis Polynomials.  Each of the k+1
-   nodes (including verifier) are assigned a point on the polynomial
-   i.e., shares of the SECRET.  The verifier is configured with the
-   SECRET.  The Controller also generates coefficients (except the
-   constant coefficient, called "RND", which is changed on a per packet
-   basis) of a second polynomial POLY-2 of the same degree.  Each node
-   is configured with the LPC of POLY-2.  Note that POLY-2 is public.
-
+   SECRET, which is per the definition of the Shamir's Secret Sharing
+   algorithm [SSS].  The k+1 points are used to derive the Lagrange
+   Basis Polynomials.  The Lagrange Polynomial Constants (LPC) are
+   retrieved from the constant coefficients of the Lagrange Basis
+   Polynomials.  Each of the k+1 nodes (including verifier) are assigned
+   a point on the polynomial i.e., shares of the SECRET.  The verifier
+   is configured with the SECRET.  The Controller also generates
+   coefficients (except the constant coefficient, called "RND", which is
+   changed on a per packet basis) of a second polynomial POLY-2 of the
+   same degree.  Each node is configured with the LPC of POLY-2.  Note
+   that POLY-2 is public.
 
 
 
@@ -820,9 +820,8 @@ Internet-Draft              Proof of Transit                   June 2020
    prime number, etc.) and communicate the associated values (i.e. prime
    number, secret-share, LPC, etc.) to the nodes.  The sum of all
    parameters for a specific node is referred to as "POT-Profile".  For
-   details see the YANG model in Section 5.2.This document does not
-   define a specific protocol to be used between Controller and nodes.
-   It only defines the procedures and the associated YANG data model.
+   details see the YANG model in Section 5.2.  This document defines the
+   procedures and the associated YANG data model.
 
 5.1.  Procedure
 
@@ -834,6 +833,7 @@ Internet-Draft              Proof of Transit                   June 2020
    choosing an appropriate refresh rate: The rate at which the POT-
    Profiles are communicated to the nodes is configurable and MUST be
    more frequent than the speed at which a POT-Profile is "used up".
+   Once the POT-Profile has been successfully communicated to all nodes
 
 
 
@@ -842,7 +842,6 @@ Brockners, et al.       Expires December 18, 2020              [Page 15]
 Internet-Draft              Proof of Transit                   June 2020
 
 
-   Once the POT-Profile has been successfully communicated to all nodes
    (e.g., all NETCONF transactions completed, in case NETCONF is used as
    a protocol), the controller sends an "enable POT-Profile" request to
    the ingress node.
@@ -893,6 +892,7 @@ Internet-Draft              Proof of Transit                   June 2020
 
 
 
+
 Brockners, et al.       Expires December 18, 2020              [Page 16]
 
 Internet-Draft              Proof of Transit                   June 2020
@@ -906,40 +906,40 @@ Internet-Draft              Proof of Transit                   June 2020
       i, this would be LPC(l_i), with l_i being the i-th Lagrange Basis
       Polynomial.
 
-   o  validator?: True if the node is a verifier node.
+   o  validator: True if the node is a verifier node.
 
-   o  validator-key?: The validator-key represents the SECRET as
+   o  validator-key: The validator-key represents the SECRET as
       described in the sections above.  The SECRET is the constant
       coefficient of POLY-1(z).  If POLY-1(z) = a_0 + a_1*z +
       a_2*z^2+..+a_k*z^k, then the SECRET would be a_0.
 
-   o  bitmask?: Number of bits as mask used in controlling the size of
+   o  bitmask: Number of bits as mask used in controlling the size of
       the random value generation. 32-bits of mask is default.  See
       Section 4 for details.
 
 5.2.2.  Tree Diagram
 
    This section shows a simplified graphical representation of the YANG
-   data model for POT.  The meaning of the symbols in these diagrams is
-   as follows:
+   data model for POT.  The meaning of the symbols in YANG tree diagrams
+   is defined in [RFC8340].
 
-   o  Brackets "[" and "]" enclose list keys.
-
-   o  Abbreviations before data node names: "rw" means configuration
-      (read-write), and "ro" means state data (read-only).
-
-   o  Symbols after data node names: "?" means an optional node, "!"
-      means a presence container, and "*" denotes a list and leaf-list.
-
-   o  Parentheses enclose choice and case nodes, and case nodes are also
-      marked with a colon (":").
-
-   o  Ellipsis ("...") stands for contents of subtrees that are not
-      shown.
-
-
-
-
+   module: ietf-pot-profile
+     +--rw pot-profiles
+        +--rw pot-profile-set* [pot-profile-name]
+           +--rw pot-profile-name    string
+           +--rw pot-profile-list* [pot-profile-index]
+              +--rw pot-profile-index    profile-index-range
+              +--rw status?              boolean
+              +--rw prime-number         uint64
+              +--rw secret-share         uint64
+              +--rw public-polynomial    uint64
+              +--rw lpc                  uint64
+              +--rw validator?           boolean
+              +--rw validator-key?       uint64
+              +--rw bitmask?             uint64
+              +--rw opot-masks
+                 +--rw downstream-mask*   uint64
+                 +--rw upstream-mask*     uint64
 
 
 
@@ -952,25 +952,6 @@ Internet-Draft              Proof of Transit                   June 2020
 Brockners, et al.       Expires December 18, 2020              [Page 17]
 
 Internet-Draft              Proof of Transit                   June 2020
-
-
-   module: ietf-pot-profile
-     +--rw pot-profiles
-        +--rw pot-profile-set* [pot-profile-name]
-           +--rw pot-profile-name        string
-           +--rw active-profile-index?   profile-index-range
-           +--rw pot-profile-list* [pot-profile-index]
-              +--rw pot-profile-index    profile-index-range
-              +--rw prime-number         uint64
-              +--rw secret-share         uint64
-              +--rw public-polynomial    uint64
-              +--rw lpc                  uint64
-              +--rw validator?           boolean
-              +--rw validator-key?       uint64
-              +--rw bitmask?             uint64
-              +--rw opot-masks
-                 +--rw downstream-mask*   uint64
-                 +--rw upstream-mask*     uint64
 
 
 5.2.3.  YANG Model
@@ -986,10 +967,10 @@ Internet-Draft              Proof of Transit                   June 2020
      organization "IETF SFC Working Group";
 
      contact "WG Web:   <https://tools.ietf.org/wg/sfc/>
-              WG List:  <mailto:sfc@ietf.org>"
+              WG List:  <mailto:sfc@ietf.org>
               Author  : Frank Brockners <fbrockne@cisco.com>
               Author  : Shwetha Bhandari <shwethab@cisco.com>
-              Author  : Tal Mizrahi <tal.mizrahi.phd@gmail.com>;
+              Author  : Tal Mizrahi <tal.mizrahi.phd@gmail.com>";
 
      description
         "This module contains a collection of YANG
@@ -1002,14 +983,6 @@ Internet-Draft              Proof of Transit                   June 2020
          Copyright (c) 2020 IETF Trust and the persons identified
          as authors of the code. All rights reserved.
          Redistribution and use in source and binary forms, with
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 18]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
          or without modification, is permitted pursuant to, and
          subject to the license terms contained in, the Simplified
          BSD License set forth in Section 4.c of the IETF Trust's
@@ -1029,6 +1002,14 @@ Internet-Draft              Proof of Transit                   June 2020
          'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
          'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
          are to be interpreted as described in BCP 14 (RFC 2119)
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 18]
+
+Internet-Draft              Proof of Transit                   June 2020
+
+
          (RFC 8174) when, and only when, they appear in all
          capitals, as shown here.";
 
@@ -1058,14 +1039,6 @@ Internet-Draft              Proof of Transit                   June 2020
 
      grouping pot-profile {
        description "A grouping for proof of transit profiles.";
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 19]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
        list pot-profile-list {
          key "pot-profile-index";
          ordered-by user;
@@ -1076,6 +1049,23 @@ Internet-Draft              Proof of Transit                   June 2020
            mandatory true;
            description
              "Proof of transit profile index.";
+         }
+
+         leaf status {
+           type boolean;
+           default "false";
+           description
+             "True if this profile is currently active.
+              Will be used by the first hop of the path or chain.
+              Other nodes will not use this field.";
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 19]
+
+Internet-Draft              Proof of Transit                   June 2020
+
+
          }
 
          leaf prime-number {
@@ -1114,14 +1104,6 @@ Internet-Draft              Proof of Transit                   June 2020
          }
 
          leaf validator {
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 20]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
            type boolean;
            default "false";
            description
@@ -1132,6 +1114,14 @@ Internet-Draft              Proof of Transit                   June 2020
            type uint64;
            description
              "The validator-key represents the secret.
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 20]
+
+Internet-Draft              Proof of Transit                   June 2020
+
+
               The secret is the constant coefficient of
               POLY-1(z). If POLY-1(z) =
               a_0 + a_1*z + a_2*z^2+..+a_k*z^k,
@@ -1170,14 +1160,6 @@ Internet-Draft              Proof of Transit                   June 2020
         }
 
         leaf-list upstream-mask {
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 21]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
           type uint64;
           max-elements 2;
           description "Secret stream used to mask the PoT metadata.
@@ -1187,6 +1169,14 @@ Internet-Draft              Proof of Transit                   June 2020
         }
       }
      }
+
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 21]
+
+Internet-Draft              Proof of Transit                   June 2020
+
 
      container pot-profiles {
        description "A group of proof of transit profiles.";
@@ -1206,14 +1196,6 @@ Internet-Draft              Proof of Transit                   June 2020
              "Unique identifier for each proof of transit profile";
          }
 
-         leaf active-profile-index {
-           type profile-index-range;
-           description
-             "POT-Profile index that is currently active.
-              Will be set in the first hop of the path or chain.
-              Other nodes will not use this field.";
-         }
-
          uses pot-profile;
        }
      /*** Container: end ***/
@@ -1221,18 +1203,6 @@ Internet-Draft              Proof of Transit                   June 2020
    /*** module: end ***/
    }
    <CODE ENDS>
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 22]
-
-Internet-Draft              Proof of Transit                   June 2020
-
 
 6.  IANA Considerations
 
@@ -1246,16 +1216,27 @@ Internet-Draft              Proof of Transit                   June 2020
 
    XML: N/A, the requested URI is an XML namespace.
 
-   This document registers a YANG module in the YANG Module Names
-   registry YANG [RFC6020].
+   IANA is requested to register the following YANG module in the "YANG
+   Module Names" subregistry [RFC7950] within the "YANG Parameters"
+   registry.
 
-   name: ietf-pot-profile
+   Name: ietf-pot-profile
 
-   namespace: urn:ietf:params:xml:ns:yang:ietf-pot-profile
+   Maintained by IANA: N
 
-   prefix: pot
+   Namespace: urn:ietf:params:xml:ns:yang:ietf-pot-profile
 
-   reference: RFC XXXX
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 22]
+
+Internet-Draft              Proof of Transit                   June 2020
+
+
+   Prefix: pot
+
+   Reference: RFC XXXX
 
 7.  Security Considerations
 
@@ -1282,14 +1263,6 @@ Internet-Draft              Proof of Transit                   June 2020
 
    o  If there are k+1 nodes in the path, the polynomials (POLY-1, POLY-
       2) should be of degree k.  Also k+1 points of POLY-1 are chosen
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 23]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
       and assigned to each node respectively.  The verifier can re-
       construct the k degree polynomial (POLY-3) only when all the
       points are correctly retrieved.
@@ -1309,6 +1282,14 @@ Internet-Draft              Proof of Transit                   June 2020
 
    If symmetric masking is used to assure OPOT (Section 3.5), the nodes
    need to keep two additional secrets: the downstream and upstream
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 23]
+
+Internet-Draft              Proof of Transit                   June 2020
+
+
    masks, that have to be managed under the same conditions as the
    secrets mentioned above.  And it is equally recommended to employ a
    different set of mask pairs across different paths, traffic profiles
@@ -1339,13 +1320,6 @@ Internet-Draft              Proof of Transit                   June 2020
       to guess mask values, which requires a proper refresh rate for
       masks, at least as high as the one used for LPCs.
 
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 24]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
 7.3.  Anti-Replay
 
    A passive attacker could reuse a set of older RND and the
@@ -1364,6 +1338,13 @@ Internet-Draft              Proof of Transit                   June 2020
    Packets arriving with a higher SEQ_NO than current buffer could be
    flagged legitimate.  Packets arriving with a lower SEQ_NO than
    current buffer could be flagged as suspicious.
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 24]
+
+Internet-Draft              Proof of Transit                   June 2020
+
 
    For all practical purposes in the rest of the document RND means
    SEQ_NO + RND to keep it simple.
@@ -1392,16 +1373,6 @@ Internet-Draft              Proof of Transit                   June 2020
    o  The left most bits of the output are truncated to desired length
       to generate RND.  It is recommended to use a minimum of 32 bits.
 
-
-
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 25]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
    o  The verifier regenerates the HMAC from the packet fields and
       compares with RND.  To ensure the POT data is in fact that of the
       packet.
@@ -1420,6 +1391,16 @@ Internet-Draft              Proof of Transit                   June 2020
    an attacker could not update the CML with a previously observed
    value.  This could subsequently be detected by using timestamps
    within the RND value as discussed above.
+
+
+
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 25]
+
+Internet-Draft              Proof of Transit                   June 2020
+
 
 7.6.  Recycling
 
@@ -1450,14 +1431,6 @@ Internet-Draft              Proof of Transit                   June 2020
    communication protocol such as for example NETCONF over SSH should be
    chosen for Controller to node communication.
 
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 26]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
    The Controller only interacts with the nodes during the initial
    configuration and thereafter at regular intervals at which the
    operator chooses to switch to a new set of secrets.  In case 64 bits
@@ -1475,6 +1448,16 @@ Internet-Draft              Proof of Transit                   June 2020
    required level of assurance through the Controller management
    interface.
 
+
+
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 26]
+
+Internet-Draft              Proof of Transit                   June 2020
+
+
 7.9.  Verification Scope
 
    The POT solution defined in this document verifies that a data-packet
@@ -1487,7 +1470,7 @@ Internet-Draft              Proof of Transit                   June 2020
 
 7.9.1.  Node Ordering
 
-   POT using Shamir's secret sharing scheme as discussed in this
+   POT using Shamir's Secret Sharing scheme as discussed in this
    document provides for a means to verify that a set of nodes has been
    visited by a data packet.  It does not verify the order in which the
    data packet visited the nodes.
@@ -1505,15 +1488,6 @@ Internet-Draft              Proof of Transit                   June 2020
    packet traversed a specific set of "nodes".  This set could be all
    nodes within a path, but could also be a subset of nodes in a path.
    Consequently, the POT approach isn't suited to detect whether
-
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 27]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
    "stealth" nodes which do not participate in proof-of-transit have
    been inserted into a path.
 
@@ -1532,6 +1506,14 @@ Internet-Draft              Proof of Transit                   June 2020
    preconfigured subset of all available NETCONF or RESTCONF protocol
    operations and content.  There are a number of nodes defined in this
    YANG module which are read/writeable.  These data nodes may be
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 27]
+
+Internet-Draft              Proof of Transit                   June 2020
+
+
    considered sensitive and vulnerable to attacks in some network
    environments.  Ability to read from or write into these nodes without
    proper protection can have a negative effect on the devices that
@@ -1541,8 +1523,8 @@ Internet-Draft              Proof of Transit                   June 2020
 
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-   Nadahalli, Erik Nordmark, Andrew Yourtchenko and Tom Petch for the
-   comments and advice.
+   Nadahalli, Erik Nordmark, Andrew Yourtchenko, Tom Petch, Mohamed
+   Boucadair and Dhruv Dhody for the comments and advice.
 
 9.  Contributors
 
@@ -1562,14 +1544,6 @@ Internet-Draft              Proof of Transit                   June 2020
       Email: john@leddy.net
 
 
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 28]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
       David Mozes
       Email: mosesster@gmail.com
 
@@ -1581,6 +1555,19 @@ Internet-Draft              Proof of Transit                   June 2020
       Spain
       Phone: +34 910 673 086
       Email: a.aguadom@fi.upm.es
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires December 18, 2020              [Page 28]
+
+Internet-Draft              Proof of Transit                   June 2020
 
 
       Diego R. Lopez
@@ -1608,12 +1595,25 @@ Internet-Draft              Proof of Transit                   June 2020
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/info/rfc2119>.
+              DOI 10.17487/RFC2119, March 1997, <https://www.rfc-
+              editor.org/info/rfc2119>.
 
    [RFC3688]  Mealling, M., "The IETF XML Registry", BCP 81, RFC 3688,
-              DOI 10.17487/RFC3688, January 2004,
-              <https://www.rfc-editor.org/info/rfc3688>.
+              DOI 10.17487/RFC3688, January 2004, <https://www.rfc-
+              editor.org/info/rfc3688>.
+
+   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
+              Chaining (SFC) Architecture", RFC 7665,
+              DOI 10.17487/RFC7665, October 2015, <https://www.rfc-
+              editor.org/info/rfc7665>.
+
+   [RFC7950]  Bjorklund, M., Ed., "The YANG 1.1 Data Modeling Language",
+              RFC 7950, DOI 10.17487/RFC7950, August 2016,
+              <https://www.rfc-editor.org/info/rfc7950>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
 
 
@@ -1626,31 +1626,13 @@ Brockners, et al.       Expires December 18, 2020              [Page 29]
 Internet-Draft              Proof of Transit                   June 2020
 
 
-   [RFC6020]  Bjorklund, M., Ed., "YANG - A Data Modeling Language for
-              the Network Configuration Protocol (NETCONF)", RFC 6020,
-              DOI 10.17487/RFC6020, October 2010,
-              <https://www.rfc-editor.org/info/rfc6020>.
-
-   [RFC7665]  Halpern, J., Ed. and C. Pignataro, Ed., "Service Function
-              Chaining (SFC) Architecture", RFC 7665,
-              DOI 10.17487/RFC7665, October 2015,
-              <https://www.rfc-editor.org/info/rfc7665>.
-
-   [RFC7950]  Bjorklund, M., Ed., "The YANG 1.1 Data Modeling Language",
-              RFC 7950, DOI 10.17487/RFC7950, August 2016,
-              <https://www.rfc-editor.org/info/rfc7950>.
-
-   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
    [RFC8300]  Quinn, P., Ed., Elzur, U., Ed., and C. Pignataro, Ed.,
               "Network Service Header (NSH)", RFC 8300,
-              DOI 10.17487/RFC8300, January 2018,
-              <https://www.rfc-editor.org/info/rfc8300>.
+              DOI 10.17487/RFC8300, January 2018, <https://www.rfc-
+              editor.org/info/rfc8300>.
 
-   [SSS]      "Shamir's Secret Sharing",
-              <https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing>.
+   [SSS]      "How to share a secret",  Communications of the ACM (22):
+              612-613, 1979.
 
 10.2.  Informative References
 
@@ -1661,8 +1643,8 @@ Internet-Draft              Proof of Transit                   June 2020
 
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
-              DOI 10.17487/RFC5246, August 2008,
-              <https://www.rfc-editor.org/info/rfc5246>.
+              DOI 10.17487/RFC5246, August 2008, <https://www.rfc-
+              editor.org/info/rfc5246>.
 
    [RFC6241]  Enns, R., Ed., Bjorklund, M., Ed., Schoenwaelder, J., Ed.,
               and A. Bierman, Ed., "Network Configuration Protocol
@@ -1673,6 +1655,24 @@ Internet-Draft              Proof of Transit                   June 2020
               Shell (SSH)", RFC 6242, DOI 10.17487/RFC6242, June 2011,
               <https://www.rfc-editor.org/info/rfc6242>.
 
+   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
+              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
+              <https://www.rfc-editor.org/info/rfc8040>.
+
+   [RFC8340]  Bjorklund, M. and L. Berger, Ed., "YANG Tree Diagrams",
+              BCP 215, RFC 8340, DOI 10.17487/RFC8340, March 2018,
+              <https://www.rfc-editor.org/info/rfc8340>.
+
+   [RFC8341]  Bierman, A. and M. Bjorklund, "Network Configuration
+              Access Control Model", STD 91, RFC 8341,
+              DOI 10.17487/RFC8341, March 2018, <https://www.rfc-
+              editor.org/info/rfc8341>.
+
+Authors' Addresses
+
+
+
+
 
 
 
@@ -1681,17 +1681,6 @@ Brockners, et al.       Expires December 18, 2020              [Page 30]
 
 Internet-Draft              Proof of Transit                   June 2020
 
-
-   [RFC8040]  Bierman, A., Bjorklund, M., and K. Watsen, "RESTCONF
-              Protocol", RFC 8040, DOI 10.17487/RFC8040, January 2017,
-              <https://www.rfc-editor.org/info/rfc8040>.
-
-   [RFC8341]  Bierman, A. and M. Bjorklund, "Network Configuration
-              Access Control Model", STD 91, RFC 8341,
-              DOI 10.17487/RFC8341, March 2018,
-              <https://www.rfc-editor.org/info/rfc8341>.
-
-Authors' Addresses
 
    Frank Brockners (editor)
    Cisco Systems, Inc.
@@ -1726,18 +1715,6 @@ Authors' Addresses
    Email: sashank@seconize.co
 
 
-
-
-
-
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 31]
-
-Internet-Draft              Proof of Transit                   June 2020
-
-
    Stephen Youell
    JP Morgan Chase
    25 Bank Street
@@ -1756,37 +1733,4 @@ Internet-Draft              Proof of Transit                   June 2020
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires December 18, 2020              [Page 32]
+Brockners, et al.       Expires December 18, 2020              [Page 31]
