@@ -19,6 +19,7 @@
 <!ENTITY RFC6242 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6242.xml">
 <!ENTITY RFC8040 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8040.xml">
 <!ENTITY RFC5246 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
+<!ENTITY RFC8340 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8340.xml">
 <!ENTITY RFC8341 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8341.xml">
 <!ENTITY RFC7950 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7950.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
@@ -245,10 +246,9 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       <t>Several deployments use Traffic Engineering, policy routing, Segment
       Routing (SR), and Service Function Chaining (SFC) <xref
       target="RFC7665"></xref> to steer packets through a specific set of
-      nodes. In certain cases, regulatory obligations or a compliance policy
-      require operators to prove that all packets that are supposed to follow
-      a specific path are indeed being forwarded across and exact set of
-      pre-determined nodes.</t>
+      nodes. In certain cases, compliance policies require operators to prove
+      that all packets that are supposed to follow a specific path are indeed
+      being forwarded across an exact set of pre-determined nodes.</t>
 
       <t>If a packet flow is supposed to go through a series of service
       functions or network nodes, it has to be proven that indeed all packets
@@ -959,14 +959,14 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
               node i, this would be LPC(l_i), with l_i being the i-th Lagrange
               Basis Polynomial.</t>
 
-              <t>validator?: True if the node is a verifier node.</t>
+              <t>validator: True if the node is a verifier node.</t>
 
-              <t>validator-key?: The validator-key represents the SECRET as
+              <t>validator-key: The validator-key represents the SECRET as
               described in the sections above. The SECRET is the constant
               coefficient of POLY-1(z). If POLY-1(z) = a_0 + a_1*z +
               a_2*z^2+..+a_k*z^k, then the SECRET would be a_0.</t>
 
-              <t>bitmask?: Number of bits as mask used in controlling the size
+              <t>bitmask: Number of bits as mask used in controlling the size
               of the random value generation. 32-bits of mask is default. See
               <xref target="metadata-for-pot"></xref> for details.</t>
             </list></t>
@@ -974,31 +974,15 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
         <section title="Tree Diagram">
           <t>This section shows a simplified graphical representation of the
-          YANG data model for POT. The meaning of the symbols in these
-          diagrams is as follows: <list style="symbols">
-              <t>Brackets "[" and "]" enclose list keys.</t>
-
-              <t>Abbreviations before data node names: "rw" means
-              configuration (read-write), and "ro" means state data
-              (read-only).</t>
-
-              <t>Symbols after data node names: "?" means an optional node,
-              "!" means a presence container, and "*" denotes a list and
-              leaf-list.</t>
-
-              <t>Parentheses enclose choice and case nodes, and case nodes are
-              also marked with a colon (":").</t>
-
-              <t>Ellipsis ("...") stands for contents of subtrees that are not
-              shown.</t>
-            </list> <figure>
+          YANG data model for POT. The meaning of the symbols in YANG tree
+          diagrams is defined in <xref target="RFC8340"></xref>.<figure>
               <artwork><![CDATA[module: ietf-pot-profile
   +--rw pot-profiles
      +--rw pot-profile-set* [pot-profile-name]
-        +--rw pot-profile-name        string
-        +--rw active-profile-index?   profile-index-range
+        +--rw pot-profile-name    string
         +--rw pot-profile-list* [pot-profile-index]
            +--rw pot-profile-index    profile-index-range
+           +--rw status?              boolean
            +--rw prime-number         uint64
            +--rw secret-share         uint64
            +--rw public-polynomial    uint64
@@ -1029,10 +1013,10 @@ module ietf-pot-profile {
   organization "IETF SFC Working Group";  
 
   contact "WG Web:   <https://tools.ietf.org/wg/sfc/>
-           WG List:  <mailto:sfc@ietf.org>"
+           WG List:  <mailto:sfc@ietf.org>
            Author  : Frank Brockners <fbrockne@cisco.com>
            Author  : Shwetha Bhandari <shwethab@cisco.com>
-           Author  : Tal Mizrahi <tal.mizrahi.phd@gmail.com>;
+           Author  : Tal Mizrahi <tal.mizrahi.phd@gmail.com>";
 
   description 
      "This module contains a collection of YANG
@@ -1103,6 +1087,15 @@ module ietf-pot-profile {
         mandatory true;
         description
           "Proof of transit profile index.";
+      }
+
+      leaf status {
+        type boolean;
+        default "false";
+        description
+          "True if this profile is currently active.
+           Will be used by the first hop of the path or chain.
+           Other nodes will not use this field.";
       }
 
       leaf prime-number {
@@ -1217,14 +1210,6 @@ module ietf-pot-profile {
           "Unique identifier for each proof of transit profile";
       }
 
-      leaf active-profile-index {
-        type profile-index-range;
-        description
-          "POT-Profile index that is currently active.
-           Will be set in the first hop of the path or chain.
-           Other nodes will not use this field.";
-      }
-
       uses pot-profile;
     }
   /*** Container: end ***/
@@ -1250,16 +1235,19 @@ module ietf-pot-profile {
 
       <t>XML: N/A, the requested URI is an XML namespace.</t>
 
-      <t>This document registers a YANG module in the YANG Module Names
-      registry YANG <xref target="RFC6020"></xref>.</t>
+      <t>IANA is requested to register the following YANG module in the "YANG
+      Module Names" subregistry <xref target="RFC7950"></xref> within the
+      "YANG Parameters" registry.</t>
 
-      <t>name: ietf-pot-profile</t>
+      <t>Name: ietf-pot-profile</t>
 
-      <t>namespace: urn:ietf:params:xml:ns:yang:ietf-pot-profile</t>
+      <t>Maintained by IANA: N</t>
 
-      <t>prefix: pot</t>
+      <t>Namespace: urn:ietf:params:xml:ns:yang:ietf-pot-profile</t>
 
-      <t>reference: RFC XXXX</t>
+      <t>Prefix: pot</t>
+
+      <t>Reference: RFC XXXX</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -1506,8 +1494,8 @@ module ietf-pot-profile {
     <section title="Acknowledgements">
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
       Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
-      Nadahalli, Erik Nordmark, Andrew Yourtchenko and Tom Petch for the
-      comments and advice.</t>
+      Nadahalli, Erik Nordmark, Andrew Yourtchenko, Tom Petch and Mohamed
+      Boucadair for the comments and advice.</t>
     </section>
 
     <section title="Contributors">
@@ -1613,6 +1601,8 @@ module ietf-pot-profile {
       &RFC6242;
 
       &RFC8040;
+
+      &RFC8340;
 
       &RFC8341;
     </references>
