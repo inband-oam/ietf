@@ -279,11 +279,11 @@
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
       outlines how IOAM data fields are encapsulated in the IPv6 <xref
-      target="RFC8200"/> and discusses deployment options for networks which
-      leverage IOAM data fields encapsulated in the IPv6 protocol. Deployment
-      considerations differ, whether the IOAM domain starts and ends on hosts
-      or whether the IOAM encapsulating and decapsulating nodes are network
-      devices that forward traffic, such as routers.</t>
+      target="RFC8200"/> and discusses deployment options for networks that
+      use IPv6-encapsulate IOAM data fields. These options have distinct
+      deployment considerations; for example, the IOAM domain can either be
+      between hosts, or be between IOAM encapsulating and decapsulating network
+      nodes that forward traffic, such as routers.</t>
     </section>
 
     <section title="Conventions">
@@ -315,22 +315,22 @@
 
     <section title="In-situ OAM Metadata Transport in IPv6">
       <t>In-situ OAM in IPv6 is used to enhance diagnostics of IPv6 networks.
-      It complements other mechanisms proposed to enhance diagnostics of IPv6
+      It complements other mechanisms designed to enhance diagnostics of IPv6
       networks, such as the IPv6 Performance and Diagnostic Metrics
       Destination Option described in <xref target="RFC8250"/>.</t>
 
-      <t>IOAM data fields are encapsulated in &ldquo;option data&rdquo; fields
-      of two types of extension headers in IPv6 packets - either Hop-by-Hop
-      Options header or Destination options header. The selection of a
-      particular extension header type depends on IOAM usage, as described in
+      <t>IOAM data fields can be encapsulated in &ldquo;option data&rdquo; fields
+      using two types of extension headers in IPv6 packets - either Hop-by-Hop
+      Options header or Destination options header. Deployments select one of these
+      extension header types depending on how IOAM is used, as described in
       section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>. Multiple options
       with the same Option Type MAY appear in the same Hop-by-Hop Options or
-      Destination Options header, with varying content.</t>
+      Destination Options header, with distinct content.</t>
 
       <t>In order for IOAM to work in IPv6 networks, IOAM MUST be explicitly
       enabled per interface on every node within the IOAM domain. Unless a
-      particular interface is explicitly enabled (i.e. explicitly configured)
-      for IOAM, a router MUST drop packets which contain extension headers
+      particular interface is explicitly enabled (i.e., explicitly configured)
+      for IOAM, a router MUST drop packets that contain extension headers
       carrying IOAM data-fields. This is the default behavior and is
       independent of whether the Hop-by-Hop options or Destination options are
       used to encode the IOAM data. This ensures that IOAM data does not
@@ -437,59 +437,59 @@
 
       <section anchor="v6_requirement"
                title="Considerations for IOAM deployment in IPv6 networks">
-        <t>IOAM deployment in an IPv6 network should take the following
+        <t>IOAM deployments in IPv6 networks should take the following
         considerations and requirements into account:<list style="hanging">
             <t hangText="C1">It is desirable that the addition of IOAM data
-            fields neither changes the way routers forward the packets, nor
-            the forwarding decision the routers takes. The packet with the
+            fields neither changes the way routers forward packets nor
+            the forwarding decisions the routers take. Packet with
             added OAM information should follow the same path within the
-            domain that the same packet without the OAM information would
-            follow within the domain even in the presence of ECMP. Such a
-            behavior is particularly interesting for deployments where IOAM
-            data fields are only added "on-demand", e.g. to provide further
+            domain that an identical packet without OAM information would
+            follow, even in the presence of ECMP. Such behavior
+            is particularly important for deployments where IOAM
+            data fields are only added "on-demand", e.g., to provide further
             insights in case of undesired network behavior for certain flows.
-            Implementations of IOAM should ensure that ECMP behavior for
+            Implementations of IOAM SHOULD ensure that ECMP behavior for
             packets with and without IOAM data fields is the same.</t>
 
             <t hangText="C2">Given that IOAM data fields increase the total
-            size of the packet, the size of the packet including the IOAM data
+            size of a packet, the size of a packet including the IOAM data
             could exceed the PMTU. In particular, the incremental trace IOAM
-            HbH Option, which is proposed to support hardware implementations
+            Hop-by-Hop (HbH) Option, which is intended to support hardware implementations
             of IOAM, changes Option Data Length en-route. Operators of an IOAM
-            domain are to ensure that the addition of OAM information does not
-            lead to fragmentation of the packet, e.g. by configuring the MTU
+            domain SHOULD ensure that the addition of OAM information does not
+            lead to fragmentation of the packet, e.g., by configuring the MTU
             of transit routers and switches to a sufficiently high value.
             Careful control of the MTU in a network is one of the reasons why
-            IOAM is considered a domain specific feature, see also <xref
-            target="I-D.ietf-ippm-ioam-data"/>. In addition, the PMTU
-            tolerance range in the IOAM domain should be identified (e.g.
+            IOAM is considered a domain-specific feature (see also <xref
+            target="I-D.ietf-ippm-ioam-data"/>). In addition, the PMTU
+            tolerance range in the IOAM domain should be identified (e.g.,
             through configuration) and IOAM encapsulation operations and/or
             IOAM data field insertion (in case of incremental tracing) should
             not be performed if it exceeds the packet size beyond PMTU.</t>
 
             <t hangText="C3">Packets with IOAM data or associated ICMP errors,
-            should not arrive at destinations which have no knowledge of IOAM.
-            Consider using IOAM in transit devices; misleading ICMP errors due
-            to addition and/or presence of OAM data in the packet can confuse
-            a source of the packet that did not insert the OAM
+            should not arrive at destinations that have no knowledge of IOAM.
+            For exmample, if IOAM is used in in transit devices, misleading ICMP
+            errors due to addition and/or presence of OAM data in a packet could
+            confuse the host that sent the packet if it did not insert the OAM
             information.</t>
 
-            <t hangText="C4">OAM data leaks may affect the forwarding behavior
+            <t hangText="C4">OAM data leaks can affect the forwarding behavior
             and state of network elements outside an IOAM domain. IOAM domains
             SHOULD provide a mechanism to prevent data leaks or be able to
-            assure that upon leak network elements outside the domain are not
-            affected i.e they continue to process other valid packets.</t>
+            ensure that if a leak occurs, network elements outside the domain are
+            not affected (i.e., they continue to process other valid packets).</t>
 
-            <t hangText="C5">The source of that inserted and leaked the IOAM
-            data must be easy to identify for the purpose of troubleshooting,
+            <t hangText="C5">The source that inserts and leaks the IOAM
+            data needs to be easy to identify for the purpose of troubleshooting,
             due to the high complexity of troubleshooting a source that
             inserted the IOAM data and did not remove it when the packet
-            traversed across an AS. Such a troubleshooting process may require
-            coordination between multiple operators, complicated configuration
+            traversed across an Autonomous System (AS). Such a troubleshooting process
+            might require coordination between multiple operators, complex configuration
             verification, packet capture analysis, etc.</t>
 
-            <t hangText="C6">Compliance with <xref target="RFC8200"/> would
-            require OAM data to be encapsulated instead of header/option
+            <t hangText="C6">Compliance with <xref target="RFC8200"/>
+            requires OAM data to be encapsulated instead of header/option
             insertion directly into in-flight packets using the original IPv6
             header.</t>
           </list></t>
@@ -515,21 +515,23 @@
         target="v6_requirement"/>.</t>
 
         <section title="IPv6-in-IPv6 encapsulation">
-          <t>Leverage an IPv6-in-IPv6 approach: Preserve the original IP
+          <t>The "IPv6-in-IPv6" approach preserves the original IP
           packet and add an IPv6 header including IOAM data fields in an
           extension header in front of it, to forward traffic within and
-          across the IOAM domain. The overlay network formed by the additional
+          across an IOAM domain. The overlay network formed by the additional
           IPv6 header with the IOAM data fields included in an extension
           header is referred to as IOAM Overlay Network (ION) in this
-          document. <list style="numbers">
-              <t>Perform an IPv6-in-IPv6 approach. The source address of the
+          document.</t>
+          <t>The following steps should be taken to perform an
+          IPv6-in-IPv6 approach: <list style="numbers">
+              <t> The source address of the
               outer IPv6 header is that of the IOAM encapsulating node. The
               destination address of the outer IPv6 header is the same as the
-              inner IPv6 destination address, i.e. the destination address of
+              inner IPv6 destination address, i.e., the destination address of
               the packet does not change.</t>
 
-              <t>To simplify debugging in case of leaked IOAM data fields in
-              packets, consider a new IOAM E2E destination option to identify
+              <t>To simplify debugging in case of leaked IOAM data fields,
+              consider a new IOAM E2E destination option to identify
               the Source IOAM domain (AS, v6 prefix). Insert this option into
               the IOAM destination options EH attached to the outer IPv6
               header. This additional information would allow for easy
@@ -538,10 +540,10 @@
               data fields would only occur in case a router would be
               misconfigured.</t>
 
-              <t>All the IOAM options are defined with type "00 - skip over
-              this option and continue processing the header. So presence of
-              the options must not cause packet drop in the network elements
-              that do not understand the option. In addition <xref
+              <t>All the IOAM options are defined with type "00" - skip over
+              this option and continue processing the header. Presence of
+              these options must not cause packet drops in network elements
+              that do not understand the option. In addition, <xref
               target="I-D.ietf-6man-hbh-header-handling"/> should be
               considered.</t>
             </list></t>
@@ -549,7 +551,7 @@
 
         <section title="IP-in-IPv6 encapsulation with ULA">
           <t>The "IP-in-IPv6 encapsulation with ULA" <xref target="RFC4193"/>
-          approach can be used to apply IOAM to an IPv6 as well as an IPv4
+          approach can be used to apply IOAM to either an IPv6 or an IPv4
           network. In addition, it fulfills requirement C4 (avoid leaks) by
           using ULA for the ION. Similar to the IPv6-in-IPv6 encapsulation
           approach above, the original IP packet is preserved. An IPv6 header
@@ -565,7 +567,7 @@
           topology and address space that would be followed by packets that do
           not have supplemental IOAM information). Establishment and
           maintenance of the parallel IOAM ULA forwarding topology could be
-          automated, e.g. similar to how LDP <xref target="RFC5036"/> is used
+          automated, e.g., similar to how LDP <xref target="RFC5036"/> is used
           in MPLS to establish and maintain an LSP forwarding topology that is
           parallel to the network's IGP forwarding topology.</t>
 
@@ -603,7 +605,7 @@
       in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
 
       <t>As this document describes new options for IPv6, these are similar to
-      the security considerations of <xref target="RFC8200"/> and the new
+      the security considerations of <xref target="RFC8200"/> and the
       weakness documented in <xref target="RFC8250"/>.</t>
     </section>
 
