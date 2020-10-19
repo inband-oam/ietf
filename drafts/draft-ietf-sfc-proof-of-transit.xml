@@ -124,19 +124,18 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 
     <author fullname="Shwetha Bhandari" initials="S." role="editor"
             surname="Bhandari">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+      <organization abbrev="Thoughtspot">Thoughtspot</organization>
 
       <address>
         <postal>
-          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
-          Road</street>
-
-          <city>Bangalore, KARNATAKA 560 087</city>
+          <street>3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout,
+	  HSR Layout</street>
+          <city>Bangalore, KARNATAKA 560 102</city>
 
           <country>India</country>
         </postal>
 
-        <email>shwethab@cisco.com</email>
+        <email>shwetha.bhandari@thoughtspot.com</email>
       </address>
     </author>
 
@@ -203,7 +202,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </address>
     </author>
 
-    <date day="16" month="June" year="2020" />
+    <date day="19" month="October" year="2020" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -236,7 +235,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       These mechanisms allow to securely verify whether, within a given path,
       all packets traversed all the nodes that they are supposed to visit. The
       document defines the data model through Unified Modeling Language (UML)
-      class diagrams and formally specifies it using a NDMA- compliant YANG
+      class diagrams and formally specifies it using an NDMA- compliant YANG
       model to enable these mechanisms.</t>
     </abstract>
   </front>
@@ -1009,6 +1008,10 @@ module ietf-pot-profile {
 
   prefix "pot";
 
+  import ietf-netconf-acm {
+    prefix nacm;
+  }
+
   organization "IETF SFC Working Group";  
 
   contact "WG Web:   <https://tools.ietf.org/wg/sfc/>
@@ -1099,6 +1102,7 @@ module ietf-pot-profile {
 
       leaf prime-number {
         type uint64;
+        nacm:default-deny-all;
         mandatory true;
         description
           "Prime number used for module math computation";
@@ -1106,6 +1110,7 @@ module ietf-pot-profile {
 
       leaf secret-share {
         type uint64;
+        nacm:default-deny-all;
         mandatory true;
         description
           "Share of the secret of polynomial-1 used
@@ -1141,6 +1146,7 @@ module ietf-pot-profile {
 
       leaf validator-key {
         type uint64;
+        nacm:default-deny-all;
         description
           "The validator-key represents the secret.
            The secret is the constant coefficient of
@@ -1475,7 +1481,7 @@ module ietf-pot-profile {
         The lowest NETCONF <xref target="RFC6241"></xref> layer is the secure
         transport layer, and the mandatory-to-implement secure transport is
         Secure Shell (SSH) <xref target="RFC6242"></xref>. The lowest RESTCONF
-        layer is HTTPS, and the mandatory-to- implement secure transport is
+        layer is HTTPS, and the mandatory-to-implement secure transport is
         TLS <xref target="RFC5246"></xref>.</t>
 
         <t>The NETCONF Access Control Module (NACM) <xref

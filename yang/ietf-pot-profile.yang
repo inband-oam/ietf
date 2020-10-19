@@ -5,6 +5,10 @@ module ietf-pot-profile {
 
   prefix "pot";
 
+  import ietf-netconf-acm {
+    prefix nacm;
+  }
+
   organization "IETF SFC Working Group";  
 
   contact "WG Web:   <https://tools.ietf.org/wg/sfc/>
@@ -95,6 +99,7 @@ module ietf-pot-profile {
 
       leaf prime-number {
         type uint64;
+	nacm:default-deny-all;
         mandatory true;
         description
           "Prime number used for module math computation";
@@ -103,6 +108,7 @@ module ietf-pot-profile {
       leaf secret-share {
         type uint64;
         mandatory true;
+	nacm:default-deny-all;
         description
           "Share of the secret of polynomial-1 used
            in computation for the node. If POLY-1
@@ -137,6 +143,7 @@ module ietf-pot-profile {
 
       leaf validator-key {
         type uint64;
+	nacm:default-deny-all;
         description
           "The validator-key represents the secret.
            The secret is the constant coefficient of
