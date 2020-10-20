@@ -131,18 +131,18 @@
       <t>This draft extends <xref target="I-D.ietf-ippm-ioam-data"/> with
       additional data fields. The additional suggested data fields are: <list
           style="symbols">
-          <t>Transmitted Bytes from a port</t>
+          <t>Transmitted Bytes from an interface</t>
 
-          <t>Speed of a port</t>
+          <t>Speed of an interface</t>
 
-          <t>Port errors</t>
+          <t>Interface errors</t>
         </list>The addition of these new data fields is intended to help
       network operators to better manage their networks, where more data is
       requried with regards to the activity and quality of the network ports.
       For example, one framework that may take advantage of these new data
       fileds is HPCC, which is proposed at <xref
       target="I-D.pan-tsvwg-hpccplus"/>. This section discusses the
-      ammendments should be done to the IOAM Trace header and the format of
+      needed ammendments to the IOAM Trace header and the format of
       the added data fields themselves.</t>
 
       <section title="IOAM Trace Option-Types Ammendments">
@@ -156,10 +156,10 @@
         the packet. This draft is asking for the allocation of additional 2
         bits: <list style="hanging">
             <t hangText="Bit 12">When set indicates presence of Transmitted
-            Bytes from a port.</t>
+            Bytes from an interface.</t>
 
-            <t hangText="Bit 13">When set indicates presence of Speed of a
-            port and Port errors.</t>
+            <t hangText="Bit 13">When set indicates presence of Speed of an
+            interface and Interface errors.</t>
           </list> <xref target="ioam-node-data-fields"/> describes the new
         suggested data types and their formats.</t>
       </section>
@@ -168,7 +168,7 @@
                title="The Additional IOAM Node Data Fields and Associated Formats">
         <t>The Data fields and associated data types for each of the
         additional IOAM Data Fields are shown below: <list style="hanging">
-            <t hangText="Transmitted Bytes from a port:">4-octet field defined
+            <t hangText="Transmitted Bytes from an interface:">4-octet field defined
             as follows:<figure>
                 <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -177,26 +177,27 @@
               </figure> <list style="hanging">
                 <t hangText="tx_bytes:">4-octet unsigned integer field. This
                 field indicates how many bytes have been trasmitted from the
-                egress port the packet is going out from. Note that this field
+                egress interface the packet is going out from. Note that this field
                 may wrap around. As an example, for a 100Gbps port this field
                 may wrap around within less than 3 seconds.</t>
               </list></t>
 
-            <t hangText="Speed of a port and Total errors of a port:">4-octet
+            <t hangText="Speed of an interface and Total errors of an interface:">4-octet
             field defined as follows: <figure>
                 <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-| port_speed|                     port_errors                   | 
+| interface_|                      interface_errors             |
+|   speed   |                                                   | 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
               </figure> <list style="hanging">
-                <t hangText="port_speed:">6 bits unsigned integer field. This
-                field indicates the current operational speed of the port. The
-                procedure to allocate, manage and map the port_sp values into
+                <t hangText="interface_speed:">6 bits unsigned integer field. This
+                field indicates the current operational speed of the interface. The
+                procedure to allocate, manage and map the interface_speed values into
                 the actual speed is beyond the scope of this document.</t>
 
                 <t hangText="port_errors:">26 bits unsigned integer field.
                 This field inciates how many errors, such as packet drops due
-                to CRC errors, has been detected on the port used to deliver
+                to CRC errors, has been detected on the interface used to deliver
                 the packet.</t>
               </list></t>
           </list></t>
