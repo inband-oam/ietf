@@ -5,14 +5,14 @@
 Network Working Group                                  F. Brockners, Ed.
 Internet-Draft                                                     Cisco
 Intended status: Experimental                           S. Bhandari, Ed.
-Expires: 22 April 2021                                       Thoughtspot
+Expires: April 28, 2021                                      Thoughtspot
                                                          T. Mizrahi, Ed.
                                         Huawei Network.IO Innovation Lab
                                                                  S. Dara
                                                                 Seconize
                                                                S. Youell
                                                                     JPMC
-                                                         19 October 2020
+                                                        October 25, 2020
 
 
                             Proof of Transit
@@ -45,7 +45,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 22 April 2021.
+   This Internet-Draft will expire on April 28, 2021.
 
 
 
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Brockners, et al.         Expires 22 April 2021                 [Page 1]
+Brockners, et al.        Expires April 28, 2021                 [Page 1]
 
 Internet-Draft              Proof of Transit                October 2020
 
@@ -64,13 +64,14 @@ Copyright Notice
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents (https://trustee.ietf.org/
-   license-info) in effect on the date of publication of this document.
-   Please review these documents carefully, as they describe your rights
-   and restrictions with respect to this document.  Code Components
-   extracted from this document must include Simplified BSD License text
-   as described in Section 4.e of the Trust Legal Provisions and are
-   provided without warranty as described in the Simplified BSD License.
+   Provisions Relating to IETF Documents
+   (https://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
 
 Table of Contents
 
@@ -98,39 +99,39 @@ Table of Contents
      3.5.  Ordered POT (OPOT)  . . . . . . . . . . . . . . . . . . .  13
    4.  Sizing the Data for Proof of Transit  . . . . . . . . . . . .  14
    5.  Node Configuration  . . . . . . . . . . . . . . . . . . . . .  15
-     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  16
+     5.1.  Procedure . . . . . . . . . . . . . . . . . . . . . . . .  15
      5.2.  YANG Model for POT  . . . . . . . . . . . . . . . . . . .  16
        5.2.1.  Main Parameters . . . . . . . . . . . . . . . . . . .  16
        5.2.2.  Tree Diagram  . . . . . . . . . . . . . . . . . . . .  17
        5.2.3.  YANG Model  . . . . . . . . . . . . . . . . . . . . .  18
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
    7.  Security Considerations . . . . . . . . . . . . . . . . . . .  23
-     7.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  24
 
 
 
-Brockners, et al.         Expires 22 April 2021                 [Page 2]
+Brockners, et al.        Expires April 28, 2021                 [Page 2]
 
 Internet-Draft              Proof of Transit                October 2020
 
 
+     7.1.  Proof of Transit  . . . . . . . . . . . . . . . . . . . .  23
      7.2.  Cryptanalysis . . . . . . . . . . . . . . . . . . . . . .  24
-     7.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  25
-     7.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  26
+     7.3.  Anti-Replay . . . . . . . . . . . . . . . . . . . . . . .  24
+     7.4.  Anti-Preplay  . . . . . . . . . . . . . . . . . . . . . .  25
      7.5.  Tampering . . . . . . . . . . . . . . . . . . . . . . . .  26
      7.6.  Recycling . . . . . . . . . . . . . . . . . . . . . . . .  26
-     7.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  27
-     7.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  27
+     7.7.  Redundant Nodes and Failover  . . . . . . . . . . . . . .  26
+     7.8.  Controller Operation  . . . . . . . . . . . . . . . . . .  26
      7.9.  Verification Scope  . . . . . . . . . . . . . . . . . . .  27
-       7.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  28
-       7.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  28
-     7.10. POT Yang module . . . . . . . . . . . . . . . . . . . . .  28
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  29
-   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  29
+       7.9.1.  Node Ordering . . . . . . . . . . . . . . . . . . . .  27
+       7.9.2.  Stealth Nodes . . . . . . . . . . . . . . . . . . . .  27
+     7.10. POT Yang module . . . . . . . . . . . . . . . . . . . . .  27
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  28
+   9.  Contributors  . . . . . . . . . . . . . . . . . . . . . . . .  28
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  29
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  29
      10.2.  Informative References . . . . . . . . . . . . . . . . .  30
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  30
 
 1.  Introduction
 
@@ -161,15 +162,15 @@ Internet-Draft              Proof of Transit                October 2020
    chaining concepts (using technologies such as Locator/ID Separation
    Protocol (LISP), Network Service Header (NSH), Segment Routing (SR),
    etc.) blurs the line between the different trust domains, because the
-   hand-off-points are no longer clearly defined physical interfaces,
 
 
 
-Brockners, et al.         Expires 22 April 2021                 [Page 3]
+Brockners, et al.        Expires April 28, 2021                 [Page 3]
 
 Internet-Draft              Proof of Transit                October 2020
 
 
+   hand-off-points are no longer clearly defined physical interfaces,
    but are virtual interfaces.  As a consequence, different trust layers
    should not to be mixed in the same device.  For an NFV scenario a
    different type of proof is required.  Offering a proof that a packet
@@ -217,14 +218,15 @@ Internet-Draft              Proof of Transit                October 2020
 
    LISP:      Locator/ID Separation Protocol
 
-   LPC:       Lagrange Polynomial Constants
 
 
 
-Brockners, et al.         Expires 22 April 2021                 [Page 4]
+Brockners, et al.        Expires April 28, 2021                 [Page 4]
 
 Internet-Draft              Proof of Transit                October 2020
 
+
+   LPC:       Lagrange Polynomial Constants
 
    NFV:       Network Function Virtualization
 
@@ -271,16 +273,17 @@ Internet-Draft              Proof of Transit                October 2020
    encapsulated in packets as an IOAM Proof of Transit Option-Type.  The
    details and format of the encapsulation and the IOAM POT Option-Type
    format are specified in [I-D.ietf-ippm-ioam-data].  When used in
-   conjunction with NSH [RFC8300], the POT Option-Type MUST be carried
-   as specified in [I-D.ietf-sfc-ioam-nsh].
 
 
 
 
-Brockners, et al.         Expires 22 April 2021                 [Page 5]
+Brockners, et al.        Expires April 28, 2021                 [Page 5]
 
 Internet-Draft              Proof of Transit                October 2020
 
+
+   conjunction with NSH [RFC8300], the POT Option-Type MUST be carried
+   as specified in [I-D.ietf-sfc-ioam-nsh].
 
    The solution approach is detailed in two steps.  Initially the
    concept of the approach is explained.  This concept is then further
@@ -327,16 +330,16 @@ Internet-Draft              Proof of Transit                October 2020
    solution approach: A secret polynomial as described above which is
    kept constant, and a per-packet polynomial which is public and
    generated by the ingress node (the first node along the path).
-   Operations are performed on the sum of those two polynomials -
-   creating a third polynomial which is secret and per packet.
 
 
 
-
-Brockners, et al.         Expires 22 April 2021                 [Page 6]
+Brockners, et al.        Expires April 28, 2021                 [Page 6]
 
 Internet-Draft              Proof of Transit                October 2020
 
+
+   Operations are performed on the sum of those two polynomials -
+   creating a third polynomial which is secret and per packet.
 
 3.2.  Solution Approach
 
@@ -386,10 +389,7 @@ Internet-Draft              Proof of Transit                October 2020
 
 
 
-
-
-
-Brockners, et al.         Expires 22 April 2021                 [Page 7]
+Brockners, et al.        Expires April 28, 2021                 [Page 7]
 
 Internet-Draft              Proof of Transit                October 2020
 
@@ -445,7 +445,7 @@ Internet-Draft              Proof of Transit                October 2020
 
 
 
-Brockners, et al.         Expires 22 April 2021                 [Page 8]
+Brockners, et al.        Expires April 28, 2021                 [Page 8]
 
 Internet-Draft              Proof of Transit                October 2020
 
@@ -476,8 +476,10 @@ Internet-Draft              Proof of Transit                October 2020
             = (((x-4) / (2-4)) * ((x-5)/2-5))) mod 53
             = (10/3 - 3x/2 + (1/6)x^2) mod 53
 
+
       l1(x) = (((x-x0) / (x1-x0)) * ((x-x2)/x1-x2))) mod 53
             = (-5 + 7x/2 - (1/2)x^2) mod 53
+
 
       l2(x) = (((x-x0) / (x2-x0)) * ((x-x1)/x2-x1))) mod 53
             = (8/3 - 2 + (1/3)x^2) mod 53
@@ -496,15 +498,15 @@ Internet-Draft              Proof of Transit                October 2020
 
       LPC(l1) = (-5) mod 53 = 48
 
-      LPC(l2) = (8/3) mod 53 = 38
 
 
 
-
-Brockners, et al.         Expires 22 April 2021                 [Page 9]
+Brockners, et al.        Expires April 28, 2021                 [Page 9]
 
 Internet-Draft              Proof of Transit                October 2020
 
+
+      LPC(l2) = (8/3) mod 53 = 38
 
    For a general way to compute the modular multiplicative inverse, see
    e.g., the Euclidean algorithm.
@@ -555,9 +557,7 @@ Internet-Draft              Proof of Transit                October 2020
 
 
 
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 10]
+Brockners, et al.        Expires April 28, 2021                [Page 10]
 
 Internet-Draft              Proof of Transit                October 2020
 
@@ -613,7 +613,7 @@ Internet-Draft              Proof of Transit                October 2020
 
 
 
-Brockners, et al.         Expires 22 April 2021                [Page 11]
+Brockners, et al.        Expires April 28, 2021                [Page 11]
 
 Internet-Draft              Proof of Transit                October 2020
 
@@ -669,7 +669,7 @@ Internet-Draft              Proof of Transit                October 2020
 
 
 
-Brockners, et al.         Expires 22 April 2021                [Page 12]
+Brockners, et al.        Expires April 28, 2021                [Page 12]
 
 Internet-Draft              Proof of Transit                October 2020
 
@@ -725,7 +725,7 @@ Internet-Draft              Proof of Transit                October 2020
 
 
 
-Brockners, et al.         Expires 22 April 2021                [Page 13]
+Brockners, et al.        Expires April 28, 2021                [Page 13]
 
 Internet-Draft              Proof of Transit                October 2020
 
@@ -781,37 +781,32 @@ Internet-Draft              Proof of Transit                October 2020
 
 
 
-Brockners, et al.         Expires 22 April 2021                [Page 14]
+Brockners, et al.        Expires April 28, 2021                [Page 14]
 
 Internet-Draft              Proof of Transit                October 2020
 
 
-   +===============+=================+================+===============+
-   | Transfer rate | Secret/RND size |    Max # of    |    Time RND   |
-   |               |                 |    packets     |     lasts     |
-   +===============+=================+================+===============+
-   |     1 Gbps    |        64       | 2^64 = approx. |    approx.    |
-   |               |                 |    2*10^19     | 310,000 years |
-   +---------------+-----------------+----------------+---------------+
-   |    10 Gbps    |        64       | 2^64 = approx. |    approx.    |
-   |               |                 |    2*10^19     |  31,000 years |
-   +---------------+-----------------+----------------+---------------+
-   |    100 Gbps   |        64       | 2^64 = approx. | approx. 3,100 |
-   |               |                 |    2*10^19     |     years     |
-   +---------------+-----------------+----------------+---------------+
-   |     1 Gbps    |        32       | 2^32 = approx. | 2,200 seconds |
-   |               |                 |     4*10^9     |               |
-   +---------------+-----------------+----------------+---------------+
-   |    10 Gbps    |        32       | 2^32 = approx. |  220 seconds  |
-   |               |                 |     4*10^9     |               |
-   +---------------+-----------------+----------------+---------------+
-   |    100 Gbps   |        32       | 2^32 = approx. |   22 seconds  |
-   |               |                 |     4*10^9     |               |
-   +---------------+-----------------+----------------+---------------+
+   +-------------+--------------+------------------+-------------------+
+   |   Transfer  |  Secret/RND  | Max # of packets |   Time RND lasts  |
+   |     rate    |     size     |                  |                   |
+   +-------------+--------------+------------------+-------------------+
+   |    1 Gbps   |      64      |  2^64 = approx.  |  approx. 310,000  |
+   |             |              |     2*10^19      |       years       |
+   |   10 Gbps   |      64      |  2^64 = approx.  |   approx. 31,000  |
+   |             |              |     2*10^19      |       years       |
+   |   100 Gbps  |      64      |  2^64 = approx.  |   approx. 3,100   |
+   |             |              |     2*10^19      |       years       |
+   |    1 Gbps   |      32      |  2^32 = approx.  |   2,200 seconds   |
+   |             |              |      4*10^9      |                   |
+   |   10 Gbps   |      32      |  2^32 = approx.  |    220 seconds    |
+   |             |              |      4*10^9      |                   |
+   |   100 Gbps  |      32      |  2^32 = approx.  |     22 seconds    |
+   |             |              |      4*10^9      |                   |
+   +-------------+--------------+------------------+-------------------+
 
-                  Table 1: Proof of transit data sizing
+                      Table assumes 64 octet packets
 
-   Table assumes 64 octet packets
+                   Table 1: Proof of transit data sizing
 
    If the symmetric masking method for ordered POT is used
    (Section 3.5), the masks used between nodes adjacent in the path MUST
@@ -828,20 +823,6 @@ Internet-Draft              Proof of Transit                October 2020
    details see the YANG model in Section 5.2.  This document defines the
    procedures and the associated YANG data model.
 
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 15]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
 5.1.  Procedure
 
    The Controller creates new POT-Profiles at a constant rate and
@@ -853,6 +834,14 @@ Internet-Draft              Proof of Transit                October 2020
    Profiles are communicated to the nodes is configurable and MUST be
    more frequent than the speed at which a POT-Profile is "used up".
    Once the POT-Profile has been successfully communicated to all nodes
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 15]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
    (e.g., all NETCONF transactions completed, in case NETCONF is used as
    a protocol), the controller sends an "enable POT-Profile" request to
    the ingress node.
@@ -886,45 +875,45 @@ Internet-Draft              Proof of Transit                October 2020
    The main parameters for the information exchange between the
    Controller and the node used in the YANG model are as follows:
 
-   *  pot-profile-index: Section 5.1 details that two POT-Profiles are
+   o  pot-profile-index: Section 5.1 details that two POT-Profiles are
       used.  Only one of the POT-Profiles is active at a given point in
       time, allowing the Controller to refresh the non-active one for
       future use. pot-profile-index defines which of the POT-Profiles
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 16]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
       (the "even" or "odd" POT-Profile) is currently active. pot-
       profile-index will be set in the first hop of the path or chain.
       Other nodes will not use this field.
 
-   *  prime-number: Prime number used for module math computation.
+   o  prime-number: Prime number used for module math computation.
 
-   *  secret-share: Share of the secret of polynomial-1 used in
+   o  secret-share: Share of the secret of polynomial-1 used in
       computation for the node.  If POLY-1 is defined by points (x1_i,
       y1_i) with i=0,..k, then for node i, the secret-share will be
       y1_i.
 
-   *  public-polynomial: Public polynomial value for the node.. If
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 16]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
+   o  public-polynomial: Public polynomial value for the node.. If
       POLY-2 is defined by points (x2_i, y2_i) with i=0,..k, then for
       node i, the secret-share will be y2_i.
 
-   *  lpc: Lagrange Polynomial Coefficient for the node, i.e. for node
+   o  lpc: Lagrange Polynomial Coefficient for the node, i.e. for node
       i, this would be LPC(l_i), with l_i being the i-th Lagrange Basis
       Polynomial.
 
-   *  validator: True if the node is a verifier node.
+   o  validator: True if the node is a verifier node.
 
-   *  validator-key: The validator-key represents the SECRET as
+   o  validator-key: The validator-key represents the SECRET as
       described in the sections above.  The SECRET is the constant
       coefficient of POLY-1(z).  If POLY-1(z) = a_0 + a_1*z +
       a_2*z^2+..+a_k*z^k, then the SECRET would be a_0.
 
-   *  bitmask: Number of bits as mask used in controlling the size of
+   o  bitmask: Number of bits as mask used in controlling the size of
       the random value generation. 32-bits of mask is default.  See
       Section 4 for details.
 
@@ -933,26 +922,6 @@ Internet-Draft              Proof of Transit                October 2020
    This section shows a simplified graphical representation of the YANG
    data model for POT.  The meaning of the symbols in YANG tree diagrams
    is defined in [RFC8340].
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 17]
-
-Internet-Draft              Proof of Transit                October 2020
-
 
    module: ietf-pot-profile
      +--rw pot-profiles
@@ -972,8 +941,20 @@ Internet-Draft              Proof of Transit                October 2020
                  +--rw downstream-mask*   uint64
                  +--rw upstream-mask*     uint64
 
-5.2.3.  YANG Model
 
+
+
+
+
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 17]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
+5.2.3.  YANG Model
 
    <CODE BEGINS> file "ietf-pot-profile@2020-09-08.yang"
    module ietf-pot-profile {
@@ -1003,13 +984,6 @@ Internet-Draft              Proof of Transit                October 2020
          POT-Profile between a controller and nodes
          participating in proof of transit.
 
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 18]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
          Copyright (c) 2020 IETF Trust and the persons identified
          as authors of the code. All rights reserved.
          Redistribution and use in source and binary forms, with
@@ -1028,6 +1002,14 @@ Internet-Draft              Proof of Transit                October 2020
          This version of this YANG module is part of RFC XXXX
          (https://www.rfc-editor.org/info/rfcXXXX); see the RFC
          itself for full legal notices.
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 18]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
          The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL',
          'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED',
          'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document
@@ -1059,13 +1041,6 @@ Internet-Draft              Proof of Transit                October 2020
      }
 
 
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 19]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
      grouping pot-profile {
        description "A grouping for proof of transit profiles.";
        list pot-profile-list {
@@ -1083,6 +1058,14 @@ Internet-Draft              Proof of Transit                October 2020
          leaf status {
            type boolean;
            default "false";
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 19]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
            description
              "True if this profile is currently active.
               Will be used by the first hop of the path or chain.
@@ -1114,14 +1097,6 @@ Internet-Draft              Proof of Transit                October 2020
            mandatory true;
            description
              "Public polynomial value for the node.
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 20]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
               If POLY-2 is defined by points (x2_i, y2_i)
               with i=0,..k, then for node i,
               the secret-share will be y2_i.";
@@ -1139,6 +1114,14 @@ Internet-Draft              Proof of Transit                October 2020
            default "false";
            description
              "True if the node is a verifier node";
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 20]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
          }
 
          leaf validator-key {
@@ -1170,14 +1153,6 @@ Internet-Draft              Proof of Transit                October 2020
       description "Grouping containing OPoT related data.";
 
 
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 21]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
       container opot-masks {
         must "count(downstream-mask) = count(upstream-mask)";
         description "Masking information for OPoT support.";
@@ -1195,6 +1170,14 @@ Internet-Draft              Proof of Transit                October 2020
           type uint64;
           max-elements 2;
           description "Secret stream used to mask the PoT metadata.
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 21]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
           The mask is used between nodes adjacent in the path
           and MUST have a length equal to the sum of the ones
           of RND and CML.";
@@ -1226,14 +1209,6 @@ Internet-Draft              Proof of Transit                October 2020
      }
    /*** module: end ***/
    }
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 22]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
    <CODE ENDS>
 
 6.  IANA Considerations
@@ -1251,6 +1226,13 @@ Internet-Draft              Proof of Transit                October 2020
    IANA is requested to register the following YANG module in the "YANG
    Module Names" subregistry [RFC7950] within the "YANG Parameters"
    registry.
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 22]
+
+Internet-Draft              Proof of Transit                October 2020
+
 
    Name: ietf-pot-profile
 
@@ -1276,20 +1258,6 @@ Internet-Draft              Proof of Transit                October 2020
    These considerations are discussed in detail in the rest of this
    section.
 
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 23]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
 7.1.  Proof of Transit
 
    Proof of correctness and security of the solution approach is per
@@ -1299,13 +1267,13 @@ Internet-Draft              Proof of Transit                October 2020
    below conditions are met it is impossible for an attacker to bypass
    one or multiple nodes without getting caught.
 
-   *  If there are k+1 nodes in the path, the polynomials (POLY-1, POLY-
+   o  If there are k+1 nodes in the path, the polynomials (POLY-1, POLY-
       2) should be of degree k.  Also k+1 points of POLY-1 are chosen
       and assigned to each node respectively.  The verifier can re-
       construct the k degree polynomial (POLY-3) only when all the
       points are correctly retrieved.
 
-   *  Precisely three values are kept secret by individual nodes.  Share
+   o  Precisely three values are kept secret by individual nodes.  Share
       of SECRET (i.e. points on POLY-1), Share of POLY-2, LPC, P.  Note
       that only constant coefficient, RND, of POLY-2 is public. x values
       and non-constant coefficient of POLY-2 are secret
@@ -1313,6 +1281,14 @@ Internet-Draft              Proof of Transit                October 2020
    An attacker bypassing a few nodes will miss adding a respective point
    on POLY-1 to corresponding point on POLY-2 , thus the verifier cannot
    construct POLY-3 for cross verification.
+
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 23]
+
+Internet-Draft              Proof of Transit                October 2020
+
 
    Also it is highly recommended that different polynomials should be
    used as POLY-1 across different paths, traffic profiles or service
@@ -1332,21 +1308,7 @@ Internet-Draft              Proof of Transit                October 2020
    two types of differential analysis for guessing the secrets could be
    done.
 
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 24]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
-   *  Inter-Node: A passive attacker observing CML values across nodes
+   o  Inter-Node: A passive attacker observing CML values across nodes
       (i.e., as the packets entering and leaving), cannot perform
       differential analysis to construct the points on POLY-1.  This is
       because at each point there are four unknowns (i.e.  Share(POLY-
@@ -1354,7 +1316,7 @@ Internet-Draft              Proof of Transit                October 2020
       (i.e.  RND, CML-before, CML-after).  The application of symmetric
       masking for OPOT makes inter-node analysis less feasible.
 
-   *  Inter-Packets: A passive attacker could observe CML values across
+   o  Inter-Packets: A passive attacker could observe CML values across
       packets (i.e., values of PKT-1 and subsequent PKT-2), in order to
       predict the secrets.  Differential analysis across packets could
       be mitigated using a good PRNG for generating RND.  Note that if
@@ -1376,6 +1338,14 @@ Internet-Draft              Proof of Transit                October 2020
    then first 16 bits could be a sequence number SEQ_NO and next 48 bits
    could be a random number.
 
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 24]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
    Subsequently, the verifier could use the SEQ_NO bits to run classic
    anti-replay techniques like sliding window used in IPSEC.  The
    verifier could buffer up to 2^16 packets as a sliding window.
@@ -1390,18 +1360,6 @@ Internet-Draft              Proof of Transit                October 2020
    replay attacks.  An anti-replay mechanism may be included in future
    versions of the solution.
 
-
-
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 25]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
 7.4.  Anti-Preplay
 
    An active attacker could try to perform a man-in-the-middle (MITM)
@@ -1413,16 +1371,16 @@ Internet-Draft              Proof of Transit                October 2020
    Preplay attacks are possible since the POT metadata is not dependent
    on the packet fields.  Below steps are recommended for remediation:
 
-   *  Ingress node and Verifier are configured with common pre shared
+   o  Ingress node and Verifier are configured with common pre shared
       key
 
-   *  Ingress node generates a Message Authentication Code (MAC) from
+   o  Ingress node generates a Message Authentication Code (MAC) from
       packet fields using standard HMAC algorithm.
 
-   *  The left most bits of the output are truncated to desired length
+   o  The left most bits of the output are truncated to desired length
       to generate RND.  It is recommended to use a minimum of 32 bits.
 
-   *  The verifier regenerates the HMAC from the packet fields and
+   o  The verifier regenerates the HMAC from the packet fields and
       compares with RND.  To ensure the POT data is in fact that of the
       packet.
 
@@ -1432,6 +1390,17 @@ Internet-Draft              Proof of Transit                October 2020
    The solution discussed in this memo does not currently mitigate
    preplay attacks.  A mitigation mechanism may be included in future
    versions of the solution.
+
+
+
+
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 25]
+
+Internet-Draft              Proof of Transit                October 2020
+
 
 7.5.  Tampering
 
@@ -1447,16 +1416,6 @@ Internet-Draft              Proof of Transit                October 2020
    like POLY-1.  All the nodes could be periodically updated with shares
    of new SECRET as best practice.  The table above could be consulted
    for refresh cycles (see Section 4).
-
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 26]
-
-Internet-Draft              Proof of Transit                October 2020
-
 
    If symmetric masking is used for OPOT (Section 3.5), mask values must
    be periodically updated as well, at least as frequently as the other
@@ -1491,6 +1450,14 @@ Internet-Draft              Proof of Transit                October 2020
    Controller would only be used for the initial configuration of the
    POT-Profiles.
 
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 26]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
    If OPOT (Section 3.5) is applied using symmetric masking, the
    Controller will be required to perform a a periodic refresh of the
    mask pairs.  The use of OPOT SHOULD be configurable as part of the
@@ -1506,13 +1473,6 @@ Internet-Draft              Proof of Transit                October 2020
    be a component within a networking device or system.  The latter
    would be the case if a forwarding path within a device would need to
    be securely verified.
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 27]
-
-Internet-Draft              Proof of Transit                October 2020
-
 
 7.9.1.  Node Ordering
 
@@ -1547,6 +1507,13 @@ Internet-Draft              Proof of Transit                October 2020
    [RFC6242].  The lowest RESTCONF layer is HTTPS, and the mandatory-to-
    implement secure transport is TLS [RFC5246].
 
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 27]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
    The NETCONF Access Control Module (NACM) [RFC8341] provides the means
    to restrict access for particular NETCONF or RESTCONF users to a
    preconfigured subset of all available NETCONF or RESTCONF protocol
@@ -1556,19 +1523,6 @@ Internet-Draft              Proof of Transit                October 2020
    environments.  Ability to read from or write into these nodes without
    proper protection can have a negative effect on the devices that
    support this feature.
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 28]
-
-Internet-Draft              Proof of Transit                October 2020
-
 
 8.  Acknowledgements
 
@@ -1590,11 +1544,14 @@ Internet-Draft              Proof of Transit                October 2020
       United States
       Email: cpignata@cisco.com
 
+
       John Leddy
       Email: john@leddy.net
 
+
       David Mozes
       Email: mosesster@gmail.com
+
 
       Alejandro Aguado
       Universidad Politecnica de Madrid
@@ -1604,6 +1561,15 @@ Internet-Draft              Proof of Transit                October 2020
       Phone: +34 910 673 086
       Email: a.aguadom@fi.upm.es
 
+
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 28]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
       Diego R. Lopez
       Telefonica I+D
       Editor Jose Manuel Lara, 9 (1-B)
@@ -1612,33 +1578,20 @@ Internet-Draft              Proof of Transit                October 2020
       Phone: +34 913 129 041
       Email: diego.r.lopez@telefonica.com
 
+
 10.  References
 
 10.1.  Normative References
 
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 29]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
    [I-D.ietf-ippm-ioam-data]
               Brockners, F., Bhandari, S., and T. Mizrahi, "Data Fields
-              for In-situ OAM", Work in Progress, Internet-Draft, draft-
-              ietf-ippm-ioam-data-10, 13 July 2020,
-              <http://www.ietf.org/internet-drafts/draft-ietf-ippm-ioam-
-              data-10.txt>.
+              for In-situ OAM", draft-ietf-ippm-ioam-data-10 (work in
+              progress), July 2020.
 
    [I-D.ietf-sfc-ioam-nsh]
               Brockners, F. and S. Bhandari, "Network Service Header
-              (NSH) Encapsulation for In-situ OAM (IOAM) Data", Work in
-              Progress, Internet-Draft, draft-ietf-sfc-ioam-nsh-04, 16
-              June 2020, <http://www.ietf.org/internet-drafts/draft-
-              ietf-sfc-ioam-nsh-04.txt>.
+              (NSH) Encapsulation for In-situ OAM (IOAM) Data", draft-
+              ietf-sfc-ioam-nsh-04 (work in progress), June 2020.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1662,32 +1615,31 @@ Internet-Draft              Proof of Transit                October 2020
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+
+
+
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 29]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
    [RFC8300]  Quinn, P., Ed., Elzur, U., Ed., and C. Pignataro, Ed.,
               "Network Service Header (NSH)", RFC 8300,
               DOI 10.17487/RFC8300, January 2018,
               <https://www.rfc-editor.org/info/rfc8300>.
 
-   [SSS]      A., S., "How to share a secret",  Communications of the
-              ACM (22): 612-613, 1979.
+   [SSS]      "How to share a secret",  Communications of the ACM (22):
+              612-613, 1979.
 
 10.2.  Informative References
 
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 30]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
    [I-D.ietf-anima-autonomic-control-plane]
               Eckert, T., Behringer, M., and S. Bjarnason, "An Autonomic
-              Control Plane (ACP)", Work in Progress, Internet-Draft,
-              draft-ietf-anima-autonomic-control-plane-18, 7 August
-              2018, <http://www.ietf.org/internet-drafts/draft-ietf-
-              anima-autonomic-control-plane-18.txt>.
+              Control Plane (ACP)", draft-ietf-anima-autonomic-control-
+              plane-18 (work in progress), August 2018.
 
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246,
@@ -1718,10 +1670,22 @@ Internet-Draft              Proof of Transit                October 2020
 
 Authors' Addresses
 
+
+
+
+
+
+
+
+Brockners, et al.        Expires April 28, 2021                [Page 30]
+
+Internet-Draft              Proof of Transit                October 2020
+
+
    Frank Brockners (editor)
    Cisco Systems, Inc.
    Hansaallee 249, 3rd Floor
-   40549 DUESSELDORF
+   DUESSELDORF, NORDRHEIN-WESTFALEN  40549
    Germany
 
    Email: fbrockne@cisco.com
@@ -1730,14 +1694,6 @@ Authors' Addresses
    Shwetha Bhandari (editor)
    Thoughtspot
    3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR Layout
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 31]
-
-Internet-Draft              Proof of Transit                October 2020
-
-
    Bangalore, KARNATAKA 560 102
    India
 
@@ -1753,9 +1709,8 @@ Internet-Draft              Proof of Transit                October 2020
 
    Sashank Dara
    Seconize
-   BANGALORE
-   Bangalore, KARNATAKA
-   India
+   BANGALORE, Bangalore, KARNATAKA
+   INDIA
 
    Email: sashank@seconize.co
 
@@ -1763,8 +1718,7 @@ Internet-Draft              Proof of Transit                October 2020
    Stephen Youell
    JP Morgan Chase
    25 Bank Street
-   London
-   E14 5JP
+   London  E14 5JP
    United Kingdom
 
    Email: stephen.youell@jpmorgan.com
@@ -1779,14 +1733,4 @@ Internet-Draft              Proof of Transit                October 2020
 
 
 
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.         Expires 22 April 2021                [Page 32]
+Brockners, et al.        Expires April 28, 2021                [Page 31]
