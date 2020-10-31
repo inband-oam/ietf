@@ -21,6 +21,7 @@
 <!ENTITY RFC5246 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5246.xml">
 <!ENTITY RFC8340 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8340.xml">
 <!ENTITY RFC8341 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8341.xml">
+<!ENTITY RFC8342 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8342.xml">
 <!ENTITY RFC7950 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7950.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
@@ -76,7 +77,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-07"
+<rfc category="exp" docName="draft-ietf-sfc-proof-of-transit-08"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -202,7 +203,7 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       </address>
     </author>
 
-    <date day="25" month="October" year="2020" />
+    <date day="31" month="October" year="2020" />
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -233,10 +234,9 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       traffic through a specific, user-defined path. This document defines
       mechanisms to securely prove that traffic transited a defined path.
       These mechanisms allow to securely verify whether, within a given path,
-      all packets traversed all the nodes that they are supposed to visit. The
-      document defines the data model through Unified Modeling Language (UML)
-      class diagrams and formally specifies it using an NDMA- compliant YANG
-      model to enable these mechanisms.</t>
+      all packets traversed all the nodes that they are supposed to visit.
+      This document specifies the data model to enable these mechanisms
+      using YANG.</t>
     </abstract>
   </front>
 
@@ -292,7 +292,9 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
       found in the packet to validate whether the packet traversed the path
       correctly. This document defines a data model and specifies it formally
       using the YANG 1.1 <xref target="RFC7950"></xref> data modeling language
-      to support enabling the POT solution.</t>
+      to support enabling the POT solution. The YANG data model defined in
+      this document conforms to the Network Management Datastore
+      Architecture (NMDA) defined in <xref target="RFC8342"></xref>.</t>
 
       <t>Note to RFC Editor: Please replace the date 2020-09-09 in <xref
       target="YANG"></xref> of the draft with the date of publication of this
@@ -1002,14 +1004,15 @@ The proposed mechanism has two significant vulnerabilities that (in my understan
      implicit by means of the masks)--><figure>
               <artwork><![CDATA[<CODE BEGINS> file "ietf-pot-profile@2020-09-08.yang"
 module ietf-pot-profile {
-
-
+  yang-version 1.1;
   namespace "urn:ietf:params:xml:ns:yang:ietf-pot-profile";
 
   prefix "pot";
 
   import ietf-netconf-acm {
     prefix nacm;
+    reference
+         "RFC 8341: Network Configuration Access Control Model";
   }
 
   organization "IETF SFC Working Group";  
@@ -1055,17 +1058,10 @@ module ietf-pot-profile {
  
    revision "2020-09-08" {
     description
-      "Addressing WGLC comments";
-    reference
-      "draft-ietf-sfc-proof-of-transit";
-  }
-
-  revision 2016-06-15 {
-    description
-      "Initial revision.";
-    reference
-      "draft-ietf-sfc-proof-of-transit";
-  }
+         "Initial revision.";
+       reference
+         "RFC XXXX: Proof of Transit";
+     }
 
   typedef profile-index-range {
     type int32 {
@@ -1487,12 +1483,13 @@ module ietf-pot-profile {
         <t>The NETCONF Access Control Module (NACM) <xref
         target="RFC8341"></xref> provides the means to restrict access for
         particular NETCONF or RESTCONF users to a preconfigured subset of all
-        available NETCONF or RESTCONF protocol operations and content. There
-        are a number of nodes defined in this YANG module which are
-        read/writeable. These data nodes may be considered sensitive and
-        vulnerable to attacks in some network environments. Ability to read
-        from or write into these nodes without proper protection can have a
-        negative effect on the devices that support this feature.</t>
+        available NETCONF or RESTCONF protocol operations and content. The
+	nodes defined in this YANG module to specify secret-share, prime-number,
+	validator-key are read/writeable. These data nodes may be considered
+	sensitive and vulnerable to attacks in some network environments.
+	Ability to read from or write into these nodes without proper
+	protection can have a negative effect on the devices that support
+	this feature.</t>
       </section>
     </section>
 
@@ -1609,6 +1606,8 @@ module ietf-pot-profile {
       &RFC8340;
 
       &RFC8341;
+
+      &RFC8342;      
     </references>
   </back>
 </rfc>
