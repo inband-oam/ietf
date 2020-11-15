@@ -21,6 +21,7 @@
 <!ENTITY RFC5905 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY RFC7384 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7384.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
+<!ENTITY RFC8877 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8877.xml">
 <!ENTITY I-D.brockners-opsawg-ioam-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-opsawg-ioam-deployment.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
 <!ENTITY I-D.ioamteam-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioamteam-ippm-ioam-direct-export.xml">
@@ -33,7 +34,6 @@
 <!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
 <!ENTITY I-D.ietf-nvo3-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-geneve.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.lapukhov-dataplane-probe.xml">
-<!ENTITY I-D.ietf-ntp-packet-timestamps SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ntp-packet-timestamps.xml">
 <!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
@@ -62,7 +62,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-10" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-11" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -553,7 +553,7 @@
       </section>
 
       <section anchor="IOAM_tracing_option" title="IOAM Trace Option-Types">
-        <t>"IOAM tracing data" is expected to be either collected at every
+        <t>"IOAM tracing data" is expected to be collected at every
         IOAM transit node that a packet traverses to ensure visibility into
         the entire path a packet takes within an IOAM-Domain. I.e., in a
         typical deployment all nodes in an IOAM-Domain would participate in
@@ -1547,7 +1547,7 @@ be 4-octet aligned:
         an 80-bit timestamp format. The truncated timestamp format is a 64-bit
         field, which is the 64 least significant bits of the 80-bit PTP
         timestamp. The PTP truncated format is specified in Section 4.3 of
-        <xref target="I-D.ietf-ntp-packet-timestamps"/>, and the details are
+        <xref target="RFC8877"/>, and the details are
         presented below for the sake of completeness.</t>
 
         <figure align="center" anchor="PTPFormat"
@@ -1613,7 +1613,7 @@ be 4-octet aligned:
       <section anchor="NTPFormatSec" title="NTP 64-bit Timestamp Format">
         <t>The Network Time Protocol (NTP) <xref target="RFC5905"/> timestamp
         format is 64 bits long. This format is specified in Section 4.2.1 of
-        <xref target="I-D.ietf-ntp-packet-timestamps"/>, and the details are
+        <xref target="RFC8877"/>, and the details are
         presented below for the sake of completeness.</t>
 
         <figure align="center" anchor="NTPFormat"
@@ -2009,9 +2009,10 @@ be 4-octet aligned:
       any system, has to be reviewed on a per-deployment-scenario basis, based
       on a systems-specific threat analysis, which can lead to specific
       security solutions that are beyond the scope of the current document.
-      For example, in an IOAM deployment that is not confined to a single LAN,
-      but spans multiple inter-connected sites, the inter-site links can be
-      secured (e.g., by IPsec) in order to avoid external threats.</t>
+	  Specifically, in an IOAM deployment that is not confined to a single
+	  LAN, but spans multiple inter-connected sites (for example, using an
+	  overlay network), the inter-site links can be secured (e.g., by IPsec)
+	  in order to avoid external threats.</t>
     </section>
 
     <section title="Acknowledgements">
@@ -2128,7 +2129,7 @@ be 4-octet aligned:
 
       &I-D.ietf-nvo3-geneve;
 
-      &I-D.ietf-ntp-packet-timestamps;
+      &RFC8877;
 
       &I-D.ietf-sfc-proof-of-transit;
 
