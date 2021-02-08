@@ -23,6 +23,7 @@
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY RFC8877 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8877.xml">
 <!ENTITY I-D.brockners-opsawg-ioam-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-opsawg-ioam-deployment.xml">
+<!ENTITY I-D.brockners-ippm-ioam-data-integrity SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-ippm-ioam-data-integrity.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
 <!ENTITY I-D.ioamteam-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioamteam-ippm-ioam-direct-export.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
@@ -62,7 +63,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-11" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-12" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -108,20 +109,15 @@
     </author>
 
     <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari" role="editor">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-
-      <address>
-        <postal>
-          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
-          Road</street>
-
-          <city>Bangalore, KARNATAKA 560 087</city>
-
+        <organization abbrev="Thoughtspot">Thoughtspot</organization>
+        <address>
+         <postal>
+          <street>3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR Layout</street>
+          <city>Bangalore, KARNATAKA 560 102</city>
           <country>India</country>
-        </postal>
-
-        <email>shwethab@cisco.com</email>
-      </address>
+         </postal>
+         <email>shwetha.bhandari@thoughtspot.com</email>
+        </address>
     </author>
 
     <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi" role="editor">
@@ -142,7 +138,7 @@
       </address>
     </author>
 
-    <date year="2020"/>
+    <date day="8" month="February" year="2021"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -1977,6 +1973,7 @@ be 4-octet aligned:
       plane and mitigating the leakage threat. IOAM data exporting and the way
       it is secured is outside the scope of this document.</t>
 
+
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
       add an IOAM header to packets in order to consume the resources of
@@ -1996,6 +1993,12 @@ be 4-octet aligned:
       other attacks. Thus, IOAM configuration has to be secured in a way that
       authenticates authorized users and verifies the integrity of
       configuration procedures.</t>
+
+      <t>Solutions to ensure the integrity of IOAM data fields are outside
+      the scope of this document.  <xref target="I-D.brockners-ippm-ioam-data-integrity"/>
+      discusses several methods to ensure the integrity of IOAM data fields
+      for those deployments that have a need to protect the integrity of
+      IOAM data fields.</t>
 
       <t>The current document does not define a specific IOAM encapsulation.
       It has to be noted that some IOAM encapsulation types can introduce
@@ -2022,13 +2025,20 @@ be 4-octet aligned:
 	  LAN, but spans multiple inter-connected sites (for example, using an
 	  overlay network), the inter-site links can be secured (e.g., by IPsec)
 	  in order to avoid external threats.</t>
+
+      <t>IOAM deployment considerations, including approaches to mitigate the above
+	      discussed threads and potential attacks are outside the scope of this 
+	      document. IOAM deployment considerations are discussed in 
+	      <xref target="I-D.brockners-opsawg-ioam-deployment"/>.
+      </t>
+
     </section>
 
     <section title="Acknowledgements">
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
       Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
       Nadahalli, LJ Wobker, Erik Nordmark, Vengada Prasad Govindan, Andrew
-      Yourtchenko, Aviv Kfir, Tianran Zhou and Zhenbin (Robin) for the
+      Yourtchenko, Aviv Kfir, Tianran Zhou, Zhenbin (Robin) and Greg Mirsky for the
       comments and advice.</t>
 
       <t>This document leverages and builds on top of several concepts
@@ -2147,6 +2157,8 @@ be 4-octet aligned:
       &I-D.spiegel-ippm-ioam-rawexport;
 
       &I-D.brockners-opsawg-ioam-deployment;
+
+      &I-D.brockners-ippm-ioam-data-integrity;
 
       <reference anchor="SSS"
                  target="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">
