@@ -6,6 +6,7 @@
      There has to be one entity for each item to be referenced. 
      An alternate method (rfc include) is described in the references. -->
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
@@ -21,12 +22,12 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-flags-03" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-flags-04" ipr="trust200902">
   <front>
     <title abbrev="IOAM Flags">In-situ OAM Flags</title>
 
     <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
-      <organization abbrev="">Huawei Smart Platforms iLab</organization>
+      <organization abbrev="">Huawei</organization>
 
       <address>
         <postal>
@@ -67,21 +68,16 @@
       </address>
     </author>
 
-    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-
-      <address>
-        <postal>
-          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
-          Road</street>
-
-          <city>Bangalore, KARNATAKA 560 087</city>
-
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari" role="editor">
+        <organization abbrev="Thoughtspot">Thoughtspot</organization>
+        <address>
+         <postal>
+          <street>3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR Layout</street>
+          <city>Bangalore, KARNATAKA 560 102</city>
           <country>India</country>
-        </postal>
-
-        <email>shwethab@cisco.com</email>
-      </address>
+         </postal>
+         <email>shwetha.bhandari@thoughtspot.com</email>
+        </address>
     </author>
 
     <author fullname="Ramesh Sivakolundu" initials="R." surname="Sivakolundu">
@@ -121,25 +117,15 @@
     </author>
 
     <author fullname="Aviv Kfir" initials="A." surname="Kfir">
-      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+      <organization abbrev="">Nvidia</organization>
 
       <address>
-        <postal>
-          <street>350 Oakmead Parkway, Suite 100</street>
-
-          <city>Sunnyvale, CA</city>
-
-          <code>94085</code>
-
-          <country>U.S.A.</country>
-        </postal>
-
-        <email>avivk@mellanox.com</email>
+        <email>avivk@nvidia.com</email>
       </address>
     </author>
 
     <author fullname="Barak Gafni" initials="B." surname="Gafni">
-      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+      <organization abbrev="">Nvidia</organization>
 
       <address>
         <postal>
@@ -152,7 +138,7 @@
           <country>U.S.A.</country>
         </postal>
 
-        <email>gbarak@mellanox.com</email>
+        <email>gbarak@nvidia.com</email>
       </address>
     </author>
 
@@ -194,7 +180,7 @@
       </address>
     </author>
 
-    <date year="2020"/>
+    <date year="2021"/>
 
     <area>TSV</area>
 
@@ -237,11 +223,12 @@
     </section>
 
     <section anchor="Conventions" title="Conventions">
-      <section title="Requirement Language">
+      <section title="Requirements Language">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-        document are to be interpreted as described in <xref
-        target="RFC2119"/>.</t>
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+        "OPTIONAL" in this document are to be interpreted as described in BCP
+        14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only
+        when, they appear in all capitals, as shown here.</t>
       </section>
 
       <section title="Terminology">
@@ -505,6 +492,14 @@
           security aspects of this mechanism.</t>
         </list></t>
 
+	  <t>Some of the security threats that were discussed in this document may
+	  be worse in a wide area network in which there are nested IOAM
+	  domains. For example, if there are two nested IOAM domains that use
+	  loopback, then a looped-back copy in the outer IOAM domain may be
+	  forwarded through another (inner) IOAM domain and may be subject to
+	  loopback in that (inner) IOAM domain, causing the amplification to be
+	  worse than in the conventional case.</t>
+
       <t>In order to mitigate the attacks described above, as described in
       <xref target="Performance"/> it should be possible for IOAM-enabled
       devices to selectively apply the mechanisms that use the flags defined
@@ -533,6 +528,8 @@
     <references title="Normative References">
       &RFC2119;
 
+      &RFC8174;
+	  
       &I-D.ietf-ippm-ioam-data;
     </references>
 
