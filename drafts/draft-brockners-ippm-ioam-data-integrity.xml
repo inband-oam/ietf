@@ -21,7 +21,9 @@
 <!ENTITY RFC5905 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY RFC7384 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7384.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
+<!ENTITY RFC4302 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4302.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
+<!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
@@ -74,7 +76,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-brockners-ippm-ioam-data-integrity-00"
+<rfc category="info" docName="draft-brockners-ippm-ioam-data-integrity-01"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -155,7 +157,7 @@
       </address>
     </author>
 
-    <date day="25" month="January" year="2021"/>
+    <date day="17" month="February" year="2021"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -761,6 +763,50 @@
           feasible, 32 bits for KeyID might well be feasible.</t>
         </section>
       </section>
+
+     <section title="Method 5: Using IP Authentication Header">
+        <t>The IP Authentication Header (AH) is used to provide connectionless
+   integrity and data origin authentication for IP datagrams and to provide protection against
+   replays as defined in RFC4302 <xref target="RFC4302"/>. AH provides authentication for as much
+   of the IP header as possible, by classifying and including the immutable fields in intergrity
+   calculation.  To protect the IOAM data in the IP header AH may be employed in transport mode by
+   setting up IP AH Security Association(SA) with supported integrity algorithms between IOAM encapsulating, 
+   decapsulation and transit nodes.
+   This method utilizes IP AH for integrity protection of IOAM options that are immutable enroute 
+   between IOAM entities that are required to validate the integrity of the IOAM data.
+   It is applicable to IOAM option types as follows:
+   <list style="numbers">
+   <t>IOAM Edge-to-Edge Option-Type: This IOAM option data is immutable enroute and can be integrity 
+   checked using IP AH between IOAM-encapsulating nodes and 
+   IOAM-decapsulating nodes.   </t>
+   <t> The Direct Exporting (DEX) IOAM Option Type: IOAM DEX IOAM option type is immutable enroute
+   and can be integrity checked using IP AH between IOAM-encapsulating nodes and 
+   IOAM-decapsulating nodes. For the IOAM-transit nodes, that use DEX option as a trigger to export IOAM, 
+   to validate the DEX option if the IP AH integrity algorithm negotiated during 
+   SA setup depend on shared secrets then IOAM-transit nodes may have to
+   be configured with the corresponding shared secrets.</t>
+   <t> IOAM Proof of Transit Option-Type: This IOAM option is mutable by IOAM-transit nodes enroute that
+   participate in proof of transit operation. Hence the IP AH based integrity
+   protection method does not apply.</t>
+   <t> IOAM Pre-allocated and Incremental Trace Option-Types: These IOAM options are mutable by IOAM-transit 
+   nodes encroute that participate in IOAM tracing. Hence the IP AH based integrity protection method
+   does not apply.</t>
+   </list>
+   </t>
+         <section title="Overhead consideration for Method 5">
+         <t>This method involves overhead of setting up and maintaining SA for AH 
+         IOAM-encapsulating nodes and IOAM-decapsulating nodes.
+         The anti-replay mechanism supported by IP AH must be enabled for this 
+         method to effectively protect IOAM data whose integrity and freshness needs to be guarenteed. 
+         The anti-replay mechanism of IP AH has the overhead of maintaining and validating
+         sequence numbers as part of the IP AH validation. In cases where IOAM-transit nodes 
+         have to validate IOAM Options e.g. DEX Option Type, then there will be additional overhead to
+         distribute shared secrets to the transit nodes when the integrity algorithm is based on shared
+         secrets. 
+          </t>
+        </section>
+      </section>
+
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -864,9 +910,13 @@
 
       &I-D.ietf-detnet-security;
 
+      &I-D.ietf-ippm-ioam-direct-export;
+
       &RFC7276;
 
       &RFC7384;
+
+      &RFC4302;
 
       <reference anchor="McEliece"
                  target="https://ipnpr.jpl.nasa.gov/progress_report2/42-44/44N.PDF">
