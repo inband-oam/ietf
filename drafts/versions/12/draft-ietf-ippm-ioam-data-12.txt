@@ -5,10 +5,10 @@
 ippm                                                   F. Brockners, Ed.
 Internet-Draft                                                     Cisco
 Intended status: Standards Track                        S. Bhandari, Ed.
-Expires: August 12, 2021                                     Thoughtspot
+Expires: August 25, 2021                                     Thoughtspot
                                                          T. Mizrahi, Ed.
                                                                   Huawei
-                                                        February 8, 2021
+                                                       February 21, 2021
 
 
                       Data Fields for In-situ OAM
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 12, 2021.
+   This Internet-Draft will expire on August 25, 2021.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Brockners, et al.        Expires August 12, 2021                [Page 1]
+Brockners, et al.        Expires August 25, 2021                [Page 1]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -75,7 +75,7 @@ Table of Contents
      5.1.  IOAM Data-Fields and Option-Types . . . . . . . . . . . .   6
      5.2.  IOAM-Domains and types of IOAM Nodes  . . . . . . . . . .   7
      5.3.  IOAM-Namespaces . . . . . . . . . . . . . . . . . . . . .   8
-     5.4.  IOAM Trace Option-Types . . . . . . . . . . . . . . . . .  10
+     5.4.  IOAM Trace Option-Types . . . . . . . . . . . . . . . . .  11
        5.4.1.  Pre-allocated and Incremental Trace Option-Types  . .  13
        5.4.2.  IOAM node data fields and associated formats  . . . .  17
          5.4.2.1.  Hop_Lim and node_id short format  . . . . . . . .  18
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Brockners, et al.        Expires August 12, 2021                [Page 2]
+Brockners, et al.        Expires August 25, 2021                [Page 2]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -165,7 +165,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021                [Page 3]
+Brockners, et al.        Expires August 25, 2021                [Page 3]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -221,7 +221,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021                [Page 4]
+Brockners, et al.        Expires August 25, 2021                [Page 4]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -240,7 +240,9 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
    types for in-situ OAM.  The in-situ OAM data field can be
    encapsulated in a variety of protocols, including NSH, Segment
    Routing, Geneve, IPv6, or IPv4.  Specification details for these
-   different protocols are outside the scope of this document.
+   different protocols are outside the scope of this document.  It is
+   expected that each such encapsulation will be defined in the relevant
+   working group in the IETF.
 
    Deployment domain (or scope) of in-situ OAM deployment: IOAM is a
    network domain focused feature, with "network domain" being a set of
@@ -272,16 +274,16 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
    Traffic-sets that IOAM is applied to: IOAM can be deployed on all or
    only on subsets of the live user traffic.  Using IOAM on a selected
-   set of traffic (e.g., per interface, based on an access control list
-   or flow specification defining a specific set of traffic, etc.) could
 
 
 
-Brockners, et al.        Expires August 12, 2021                [Page 5]
+Brockners, et al.        Expires August 25, 2021                [Page 5]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
+   set of traffic (e.g., per interface, based on an access control list
+   or flow specification defining a specific set of traffic, etc.) could
    be useful in deployments where the cost of processing IOAM-Data-
    Fields by encapsulating, transit, or decapsulating node(s) might be a
    concern from a performance or operational perspective.  Thus limiting
@@ -327,16 +329,17 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
    Option-Types, different IOAM-Data-Fields are defined.  IOAM-Data-
    Fields can be encapsulated into a variety of protocols, such as NSH,
    Geneve, IPv6, etc.  The definition of how IOAM-Data-Fields are
-   encapsulated into other protocols is outside the scope of this
-   document.
 
 
 
 
-Brockners, et al.        Expires August 12, 2021                [Page 6]
+Brockners, et al.        Expires August 25, 2021                [Page 6]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
+
+   encapsulated into other protocols is outside the scope of this
+   document.
 
    This document defines four IOAM-Option-Types:
 
@@ -383,17 +386,17 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
    An "IOAM transit node" updates one or more of the IOAM-Data-Fields.
    If both the Pre-allocated and the Incremental Trace Option-Types are
-   present in the packet, each IOAM transit node based on configuration
-   and available implementation of IOAM populates IOAM trace data in
-   either Pre-allocated or Incremental Trace Option-Type but not both.
 
 
 
-Brockners, et al.        Expires August 12, 2021                [Page 7]
+Brockners, et al.        Expires August 25, 2021                [Page 7]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
+   present in the packet, each IOAM transit node based on configuration
+   and available implementation of IOAM populates IOAM trace data in
+   either Pre-allocated or Incremental Trace Option-Type but not both.
    A transit node MUST ignore IOAM-Option-Types that it does not
    understand.  A transit node MUST NOT add new IOAM-Option-Types to a
    packet, MUST NOT remove IOAM-Option-Types from a packet, and MUST NOT
@@ -438,17 +441,19 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
    An IOAM-Namespace is identified by a 16-bit namespace identifier
    (Namespace-ID).  IOAM-Namespace identifiers MUST be present and
+
+
+
+
+Brockners, et al.        Expires August 25, 2021                [Page 8]
+
+Internet-Draft           In-situ OAM Data Fields           February 2021
+
+
    populated in all IOAM-Option-Types.  The Namespace-ID value is
    divided into two sub-ranges:
 
    o  An operator-assigned range from 0x0001 to 0x7FFF
-
-
-
-Brockners, et al.        Expires August 12, 2021                [Page 8]
-
-Internet-Draft           In-situ OAM Data Fields           February 2021
-
 
    o  An IANA-assigned range from 0x8000 to 0xFFFF
 
@@ -493,19 +498,19 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
       (e.g. if an operator wishes to use different node identifiers for
       different IOAM layers, even within the same device; or node
       identifiers might not be unique for other organizational reasons,
+
+
+
+Brockners, et al.        Expires August 25, 2021                [Page 9]
+
+Internet-Draft           In-situ OAM Data Fields           February 2021
+
+
       such as after a merger of two formerly separated organizations),
       the combination of node_id and Namespace-ID will always be unique.
       Similarly, IOAM-Namespaces can be used to define how certain IOAM-
       Data-Fields are interpreted: IOAM offers three different timestamp
       format options.  The Namespace-ID can be used to determine the
-
-
-
-Brockners, et al.        Expires August 12, 2021                [Page 9]
-
-Internet-Draft           In-situ OAM Data Fields           February 2021
-
-
       timestamp format.  IOAM-Data-Fields (e.g. buffer occupancy) which
       do not have a unit associated are to be interpreted within the
       context of a IOAM-Namespace.
@@ -546,6 +551,17 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
          of the deployment, the captured IOAM-Data-Fields of the two
          IOAM-Namespaces need to be correlated.
 
+
+
+
+
+
+
+Brockners, et al.        Expires August 25, 2021               [Page 10]
+
+Internet-Draft           In-situ OAM Data Fields           February 2021
+
+
 5.4.  IOAM Trace Option-Types
 
    "IOAM tracing data" is expected to be collected at every IOAM transit
@@ -554,14 +570,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
    deployment all nodes in an IOAM-Domain would participate in IOAM and
    thus be IOAM transit nodes, IOAM encapsulating or IOAM decapsulating
    nodes.  If not all nodes within a domain support IOAM functionality
-
-
-
-Brockners, et al.        Expires August 12, 2021               [Page 10]
-
-Internet-Draft           In-situ OAM Data Fields           February 2021
-
-
    as defined in this document, IOAM tracing information (i.e., node
    data, see below) will only be collected on those nodes which support
    IOAM functionality as defined in this document.  Nodes which do not
@@ -602,6 +610,14 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
    Incremental Trace-Option:  This trace option is defined as a
       container of node data fields where each node allocates and pushes
       its node data immediately following the option header.  This type
+
+
+
+Brockners, et al.        Expires August 25, 2021               [Page 11]
+
+Internet-Draft           In-situ OAM Data Fields           February 2021
+
+
       of trace recording is useful for some of the hardware
       implementations as it eliminates the need for the transit network
       elements to read the full array in the option and allows for
@@ -610,14 +626,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
       Option-Type.  Based on operational state and configuration, the
       IOAM encapsulating node sets the fields in the Option-Type that
       control what IOAM-Data-Fields have to be collected and how large
-
-
-
-Brockners, et al.        Expires August 12, 2021               [Page 11]
-
-Internet-Draft           In-situ OAM Data Fields           February 2021
-
-
       the node data list can grow.  IOAM transit nodes push their node
       data to the node data list, decrease the remaining length
       available to subsequent nodes and adjust the lengths and possibly
@@ -657,6 +665,15 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
       feasible and expected, though it is important that all devices of
       an in-situ OAM domain follow the same definition.
 
+
+
+
+
+Brockners, et al.        Expires August 25, 2021               [Page 12]
+
+Internet-Draft           In-situ OAM Data Fields           February 2021
+
+
    o  Generic data: Format-free information where syntax and semantic of
       the information is defined by the operator in a specific
       deployment.  For a specific IOAM-Namespace, all IOAM nodes have to
@@ -665,14 +682,6 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
       at the time the packet was processed), buffer queue fill level or
       cache fill level at the time the packet was processed, or even a
       battery charge level.
-
-
-
-
-Brockners, et al.        Expires August 12, 2021               [Page 12]
-
-Internet-Draft           In-situ OAM Data Fields           February 2021
-
 
    o  Information to detect whether IOAM trace data was added at every
       hop or whether certain hops in the domain weren't IOAM transit
@@ -716,16 +725,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-
-
-
-
-
-
-
-
-
-Brockners, et al.        Expires August 12, 2021               [Page 13]
+Brockners, et al.        Expires August 25, 2021               [Page 13]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -781,7 +781,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 14]
+Brockners, et al.        Expires August 25, 2021               [Page 14]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -837,7 +837,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 15]
+Brockners, et al.        Expires August 25, 2021               [Page 15]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -893,7 +893,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 16]
+Brockners, et al.        Expires August 25, 2021               [Page 16]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -949,7 +949,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 17]
+Brockners, et al.        Expires August 25, 2021               [Page 17]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1005,7 +1005,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 18]
+Brockners, et al.        Expires August 25, 2021               [Page 18]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1061,7 +1061,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 19]
+Brockners, et al.        Expires August 25, 2021               [Page 19]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1117,7 +1117,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 20]
+Brockners, et al.        Expires August 25, 2021               [Page 20]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1173,7 +1173,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 21]
+Brockners, et al.        Expires August 25, 2021               [Page 21]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1219,8 +1219,8 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
    the context of an IOAM-Namespace and/or node-id if used.  The authors
    acknowledge that in some operational cases there is a need for the
    units to be consistent across a packet path through the network,
-   hence RECOMMEND the implementations to use standard units such as
-   Bytes.
+   hence it is RECOMMENDED for implementations to use standard units
+   such as Bytes.
 
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1229,7 +1229,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 22]
+Brockners, et al.        Expires August 25, 2021               [Page 22]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1285,7 +1285,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 23]
+Brockners, et al.        Expires August 25, 2021               [Page 23]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1341,7 +1341,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 24]
+Brockners, et al.        Expires August 25, 2021               [Page 24]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1397,7 +1397,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 25]
+Brockners, et al.        Expires August 25, 2021               [Page 25]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1453,7 +1453,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 26]
+Brockners, et al.        Expires August 25, 2021               [Page 26]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1509,7 +1509,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 27]
+Brockners, et al.        Expires August 25, 2021               [Page 27]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1565,7 +1565,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 28]
+Brockners, et al.        Expires August 25, 2021               [Page 28]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1621,7 +1621,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 29]
+Brockners, et al.        Expires August 25, 2021               [Page 29]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1677,7 +1677,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 30]
+Brockners, et al.        Expires August 25, 2021               [Page 30]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1733,7 +1733,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 31]
+Brockners, et al.        Expires August 25, 2021               [Page 31]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1789,7 +1789,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 32]
+Brockners, et al.        Expires August 25, 2021               [Page 32]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1845,7 +1845,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 33]
+Brockners, et al.        Expires August 25, 2021               [Page 33]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1901,7 +1901,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 34]
+Brockners, et al.        Expires August 25, 2021               [Page 34]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -1957,7 +1957,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 35]
+Brockners, et al.        Expires August 25, 2021               [Page 35]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2013,7 +2013,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 36]
+Brockners, et al.        Expires August 25, 2021               [Page 36]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2069,7 +2069,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 37]
+Brockners, et al.        Expires August 25, 2021               [Page 37]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2078,14 +2078,14 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
    0xFFFF are to be assigned via the "Expert Review" policy defined in
    [RFC8126].  Upon a new allocation request, the responsible AD will
    appoint a designated expert, who will review the allocation request.
-   The expert will post the request on the IPPM mailing list, and
-   possibly on other relevant mailing lists, to allow for community
-   feedback.  Based on the review, the expert will either approve or
-   deny the request.  The intention is that any allocation will be
-   accompanied by a published RFC.  But in order to allow for the
-   allocation of values prior to the RFC being approved for publication,
-   the designated expert can approve allocations once it seems clear
-   that an RFC will be published.
+   The expert will post the request on the mailing list of the IPPM
+   working group in the IETF (ippm@ietf.org), and possibly on other
+   relevant mailing lists, to allow for community feedback.  Based on
+   the review, the expert will either approve or deny the request.  The
+   intention is that any allocation will be accompanied by a published
+   RFC.  But in order to allow for the allocation of values prior to the
+   RFC being approved for publication, the designated expert can approve
+   allocations once it seems clear that an RFC will be published.
 
    0: default namespace (known to all IOAM nodes)
 
@@ -2125,7 +2125,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 38]
+Brockners, et al.        Expires August 25, 2021               [Page 38]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2181,7 +2181,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 39]
+Brockners, et al.        Expires August 25, 2021               [Page 39]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2237,7 +2237,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 40]
+Brockners, et al.        Expires August 25, 2021               [Page 40]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2293,7 +2293,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 41]
+Brockners, et al.        Expires August 25, 2021               [Page 41]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2349,7 +2349,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 42]
+Brockners, et al.        Expires August 25, 2021               [Page 42]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2392,12 +2392,12 @@ Contributors' Addresses
 
 
       Barak Gafni
-      Mellanox Technologies, Inc.
+      Nvidia
       350 Oakmead Parkway, Suite 100
       Sunnyvale, CA  94085
       U.S.A.
 
-      Email: gbarak@mellanox.com
+      Email: gbarak@nvidia.com
 
 
       Jennifer Lemon
@@ -2405,7 +2405,7 @@ Contributors' Addresses
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 43]
+Brockners, et al.        Expires August 25, 2021               [Page 43]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2461,7 +2461,7 @@ Internet-Draft           In-situ OAM Data Fields           February 2021
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 44]
+Brockners, et al.        Expires August 25, 2021               [Page 44]
 
 Internet-Draft           In-situ OAM Data Fields           February 2021
 
@@ -2517,4 +2517,4 @@ Authors' Addresses
 
 
 
-Brockners, et al.        Expires August 12, 2021               [Page 45]
+Brockners, et al.        Expires August 25, 2021               [Page 45]

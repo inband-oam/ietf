@@ -12,14 +12,15 @@
 <!ENTITY RFC5036 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5036.xml">
 <!ENTITY RFC4193 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4193.xml">
 <!ENTITY RFC1772 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1772.xml">
-<!ENTITY I-D.draft-ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-ippm-ioam-data-01.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc tocompact="no"?>
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-04"
+<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-05"
      ipr="trust200902">
   <front>
     <title abbrev="In-situ OAM IPv6 encapsulation">In-situ OAM IPv6
@@ -254,7 +255,7 @@
       </address>
     </author>
 
-    <date day="1" month="November" year="2020"/>
+    <date day="21" month="February" year="2021"/>
 
     <area>Transport Area</area>
 
@@ -376,36 +377,34 @@
           Option-Type-specific data.</t>
         </list></t>
 
-      <t>In-situ OAM Options are inserted as Option data as follows:<list
-          style="numbers">
+      <t>In-situ OAM Option-Types are inserted as Option data as follows:<list style="numbers">
           <t>Pre-allocated Trace Option: The in-situ OAM Preallocated Trace
-          option defined in <xref target="I-D.ietf-ippm-ioam-data"/> is
-          represented as an IPv6 option in Hop-by-Hop extension header: <list
+          Option-Type defined in <xref target="I-D.ietf-ippm-ioam-data"/> is
+          represented as an IPv6 option in the Hop-by-Hop extension header: <list
               style="hanging">
               <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
               type of option. xxxxx=TBD.</t>
 
-              <t hangText="IOAM Type:">IOAM Pre-allocated Trace Option
-              Type.</t>
+              <t hangText="IOAM Option-Type:">IOAM Pre-allocated Trace Option-Type.</t>
             </list></t>
 
           <t>Incremental Trace Option: The in-situ OAM Incremental Trace
-          option defined in <xref target="I-D.ietf-ippm-ioam-data"/> is
-          represented as an IPv6 option in Hop-by-Hop extension header: <list
+          Option-Type defined in <xref target="I-D.ietf-ippm-ioam-data"/> is
+          represented as an IPv6 option in the Hop-by-Hop extension header: <list
               style="hanging">
               <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
               type of option. xxxxx=TBD.</t>
 
-              <t hangText="IOAM Type:">IOAM Incremental Trace Option Type.</t>
+              <t hangText="IOAM Option-Type:">IOAM Incremental Trace Option-Type.</t>
             </list></t>
 
-          <t>Proof of Transit Option: The in-situ OAM POT option defined in
+          <t>Proof of Transit Option: The in-situ OAM POT Option-Type defined in
           <xref target="I-D.ietf-ippm-ioam-data"/> is represented as an IPv6
-          option in Hop-by-Hop extension header: <list style="hanging">
+          option in the Hop-by-Hop extension header: <list style="hanging">
               <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
               type of option. xxxxx=TBD.</t>
 
-              <t hangText="IOAM Type:">IOAM POT Option Type.</t>
+              <t hangText="IOAM Option-Type:">IOAM POT Option-Type.</t>
             </list></t>
 
           <t>Edge to Edge Option: The in-situ OAM E2E option defined in <xref
@@ -414,8 +413,18 @@
               <t hangText="Option Type:">000xxxxx 8-bit identifier of the IOAM
               type of option. xxxxx=TBD.</t>
 
-              <t hangText="IOAM Type:">IOAM E2E Option Type.</t>
+              <t hangText="IOAM Option-Type:">IOAM E2E Option-Type.</t>
             </list></t>
+
+          <t>Direct Export (DEX) Option: The in-situ OAM Direct Export Option-Type defined in <xref
+          target="I-D.ietf-ippm-ioam-direct-export"/> is represented as an IPv6 option
+          in the Hop-by-Hop extension header: <list style="hanging">
+              <t hangText="Option Type:">000xxxxx 8-bit identifier of the IOAM
+              type of option. xxxxx=TBD.</t>
+
+              <t hangText="IOAM Option-Type:">IOAM Direct Export (DEX) Option-Type.</t>
+            </list></t>
+
         </list>All the in-situ OAM IPv6 options defined here have alignment
       requirements. Specifically, they all require 4n alignment. This ensures
       that fields specified in <xref target="I-D.ietf-ippm-ioam-data"/> are
@@ -425,6 +434,10 @@
       every hop, the Trace-Type for Incremental Trace Option in IPv6 MUST be
       selected such that the IOAM node data length is a multiple of
       8-octets.</t>
+
+      <t>IPv6 options can have a maximum length of 255 octets. Consequently,
+	      the total lenght of IOAM Option-Types including all data fields
+	      is also limited to 255 octets when encapsulated into IPv6.</t>
     </section>
 
     <section title="IOAM Deployment In IPv6 Networks">
@@ -645,7 +658,10 @@
 
       &RFC8174;
 
-      &I-D.draft-ietf-ippm-ioam-data;
+      &I-D.ietf-ippm-ioam-data;
+
+      &I-D.ietf-ippm-ioam-direct-export;
+
     </references>
 
     <references title="Informative References">
