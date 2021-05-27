@@ -612,9 +612,10 @@
             IOAM encapsulating node sets the fields in the Option-Type that
             control what IOAM-Data-Fields have to be collected and how large
             the node data list can grow. IOAM transit nodes push their node
-            data to the node data list, decrease the remaining length
-            available to subsequent nodes and adjust the lengths and possibly
-            checksums in outer headers.</t>
+			data to the node data list subject to any protocol constraints of 
+			the encapsulating layer. They then decrease the remaining length
+			available to subsequent nodes and adjust the lengths and possibly
+			checksums in outer headers.</t>
           </list></t>
 
         <t>A particular implementation of IOAM MAY choose to support only one
@@ -624,9 +625,9 @@
         with either the Incremental Trace-Option or the Pre-allocated
         Trace-Option could result in both Option-Types being present in a
         packet. Given that the operator knows which equipment is deployed in a
-        particular IOAM, the operator will decide by means of configuration
-        which type(s) of trace options will be used for a particular
-        domain.</t>
+        particular IOAM domain, the operator will decide by means of 
+		configuration which type(s) of trace options will be used for a 
+		particular domain.</t>
 
         <t>Every node data entry holds information for a particular IOAM
         transit node that is traversed by a packet. The IOAM decapsulating
