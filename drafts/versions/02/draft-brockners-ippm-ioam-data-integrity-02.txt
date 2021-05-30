@@ -67,45 +67,45 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   3.  Threat Analysis . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  Threat Analysis . . . . . . . . . . . . . . . . . . . . . . .   5
      3.1.  Modification: IOAM Data Fields  . . . . . . . . . . . . .   5
-     3.2.  Modification: IOAM Option-Type Headers  . . . . . . . . .   5
+     3.2.  Modification: IOAM Option-Type Headers  . . . . . . . . .   6
      3.3.  Injection: IOAM Data Fields . . . . . . . . . . . . . . .   6
      3.4.  Injection: IOAM Option-Type Headers . . . . . . . . . . .   6
-     3.5.  Replay  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     3.5.  Replay  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      3.6.  Management and Exporting  . . . . . . . . . . . . . . . .   7
      3.7.  Delay . . . . . . . . . . . . . . . . . . . . . . . . . .   7
      3.8.  Threat Summary  . . . . . . . . . . . . . . . . . . . . .   8
    4.  Methods of providing integrity to IOAM data fields  . . . . .   8
-     4.1.  Space optimized symmetric key based signing of trace data   9
-       4.1.1.  Overhead consideration  . . . . . . . . . . . . . . .   9
-     4.2.  Space optimized assymmetric key based signing of trace
-           data  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
-       4.2.1.  Overhead consideration  . . . . . . . . . . . . . . .  10
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  10
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  10
-     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  10
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+     4.1.  Integrity Protected IOAM Options  . . . . . . . . . . . .   9
+     4.2.  Integrity Protected IOAM Options sub-header . . . . . . .   9
+     4.3.  Space optimized symmetric key based signing of trace data  11
+       4.3.1.  Overhead consideration  . . . . . . . . . . . . . . .  12
+     4.4.  Space optimized asymmetric key based signing of trace
+           data  . . . . . . . . . . . . . . . . . . . . . . . . . .  12
+       4.4.1.  Overhead consideration  . . . . . . . . . . . . . . .  12
+   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
+     5.1.  IOAM Option-Type Registry . . . . . . . . . . . . . . . .  13
+     5.2.  IOAM Integrity Protection Algorithm Suite Registry  . . .  13
+   6.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  14
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  14
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  14
    Appendix A.  Appendix - Alternate methods for integrity
-                protection and validation  . . . . . . . . . . . . .  12
+                protection and validation  . . . . . . . . . . . . .  17
      A.1.  Method 1: Using asymmetric keys for signing node trace
-           data  . . . . . . . . . . . . . . . . . . . . . . . . . .  13
-       A.1.1.  Overhead consideration for Method 1 . . . . . . . . .  14
+           data  . . . . . . . . . . . . . . . . . . . . . . . . . .  18
+       A.1.1.  Overhead consideration for Method 1 . . . . . . . . .  19
      A.2.  Method 2: Using symmetric keys for signing node trace
-           data  . . . . . . . . . . . . . . . . . . . . . . . . . .  15
-       A.2.1.  Overhead consideration for Method 2 . . . . . . . . .  15
+           data  . . . . . . . . . . . . . . . . . . . . . . . . . .  19
+       A.2.1.  Overhead consideration for Method 2 . . . . . . . . .  19
      A.3.  Method 4: Dynamic symmetric keys based signing of trace
-           data  . . . . . . . . . . . . . . . . . . . . . . . . . .  15
-       A.3.1.  Overhead consideration for Method 4 . . . . . . . . .  17
-     A.4.  Method 5: Using IP Authentication Header  . . . . . . . .  17
-       A.4.1.  Overhead consideration for Method 5 . . . . . . . . .  18
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
-
-
-
-
+           data  . . . . . . . . . . . . . . . . . . . . . . . . . .  20
+       A.3.1.  Overhead consideration for Method 4 . . . . . . . . .  22
+     A.4.  Method 5: Leverage IP Authentication Header . . . . . . .  22
+       A.4.1.  Overhead consideration for Method 5 . . . . . . . . .  23
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  23
 
 
 
@@ -185,6 +185,15 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
    IOAM data fields is a concern.  This document proposes several
    methods to achieve integrity protection for IOAM data fields.
 
+   The discussion of the different methods to protect the integrity of
+   IOAM data fields focuses mostly on protecting the integrity of IOAM
+   trace data fields, though the outlined methods are not limited to
+   protecting IOAM trace data fields only.  The methods could be applied
+   to other IOAM Option-Types, such as the E2E Option-Type or the DEX
+   Option-Type.  If methods only apply to a specific set of IOAM Option-
+   Types, like e.g. the method 5 discussed below, those limits are
+   discussed and explained explicitly.
+
 2.  Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -210,6 +219,13 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
 
    SFC:       Service Function Chain
 
+
+
+Brockners, et al.        Expires October 9, 2021                [Page 4]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
 3.  Threat Analysis
 
    This section presents a threat analysis of integrity-related threats
@@ -217,14 +233,6 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
    to be independent of the lower layer protocols; it is assumed that
    threats at other layers are handled by security mechanisms that are
    deployed at these layers.
-
-
-
-
-Brockners, et al.        Expires October 9, 2021                [Page 4]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
 
    This document is focused on integrity protection for IOAM data
    fields.  Thus the threat analysis includes threats that are related
@@ -265,6 +273,15 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
       the paths in the network, the existence of faulty nodes and their
       location, and the network performance.
 
+
+
+
+
+Brockners, et al.        Expires October 9, 2021                [Page 5]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
 3.2.  Modification: IOAM Option-Type Headers
 
    Threat
@@ -274,13 +291,6 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
       behavior of nodes processing IOAM data fields along the path.
 
    Impact
-
-
-
-Brockners, et al.        Expires October 9, 2021                [Page 5]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
 
       Changing the header of IOAM Option-Types may have several
       implications.  An attacker can maliciously increase the processing
@@ -316,6 +326,18 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
 
       This attack and it impacts are similar to Section 3.2.
 
+
+
+
+
+
+
+
+Brockners, et al.        Expires October 9, 2021                [Page 6]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
 3.5.  Replay
 
    Threat
@@ -327,16 +349,6 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
       on-path and off-path attackers.
 
    Impact
-
-
-
-
-
-
-Brockners, et al.        Expires October 9, 2021                [Page 6]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
 
       As with previous threats, this threat may create a false image of
       a nonexistent failure, or may overload nodes which process IOAM
@@ -374,6 +386,14 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
       packets that include IOAM data fields in order to create the false
       illusion of congestion.  Delay attacks are well known in the
       context of deterministic networks [I-D.ietf-detnet-security] and
+
+
+
+Brockners, et al.        Expires October 9, 2021                [Page 7]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
       synchronization [RFC7384], and may be somewhat mitigated in these
       environments by using redundant paths in a way that is resilient
       to an attack along one of the paths.  This approach does not
@@ -384,15 +404,6 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
       document.
 
    Impact
-
-
-
-
-
-Brockners, et al.        Expires October 9, 2021                [Page 7]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
 
       Since IOAM can be applied to a fraction of the traffic, an
       attacker can detect and delay only the packets that include IOAM
@@ -424,20 +435,9 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
 
 4.  Methods of providing integrity to IOAM data fields
 
-   This section describes enhancements to IOAM Trace-Option header to
-   carry a "Trace Signature" field.  This can be achieved using
-   symmetric or assymetric key based signatures as described below sub-
-   sections.
-
-    0                   1                   2                   3
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |        Namespace-ID           |NodeLen  | Flags | RemainingLen|
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |               IOAM-Trace-Type                 |  Reserved     |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                      Trace Signature                          ~
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   This section describes enhancements to IOAM Options to carry a
+   intergrity data fields.  This can be achieved using symmetric or
+   asymetric key based signatures as described below sub-sections.
 
 
 
@@ -450,53 +450,53 @@ Brockners, et al.        Expires October 9, 2021                [Page 8]
 Internet-Draft         IOAM Data Fields Integrity             April 2021
 
 
-4.1.  Space optimized symmetric key based signing of trace data
+4.1.  Integrity Protected IOAM Options
 
-   This method assumes that symmetric keys have been distributed to the
-   respective nodes as well as the Validator (the Validator receives all
-   the keys).  The details of the mechanisms of how keys are distributed
-   are outside the scope of this document.  The "Trace Signature" field
-   is populated as follows:
+   Each of the IOAM Options defined in [I-D.ietf-ippm-ioam-data] are
+   extended to include Integrity Protected(IP) options by allocating the
+   following IOAM Option-Type in the IOAM Option-Type registry.
 
-   1.  The first node creates a seed and sign/HMAC over the hash of its
-       node_data_list[x], the seed and its symmetric key.  The seed can
-       be included as a field in first node data or the seed can be the
-       trailer to the trace option.  The resulting HMAC/signature is
-       included in the Trace Signature field.
+   64 IOAM Pre-allocated Trace Intergrity Protected Option-Type
+      corresponds to IOAM Pre-allocated Trace Option-Type with integrity
+      protection.
 
-   2.  Subsequent nodes will update the Trace Signature field by
-       creating a signature/HMAC of data where the data is [Trace
-       Signature || its node_data_list[x] hash] with its symmetric key.
+   65 IOAM Incremental Trace Intergrity Protected Option-Type
+      corresponds to IOAM Incremental Trace Option-Type with integrity
+      protection.
 
-   3.  The Validator will iteratively recreate the Trace Signature over
-       the node data trace fields collected and matches the Trace
-       Signature field to validate the trace data integrity.
+   66 IOAM POT Intergrity Protected Option-Type corresponds to IOAM POT
+      Option-Type with integrity protection.
 
-4.1.1.  Overhead consideration
+   67 IOAM E2E Intergrity Protected Option-Type corresponds to IOAM E2E
+      Option-Type with integrity protection.
 
-   Trace Signature would consume 16 or 32 bytes - though with this
-   method the Trace Signature is only carried once for the entire
-   packet.
+4.2.  Integrity Protected IOAM Options sub-header
 
-4.2.  Space optimized assymmetric key based signing of trace data
+   The integrity data sub-header that will be included in IOAM Integrity
+   Protected Options is defined as follows:
 
-   This method assumes that assymmetric keys have been generated per
-   IOAM node and the respective nodes can access their keys.  The
-   Validator receives all the public keys.  The details of the
-   mechanisms of how keys are generated and shared are outside the scope
-   of this document.  The "Trace Signature" field is populated as
-   follows:
 
-   1.  The first node creates a seed and signs over the hash of its
-       node_data_list[x], the seed and its private key.  The seed can be
-       included as a field in first node data or the seed can be the
-       trailer to the trace option.  The resulting signature is included
-       in the Trace Signature field.
+        0                   1                   2                   3
+       0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |Signature-suite|  Nonce length |         Reserved.             |
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                        Nonce                                  ~
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+      |                       Signature                               ~
+      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   2.  Subsequent nodes will update the Trace Signature field by
-       creating a signature of data where the data is [Trace
-       Signature || its node_data_list[x] hash] with its private key.
 
+
+   Signature-suite:  8-bit defines the algorithms used to compute digest
+      and signature over the Option header and data excluding the
+      Signature field.
+
+   Nonce length:  8-bit unsigned integer.  This field specifies the
+      length of Nonce field in octets.
+
+   Reserved:  16-bit Reserved field MUST be set to zero upon
+      transmission and ignored upon receipt.
 
 
 
@@ -506,21 +506,229 @@ Brockners, et al.        Expires October 9, 2021                [Page 9]
 Internet-Draft         IOAM Data Fields Integrity             April 2021
 
 
-   3.  The Validator will iteratively validate the Trace Signature and
-       the node data trace fields collected using the public keys of the
-       nodes in reverse order of the nodes in the node-list.
+   Nonce:  Variable length field with length specified in Nonce length.
 
-4.2.1.  Overhead consideration
+   Signature:  is the digital signature value generated by the method
+      and algorithm specified by Signature-suite.
 
-   Trace Signature would consume 64 - 256 bytes based on the algorithm
-   employed - though with this method the Trace Signature is only
+   The Integrity sub-header will follow the IOAM Option header when the
+   IOAM Option Type is Intergrity Protected Option.  Pre-allocated and
+   incremental Trace option headers are as defined in
+   [I-D.ietf-ippm-ioam-data].  When IOAM Option Type is set to IOAM Pre-
+   allocated Trace Intergrity Protected Option-Type or IOAM Incremental
+   Trace Intergrity Protected Option-Type then Integrity Protection
+   subheader follows the original IOAM Option Type header: :
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |        Namespace-ID           |NodeLen  | Flags | RemainingLen|
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |               IOAM-Trace-Type                 |  Reserved     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Signature-suite|  Nonce length |         Reserved.             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Nonce                                  ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Signature                               ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   IOAM POT option header as defined in [I-D.ietf-ippm-ioam-data] is
+   followed by Integrity Protection subheader when IOAM Option Type is
+   set to IOAM POT Intergrity Protected Option-Type:
+
+     0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |       Namespace-ID            |IOAM POT Type  | IOAM POT flags|
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Signature-suite|  Nonce length |         Reserved.             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Nonce                                  ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Signature                               ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+   IOAM E2E option header as defined in [I-D.ietf-ippm-ioam-data] is
+   followed by Integrity Protection subheader when IOAM Option Type is
+   set to IOAM E2E Intergrity Protected Option-Type:
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 10]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |        Namespace-ID           |         IOAM-E2E-Type         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Signature-suite|  Nonce length |         Reserved.             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Nonce                                  ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Signature                               ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+4.3.  Space optimized symmetric key based signing of trace data
+
+   This method assumes that symmetric keys have been distributed to the
+   respective nodes as well as the Validator (the Validator receives all
+   the keys).  The details of the mechanisms of how keys are distributed
+   are outside the scope of this document.  The "Trace Signature" field
+   is populated as follows:
+
+   1.  The first node creates a nonce and signature over the hash of
+       IOAM Option excluding the Signature field, the nonce and its
+       symmetric key.  The nonce is included as a field in Integrity
+       Protection sub-header of the corresponding IOAM Option.  The
+       resulting signature is included in the corresponding Signature
+       field.
+
+   2.  Intermediate nodes will update the Signature field by creating a
+       signature of data where the data is [Signature ||
+       hash(node_data_list[x])] with its symmetric key in case of IOAM
+       Trace Integrity Protected Options.  Intermediate nodes updating
+       IOAM POT Option will update the Signature field by creating a
+       signature of data where the data is [Signature || hash(IOAM POT
+       OPTION excluding Signature field)] with its symmetric key in case
+       of IOAM POT Integrity Protected Option.
+
+   3.  The Validator will iteratively recreate the Signature over the
+       IOAM Option fields collected and matches the Signature field to
+       validate the data integrity.
+
+   This method recommend use of the following algorithms:
+
+   1.  The algorithm to calculate signature using symmetric key MUST be
+       Advanced Encryption Standard (AES) AES-256.  [AES]
+       [NIST.800-38D].
+
+   2.  The digest/hash algorithm used MUST be SHA-256 [SHS].
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 11]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
+4.3.1.  Overhead consideration
+
+   The Signature would consume 32 bytes with AES-256 - though with this
+   method the Signature is only carried once for the entire packet.
+
+4.4.  Space optimized asymmetric key based signing of trace data
+
+   This method assumes that asymmetric keys have been generated per IOAM
+   node and the respective nodes can access their keys.  The Validator
+   receives all the public keys.  The details of the mechanisms of how
+   keys are generated and shared are outside the scope of this document.
+   The " Signature" field is populated as follows:
+
+   1.  The first node creates a nonce and signs over the hash of IOAM
+       Option it populates excluding the Signature field in the option,
+       the nonce and its private key.  The resulting signature is
+       included in the Signature field.
+
+   2.  Intermediate nodes will update the Signature field by creating a
+       signature of data where the data is [Signature ||
+       hash(node_data_list[x])] with its private key in case of IOAM
+       Trace Integrity Protected Options.  Intermediate nodes updating
+       IOAM POT Option will update the Signature field by creating a
+       signature of data where the data is [Signature || hash(IOAM POT
+       OPTION excluding Signature field)] with its private key in case
+       of IOAM POT Integrity Protected Option.
+
+   3.  The Validator will iteratively recreate the Signature over the
+       IOAM Option fields collected and matches the Signature field to
+       validate the data integrity using public keys of the IOAM nodes.
+
+   This method recommend use of the following algorithms:
+
+   1.  The signature algorithm used MUST be the Elliptic Curve Digital
+       Signature Algorithm (ECDSA) with curve P-256 [RFC6090] [DSS].
+
+   2.  The digest/hash algorithm used MUST be SHA-256 [SHS].
+
+4.4.1.  Overhead consideration
+
+   The Signature would consume 32 bytes based on the SHA-256 ECDSA P-256
+   algorithm employed - though with this method the Signature is only
    carried once for the entire packet.
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 12]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
 
 5.  IANA Considerations
 
-   This document is to support the IPPM working group to design and
-   specify a solution for protecting the integrity of IOAM data fields.
-   It does not include any requests to IANA.
+5.1.  IOAM Option-Type Registry
+
+   The following code points are defined in this draft in "IOAM Option-
+   Type Registry" :
+
+   64 IOAM Pre-allocated Trace Intergrity Protected Option-Type
+
+   65 IOAM Incremental Trace Intergrity Protected Option-Type
+
+   66 IOAM POT Intergrity Protected Option-Type
+
+   67 IOAM E2E Intergrity Protected Option-Type
+
+5.2.  IOAM Integrity Protection Algorithm Suite Registry
+
+   "IOAM Integrity Protection Algorithm Suite Registry" in the "In-Situ
+   OAM (IOAM) Protocol Parameters" group.  The one-octet "IOAM Integrity
+   Protection Algorithm Suite Registry" identifiers assigned by IANA
+   identify the digest algorithm and signature algorithm used in the
+   Signature Suite Identifier field.  IANA has registered following
+   algorithm suite identifiers for the digest algorithm and for the
+   signature algorithm.
+
+              IOAM Integrity Protection Algorithm Suite Registry
+
+        Algorithm    Digest       Signature    Specification
+        Suite        Algorithm    Algorithm    Pointer
+        Identifier
+      +------------+------------+-------------+-----------------------+
+      | 0x0        | Reserved   | Reserved    | This document         |
+      +------------+------------+-------------+-----------------------+
+      | 0x1        | SHA-256    | ECDSA P-256 | [SHS] [DSS] [RFC6090] |
+      |            |            |             | This document         |
+      +------------+------------+-------------+-----------------------+
+      | 0x2        | SHA-256    | AES-256     | [AES] [NIST.800-38D]  |
+      |            |            |             | This document         |
+      +------------+------------+-------------+-----------------------+
+      | 0xEF-0xFF  | Unassigned | Unassigned  |                       |
+      +------------+------------+-------------+-----------------------+
+
+   Future assignments are to be made using the Standards Action process
+   defined in [RFC8126].  Assignments consist of the one-octet algorithm
+   suite identifier value and the associated digest algorithm name and
+   signature algorithm name.
+
+
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 13]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
 
 6.  Security Considerations
 
@@ -548,55 +756,67 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
 
 8.2.  Informative References
 
+   [AES]      National Institute of Standards and Technology, "Advanced
+              Encryption Standard (AES)",  FIPS PUB 197, 2001,
+              <http://csrc.nist.gov/publications/fips/fips197/fips-
+              197.pdf>.
+
    [BLS]      Wikipedia, "BLS (Boneh-Lynn-Shacham) digital signature",
               2021,
               <https://en.wikipedia.org/wiki/BLS_digital_signature>.
 
-
-
-
-
-
-Brockners, et al.        Expires October 9, 2021               [Page 10]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
+   [DSS]      National Institute of Standards and Technology, "Digital
+              Signature Standard (DSS)",  NIST FIPS Publication 186-4,
+              DOI 10.6028/NIST.FIPS.186-4, 2013,
+              <http://nvlpubs.nist.gov/nistpubs/FIPS/
+              NIST.FIPS.186-4.pdf>.
 
    [EdDSA25519]
               Wikipedia, "Edwards-curve Digital Signature Algorithm
               (EdDSA)", 2021,
               <https://en.wikipedia.org/wiki/EdDSA#Ed25519>.
 
+
+
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 14]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
    [I-D.brockners-ippm-ioam-geneve]
-              Brockners, F., Bhandari, S., Govindan, V., Pignataro, C.,
-              Nainar, N., Gredler, H., Leddy, J., Youell, S., Mizrahi,
-              T., Lapukhov, P., Gafni, B., Kfir, A., and M. Spiegel,
-              "Geneve encapsulation for In-situ OAM Data", draft-
-              brockners-ippm-ioam-geneve-05 (work in progress), November
-              2020.
+              Brockners, F., Bhandari, S., Govindan, V. P., Pignataro,
+              C., Nainar, N. K., Gredler, H., Leddy, J., Youell, S.,
+              Mizrahi, T., Lapukhov, P., Gafni, B., Kfir, A., and M.
+              Spiegel, "Geneve encapsulation for In-situ OAM Data",
+              draft-brockners-ippm-ioam-geneve-05 (work in progress),
+              November 2020.
 
    [I-D.ietf-detnet-security]
-              Grossman, E., Mizrahi, T., and A. Hacker, "Deterministic
-              Networking (DetNet) Security Considerations", draft-ietf-
-              detnet-security-13 (work in progress), December 2020.
+              Grossman, E., Mizrahi, T., and A. J. Hacker,
+              "Deterministic Networking (DetNet) Security
+              Considerations", draft-ietf-detnet-security-16 (work in
+              progress), March 2021.
 
    [I-D.ietf-ippm-ioam-data]
               Brockners, F., Bhandari, S., and T. Mizrahi, "Data Fields
-              for In-situ OAM", draft-ietf-ippm-ioam-data-11 (work in
-              progress), November 2020.
+              for In-situ OAM", draft-ietf-ippm-ioam-data-12 (work in
+              progress), February 2021.
 
    [I-D.ietf-ippm-ioam-direct-export]
               Song, H., Gafni, B., Zhou, T., Li, Z., Brockners, F.,
               Bhandari, S., Sivakolundu, R., and T. Mizrahi, "In-situ
               OAM Direct Exporting", draft-ietf-ippm-ioam-direct-
-              export-02 (work in progress), November 2020.
+              export-03 (work in progress), February 2021.
 
    [I-D.ietf-ippm-ioam-ipv6-options]
               Bhandari, S., Brockners, F., Pignataro, C., Gredler, H.,
               Leddy, J., Youell, S., Mizrahi, T., Kfir, A., Gafni, B.,
               Lapukhov, P., Spiegel, M., Krishnan, S., Asati, R., and M.
               Smith, "In-situ OAM IPv6 Options", draft-ietf-ippm-ioam-
-              ipv6-options-04 (work in progress), November 2020.
+              ipv6-options-05 (work in progress), February 2021.
 
    [I-D.ietf-nvo3-geneve]
               Gross, J., Ganga, I., and T. Sridhar, "Geneve: Generic
@@ -608,20 +828,19 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
               (NSH) Encapsulation for In-situ OAM (IOAM) Data", draft-
               ietf-sfc-ioam-nsh-05 (work in progress), December 2020.
 
-
-
-
-
-
-Brockners, et al.        Expires October 9, 2021               [Page 11]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
-
    [I-D.ietf-sfc-proof-of-transit]
               Brockners, F., Bhandari, S., Mizrahi, T., Dara, S., and S.
               Youell, "Proof of Transit", draft-ietf-sfc-proof-of-
               transit-08 (work in progress), November 2020.
+
+
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 15]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
 
    [McEliece]
               McEliece, R., "A Public-Key Cryptosystem Based on
@@ -629,9 +848,22 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
               <https://ipnpr.jpl.nasa.gov/
               progress_report2/42-44/44N.PDF>.
 
+   [NIST.800-38D]
+              National Institute of Standards and Technology,
+              "Recommendation for Block Cipher Modes of Operation:
+              Galois/Counter Mode (GCM) and GMAC",  NIST Special
+              Publication 800-38D, 2001,
+              <http://csrc.nist.gov/publications/nistpubs/800-38D/SP-
+              800-38D.pdf>.
+
    [RFC4302]  Kent, S., "IP Authentication Header", RFC 4302,
               DOI 10.17487/RFC4302, December 2005,
               <https://www.rfc-editor.org/info/rfc4302>.
+
+   [RFC6090]  McGrew, D., Igoe, K., and M. Salter, "Fundamental Elliptic
+              Curve Cryptography Algorithms", RFC 6090,
+              DOI 10.17487/RFC6090, February 2011,
+              <https://www.rfc-editor.org/info/rfc6090>.
 
    [RFC7276]  Mizrahi, T., Sprecher, N., Bellagamba, E., and Y.
               Weingarten, "An Overview of Operations, Administration,
@@ -652,6 +884,20 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
               DOI 10.17487/RFC8300, January 2018,
               <https://www.rfc-editor.org/info/rfc8300>.
 
+   [SHS]      National Institute of Standards and Technology, "Secure
+              Hash Standard (SHS)",  NIST FIPS Publication 180-4, DOI
+              10.6028/NIST.FIPS.180-4, 2015,
+              <http://nvlpubs.nist.gov/nistpubs/FIPS/
+              NIST.FIPS.180-4.pdf>.
+
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 16]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
 Appendix A.  Appendix - Alternate methods for integrity protection and
              validation
 
@@ -662,20 +908,12 @@ Appendix A.  Appendix - Alternate methods for integrity protection and
    It isn't expected that all four methods would be chosen for a
    solution specification.
 
-   The discussion of the different methods focuses on protecting the
-   integrity of IOAM trace data fields, though the outlined methods are
-   not limited to protecting IOAM trace data fields only.  The methods
-
-
-
-
-Brockners, et al.        Expires October 9, 2021               [Page 12]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
-
-   could be applied to other IOAM Option-Types, such as the E2E Option-
-   Type.
+   As already stated in the introduction, the discussion of the
+   different methods focuses mostly on protecting the integrity of IOAM
+   trace data fields, though the outlined methods are not limited to
+   protecting IOAM trace data fields only.  The methods could be applied
+   to other IOAM Option-Types, such as the E2E Option-Type or the DEX
+   Option-Type.
 
    IOAM trace data can be embedded in a variety of protocols.  There are
    specific drafts that cover the encapsulation of IOAM data into
@@ -706,6 +944,16 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
    the network management entity/controller and the nodes are outside
    the scope of this document.
 
+
+
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 17]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
 A.1.  Method 1: Using asymmetric keys for signing node trace data
 
    Method 1 uses asymmetric keys for signing node trace data.  This is
@@ -720,15 +968,6 @@ A.1.  Method 1: Using asymmetric keys for signing node trace data
        [EdDSA25519] are suggested, resulting in fast signing for small
        keys and limited overhead (see below for an overhead
        calculation).
-
-
-
-
-
-Brockners, et al.        Expires October 9, 2021               [Page 13]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
 
    2.  Each node data list [x] field is extended with an additional
        "signed node-data" field: node_data_sign[x].  Node_data_sign
@@ -764,6 +1003,13 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
        result to the last node's node_data-sign value.  If the two
        values match, the IOAM data was not tampered with.
 
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 18]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
 A.1.1.  Overhead consideration for Method 1
 
    Assuming e.g Ed25519, the public keys would have a size of 256 bits /
@@ -773,18 +1019,6 @@ A.1.1.  Overhead consideration for Method 1
    the provided integrity check is an online method, i.e. packets are
    verified as they arrive.  This allows an attacker only a short time-
    window.
-
-
-
-
-
-
-
-
-Brockners, et al.        Expires October 9, 2021               [Page 14]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
 
 A.2.  Method 2: Using symmetric keys for signing node trace data
 
@@ -825,6 +1059,13 @@ A.2.1.  Overhead consideration for Method 2
    IOAM enabled hops, the number of bytes consumed in case of larger
    networks might not be acceptable.
 
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 19]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
+
 A.3.  Method 4: Dynamic symmetric keys based signing of trace data
 
    This method builds on top of Method 3 leverages Post-quantum Secure
@@ -834,14 +1075,6 @@ A.3.  Method 4: Dynamic symmetric keys based signing of trace data
    be added to the trace data to protect from replays because a private
    key is derived for each packet.  The method relies on a local service
    that generates common Key/KeyID pairs for the participating Node and
-
-
-
-Brockners, et al.        Expires October 9, 2021               [Page 15]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
-
    Validator (see the figure below).  This common key generator uses
    ratcheting cryptography to generate the next secret while forgetting
    about the previous one.  A unique ID is paired with each secret
@@ -851,6 +1084,43 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
    for the next key or for a specific key ID.
 
    The figure below illustrates the concept:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 20]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
 
          Validator                                         Node
              |                                              |
@@ -862,49 +1132,51 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
              |               (e.g. TLS)                     |
              |---Send public key over secure connection---->|
              |                                              |
-             |                             Generate random secret seed
+             |                             Generate random secret nonce
              |                               and encrypt w/ Validator
              |                                        public key
              |                                              |
              |<--Send encrypted seed over secure connection-|
              |                                              |
-      Decrypt secret seed sent from Node                    |
+      Decrypt secret nonce sent from Node                   |
          using Validator's private key                      |
              |                                              |
-             (-- Common secret seed established between   --)
+             (-- Common secret nonce established between  --)
              (--       Node and Validator                 --)
              |                                              |
              |                             Generate Node's KeyID pair
-             |                             based on common secret seed
+             |                             based on common secret nonce
              |                                              |
-             |           Use Node's key to update Trace Signature field
-             |           in trace option header. Include Node's KeyID
-             |                           in the extended node data.
+             |           Use Node's key to update  Signature field
+             | in  Integrity protection option header. Include Node's
+             |                       KeyID in the extended node data.
              |                                              |
              (--        Packet reaches Validator          --)
              |                                              |
        Get Node's key using Node's KeyID                    |
        present in extended node data.                       |
-       Validate Trace Signature using Node's key.           |
+       Validate  Signature using Node's key.                |
 
 
    The main steps of method 4 are:
-
-
-
-
-Brockners, et al.        Expires October 9, 2021               [Page 16]
-
-Internet-Draft         IOAM Data Fields Integrity             April 2021
-
 
    1.  Each node will establish a common secret seed establishment using
        McEliece [McEliece] with the Validator.
 
    2.  Each node will then use the seed to generate a symmetric key per
-       packet and use it in updating the Trace Signature field in the
-       IOAM Trace-Option header over its node data hash.  The node data
-       is extended to include the KeyID of the dynamic key generated.
+       packet and use it in updating the Signature field in the IOAM
+       Trace-Option header over its node data hash.  The node data is
+       extended to include the KeyID of the dynamic key generated.
+
+
+
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 21]
+
+Internet-Draft         IOAM Data Fields Integrity             April 2021
+
 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |                            KeyID [x]                          |
@@ -915,17 +1187,17 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-   3.  The Validator will validate the Trace Signature by deducing the
-       key for each node using the KeyID.
+   3.  The Validator will validate the Signature by deducing the key for
+       each node using the KeyID.
 
    The detailed mechanisms how keys and seeds are exchanged between
    nodes are outside the scope of this document.
 
 A.3.1.  Overhead consideration for Method 4
 
-   Like with method 3, the Trace Signature is only carried once for the
-   entire packet and could be 32 bytes total.  In addition, the KeyID
-   needs to be added on a per hop basis.  For sizing the Key ID, similar
+   Like with method 3, the Signature is only carried once for the entire
+   packet and could be 32 bytes total.  In addition, the KeyID needs to
+   be added on a per hop basis.  For sizing the Key ID, similar
    considerations like those for proof-of-transit packet random numbers
    apply - i.e. it depends on the packet rates of quickly keys are
    consumed.  E.g. assuming a packet rate of 100Gbps and a KeyID space
@@ -933,65 +1205,70 @@ A.3.1.  Overhead consideration for Method 4
    years (see also [I-D.ietf-sfc-proof-of-transit]).  If frequent re-
    keying is feasible, 32 bits for KeyID might well be feasible.
 
-A.4.  Method 5: Using IP Authentication Header
+A.4.  Method 5: Leverage IP Authentication Header
 
    The IP Authentication Header (AH) is used to provide connectionless
    integrity and data origin authentication for IP datagrams and to
    provide protection against replays as defined in RFC4302 [RFC4302].
-   AH provides authentication for as much of the IP header as possible,
-   by classifying and including the immutable fields in intergrity
-   calculation.  To protect the IOAM data in the IP header AH may be
-   employed in transport mode by setting up IP AH Security
-   Association(SA) with supported integrity algorithms between IOAM
-   encapsulating, decapsulation and transit nodes.  This method utilizes
-   IP AH for integrity protection of IOAM options that are immutable
-   enroute between IOAM entities that are required to validate the
+   The AH provides authentication for as much of the IP header as
+   possible, by classifying and including the immutable fields in the
+   integrity calculation.  To protect the IOAM data in the IP header,
+   the AH may be employed in transport mode by setting up an IP AH
+   Security Association (SA) with supported integrity algorithms between
+   IOAM encapsulating nodes, IOAM decapsulating nodes and IOAM transit
+   nodes.  Method 5 utilizes the IP AH for integrity protection of IOAM
+   options that are immutable enroute between IOAM entities that are
+   required to validate the integrity of the IOAM data.  It is
+   applicable to IOAM Option-Types as follows:
+
+   1.  IOAM Edge-to-Edge Option-Type: The data for this IOAM Option-Type
+       is immutable enroute and can be integrity checked using an IP AH
+       between IOAM-encapsulating nodes and IOAM-decapsulating nodes.
 
 
 
-Brockners, et al.        Expires October 9, 2021               [Page 17]
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 22]
 
 Internet-Draft         IOAM Data Fields Integrity             April 2021
 
 
-   integrity of the IOAM data.  It is applicable to IOAM option types as
-   follows:
+   2.  The Direct Exporting (DEX) IOAM Option-Type
+       ([I-D.ietf-ippm-ioam-direct-export]): The data for this IOAM
+       Option-Type is immutable enroute and can be integrity checked
+       using an IP AH between IOAM-encapsulating nodes and IOAM-
+       decapsulating nodes.  IOAM-transit nodes, that use the IOAM DEX
+       Option-Type as a trigger to export IOAM data fields, and which
+       are to validate the IOAM DEX Option-Type data fields may have to
+       be configured with shared secrets, in case the AH negotiated
+       integrity algorithm relies on shared secrets.  These shared
+       secrets correspond to those secrets that result from the IP AH
+       integrity algorithm negotiated during SA setup.
 
-   1.  IOAM Edge-to-Edge Option-Type: This IOAM option data is immutable
-       enroute and can be integrity checked using IP AH between IOAM-
-       encapsulating nodes and IOAM-decapsulating nodes.
-
-   2.  The Direct Exporting (DEX) IOAM Option Type: IOAM DEX IOAM option
-       type is immutable enroute and can be integrity checked using IP
-       AH between IOAM-encapsulating nodes and IOAM-decapsulating nodes.
-       For the IOAM-transit nodes, that use DEX option as a trigger to
-       export IOAM, to validate the DEX option if the IP AH integrity
-       algorithm negotiated during SA setup depend on shared secrets
-       then IOAM-transit nodes may have to be configured with the
-       corresponding shared secrets.
-
-   3.  IOAM Proof of Transit Option-Type: This IOAM option is mutable by
-       IOAM-transit nodes enroute that participate in proof of transit
-       operation.  Hence the IP AH based integrity protection method
-       does not apply.
+   3.  IOAM Proof of Transit Option-Type: This IOAM Option-Type is
+       mutable by IOAM-transit nodes enroute that participate in proof
+       of transit operation.  Hence the IP AH based integrity protection
+       method does not apply.
 
    4.  IOAM Pre-allocated and Incremental Trace Option-Types: These IOAM
-       options are mutable by IOAM-transit nodes encroute that
-       participate in IOAM tracing.  Hence the IP AH based integrity
-       protection method does not apply.
+       Option-Types are mutable by IOAM-transit nodes encroute that
+       process IOAM tracing Option-Types.  Hence the IP AH based
+       integrity protection method does not apply.
 
 A.4.1.  Overhead consideration for Method 5
 
-   This method involves overhead of setting up and maintaining SA for AH
-   IOAM-encapsulating nodes and IOAM-decapsulating nodes.  The anti-
-   replay mechanism supported by IP AH must be enabled for this method
-   to effectively protect IOAM data whose integrity and freshness needs
-   to be guarenteed.  The anti-replay mechanism of IP AH has the
-   overhead of maintaining and validating sequence numbers as part of
-   the IP AH validation.  In cases where IOAM-transit nodes have to
-   validate IOAM Options e.g.  DEX Option Type, then there will be
-   additional overhead to distribute shared secrets to the transit nodes
-   when the integrity algorithm is based on shared secrets.
+   This method involves overhead of setting up and maintaining SA for
+   the AH IOAM-encapsulating nodes and IOAM-decapsulating nodes.  The
+   anti-replay mechanism supported by IP AH must be enabled for this
+   method to effectively protect IOAM data fields whose integrity and
+   freshness needs to be guarenteed.  The anti-replay mechanism of IP AH
+   has the overhead of maintaining and validating sequence numbers as
+   part of the IP AH validation.  In cases where IOAM-transit nodes have
+   to validate IOAM Option-Types e.g. the DEX Option-Type, then there
+   will be additional overhead to distribute shared secrets to the
+   transit nodes when the integrity algorithm is based on shared
+   secrets.
 
 Authors' Addresses
 
@@ -1005,7 +1282,10 @@ Authors' Addresses
 
 
 
-Brockners, et al.        Expires October 9, 2021               [Page 18]
+
+
+
+Brockners, et al.        Expires October 9, 2021               [Page 23]
 
 Internet-Draft         IOAM Data Fields Integrity             April 2021
 
@@ -1061,4 +1341,4 @@ Internet-Draft         IOAM Data Fields Integrity             April 2021
 
 
 
-Brockners, et al.        Expires October 9, 2021               [Page 19]
+Brockners, et al.        Expires October 9, 2021               [Page 24]
