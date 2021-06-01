@@ -6,7 +6,9 @@
      There has to be one entity for each item to be referenced. 
      An alternate method (rfc include) is described in the references. -->
 <!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
+<!ENTITY RFC8799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8799.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
 <!ENTITY RFC7276 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7276.xml">
@@ -22,6 +24,7 @@
 <!ENTITY RFC7384 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7384.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY RFC8877 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8877.xml">
+<!ENTITY RFC8899 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8899.xml">
 <!ENTITY I-D.brockners-opsawg-ioam-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-opsawg-ioam-deployment.xml">
 <!ENTITY I-D.brockners-ippm-ioam-data-integrity SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-ippm-ioam-data-integrity.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
@@ -63,7 +66,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-12" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-13" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -138,7 +141,7 @@
       </address>
     </author>
 
-    <date day="21" month="February" year="2021"/>
+    <date day="1" month="June" year="2021"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -173,9 +176,9 @@
       traverses a path between two points in the network. This document
       discusses the data fields and associated data types for in-situ OAM.
       In-situ OAM data fields can be encapsulated into a variety of protocols
-      such as NSH, Segment Routing, Geneve, IPv6 (via extension header), or
-      IPv4. In-situ OAM can be used to complement OAM mechanisms based on e.g.
-      ICMP or other types of probe packets.</t>
+      such as NSH, Segment Routing, Geneve, IPv6, or
+      IPv4. In-situ OAM can be used to complement OAM mechanisms based on,
+      e.g., ICMP or other types of probe packets.</t>
     </abstract>
   </front>
 
@@ -191,20 +194,21 @@
       can be considered a hybrid OAM type. "In-situ" mechanisms do not require
       extra packets to be sent. IOAM adds information to the already available
       data packets and therefore cannot be considered passive. In terms of the
-      classification given in <xref target="RFC7799"/> IOAM could be portrayed
+      classification given in <xref target="RFC7799"/>, IOAM could be portrayed
       as Hybrid Type 1. IOAM mechanisms can be leveraged where mechanisms
-      using e.g. ICMP do not apply or do not offer the desired results, such
+      using, e.g., ICMP do not apply or do not offer the desired results, such
       as proving that a certain traffic flow takes a pre-defined path, SLA
       verification for the live data traffic, detailed statistics on traffic
       distribution paths in networks that distribute traffic across multiple
       paths, or scenarios in which probe traffic is potentially handled
       differently from regular data traffic by the network devices.</t>
 
-      <t>IOAM use cases and mechanisms have expanded as this document matured,
-      resulting in additional flags and options that could trigger creation of
-      additional packets dedicated to OAM. The term IOAM continues to be used
-      for such mechanisms, in addition to the "in-situ" mechanisms that
-      motivated this terminology.</t>
+      <t> The term "in situ OAM" was originally motivated by the use
+      of OAM related mechanisms that add information into a packet. This
+      document uses IOAM as a term defining the IOAM technology. IOAM
+      includes "in-situ" mechanisms, but also mechanisms that could trigger 
+      the creation of additional packets dedicated to OAM.   
+      </t>
     </section>
 
 	<section title="Contributors">
@@ -231,12 +235,9 @@
 	</section>
 	
     <section anchor="Conventions" title="Conventions">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref
-      target="RFC2119"/>.</t>
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <xref target="RFC2119" format="default"/> <xref target="RFC8174" format="default"/> when, and only when, they appear in all capitals, as shown here.</t>
 
-      <t>Abbreviations used in this document:</t>
+      <t>Abbreviations and definitions used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
           <t hangText="E2E">Edge to Edge</t>
@@ -260,6 +261,9 @@
 
           <t hangText="SFC:">Service Function Chain</t>
 
+          <t hangText="Short format:">"Short format" refers to
+          an IOAM-Data-Field which comprises 4 octets.</t>
+
           <t hangText="SID:">Segment Identifier</t>
 
           <t hangText="SR:">Segment Routing</t>
@@ -267,6 +271,9 @@
           <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
           Generic Protocol Extension <xref
           target="I-D.ietf-nvo3-vxlan-gpe"/></t>
+
+          <t hangText="Wide format:">"Wide format" refers to
+          an IOAM-Data-Field which comprises 8 octets.</t>
         </list></t>
     </section>
 
@@ -279,25 +286,27 @@
       a variety of protocols, including NSH, Segment Routing, Geneve, IPv6, or
       IPv4. Specification details for these different protocols are outside
       the scope of this document. It is expected that each such encapsulation
-	  will be defined in the relevant working group in the IETF.</t>
+	  would be specified by an RFC, jointly designed by the working group
+	  that develops or maintains the encapsulation protocol and the IETF IPPM
+	  working group.</t>
 
-      <t>Deployment domain (or scope) of in-situ OAM deployment: IOAM is a
-      network domain focused feature, with "network domain" being a set of
-      network devices or entities within a single administration. For example,
-      a network domain can include an enterprise campus using physical
-      connections between devices or an overlay network using virtual
-      connections / tunnels for connectivity between said devices. A network
-      domain is defined by its perimeter or edge. Designers of protocol
+      <t>Deployment domain (or scope) of in-situ OAM deployment: IOAM is
+      focused on "limited domains" as defined in <xref target="RFC8799"/>.
+      For IOAM, a limited domain could for example be an enterprise campus
+      using physical connections between devices or an overlay network using virtual
+      connections / tunnels for connectivity between said devices. A limited
+      domain which uses IOAM is called an "IOAM domain". An IOAM domain
+      is bounded by its perimeter or edge. Designers of protocol
       encapsulations for IOAM specify mechanisms to ensure that IOAM data
       stays within an IOAM domain. In addition, the operator of such a domain
       is expected to put provisions in place to ensure that IOAM data does not
-      leak beyond the edge of an IOAM domain using,for example, packet
+      leak beyond the edge of an IOAM domain using, for example, packet
       filtering methods. The operator has to consider the potential
       operational impact of IOAM to mechanisms such as ECMP processing (e.g.
       load-balancing schemes based on packet length could be impacted by the
-      increased packet size due to IOAM), path MTU (i.e. ensure that the MTU
+      increased packet size due to IOAM), path MTU (i.e., ensure that the MTU
       of all links within a domain is sufficiently large to support the
-      increased packet size due to IOAM) and ICMP message handling (i.e. in
+      increased packet size due to IOAM) and ICMP message handling (i.e., in
       case of IPv6, IOAM support for ICMPv6 Echo Request/Reply is desired
       which would translate into ICMPv6 extensions to enable IOAM-Data-Fields
       to be copied from an Echo Request message to an Echo Reply message).</t>
@@ -320,14 +329,12 @@
       <t>Encapsulation independence: The definition of IOAM-Data-Fields is
       independent from the protocols the IOAM-Data-Fields are encapsulated
       into. IOAM-Data-Fields can be encapsulated into several encapsulating
-      protocols. The specification of how IOAM-Data-Fields are encapsulated
-      into "parent" protocols, like e.g., NSH or IPv6 is outside the scope of
-      this document.</t>
+      protocols.</t>
 
       <t>Layering: If several encapsulation protocols (e.g., in case of
       tunneling) are stacked on top of each other, IOAM-Data-Fields could be
       present at multiple layers. The behavior follows the ships-in-the-night
-      model, i.e. IOAM-Data-Fields in one layer are independent from
+      model, i.e., IOAM-Data-Fields in one layer are independent from
       IOAM-Data-Fields in another layer. Layering allows operators to
       instrument the protocol layer they want to measure. The different layers
       could, but do not have to, share the same IOAM encapsulation
@@ -350,14 +357,11 @@
         purpose of IOAM.</t>
 
         <t>To accommodate the different uses of IOAM, IOAM-Data-Fields fall
-        into different categories. In IOAM these categories are referred to as
+        into different categories. In IOAM, these categories are referred to as
         IOAM-Option-Types. A common registry is maintained for
         IOAM-Option-Types, see <xref target="IOAM-type-registry"/> for
         details. Corresponding to these IOAM-Option-Types, different
-        IOAM-Data-Fields are defined. IOAM-Data-Fields can be encapsulated
-        into a variety of protocols, such as NSH, Geneve, IPv6, etc. The
-        definition of how IOAM-Data-Fields are encapsulated into other
-        protocols is outside the scope of this document.</t>
+        IOAM-Data-Fields are defined.</t>
 
         <t>This document defines four IOAM-Option-Types:<list style="symbols">
             <t>Pre-allocated Trace Option-Type</t>
@@ -378,13 +382,13 @@
         Within the IOAM-Domain, the IOAM-Data-Fields MAY be updated by network
         nodes that the packet traverses. An IOAM-Domain consists of "IOAM
         encapsulating nodes", "IOAM decapsulating nodes" and "IOAM transit
-        nodes". The role of a node (i.e. encapsulating, transit,
+        nodes". The role of a node (i.e., encapsulating, transit,
         decapsulating) is defined within an IOAM-Namespace (see below). A node
         can have different roles in different IOAM-Namespaces.</t>
 
         <t>A device which adds at least one IOAM-Option-Type to the packet is
-        called the "IOAM encapsulating node", whereas a device which removes
-        an IOAM-Option-Type is referred to as the "IOAM decapsulating node".
+        called an "IOAM encapsulating node", whereas a device which removes
+        an IOAM-Option-Type is referred to as an "IOAM decapsulating node".
         Nodes within the domain which are aware of IOAM data and read and/or
         write or process the IOAM data are called "IOAM transit nodes". IOAM
         nodes which add or remove the IOAM-Data-Fields can also update the
@@ -419,7 +423,7 @@
 
         <t>The role of an IOAM-encapsulating, IOAM-transit or
         IOAM-decapsulating node is always performed within a specific
-        IOAM-Namespace. This means that an IOAM node which is e.g. an
+        IOAM-Namespace. This means that an IOAM node which is, e.g., an
         IOAM-decapsulating node for IOAM-Namespace "A" but not for
         IOAM-Namespace "B" will only remove the IOAM-Option-Types for
         IOAM-Namespace "A" from the packet. Note that this applies even
@@ -449,9 +453,11 @@
 		IOAM-Namespaces group nodes to support different deployment approaches
 		of IOAM (see a few example use-cases below) as
         well as resolve issues which can occur due to IOAM-Data-Fields not
-        being globally unique (e.g. IOAM node identifiers do not have to be
+        being globally unique (e.g., IOAM node identifiers do not have to be
         globally unique). IOAM-Data-Fields significance is always within a
-        particular IOAM-Namespace.</t>
+        particular IOAM-Namespace. Given that IOAM-Data-Fields are always 
+        interpreted the context of a specific namespace, the namespace-id 
+        field always needs to be carried along with the IOAM data-fields themselves.</t>
 
         <t>An IOAM-Namespace is identified by a 16-bit namespace identifier
         (Namespace-ID). The IOAM-Namespace field is included in all the 
@@ -465,7 +471,7 @@
             <t>An IANA-assigned range from 0x8000 to 0xFFFF</t>
           </list>The IANA-assigned range is intended to allow future
         extensions to have new and interoperable IOAM functionality, while the
-        operator-assigned range is intended to be domain specific, and managed
+        operator-assigned range is intended to be domain-specific, and managed
         by the network operator. The Namespace-ID value of 0x0000 is the 
 		"Default-Namespace-ID". The Default-Namespace-ID indicates that no 
 		specific namespace is associated with the IOAM data fields in the 
@@ -490,7 +496,7 @@
             deployment.</t>
 
             <t>whether IOAM-Option-Type(s) has to be removed from the packet,
-            e.g. at a domain edge or domain boundary.</t>
+            e.g., at a domain edge or domain boundary.</t>
           </list></t>
 
         <t>IOAM-Namespaces support several different uses:</t>
@@ -504,7 +510,7 @@
 			and thus can be used to ensure that IOAM-Data-Fields are unique and 
 			are interpreted properly by management stations or network 
 			controllers.  For example, the node identifier field (node_id, see 
-			below) does not need to be unique in a deployment (e.g. if an 
+			below) does not need to be unique in a deployment (e.g., if an 
 			operator wishes to use different node identifiers for different 
 			IOAM layers, even within the same device; or node identifiers 
 			might not be unique for other organizational reasons, such as 
@@ -514,7 +520,7 @@
             Similarly, IOAM-Namespaces can be used to define how certain
             IOAM-Data-Fields are interpreted: IOAM offers three different
             timestamp format options. The Namespace-ID can be used to
-            determine the timestamp format. IOAM-Data-Fields (e.g. buffer
+            determine the timestamp format. IOAM-Data-Fields (e.g., buffer
             occupancy) which do not have a unit associated are to be
             interpreted within the context of a IOAM-Namespace.</t>
 
@@ -561,7 +567,7 @@
         <t>"IOAM tracing data" is expected to be collected at every
         IOAM transit node that a packet traverses to ensure visibility into
         the entire path a packet takes within an IOAM-Domain. I.e., in a
-        typical deployment all nodes in an IOAM-Domain would participate in
+        typical deployment, all nodes in an IOAM-Domain would participate in
         IOAM and thus be IOAM transit nodes, IOAM encapsulating or IOAM
         decapsulating nodes. If not all nodes within a domain support IOAM
         functionality as defined in this document, IOAM tracing information
@@ -572,7 +578,7 @@
         The maximum number of hops and the minimum path MTU of the IOAM domain
         is assumed to be known. An overflow indicator (O-bit) is defined
 	as one of the ways to deal with situations where the PMTU
-	was underestimated, i.e. where the number of hops which
+	was underestimated, i.e., where the number of hops which
 	are IOAM capable exceeds the available space in the packet.</t>
 
         <t>To optimize hardware and software implementations, IOAM tracing is
@@ -621,9 +627,11 @@
 			checksums in outer headers.</t>
           </list></t>
 
-        <t>A particular implementation of IOAM MAY choose to support only one
-        of the two trace option types. In the event that both options are
-        utilized at the same time, the Incremental Trace-Option MUST be placed
+        <t>IOAM encapsulating nodes and IOAM decapsulating nodes which support
+        tracing MUST support both Trace-Option-Types. For IOAM transit nodes it
+        is sufficient to support one of the Trace-Option-Types.  
+        In the event that both options are utilized in a deployment 
+        at the same time, the Incremental Trace-Option MUST be placed
         before the Pre-allocated Trace-Option. Deployments which mix devices
         with either the Incremental Trace-Option or the Pre-allocated
         Trace-Option could result in both Option-Types being present in a
@@ -647,10 +655,10 @@
             subsystem within a device.</t>
 
             <t>Identification of the interface that a packet was received on,
-            i.e. ingress interface.</t>
+            i.e., ingress interface.</t>
 
             <t>Identification of the interface that a packet was sent out on,
-            i.e. egress interface.</t>
+            i.e., egress interface.</t>
 
             <t>Time of day when the packet was processed by the node as well
             as the transit delay. Different definitions of processing time are
@@ -681,7 +689,7 @@
           An IOAM transit node (that is not an IOAM encapsulating node or IOAM
           decapsulating node) MUST NOT modify any of the fields in the fixed
           size &ldquo;trace option header&rdquo;, other than
-          &ldquo;flags&rdquo; and &ldquo;RemainingLen&rdquo;, i.e. an IOAM
+          &ldquo;flags&rdquo; and &ldquo;RemainingLen&rdquo;, i.e., an IOAM
           transit node MUST NOT modify the Namespace-ID, NodeLen,
           IOAM-Trace-Type, or Reserved fields.</t>
 
@@ -741,7 +749,7 @@ The trace option data MUST be 4-octet aligned:
               added by a node would be (NodeLen + length of the "Opaque State
               Snapshot" field) in 4 octet units. <vspace blankLines="1"/>For
               example, if 3 IOAM-Trace-Type bits are set and none of them are
-              wide, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are set
+              in wide format, then NodeLen would be 3. If 3 IOAM-Trace-Type bits are set
               and 2 of them are wide, then NodeLen would be 5. <vspace
               blankLines="1"/>An IOAM encapsulating node MUST set NodeLen.
               <vspace blankLines="1"/>A node receiving an IOAM Pre-allocated
@@ -804,7 +812,7 @@ The trace option data MUST be 4-octet aligned:
                   timestamp seconds in the node data.</t>
 
                   <t hangText="Bit 3">When set, indicates presence of
-                  timestamp subseconds in the node data.</t>
+                  timestamp fraction in the node data.</t>
 
                   <t hangText="Bit 4">When set, indicates presence of transit
                   delay in the node data.</t>
@@ -838,7 +846,7 @@ The trace option data MUST be 4-octet aligned:
 				  (<xref target="ioam-trace-type-registry"/>). Every future 
 				  node data field corresponding to one of these bits MUST 
 				  be 4-octets long. An IOAM encapsulating node MUST set the 
-				  value of each of these bits to 0.  If an IOAM transit 
+				  value of each undefined bit to 0.  If an IOAM transit 
 				  node receives a packet with one or more of these bits set 
 				  to 1, it MUST either: 
 				  <list style="numbers">
@@ -898,7 +906,10 @@ The trace option data MUST be 4-octet aligned:
 
           <t>Some IOAM-Data-Fields defined below, such as interface
           identifiers or IOAM-Namespace specific data, are defined in both
-          "short format" as well as "wide format". Their use is not exclusive.
+          "short format" as well as "wide format". "Short format" refers to
+          an IOAM-Data-Field which comprises 4 octets. "Wide format" refers to
+          an IOAM-Data-Field which comprises 8 octets.
+          The  use of "short format" or "wide format" is not mutially exclusive.
           A deployment could choose to leverage both. For example,
           ingress_if_id_(short format) could be an identifier for the physical
           interface, whereas ingress_if_id_(wide format) could be an
@@ -906,7 +917,20 @@ The trace option data MUST be 4-octet aligned:
           interface.</t>
 
           <t>Data fields and associated data types for each of the
-          IOAM-Data-Fields are specified in the following sections.</t>
+          IOAM-Data-Fields are specified in the following sections.
+          The definition of IOAM-Data-Fields focuses on the syntax
+          of the data-fields and avoids specifying the semantics
+          where feasible. This is why no units are defined for
+          data-fields like e.g., "buffer occupancy" or "queue depth".
+          With this approach, nodes can supply the
+          information in their native format and are not required
+          to perform unit or format conversions. Systems that further
+          process IOAM information, like e.g., a network management
+          system are assumed to also handle unit conversions as part
+          of their IOAM data-fields processing. The combination of a 
+          particular data-field and the namespace-id provides for the context 
+          to interpret the provided data appropriately.
+          </t>
 
           <section title="Hop_Lim and node_id short format">
             <t>The "Hop_Lim and node_id short format" field is a 4-octet field
@@ -956,7 +980,7 @@ The trace option data MUST be 4-octet aligned:
             IOAM-Namespaces for IOAM-Data-Fields, data fields like interface
             identifiers can be used in a flexible way to represent system
             resources that are associated with ingressing or egressing
-            packets, i.e. ingress_if_id could represent a physical interface,
+            packets, i.e., ingress_if_id could represent a physical interface,
             a virtual or logical interface, or even a queue.</t>
           </section>
 
@@ -964,7 +988,7 @@ The trace option data MUST be 4-octet aligned:
             <t>The "timestamp seconds" field is a 4-octet unsigned integer
             field. Absolute timestamp in seconds that specifies the time at
             which the packet was received by the node. This field has three
-            possible formats; based on either PTP <xref target="IEEE1588v2"/>,
+            possible formats; based on either PTP (see e.g., <xref target="RFC8877"/>),
             NTP <xref target="RFC5905"/>, or POSIX <xref target="POSIX"/>. The
             three timestamp formats are specified in <xref
             target="TimestampSec"/>. In all three cases, the Timestamp Seconds
@@ -977,15 +1001,16 @@ The trace option data MUST be 4-octet aligned:
             time-of-day in order to detect the error indication.</t>
           </section>
 
-          <section title="timestamp subseconds">
-            <t>The "timestamp subseconds" field is a 4-octet unsigned integer
-            field. Absolute timestamp in subseconds that specifies the time at
+          <section title="timestamp faction">
+            <t>The "timestamp fraction" field is a 4-octet unsigned integer
+            field. Fraction specifies the fractional portion of the number of
+            seconds since the epoch <xref target="RFC8877"/>. The field specifies the time at
             which the packet was received by the node. This field has three
-            possible formats; based on either PTP <xref target="IEEE1588v2"/>,
+            possible formats; based on either PTP (see e.g., <xref target="RFC8877"/>),
             NTP <xref target="RFC5905"/>, or POSIX <xref target="POSIX"/>. The
             three timestamp formats are specified in <xref
             target="TimestampSec"/>. In all three cases, the Timestamp
-            Subseconds field contains the 32 least significant bits of the
+            fraction field contains the 32 least significant bits of the
             timestamp format that is specified in <xref
             target="TimestampSec"/>. If a node is not capable of populating
             this field, it assigns the value 0xFFFFFFFF. Note that this is a
@@ -1082,7 +1107,7 @@ The trace option data MUST be 4-octet aligned:
                 the Hop Limit value in the packet at the node that records
                 this data. Hop Limit information is used to identify the
                 location of the node in the communication path. This is copied
-                from the lower layer for e.g. TTL value in IPv4 header or hop
+                from the lower layer for, e.g., TTL value in IPv4 header or hop
                 limit field from IPv6 header of the packet. The semantics of
                 the Hop_Lim field depend on the lower layer protocol that IOAM
                 is encapsulated into, and therefore its specific semantics are
@@ -1142,7 +1167,7 @@ The trace option data MUST be 4-octet aligned:
             interpreted within the context of an IOAM-Namespace and/or
             node-id if used. The authors acknowledge that in some operational
             cases there is a need for the units to be consistent across a
-            packet path through the network, hence it is RECOMMENDED for
+            packet path through the network, hence it is recommended for
             implementations to use standard units such as Bytes. <figure>
                 <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1212,7 +1237,7 @@ The trace option data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |     ingress_if_id             |         egress_if_id          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                     timestamp subseconds                      |
+    |                     timestamp fraction                        |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                    namespace specific data                    |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1239,7 +1264,7 @@ The trace option data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                   timestamp subseconds                        |
+    |                   timestamp fraction                          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 ]]></artwork>
@@ -1263,7 +1288,7 @@ The trace option data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                    timestamp subseconds                       |
+    |                    timestamp fraction                         |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                    namespace specific data                    |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1277,7 +1302,7 @@ The trace option data MUST be 4-octet aligned:
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |                      timestamp seconds                        |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-    |                    timestamp subseconds                       |
+    |                    timestamp fraction                         |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
     |   Hop_Lim     |              node_id                          |
     +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1315,8 +1340,7 @@ The trace option data MUST be 4-octet aligned:
         pieces of information are added as IOAM-Data-Fields to the packet:</t>
 
         <t><list style="symbols">
-            <t>Random: Unique identifier for the packet (e.g., 64-bits allow
-            for the unique identification of 2^64 packets).</t>
+            <t>PktID: Unique identifier for the packet.</t>
 
             <t>Cumulative: Information which is handed from node to node and
             updated by every node according to a verification algorithm.</t>
@@ -1368,11 +1392,14 @@ IOAM proof of transit Option-Type IOAM-Data-Fields MUST be
             defined:<list style="hanging">
                 <t hangText="Bit 0">"Profile-to-use" (P-bit) (most significant
                 bit). For IOAM POT types that use a maximum of two profiles to
-                drive computation, indicates which POT-profile is used. The
+                drive computation, indicates which POT-profile (see <xref
+                target="I-D.ietf-sfc-proof-of-transit"/> for details) is used. The
                 two profiles are numbered 0, 1.</t>
 
-                <t hangText="Bit 1-7">Reserved: MUST be set to zero upon
-                transmission and ignored upon receipt.</t>
+                <t hangText="Bit 1-7">Undefined:  These bits are 
+                available for assignment, see <xref target="pot-flags-sec"/>. 
+                Bit which have not been assigned
+                MUST be set to zero upon transmission and ignored upon receipt.</t>
               </list></t>
 
             <t hangText="POT Option data:">Variable-length field. The type of
@@ -1389,9 +1416,9 @@ IOAM proof of transit option of IOAM POT Type 0:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |        Namespace-ID           |IOAM POT Type=0|P|R R R R R R R|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-|                        Random                                 |  |
+|                        PktID                                  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
-|                        Random(contd)                          |  O
+|                        PktID (contd)                          |  O
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  T
 |                        Cumulative                             |  | 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  |
@@ -1416,7 +1443,8 @@ IOAM proof of transit option of IOAM POT Type 0:
               the value 0.</t>
 
               <t hangText="P bit:">1-bit. "Profile-to-use" (P-bit) (most
-              significant bit). Indicates which POT-profile is used to
+              significant bit). Indicates which POT-profile (see <xref
+              target="I-D.ietf-sfc-proof-of-transit"/> for details) is used to
               generate the Cumulative. Any node participating in POT will have
               a maximum of 2 profiles configured that drive the computation of
               cumulative. The two profiles are numbered 0, 1. This bit conveys
@@ -1427,14 +1455,14 @@ IOAM proof of transit option of IOAM POT Type 0:
               MUST be set to zero upon transmission and ignored upon
               receipt.</t>
 
-              <t hangText="Random:">64-bit Per packet Random number.</t>
+              <t hangText="PktID:">64-bit packet identifier.</t>
 
               <t hangText="Cumulative:">64-bit Cumulative that is updated at
-              specific nodes by processing per packet Random number field and
+              specific nodes by processing per packet PktID field and
               configured parameters.</t>
-            </list>Note: Larger or smaller sizes of "Random" and "Cumulative"
+            </list>Note: Larger or smaller sizes of "PktID" and "Cumulative"
           data are feasible and could be required for certain deployments
-          (e.g. in case of space constraints in the encapsulation protocols
+          (e.g., in case of space constraints in the encapsulation protocols
           used). Future documents could introduce different sizes of data for
           "proof of transit".</t>
         </section>
@@ -1491,7 +1519,7 @@ be 4-octet aligned:
                 "packet group" which is used to detect packet loss, packet
                 reordering, or packet duplication within the group. The
                 "packet group" is deployment dependent and defined at the IOAM
-                encapsulating node e.g. by n-tuple based classification of
+                encapsulating node, e.g., by n-tuple based classification of
                 packets.</t>
 
                 <t hangText="Bit 1">When set indicates presence of a 32-bit
@@ -1499,7 +1527,7 @@ be 4-octet aligned:
                 used to detect packet loss, packet reordering, or packet
                 duplication within that group. The "packet group" is
                 deployment dependent and defined at the IOAM encapsulating
-                node e.g. by n-tuple based classification of packets.</t>
+                node, e.g., by n-tuple based classification of packets.</t>
 
                 <t hangText="Bit 2">When set indicates presence of timestamp
                 seconds, representing the time at which the packet entered the
@@ -1512,7 +1540,7 @@ be 4-octet aligned:
                 tunnel. Each implementation has to document when the E2E
                 timestamp that is going to be put in the packet is retrieved.
                 This 4-octet field has three possible formats; based on either
-                PTP <xref target="IEEE1588v2"/>, NTP <xref target="RFC5905"/>,
+                PTP (see e.g., <xref target="RFC8877"/>), NTP <xref target="RFC5905"/>,
                 or POSIX <xref target="POSIX"/>. The three timestamp formats
                 are specified in <xref target="TimestampSec"/>. In all three
                 cases, the Timestamp Seconds field contains the 32 most
@@ -1525,13 +1553,13 @@ be 4-octet aligned:
                 in order to detect the error indication.</t>
 
                 <t hangText="Bit 3">When set indicates presence of timestamp
-                subseconds, representing the time at which the packet entered
+                fraction, representing the time at which the packet entered
                 the IOAM domain. This 4-octet field has three possible
-                formats; based on either PTP <xref target="IEEE1588v2"/>, NTP
+                formats; based on either PTP (see e.g., <xref target="RFC8877"/>), NTP
                 <xref target="RFC5905"/>, or POSIX <xref target="POSIX"/>. The
                 three timestamp formats are specified in <xref
                 target="TimestampSec"/>. In all three cases, the Timestamp
-                Subseconds field contains the 32 least significant bits of the
+                fraction field contains the 32 least significant bits of the
                 timestamp format that is specified in <xref
                 target="TimestampSec"/>. If a node is not capable of
                 populating this field, it assigns the value 0xFFFFFFFF. Note
@@ -1558,7 +1586,7 @@ be 4-octet aligned:
       is used.</t>
 
       <section anchor="PTPFromatSec" title="PTP Truncated Timestamp Format">
-        <t>The Precision Time Protocol (PTP) <xref target="IEEE1588v2"/> uses
+        <t>The Precision Time Protocol (PTP) uses
         an 80-bit timestamp format. The truncated timestamp format is a 64-bit
         field, which is the 64 least significant bits of the 80-bit PTP
         timestamp. The PTP truncated format is specified in Section 4.3 of
@@ -1566,7 +1594,7 @@ be 4-octet aligned:
         presented below for the sake of completeness.</t>
 
         <figure align="center" anchor="PTPFormat"
-                title="PTP [IEEE1588v2] Truncated Timestamp Format">
+                title="PTP Truncated Timestamp Format">
           <artwork align="left"><![CDATA[
          
      0                   1                   2                   3
@@ -1597,7 +1625,7 @@ be 4-octet aligned:
           </list></t>
 
         <t>Epoch: <list hangIndent="10" style="empty">
-            <t>The PTP <xref target="IEEE1588v2"/> epoch is 1 January 1970
+            <t>The PTP (see e.g., <xref target="RFC8877"/>) epoch is 1 January 1970
             00:00:00 TAI, which is 31 December 1969 23:59:51.999918 UTC.</t>
           </list></t>
 
@@ -1614,8 +1642,7 @@ be 4-octet aligned:
         <t>Synchronization Aspects: <list hangIndent="10" style="empty">
             <t>It is assumed that nodes that run this protocol are
             synchronized among themselves. Nodes MAY be synchronized to a
-            global reference time. Note that if PTP <xref
-            target="IEEE1588v2"/> is used for synchronization, the timestamp
+            global reference time. Note that if PTP is used for synchronization, the timestamp
             MAY be derived from the PTP-synchronized clock, allowing the
             timestamp to be measured with respect to the clock of an PTP
             Grandmaster clock.</t>
@@ -1816,15 +1843,27 @@ be 4-octet aligned:
             <t hangText="2">IOAM POT Option-Type</t>
 
             <t hangText="3">IOAM E2E Option-Type</t>
-          </list>4 - 127 are available for assignment via RFC Required process
+          </list>4 - 127 are available for assignment via "IETF Review" process
         as per <xref target="RFC8126"/>.</t>
+
+        <t>New registration requests MUST use the following template:</t>
+
+        <t><list style="hanging">
+        	<t hangText="Name:">Name of the newly registered Option-Type.</t>
+
+        	<t hangText="Code point:">Desired value of the requested code point.</t>
+
+        	<t hangText="Description:">Brief description of the newly registered Option-Type.</t>
+
+        	<t hangText="Reference:">Reference to the document that defines the new Option-Type.</t>
+        </list></t>
       </section>
 
       <section anchor="ioam-trace-type-registry" title="IOAM Trace-Type Registry">
         <t>This registry defines code point for each bit in the 24-bit
-        IOAM-Trace-Type field for Pre-allocated trace option and Incremental
-        trace option defined in <xref target="IOAM_tracing_option"/>. The
-        meaning of Bits 0 - 11 for trace type are defined in this document in
+        IOAM-Trace-Type field for Pre-allocated Trace-Option-Type and Incremental
+        Trace-Option-Type defined in <xref target="IOAM_tracing_option"/>. The
+        meaning of Bits 0 - 11 is defined in this document in
         <xref target="IOAMTraceType"/> of <xref target="TraceOptionDef"/>:</t>
 
         <t><list style="hanging">
@@ -1835,7 +1874,7 @@ be 4-octet aligned:
 
             <t hangText="Bit 2">timestamp seconds</t>
 
-            <t hangText="Bit 3">timestamp subseconds</t>
+            <t hangText="Bit 3">timestamp fraction</t>
 
             <t hangText="Bit 4">transit delay</t>
 
@@ -1858,7 +1897,20 @@ be 4-octet aligned:
 
             <t hangText="Bit 23">reserved</t>
           </list> The meaning for Bits 12 - 21 are available for assignment
-        via RFC Required process as per <xref target="RFC8126"/>.</t>
+        via "IETF Review" process as per <xref target="RFC8126"/>.</t>
+
+        <t>New registration requests MUST use the following template:</t>
+
+        <t><list style="hanging">
+        	<t hangText="Bit:">Desired bit to be allocated in the 24-bit
+             IOAM Trace-Option-Type field for Pre-allocated Trace-Option-Type
+              and Incremental Trace-Option-Type.</t>
+
+        	<t hangText="Description:">Brief description of the newly registered bit.</t>
+
+        	<t hangText="Reference:">Reference to the document that defines the new bit.</t>
+        </list></t>
+
       </section>
 
       <section anchor="Flags-Registry-Sec" title="IOAM Trace-Flags Registry">
@@ -1871,8 +1923,21 @@ be 4-octet aligned:
 
         <t><list style="hanging">
             <t hangText="Bit 0">"Overflow" (O-bit)</t>
-          </list>Bit 1 - 3 are available for assignment via RFC Required
+          </list>Bit 1 - 3 are available for assignment via "IETF Review"
         process as per <xref target="RFC8126"/>.</t>
+
+        <t>New registration requests MUST use the following template:</t>
+
+        <t><list style="hanging">
+        	<t hangText="Bit:">Desired bit to be allocated 
+        		in the 8 bit flags field of the Pre-allocated 
+        		Trace-Option-Type and for the Incremental Trace-Option-Type.</t>
+
+        	<t hangText="Description:">Brief description of the newly registered bit.</t>
+
+        	<t hangText="Reference:">Reference to the document that defines the new bit.</t>
+        </list></t>
+
       </section>
 
       <section title="IOAM POT-Type Registry">
@@ -1883,13 +1948,26 @@ be 4-octet aligned:
 
         <t><list style="hanging">
             <t hangText="0:">16 Octet POT data</t>
-          </list> 1 - 255 are available for assignment via RFC Required
+          </list> 1 - 255 are available for assignment via "IETF Review"
         process as per <xref target="RFC8126"/>.</t>
+
+        <t>New registration requests MUST use the following template:</t>
+
+        <t><list style="hanging">
+        	<t hangText="Name:">Name of the newly registered POT-Type.</t>
+
+        	<t hangText="Code point:">Desired value of the requested code point.</t>
+
+        	<t hangText="Description:">Brief description of the newly registered POT-Type.</t>
+
+        	<t hangText="Reference:">Reference to the document that defines the new POT-Type.</t>
+        </list></t>
+
       </section>
 
-      <section title="IOAM POT-Flags Registry">
+      <section anchor="pot-flags-sec" title="IOAM POT-Flags Registry">
         <t>This registry defines code points for each bit in the 8 bit flags
-        for IOAM POT option defined in <xref
+        for IOAM POT Option-Type defined in <xref
         target="IOAM_proof_of_transit_option"/>. The meaning of Bit 0 for IOAM
         POT flags is defined in this document in <xref
         target="IOAM_proof_of_transit_option"/>:</t>
@@ -1897,7 +1975,19 @@ be 4-octet aligned:
         <t><list style="hanging">
             <t hangText="Bit 0">"Profile-to-use" (P-bit)</t>
           </list> The meaning for Bits 1 - 7 are available for assignment via
-        RFC Required process as per <xref target="RFC8126"/>.</t>
+        "IETF Review" process as per <xref target="RFC8126"/>.</t>
+
+        <t>New registration requests MUST use the following template:</t>
+
+        <t><list style="hanging">
+        	<t hangText="Bit:">Desired bit to be allocated 
+        		in the 8 bit flags field of the IOAM POT Option-Type.</t>
+
+        	<t hangText="Description:">Brief description of the newly registered bit.</t>
+
+        	<t hangText="Reference:">Reference to the document that defines the new bit.</t>
+        </list></t>
+
       </section>
 
       <section title="IOAM E2E-Type Registry">
@@ -1913,37 +2003,93 @@ be 4-octet aligned:
 
             <t hangText="Bit 2">timestamp seconds</t>
 
-            <t hangText="Bit 3">timestamp subseconds</t>
+            <t hangText="Bit 3">timestamp fraction</t>
           </list> The meaning of Bits 4 - 15 are available for assignment via
-        RFC Required process as per <xref target="RFC8126"/>.</t>
+        "IETF Review" process as per <xref target="RFC8126"/>.</t>
+
+        <t>New registration requests MUST use the following template:</t>
+
+        <t><list style="hanging">
+        	<t hangText="Bit:">Desired bit to be allocated 
+        		in the 16 bit IOAM-E2E-Type field.</t>
+
+        	<t hangText="Description:">Brief description of the newly registered bit.</t>
+
+        	<t hangText="Reference:">Reference to the document that defines the new bit.</t>
+        </list></t>
+
       </section>
 
       <section title="IOAM Namespace-ID Registry ">
         <t>IANA is requested to set up an "IOAM Namespace-ID Registry",
-        containing 16-bit values. The meaning of Bit 0 is defined in this
+        containing 16-bit values and following the template for requests
+        shown below. The meaning of 0x0000 is defined in this
         document. IANA is requested to reserve the values 0x0001 to 0x7FFF for
         private use (managed by operators), as specified in <xref
         target="ioam_namespaces"/> of the current document. Registry entries
         for the values 0x8000 to 0xFFFF are to be assigned via the "Expert
-        Review" policy defined in <xref target="RFC8126"/>. Upon a new 
-		allocation request, a designated 
-		expert will review the allocation request. The expert will post 
-		the request on the mailing list of the IPPM working group in the IETF
-		(ippm@ietf.org), and possibly on other relevant 
-		mailing lists, to allow for community feedback. Based on the review, 
-		the expert will either approve or deny the request. The intention is 
-		that any allocation will be accompanied by a published RFC.  But in 
-		order to allow for the allocation of values prior to the RFC being 
-		approved for publication, the designated expert can approve 
+        Review" policy defined in <xref target="RFC8126"/>. </t>
+
+        <t>Upon receiving a new allocation request, a designated 
+		expert will perform the following:<list style="symbols">
+            <t>Review whether the request is complete, i.e., the 
+            	registration template has been filled in. The expert
+                will send incomplete requests back to the requestor.</t>
+
+            <t>Check whether the request is neither a duplicate of nor
+            	conflicting with either an already existing allocation 
+            	or a pending allocation. In case of duplicates or conflicts,
+            	the expert will ask the requestor to update the allocation
+                request accordingly.</t>
+
+            <t>Solicit feedback from relevant working groups and communities to ensure
+               that the new allocation request has been properly reviewed
+               and that rough consensus on the request exists. At a minumum,
+               the expert will solicit feedback from the IPPM working group
+               in the IETF by posting the request to the ippm@ietf.org
+               mailing list. If the feedback received from the relevant working
+               groups and communities indicates rough consensus on the
+               request, the expert will approve the request and ask IANA
+               for allocating the new Namespace-ID. In case the expert
+               senses a lack of consensus from the feedback received, the
+               expert will ask the requestor to engage with the corresponding
+               working groups and communities to further review and refine
+               the request.</t>
+
+        </list></t>
+
+        <t> It is intended that any allocation will be accompanied 
+        by a published RFC.  In order to allow for the allocation of code points
+        prior to the RFC being approved for publication, the designated expert can approve 
 		allocations once it seems clear that an RFC will be published.</t>
 
         <t><list style="hanging">
-            <t hangText="0:">default namespace (known to all IOAM nodes)</t>
+            <t hangText="0x0000:">default namespace (known to all IOAM nodes)</t>
 
             <t hangText="0x0001 - 0x7FFF:">reserved for private use</t>
 
             <t hangText="0x8000 - 0xFFFF:">unassigned</t>
           </list></t>
+
+        <t>New registration requests MUST use the following template:</t>
+
+        <t><list style="hanging">
+        	<t hangText="Name:">Name of the newly registered Namespace-ID.</t>
+
+        	<t hangText="Code point:">Desired value of the requested Namespace-ID.</t>
+
+        	<t hangText="Description:">Brief description of the newly 
+        		registered Namespace-ID.</t>
+        	
+        	<t hangText="Reference:">Reference to the document that
+        		defines the new Namespace-ID.</t>
+
+        	<t hangText="Status of the registration:"> Status can be either 
+        		"permanent" or "provisional". Namespace-ID registrations following
+        		a successful expert review will have the status "provisional".
+        		Once the RFC, which defines the new Namespace-ID is published,
+        		the status is changed to "permanent".</t>
+        </list></t>
       </section>
     </section>
 
@@ -2082,6 +2228,8 @@ be 4-octet aligned:
     <references title="Normative References">
       &RFC2119;
 
+      &RFC8174;
+
       &RFC5905;
 
       &RFC8126;
@@ -2104,29 +2252,14 @@ be 4-octet aligned:
         <seriesInfo name="" value="IEEE Std 1003.1-2008"/>
       </reference>
 
-      <reference anchor="IEEE1588v2"
-                 target="http://standards.ieee.org/findstds/standard/1588-2008.html">
-        <front>
-          <title>IEEE Std 1588-2008 - IEEE Standard for a Precision Clock
-          Synchronization Protocol for Networked Measurement and Control
-          Systems</title>
-
-          <author>
-            <organization>Institute of Electrical and Electronics
-            Engineers</organization>
-          </author>
-
-          <date year="2008"/>
-        </front>
-
-        <seriesInfo name="" value="IEEE Std 1588-2008"/>
-      </reference>
     </references>
 
     <references title="Informative References">
       &RFC7665;
 
       &RFC7799;
+
+      &RFC8877;
 
       &RFC7820;
 
@@ -2159,7 +2292,7 @@ be 4-octet aligned:
 
       &I-D.ietf-nvo3-geneve;
 
-      &RFC8877;
+      &RFC8799;
 
       &I-D.ietf-sfc-proof-of-transit;
 
