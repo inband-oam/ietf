@@ -28,7 +28,6 @@
 <!ENTITY I-D.brockners-opsawg-ioam-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-opsawg-ioam-deployment.xml">
 <!ENTITY I-D.brockners-ippm-ioam-data-integrity SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-ippm-ioam-data-integrity.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
-<!ENTITY I-D.ioamteam-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioamteam-ippm-ioam-direct-export.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
 <!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-6man-pdm-option.xml">
@@ -195,7 +194,7 @@
       extra packets to be sent. IOAM adds information to the already available
       data packets and therefore cannot be considered passive. In terms of the
       classification given in <xref target="RFC7799"/>, IOAM could be portrayed
-      as Hybrid Type 1. IOAM mechanisms can be leveraged where mechanisms
+      as Hybrid Type I. IOAM mechanisms can be leveraged where mechanisms
       using, e.g., ICMP do not apply or do not offer the desired results, such
       as proving that a certain traffic flow takes a pre-defined path, SLA
       verification for the live data traffic, detailed statistics on traffic
@@ -278,13 +277,21 @@
     </section>
 
     <section title="Scope, Applicability, and Assumptions ">
-      <t>IOAM deployment assumes a set of constraints, requirements, and
-      guiding principles which are described in this section.</t>
+      <t>IOAM assumes a set of constraints as well as 
+      guiding principles and concepts that go hand in hand with the definition
+      of the IOAM data fields. These constraints, guiding principles, and
+      concepts are described in this section. A discussion of how IOAM data 
+      fields and the associated concepts are applied to an IOAM deployment
+      are out of scope for this document. Please refer to 
+      <xref target="I-D.brockners-opsawg-ioam-deployment"/> for IOAM
+      deployment considerations.
+
+      </t>
 
       <t>Scope: This document defines the data fields and associated data
-      types for in-situ OAM. The in-situ OAM data field can be encapsulated in
-      a variety of protocols, including NSH, Segment Routing, Geneve, IPv6, or
-      IPv4. Specification details for these different protocols are outside
+      types for in-situ OAM. The in-situ OAM data fields can be encapsulated in
+      a variety of protocols, including NSH, Segment Routing, Geneve, and IPv6.
+      Specification details for these different protocols are outside
       the scope of this document. It is expected that each such encapsulation
 	  would be specified by an RFC, jointly designed by the working group
 	  that develops or maintains the encapsulation protocol and the IETF IPPM
@@ -389,8 +396,9 @@
         <t>A device which adds at least one IOAM-Option-Type to the packet is
         called an "IOAM encapsulating node", whereas a device which removes
         an IOAM-Option-Type is referred to as an "IOAM decapsulating node".
-        Nodes within the domain which are aware of IOAM data and read and/or
-        write or process the IOAM data are called "IOAM transit nodes". IOAM
+        Nodes within the domain which are aware of IOAM data and
+        read and/or write and/or process IOAM data
+        are called "IOAM transit nodes". IOAM
         nodes which add or remove the IOAM-Data-Fields can also update the
         IOAM-Data-Fields at the same time. Or in other words, IOAM
         encapsulating or decapsulating nodes can also serve as IOAM transit
@@ -407,11 +415,12 @@
         encapsulating node is responsible for applying the IOAM functionality
         to the selected subset.</t>
 
-        <t>An "IOAM transit node" updates one or more of the IOAM-Data-Fields.
+        <t>An "IOAM transit node" read and/or write and/or process
+        one or more of the IOAM-Data-Fields.
         If both the Pre-allocated and the Incremental Trace Option-Types are
         present in the packet, each IOAM transit node based on configuration and
-	available implementation of IOAM populates IOAM trace data in
-	either Pre-allocated or Incremental Trace Option-Type but not both.
+	    available implementation of IOAM populates IOAM trace data in
+	    either Pre-allocated or Incremental Trace Option-Type but not both.
         A transit node MUST ignore IOAM-Option-Types that it does not
         understand. A transit node MUST NOT add new IOAM-Option-Types to a
         packet, MUST NOT remove IOAM-Option-Types from a packet, and
@@ -444,15 +453,16 @@
       </section>
 
       <section anchor="ioam_namespaces" title="IOAM-Namespaces">
-        <t>A subset or all of the IOAM-Option-Types and their corresponding
-        IOAM-Data-Fields can be associated to an IOAM-Namespace.
+        <t>An IOAM-Namespace can be associated to a subset or all of the 
+        the IOAM-Option-Types and their corresponding IOAM-Data-Fields.
         IOAM-Namespaces add further context to IOAM-Option-Types and
         associated IOAM-Data-Fields. The IOAM-Option-Types and associated 
 		IOAM-Data-Fields are interpreted as defined in this document, 
 		regardless of the value of the IOAM-Namespace. However, 
-		IOAM-Namespaces group nodes to support different deployment approaches
-		of IOAM (see a few example use-cases below) as
-        well as resolve issues which can occur due to IOAM-Data-Fields not
+		IOAM-Namespaces provide a way to group nodes to 
+		support different deployment approaches
+		of IOAM (see a few example use-cases below). IOAM-Namespaces also
+		help to resolve potential issues which can occur due to IOAM-Data-Fields not
         being globally unique (e.g., IOAM node identifiers do not have to be
         globally unique). IOAM-Data-Fields significance is always within a
         particular IOAM-Namespace. Given that IOAM-Data-Fields are always 
@@ -495,7 +505,7 @@
             overlapping IOAM-Domains or in case of a layered IOAM
             deployment.</t>
 
-            <t>whether IOAM-Option-Type(s) has to be removed from the packet,
+            <t>whether IOAM-Option-Type(s) have to be removed from the packet,
             e.g., at a domain edge or domain boundary.</t>
           </list></t>
 
@@ -864,7 +874,9 @@ The trace option data MUST be 4-octet aligned:
                   variable length Opaque State Snapshot field.</t>
 
                   <t hangText="Bit 23">Reserved: MUST be set to zero upon
-                  transmission and ignored upon receipt.</t>
+                  transmission and ignored upon receipt. This bit is
+                  reserved to allow for future extensions of the 
+                  IOAM-Trace-Type bit field.</t>
                 </list></t>
 
               <t hangText=" "><xref target="trace-node-data-element"/>
@@ -909,7 +921,7 @@ The trace option data MUST be 4-octet aligned:
           "short format" as well as "wide format". "Short format" refers to
           an IOAM-Data-Field which comprises 4 octets. "Wide format" refers to
           an IOAM-Data-Field which comprises 8 octets.
-          The  use of "short format" or "wide format" is not mutially exclusive.
+          The  use of "short format" or "wide format" is not mutually exclusive.
           A deployment could choose to leverage both. For example,
           ingress_if_id_(short format) could be an identifier for the physical
           interface, whereas ingress_if_id_(wide format) could be an
@@ -932,7 +944,7 @@ The trace option data MUST be 4-octet aligned:
           to interpret the provided data appropriately.
           </t>
 
-          <section title="Hop_Lim and node_id short format">
+          <section anchor="Hop_Lim" title="Hop_Lim and node_id short format">
             <t>The "Hop_Lim and node_id short format" field is a 4-octet field
             that is defined as follows: <figure>
                 <artwork><![CDATA[ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -941,7 +953,7 @@ The trace option data MUST be 4-octet aligned:
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
               </figure><list style="hanging">
                 <t hangText="Hop_Lim:">1-octet unsigned integer. It is set to
-                the Hop Limit value in the packet at the node that records
+                the Hop Limit value in the packet at egress from the node that records
                 this data. Hop Limit information is used to identify the
                 location of the node in the communication path. This is copied
                 from the lower layer, e.g., TTL value in IPv4 header or hop
@@ -986,7 +998,7 @@ The trace option data MUST be 4-octet aligned:
 
           <section title="timestamp seconds">
             <t>The "timestamp seconds" field is a 4-octet unsigned integer
-            field. Absolute timestamp in seconds that specifies the time at
+            field. It contains the absolute timestamp in seconds that specifies the time at
             which the packet was received by the node. This field has three
             possible formats; based on either PTP (see e.g., <xref target="RFC8877"/>),
             NTP <xref target="RFC5905"/>, or POSIX <xref target="POSIX"/>. The
@@ -1004,7 +1016,7 @@ The trace option data MUST be 4-octet aligned:
           <section title="timestamp faction">
             <t>The "timestamp fraction" field is a 4-octet unsigned integer
             field. Fraction specifies the fractional portion of the number of
-            seconds since the epoch <xref target="RFC8877"/>. The field specifies the time at
+            seconds since the NTP epoch <xref target="RFC8877"/>. The field specifies the time at
             which the packet was received by the node. This field has three
             possible formats; based on either PTP (see e.g., <xref target="RFC8877"/>),
             NTP <xref target="RFC5905"/>, or POSIX <xref target="POSIX"/>. The
@@ -1103,17 +1115,8 @@ The trace option data MUST be 4-octet aligned:
 ~                         node_id (contd)                       |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+]]></artwork>
               </figure><list style="hanging">
-                <t hangText="Hop_Lim:">1-octet unsigned integer. It is set to
-                the Hop Limit value in the packet at the node that records
-                this data. Hop Limit information is used to identify the
-                location of the node in the communication path. This is copied
-                from the lower layer for, e.g., TTL value in IPv4 header or hop
-                limit field from IPv6 header of the packet. The semantics of
-                the Hop_Lim field depend on the lower layer protocol that IOAM
-                is encapsulated into, and therefore its specific semantics are
-                outside the scope of this memo. The value of this field MUST
-                be set to 0xff when the lower level does not have a TTL/Hop
-                limit equivalent field.</t>
+                <t hangText="Hop_Lim:">1-octet unsigned integer. See
+                	<xref target="Hop_Lim"/> for the definition of the field.</t>
 
                 <t hangText="node_id:">7-octet unsigned integer. Node
                 identifier field to uniquely identify a node within the
@@ -1220,11 +1223,12 @@ The trace option data MUST be 4-octet aligned:
 
         <section anchor="trace-type-node-data"
                  title=" Examples of IOAM node data">
-          <t>An entry in the "node data list" array can have different
-          formats, following the needs of the deployment. Some deployments
+          <t>The format used for the entries in a packet's "node data list" 
+          	array can vary from packet to packet and deployment to deployment".
+          	Some deployments
           might only be interested in recording the node identifiers, whereas
-          others might be interested in recording node identifier and
-          timestamp. The section provides example entries of the "node data
+          others might be interested in recording node identifiers and
+          timestamps. This section provides example entries of the "node data
           list".</t>
 
           <t><list style="hanging">
@@ -1326,7 +1330,7 @@ The trace option data MUST be 4-octet aligned:
 
       <section anchor="IOAM_proof_of_transit_option"
                title="IOAM Proof of Transit Option-Type">
-        <t>IOAM Proof of Transit Option-Type is to support path or service
+        <t>IOAM Proof of Transit Option-Type is used to support path or service
         function chain <xref target="RFC7665"/> verification use cases.
         Proof-of-transit leverages mechanisms like Shamir's Secret Sharing
         Schema (SSSS) <xref target="SSS"/>. For further information on
@@ -1381,12 +1385,16 @@ IOAM proof of transit Option-Type IOAM-Data-Fields MUST be
             <t hangText="IOAM POT Type:">8-bit identifier of a particular POT
             variant that specifies the POT data that is included. This
             document defines POT Type 0:<list style="hanging">
-                <t hangText="0:">POT data is a 16 Octet field as described
-                below.</t>
+                <t hangText="0:">POT data is a 16 Octet field to carry
+                	data associated to POT procedures.
+                  <xref
+                target="I-D.ietf-sfc-proof-of-transit"/> describes an
+                implementation of POT and provides details on the data
+                carried in POT data.</t>
               </list>
             If a node receives an IOAM POT Type value that it does not
-            understand, the node MUST NOT change the contents of the
-            IOAM-Data-Fields.</t>
+            understand, the node MUST NOT change, add to, or remove 
+            the contents of the OAM-Data-Fields.</t>
 
             <t hangText="IOAM POT flags:">8-bit. Following flags are
             defined:<list style="hanging">
@@ -1394,11 +1402,13 @@ IOAM proof of transit Option-Type IOAM-Data-Fields MUST be
                 bit). For IOAM POT types that use a maximum of two profiles to
                 drive computation, indicates which POT-profile (see <xref
                 target="I-D.ietf-sfc-proof-of-transit"/> for details) is used. The
-                two profiles are numbered 0, 1.</t>
+                two profiles are numbered 0, 1. This bit conveys
+                whether profile 0 or profile 1 is used to compute the
+                Cumulative.</t>
 
                 <t hangText="Bit 1-7">Undefined:  These bits are 
                 available for assignment, see <xref target="pot-flags-sec"/>. 
-                Bit which have not been assigned
+                Bits which have not been assigned
                 MUST be set to zero upon transmission and ignored upon receipt.</t>
               </list></t>
 
@@ -1429,31 +1439,20 @@ IOAM proof of transit option of IOAM POT Type 0:
 ]]></artwork>
             </figure><list style="hanging">
               <t hangText="Namespace-ID:">16-bit identifier of an
-              IOAM-Namespace. The Namespace-ID value of 0x0000 is defined as
-              the "Default-Namespace-ID" (see <xref target="ioam_namespaces"/>) 
-			  and MUST be known to all the nodes
-              implementing IOAM. For any other Namespace-ID value that does
-              not match any Namespace-ID the node is configured to operate on,
-              the node MUST NOT change the contents of the
-              IOAM-Data-Fields.</t>
+              IOAM-Namespace (see <xref target="IOAM_proof_of_transit_option"/> 
+              above).</t>
 
               <t hangText="IOAM POT Type:">8-bit identifier of a particular
-              POT variant that specifies the POT data that is included. This
-              section defines the POT data when the IOAM POT Type is set to
-              the value 0.</t>
+              POT variant that specifies the POT data that is included 
+              (see <xref target="IOAM_proof_of_transit_option"/> 
+              above). For this case here, IOAM POT Type is set to the value 0.</t>
 
-              <t hangText="P bit:">1-bit. "Profile-to-use" (P-bit) (most
-              significant bit). Indicates which POT-profile (see <xref
-              target="I-D.ietf-sfc-proof-of-transit"/> for details) is used to
-              generate the Cumulative. Any node participating in POT will have
-              a maximum of 2 profiles configured that drive the computation of
-              cumulative. The two profiles are numbered 0, 1. This bit conveys
-              whether profile 0 or profile 1 is used to compute the
-              Cumulative.</t>
+              <t hangText="Bit 0:">1-bit. "Profile-to-use" (P-bit) (most
+              significant bit), see <xref target="IOAM_proof_of_transit_option"/> 
+              above. </t>
 
-              <t hangText="R (7 bits):">7-bit IOAM POT flags for future use.
-              MUST be set to zero upon transmission and ignored upon
-              receipt.</t>
+              <t hangText="Bit 1-7:">Undefined (see <xref target="IOAM_proof_of_transit_option"/> 
+              above).</t>
 
               <t hangText="PktID:">64-bit packet identifier.</t>
 
@@ -1461,9 +1460,9 @@ IOAM proof of transit option of IOAM POT Type 0:
               specific nodes by processing per packet PktID field and
               configured parameters.</t>
             </list>Note: Larger or smaller sizes of "PktID" and "Cumulative"
-          data are feasible and could be required for certain deployments
-          (e.g., in case of space constraints in the encapsulation protocols
-          used). Future documents could introduce different sizes of data for
+          data are feasible and could be required for certain deployments,
+          e.g., in case of space constraints in the encapsulation protocols
+          used. Future documents could introduce different sizes of data for
           "proof of transit".</t>
         </section>
       </section>
@@ -1520,14 +1519,17 @@ be 4-octet aligned:
                 reordering, or packet duplication within the group. The
                 "packet group" is deployment dependent and defined at the IOAM
                 encapsulating node, e.g., by n-tuple based classification of
-                packets.</t>
+                packets. When this bit is set, "Bit 1" (for 32-bit sequence
+                number, see below) MUST be zero.</t>
 
                 <t hangText="Bit 1">When set indicates presence of a 32-bit
                 sequence number added to a specific "packet group" which is
                 used to detect packet loss, packet reordering, or packet
                 duplication within that group. The "packet group" is
                 deployment dependent and defined at the IOAM encapsulating
-                node, e.g., by n-tuple based classification of packets.</t>
+                node, e.g., by n-tuple based classification of packets. 
+                When this bit is set, "Bit 0" (for 64-bit sequence
+                number, see above) MUST be zero.</t>
 
                 <t hangText="Bit 2">When set indicates presence of timestamp
                 seconds, representing the time at which the packet entered the
@@ -1609,14 +1611,14 @@ be 4-octet aligned:
 
         <t>Timestamp field format: <list hangIndent="10" style="empty">
             <t>Seconds: specifies the integer portion of the number of seconds
-            since the epoch.</t>
+            since the PTP epoch.</t>
 
             <t>+ Size: 32 bits.</t>
 
             <t>+ Units: seconds.</t>
 
             <t>Nanoseconds: specifies the fractional portion of the number of
-            seconds since the epoch.</t>
+            seconds since the PTP epoch.</t>
 
             <t>+ Size: 32 bits.</t>
 
@@ -1625,8 +1627,7 @@ be 4-octet aligned:
           </list></t>
 
         <t>Epoch: <list hangIndent="10" style="empty">
-            <t>The PTP (see e.g., <xref target="RFC8877"/>) epoch is 1 January 1970
-            00:00:00 TAI, which is 31 December 1969 23:59:51.999918 UTC.</t>
+            <t>PTP epoch. For details see e.g., <xref target="RFC8877"/>.</t>
           </list></t>
 
         <t>Resolution: <list hangIndent="10" style="empty">
@@ -1674,14 +1675,14 @@ be 4-octet aligned:
 
         <t>Timestamp field format: <list hangIndent="10" style="empty">
             <t>Seconds: specifies the integer portion of the number of seconds
-            since the epoch.</t>
+            since the NTP epoch.</t>
 
             <t>+ Size: 32 bits.</t>
 
             <t>+ Units: seconds.</t>
 
             <t>Fraction: specifies the fractional portion of the number of
-            seconds since the epoch.</t>
+            seconds since the NTP epoch.</t>
 
             <t>+ Size: 32 bits.</t>
 
@@ -1690,7 +1691,7 @@ be 4-octet aligned:
           </list></t>
 
         <t>Epoch: <list hangIndent="10" style="empty">
-            <t>The epoch is 1 January 1900 at 00:00 UTC.</t>
+            <t>NTP Epoch. For details see <xref target="RFC5905"/>.</t>
           </list></t>
 
         <t>Resolution: <list hangIndent="10" style="empty">
@@ -1739,14 +1740,14 @@ be 4-octet aligned:
 
         <t>Timestamp field format: <list hangIndent="10" style="empty">
             <t>Seconds: specifies the integer portion of the number of seconds
-            since the epoch.</t>
+            since the POSIX epoch.</t>
 
             <t>+ Size: 32 bits.</t>
 
             <t>+ Units: seconds.</t>
 
             <t>Microseconds: specifies the fractional portion of the number of
-            seconds since the epoch.</t>
+            seconds since the POSIX epoch.</t>
 
             <t>+ Size: 32 bits.</t>
 
@@ -1755,8 +1756,7 @@ be 4-octet aligned:
           </list></t>
 
         <t>Epoch: <list hangIndent="10" style="empty">
-            <t>The epoch is 1 January 1970 00:00:00 TAI, which is 31 December
-            1969 23:59:51.999918 UTC.</t>
+            <t>POSIX epoch. For details, see <xref target="POSIX"/>, appendix A.4.16.</t>
           </list></t>
 
         <t>Resolution: <list hangIndent="10" style="empty">
@@ -1777,12 +1777,6 @@ be 4-octet aligned:
             <xref target="RFC5905"/>. Thus, the timestamp MAY be derived from
             the NTP-synchronized clock, allowing the timestamp to be measured
             with respect to the clock of an NTP server.</t>
-
-            <t>The POSIX-based timestamp format is affected by leap seconds;
-            it represents the number of seconds since the epoch minus the
-            number of leap seconds that have occurred since the epoch. The
-            value of a timestamp during or slightly after a leap second could be
-            temporarily inaccurate.</t>
           </list></t>
       </section>
     </section>
@@ -2110,25 +2104,29 @@ be 4-octet aligned:
       nonexistent ones. In particular, these threats are applicable by
       compromising the integrity of IOAM data, either by maliciously modifying
       IOAM options in transit, or by injecting packets with maliciously
-      generated IOAM options</t>
+      generated IOAM options. All nodes in the path of a IOAM carrying 
+      packet can perform such an attack.
+      </t>
 
-      <t>The Proof of Transit Option-Type (Section <xref
+      <t>The Proof of Transit Option-Type (see <xref
       target="IOAM_proof_of_transit_option"/>) is used for verifying the path
       of data packets. The security considerations of POT are further
       discussed in <xref target="I-D.ietf-sfc-proof-of-transit"/>.</t>
 
-      <t>From a confidentiality perspective, although IOAM options do not
+      <t>In case an attacker gains access to several nodes in a network
+      	and would be able to change the system software of these nodes,
+        IOAM data fields could be misused and repurposed for a use
+        different from what is specified in this document. 
+        One type of misuse is the implementation of a covert channel between
+      	network nodes.
+      </t>
+
+      <t>From a confidentiality perspective, although IOAM options are not expected to
       contain user data, they can be used for network reconnaissance, allowing
       attackers to collect information about network paths, performance, queue
       states, buffer occupancy and other information. Moreover, if IOAM data
       leaks from the IOAM domain it could enable reconnaissance beyond the scope
-      of the IOAM domain. Note that in case IOAM is used in "Direct Exporting"
-      mode <xref target="I-D.ioamteam-ippm-ioam-direct-export"/>, the IOAM
-      related trace information would not be available in the customer data
-      packets, but would trigger export of packet related IOAM information at
-      every node, thus restricting the potential threat to the management
-      plane and mitigating the leakage threat. IOAM data exporting and the way
-      it is secured is outside the scope of this document.</t>
+      of the IOAM domain.</t>
 
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
@@ -2138,7 +2136,10 @@ be 4-octet aligned:
       or analyze the IOAM data. Another example is a packet length attack, in
       which an attacker pushes headers associated with IOAM Option-Types into
       data packets, causing these packets to be increased beyond the MTU size,
-      resulting in fragmentation or in packet drops.</t>
+      resulting in fragmentation or in packet drops. In case POT is used,
+      an attacker could corrupt the POT data fields in the packet, resulting
+      in a verification failure of the POT data, even if the packet followed
+      the correct path.</t>
 
       <t>Since IOAM options can include timestamps, if network devices use
       synchronization protocols then any attack on the time protocol <xref
@@ -2147,9 +2148,8 @@ be 4-octet aligned:
 
       <t>At the management plane, attacks can be set up by misconfiguring
       or by maliciously configuring IOAM-enabled nodes in a way that enables
-      other attacks. Thus, IOAM configuration has to be secured in a way that
-      authenticates authorized users and verifies the integrity of
-      configuration procedures.</t>
+      other attacks. IOAM configuration should only managed by 
+      authorized processes or users. </t>
 
       <t>Solutions to ensure the integrity of IOAM data fields are outside
       the scope of this document.  <xref target="I-D.brockners-ippm-ioam-data-integrity"/>
@@ -2163,13 +2163,13 @@ be 4-octet aligned:
       encapsulation is expected to address the respective
       encapsulation-specific security considerations.</t>
 
-      <t>Notably, in most cases IOAM is expected to be deployed in specific
-      network domains, thus confining the potential attack vectors to within
-      the network domain. A limited administrative domain provides the
+      <t>Notably, IOAM is expected to be deployed in limited domains, 
+      	thus confining the potential attack vectors to within
+      the limited domain. A limited administrative domain provides the
       operator with the means to select, monitor, and control the access of
       all the network devices, making these devices trusted by the operator.
       Indeed, in order to limit the scope of threats mentioned above to within
-      the current network domain the network operator is expected to enforce
+      the current limited domain the network operator is expected to enforce
       policies that prevent IOAM traffic from leaking outside of the IOAM
       domain, and prevent IOAM data from outside the domain to be processed
       and used within the domain.</t>
@@ -2205,7 +2205,9 @@ be 4-octet aligned:
 
       <t>The authors would like to gracefully acknowledge useful review and
       insightful comments received from Joe Clarke, Al Morton, Tom Herbert,
-      Haoyu Song, Mickey Spiegel and Barak Gafni.</t>
+      Haoyu Song, Mickey Spiegel, Roman Danyliw, Benjamin Kaduk, 
+      Ian Swett, Martin Duke, Francesca Palombini, Lars Eggert,
+      Dan Romascanu and Barak Gafni.</t>
     </section>
   </middle>
 
@@ -2235,21 +2237,21 @@ be 4-octet aligned:
       &RFC8126;
 
       <reference anchor="POSIX"
-                 target="https://standards.ieee.org/findstds/standard/1003.1-2008.html">
+                 target="https://standards.ieee.org/findstds/standard/1003.1-2017.html">
         <front>
-          <title>IEEE Std 1003.1-2008 (Revision of IEEE Std 1003.1-2004) -
+          <title>IEEE Std 1003.1-2017 (Revision of IEEE Std 1003.1-2017) -
           IEEE Standard for Information Technology - Portable Operating System
-          Interface (POSIX(R))</title>
+          Interface (POSIX(TM) Base Specifications, Issue 7)</title>
 
           <author>
             <organization>Institute of Electrical and Electronics
             Engineers</organization>
           </author>
 
-          <date year="2008"/>
+          <date year="2017"/>
         </front>
 
-        <seriesInfo name="" value="IEEE Std 1003.1-2008"/>
+        <seriesInfo name="" value="IEEE Std 1003.1-2017"/>
       </reference>
 
     </references>
@@ -2295,8 +2297,6 @@ be 4-octet aligned:
       &RFC8799;
 
       &I-D.ietf-sfc-proof-of-transit;
-
-      &I-D.ioamteam-ippm-ioam-direct-export;
 
       &I-D.spiegel-ippm-ioam-rawexport;
 

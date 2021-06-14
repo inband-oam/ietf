@@ -72,7 +72,7 @@ Table of Contents
    3.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
    4.  Scope, Applicability, and Assumptions . . . . . . . . . . . .   5
    5.  IOAM Data-Fields, Types, Nodes  . . . . . . . . . . . . . . .   6
-     5.1.  IOAM Data-Fields and Option-Types . . . . . . . . . . . .   6
+     5.1.  IOAM Data-Fields and Option-Types . . . . . . . . . . . .   7
      5.2.  IOAM-Domains and types of IOAM Nodes  . . . . . . . . . .   7
      5.3.  IOAM-Namespaces . . . . . . . . . . . . . . . . . . . . .   8
      5.4.  IOAM Trace Option-Types . . . . . . . . . . . . . . . . .  11
@@ -97,15 +97,15 @@ Table of Contents
      5.6.  IOAM Edge-to-Edge Option-Type . . . . . . . . . . . . . .  29
    6.  Timestamp Formats . . . . . . . . . . . . . . . . . . . . . .  31
      6.1.  PTP Truncated Timestamp Format  . . . . . . . . . . . . .  31
-     6.2.  NTP 64-bit Timestamp Format . . . . . . . . . . . . . . .  33
+     6.2.  NTP 64-bit Timestamp Format . . . . . . . . . . . . . . .  32
      6.3.  POSIX-based Timestamp Format  . . . . . . . . . . . . . .  34
    7.  IOAM Data Export  . . . . . . . . . . . . . . . . . . . . . .  35
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  36
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  35
      8.1.  IOAM Option-Type Registry . . . . . . . . . . . . . . . .  36
-     8.2.  IOAM Trace-Type Registry  . . . . . . . . . . . . . . . .  37
-     8.3.  IOAM Trace-Flags Registry . . . . . . . . . . . . . . . .  38
+     8.2.  IOAM Trace-Type Registry  . . . . . . . . . . . . . . . .  36
+     8.3.  IOAM Trace-Flags Registry . . . . . . . . . . . . . . . .  37
      8.4.  IOAM POT-Type Registry  . . . . . . . . . . . . . . . . .  38
-     8.5.  IOAM POT-Flags Registry . . . . . . . . . . . . . . . . .  39
+     8.5.  IOAM POT-Flags Registry . . . . . . . . . . . . . . . . .  38
 
 
 
@@ -115,15 +115,15 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
      8.6.  IOAM E2E-Type Registry  . . . . . . . . . . . . . . . . .  39
-     8.7.  IOAM Namespace-ID Registry  . . . . . . . . . . . . . . .  40
+     8.7.  IOAM Namespace-ID Registry  . . . . . . . . . . . . . . .  39
    9.  Management and Deployment Considerations  . . . . . . . . . .  41
    10. Security Considerations . . . . . . . . . . . . . . . . . . .  41
    11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  43
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  43
      12.1.  Normative References . . . . . . . . . . . . . . . . . .  43
      12.2.  Informative References . . . . . . . . . . . . . . . . .  44
-   Contributors' Addresses . . . . . . . . . . . . . . . . . . . . .  46
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  48
+   Contributors' Addresses . . . . . . . . . . . . . . . . . . . . .  45
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  47
 
 1.  Introduction
 
@@ -138,7 +138,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    "In-situ" mechanisms do not require extra packets to be sent.  IOAM
    adds information to the already available data packets and therefore
    cannot be considered passive.  In terms of the classification given
-   in [RFC7799], IOAM could be portrayed as Hybrid Type 1.  IOAM
+   in [RFC7799], IOAM could be portrayed as Hybrid Type I.  IOAM
    mechanisms can be leveraged where mechanisms using, e.g., ICMP do not
    apply or do not offer the desired results, such as proving that a
    certain traffic flow takes a pre-defined path, SLA verification for
@@ -241,16 +241,22 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
 4.  Scope, Applicability, and Assumptions
 
-   IOAM deployment assumes a set of constraints, requirements, and
-   guiding principles which are described in this section.
+   IOAM assumes a set of constraints as well as guiding principles and
+   concepts that go hand in hand with the definition of the IOAM data
+   fields.  These constraints, guiding principles, and concepts are
+   described in this section.  A discussion of how IOAM data fields and
+   the associated concepts are applied to an IOAM deployment are out of
+   scope for this document.  Please refer to
+   [I-D.brockners-opsawg-ioam-deployment] for IOAM deployment
+   considerations.
 
    Scope: This document defines the data fields and associated data
-   types for in-situ OAM.  The in-situ OAM data field can be
+   types for in-situ OAM.  The in-situ OAM data fields can be
    encapsulated in a variety of protocols, including NSH, Segment
-   Routing, Geneve, IPv6, or IPv4.  Specification details for these
-   different protocols are outside the scope of this document.  It is
-   expected that each such encapsulation would be specified by an RFC,
-   jointly designed by the working group that develops or maintains the
+   Routing, Geneve, and IPv6.  Specification details for these different
+   protocols are outside the scope of this document.  It is expected
+   that each such encapsulation would be specified by an RFC, jointly
+   designed by the working group that develops or maintains the
    encapsulation protocol and the IETF IPPM working group.
 
    Deployment domain (or scope) of in-situ OAM deployment: IOAM is
@@ -268,12 +274,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    potential operational impact of IOAM to mechanisms such as ECMP
    processing (e.g.  load-balancing schemes based on packet length could
    be impacted by the increased packet size due to IOAM), path MTU
-   (i.e., ensure that the MTU of all links within a domain is
-   sufficiently large to support the increased packet size due to IOAM)
-   and ICMP message handling (i.e., in case of IPv6, IOAM support for
-   ICMPv6 Echo Request/Reply is desired which would translate into
-   ICMPv6 extensions to enable IOAM-Data-Fields to be copied from an
-   Echo Request message to an Echo Reply message).
 
 
 
@@ -281,6 +281,13 @@ Brockners, et al.       Expires December 3, 2021                [Page 5]
 
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
+
+   (i.e., ensure that the MTU of all links within a domain is
+   sufficiently large to support the increased packet size due to IOAM)
+   and ICMP message handling (i.e., in case of IPv6, IOAM support for
+   ICMPv6 Echo Request/Reply is desired which would translate into
+   ICMPv6 extensions to enable IOAM-Data-Fields to be copied from an
+   Echo Request message to an Echo Reply message).
 
    IOAM control points: IOAM-Data-Fields are added to or removed from
    the live user traffic by the devices which form the edge of a domain.
@@ -322,14 +329,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    types such as IOAM-Data-Fields, IOAM-Types, IOAM-Namespaces as well
    as the different types of IOAM nodes.
 
-5.1.  IOAM Data-Fields and Option-Types
 
-   An IOAM-Data-Field is a set of bits with a defined format and
-   meaning, which can be stored at a certain place in a packet for the
-   purpose of IOAM.
-
-   To accommodate the different uses of IOAM, IOAM-Data-Fields fall into
-   different categories.  In IOAM, these categories are referred to as
 
 
 
@@ -338,6 +338,14 @@ Brockners, et al.       Expires December 3, 2021                [Page 6]
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
+5.1.  IOAM Data-Fields and Option-Types
+
+   An IOAM-Data-Field is a set of bits with a defined format and
+   meaning, which can be stored at a certain place in a packet for the
+   purpose of IOAM.
+
+   To accommodate the different uses of IOAM, IOAM-Data-Fields fall into
+   different categories.  In IOAM, these categories are referred to as
    IOAM-Option-Types.  A common registry is maintained for IOAM-Option-
    Types, see Section 8.1 for details.  Corresponding to these IOAM-
    Option-Types, different IOAM-Data-Fields are defined.
@@ -369,7 +377,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    called an "IOAM encapsulating node", whereas a device which removes
    an IOAM-Option-Type is referred to as an "IOAM decapsulating node".
    Nodes within the domain which are aware of IOAM data and read and/or
-   write or process the IOAM data are called "IOAM transit nodes".  IOAM
+   write and/or process IOAM data are called "IOAM transit nodes".  IOAM
    nodes which add or remove the IOAM-Data-Fields can also update the
    IOAM-Data-Fields at the same time.  Or in other words, IOAM
    encapsulating or decapsulating nodes can also serve as IOAM transit
@@ -379,14 +387,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    In that case, only the set of firewall nodes would be IOAM transit
    nodes rather than all nodes.
 
-   An "IOAM encapsulating node" incorporates one or more IOAM-Option-
-   Types (from the list of IOAM-Types, see Section 8.1) into packets
-   that IOAM is enabled for.  If IOAM is enabled for a selected subset
-   of the traffic, the IOAM encapsulating node is responsible for
-   applying the IOAM functionality to the selected subset.
-
-
-
 
 
 Brockners, et al.       Expires December 3, 2021                [Page 7]
@@ -394,15 +394,22 @@ Brockners, et al.       Expires December 3, 2021                [Page 7]
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
-   An "IOAM transit node" updates one or more of the IOAM-Data-Fields.
-   If both the Pre-allocated and the Incremental Trace Option-Types are
-   present in the packet, each IOAM transit node based on configuration
-   and available implementation of IOAM populates IOAM trace data in
-   either Pre-allocated or Incremental Trace Option-Type but not both.
-   A transit node MUST ignore IOAM-Option-Types that it does not
-   understand.  A transit node MUST NOT add new IOAM-Option-Types to a
-   packet, MUST NOT remove IOAM-Option-Types from a packet, and MUST NOT
-   change the IOAM-Data-Fields of an IOAM Edge-to-Edge Option-Type.
+   An "IOAM encapsulating node" incorporates one or more IOAM-Option-
+   Types (from the list of IOAM-Types, see Section 8.1) into packets
+   that IOAM is enabled for.  If IOAM is enabled for a selected subset
+   of the traffic, the IOAM encapsulating node is responsible for
+   applying the IOAM functionality to the selected subset.
+
+   An "IOAM transit node" read and/or write and/or process one or more
+   of the IOAM-Data-Fields.  If both the Pre-allocated and the
+   Incremental Trace Option-Types are present in the packet, each IOAM
+   transit node based on configuration and available implementation of
+   IOAM populates IOAM trace data in either Pre-allocated or Incremental
+   Trace Option-Type but not both.  A transit node MUST ignore IOAM-
+   Option-Types that it does not understand.  A transit node MUST NOT
+   add new IOAM-Option-Types to a packet, MUST NOT remove IOAM-Option-
+   Types from a packet, and MUST NOT change the IOAM-Data-Fields of an
+   IOAM Edge-to-Edge Option-Type.
 
    An "IOAM decapsulating node" removes IOAM-Option-Type(s) from
    packets.
@@ -429,19 +436,12 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
 5.3.  IOAM-Namespaces
 
-   A subset or all of the IOAM-Option-Types and their corresponding
-   IOAM-Data-Fields can be associated to an IOAM-Namespace.  IOAM-
+   An IOAM-Namespace can be associated to a subset or all of the the
+   IOAM-Option-Types and their corresponding IOAM-Data-Fields.  IOAM-
    Namespaces add further context to IOAM-Option-Types and associated
    IOAM-Data-Fields.  The IOAM-Option-Types and associated IOAM-Data-
    Fields are interpreted as defined in this document, regardless of the
-   value of the IOAM-Namespace.  However, IOAM-Namespaces group nodes to
-   support different deployment approaches of IOAM (see a few example
-   use-cases below) as well as resolve issues which can occur due to
-   IOAM-Data-Fields not being globally unique (e.g., IOAM node
-   identifiers do not have to be globally unique).  IOAM-Data-Fields
-   significance is always within a particular IOAM-Namespace.  Given
-   that IOAM-Data-Fields are always interpreted the context of a
-
+   value of the IOAM-Namespace.  However, IOAM-Namespaces provide a way
 
 
 
@@ -450,8 +450,15 @@ Brockners, et al.       Expires December 3, 2021                [Page 8]
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
-   specific namespace, the namespace-id field always needs to be carried
-   along with the IOAM data-fields themselves.
+   to group nodes to support different deployment approaches of IOAM
+   (see a few example use-cases below).  IOAM-Namespaces also help to
+   resolve potential issues which can occur due to IOAM-Data-Fields not
+   being globally unique (e.g., IOAM node identifiers do not have to be
+   globally unique).  IOAM-Data-Fields significance is always within a
+   particular IOAM-Namespace.  Given that IOAM-Data-Fields are always
+   interpreted the context of a specific namespace, the namespace-id
+   field always needs to be carried along with the IOAM data-fields
+   themselves.
 
    An IOAM-Namespace is identified by a 16-bit namespace identifier
    (Namespace-ID).  The IOAM-Namespace field is included in all the
@@ -487,17 +494,10 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       IOAM-Option-Types can be present in a packet in case of
       overlapping IOAM-Domains or in case of a layered IOAM deployment.
 
-   o  whether IOAM-Option-Type(s) has to be removed from the packet,
+   o  whether IOAM-Option-Type(s) have to be removed from the packet,
       e.g., at a domain edge or domain boundary.
 
    IOAM-Namespaces support several different uses:
-
-   o  IOAM-Namespaces can be used by an operator to distinguish
-      different operational domains.  Devices at domain edges can filter
-      on Namespace-IDs to provide for proper IOAM-Domain isolation.
-
-   o  IOAM-Namespaces provide additional context for IOAM-Data-Fields
-      and thus can be used to ensure that IOAM-Data-Fields are unique
 
 
 
@@ -506,6 +506,12 @@ Brockners, et al.       Expires December 3, 2021                [Page 9]
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
+   o  IOAM-Namespaces can be used by an operator to distinguish
+      different operational domains.  Devices at domain edges can filter
+      on Namespace-IDs to provide for proper IOAM-Domain isolation.
+
+   o  IOAM-Namespaces provide additional context for IOAM-Data-Fields
+      and thus can be used to ensure that IOAM-Data-Fields are unique
       and are interpreted properly by management stations or network
       controllers.  For example, the node identifier field (node_id, see
       below) does not need to be unique in a deployment (e.g., if an
@@ -548,12 +554,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
          nodes or network partitions and using a separate instance of an
          IOAM-Option-Type for each Namespace-ID, a full trace for a flow
          could be collected and constructed via partial traces from each
-         IOAM-Option-Type in each of the packets in the flow.  Example:
-         An operator could choose to group the devices of a domain into
-         two IOAM-Namespaces, in a way that each IOAM-Namespace is
-         represented by one of two IOAM-Option-Types in the packet.
-         Each node would record data only for the IOAM-Namespace that it
-         belongs to, ignoring the other IOAM-Option-Type with a IOAM-
 
 
 
@@ -562,6 +562,12 @@ Brockners, et al.       Expires December 3, 2021               [Page 10]
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
+         IOAM-Option-Type in each of the packets in the flow.  Example:
+         An operator could choose to group the devices of a domain into
+         two IOAM-Namespaces, in a way that each IOAM-Namespace is
+         represented by one of two IOAM-Option-Types in the packet.
+         Each node would record data only for the IOAM-Namespace that it
+         belongs to, ignoring the other IOAM-Option-Type with a IOAM-
          Namespace to which it doesn't belong.  To retrieve a full view
          of the deployment, the captured IOAM-Data-Fields of the two
          IOAM-Namespaces need to be correlated.
@@ -604,12 +610,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       headers.  A pointer which is part of the IOAM trace data, points
       to the next empty slot in the array.  An IOAM transit node that
       updates the content of the pre-allocated option also updates the
-      value of the pointer, which specifies where the next IOAM transit
-      node fills in its data.  The "node data list" array (see below) in
-      the packet is populated iteratively as the packet traverses the
-      network, starting with the last entry of the array, i.e., "node
-      data list [n]" is the first entry to be populated, "node data list
-      [n-1]" is the second one, etc.
 
 
 
@@ -617,6 +617,13 @@ Brockners, et al.       Expires December 3, 2021               [Page 11]
 
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
+
+      value of the pointer, which specifies where the next IOAM transit
+      node fills in its data.  The "node data list" array (see below) in
+      the packet is populated iteratively as the packet traverses the
+      network, starting with the last entry of the array, i.e., "node
+      data list [n]" is the first entry to be populated, "node data list
+      [n-1]" is the second one, etc.
 
    Incremental Trace-Option:  This trace option is defined as a
       container of node data fields where each node allocates and pushes
@@ -660,19 +667,18 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       match to a device identifier or a particular control point or
       subsystem within a device.
 
-   o  Identification of the interface that a packet was received on,
-      i.e., ingress interface.
-
-   o  Identification of the interface that a packet was sent out on,
-      i.e., egress interface.
-
-
 
 
 Brockners, et al.       Expires December 3, 2021               [Page 12]
 
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
+
+   o  Identification of the interface that a packet was received on,
+      i.e., ingress interface.
+
+   o  Identification of the interface that a packet was sent out on,
+      i.e., egress interface.
 
    o  Time of day when the packet was processed by the node as well as
       the transit delay.  Different definitions of processing time are
@@ -704,12 +710,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    size "trace option header", other than "flags" and "RemainingLen",
    i.e., an IOAM transit node MUST NOT modify the Namespace-ID, NodeLen,
    IOAM-Trace-Type, or Reserved fields.
-
-
-
-
-
-
 
 
 
@@ -911,7 +911,8 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
                State Snapshot field.
 
       Bit 23   Reserved: MUST be set to zero upon transmission and
-               ignored upon receipt.
+               ignored upon receipt.  This bit is reserved to allow for
+               future extensions of the IOAM-Trace-Type bit field.
 
       Section 5.4.2 describes the IOAM-Data-Types and their formats.
       Within an IOAM-Domain possible combinations of these bits making
@@ -948,7 +949,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
 
-
 Brockners, et al.       Expires December 3, 2021               [Page 17]
 
 Internet-Draft           In-situ OAM Data Fields               June 2021
@@ -959,7 +959,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    well as "wide format".  "Short format" refers to an IOAM-Data-Field
    which comprises 4 octets.  "Wide format" refers to an IOAM-Data-Field
    which comprises 8 octets.  The use of "short format" or "wide format"
-   is not mutially exclusive.  A deployment could choose to leverage
+   is not mutually exclusive.  A deployment could choose to leverage
    both.  For example, ingress_if_id_(short format) could be an
    identifier for the physical interface, whereas ingress_if_id_(wide
    format) could be an identifier for a logical sub-interface of that
@@ -989,11 +989,11 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
    Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit value
-      in the packet at the node that records this data.  Hop Limit
-      information is used to identify the location of the node in the
-      communication path.  This is copied from the lower layer, e.g.,
-      TTL value in IPv4 header or hop limit field from IPv6 header of
-      the packet when the packet is ready for transmission.  The
+      in the packet at egress from the node that records this data.  Hop
+      Limit information is used to identify the location of the node in
+      the communication path.  This is copied from the lower layer,
+      e.g., TTL value in IPv4 header or hop limit field from IPv6 header
+      of the packet when the packet is ready for transmission.  The
       semantics of the Hop_Lim field depend on the lower layer protocol
       that IOAM is encapsulated into, and therefore its specific
       semantics are outside the scope of this memo.  The value of this
@@ -1039,25 +1039,25 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 5.4.2.3.  timestamp seconds
 
    The "timestamp seconds" field is a 4-octet unsigned integer field.
-   Absolute timestamp in seconds that specifies the time at which the
-   packet was received by the node.  This field has three possible
-   formats; based on either PTP (see e.g., [RFC8877]), NTP [RFC5905], or
-   POSIX [POSIX].  The three timestamp formats are specified in
-   Section 6.  In all three cases, the Timestamp Seconds field contains
-   the 32 most significant bits of the timestamp format that is
-   specified in Section 6.  If a node is not capable of populating this
-   field, it assigns the value 0xFFFFFFFF.  Note that this is a
-   legitimate value that is valid for 1 second in approximately 136
-   years; the analyzer has to correlate several packets or compare the
-   timestamp value to its own time-of-day in order to detect the error
-   indication.
+   It contains the absolute timestamp in seconds that specifies the time
+   at which the packet was received by the node.  This field has three
+   possible formats; based on either PTP (see e.g., [RFC8877]), NTP
+   [RFC5905], or POSIX [POSIX].  The three timestamp formats are
+   specified in Section 6.  In all three cases, the Timestamp Seconds
+   field contains the 32 most significant bits of the timestamp format
+   that is specified in Section 6.  If a node is not capable of
+   populating this field, it assigns the value 0xFFFFFFFF.  Note that
+   this is a legitimate value that is valid for 1 second in
+   approximately 136 years; the analyzer has to correlate several
+   packets or compare the timestamp value to its own time-of-day in
+   order to detect the error indication.
 
 5.4.2.4.  timestamp faction
 
    The "timestamp fraction" field is a 4-octet unsigned integer field.
    Fraction specifies the fractional portion of the number of seconds
-   since the epoch [RFC8877].  The field specifies the time at which the
-   packet was received by the node.  This field has three possible
+   since the NTP epoch [RFC8877].  The field specifies the time at which
+   the packet was received by the node.  This field has three possible
 
 
 
@@ -1185,16 +1185,8 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    ~                         node_id (contd)                       |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   Hop_Lim:  1-octet unsigned integer.  It is set to the Hop Limit value
-      in the packet at the node that records this data.  Hop Limit
-      information is used to identify the location of the node in the
-      communication path.  This is copied from the lower layer for,
-      e.g., TTL value in IPv4 header or hop limit field from IPv6 header
-      of the packet.  The semantics of the Hop_Lim field depend on the
-      lower layer protocol that IOAM is encapsulated into, and therefore
-      its specific semantics are outside the scope of this memo.  The
-      value of this field MUST be set to 0xff when the lower level does
-      not have a TTL/Hop limit equivalent field.
+   Hop_Lim:  1-octet unsigned integer.  See Section 5.4.2.1 for the
+      definition of the field.
 
    node_id:  7-octet unsigned integer.  Node identifier field to
       uniquely identify a node within the IOAM-Namespace and associated
@@ -1226,6 +1218,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    represents a "free-format" 8-octet bit field with its semantics
    defined in the context of a specific IOAM-Namespace.
 
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    namespace specific data                    ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   ~                namespace specific data (contd)                |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
 
 
 
@@ -1233,13 +1233,6 @@ Brockners, et al.       Expires December 3, 2021               [Page 22]
 
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
-
-    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                    namespace specific data                    ~
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   ~                namespace specific data (contd)                |
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 5.4.2.12.  buffer occupancy
 
@@ -1271,25 +1264,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    Namespace, indicates which particular schema is used, and has to be
    configured on the network element by the operator.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 23]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
        0                   1                   2                   3
        0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
       +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1309,6 +1283,13 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    Schema ID:  3-octet unsigned integer identifying the schema of Opaque
       data.
 
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 23]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
    Opaque data:  Variable length field.  This field is interpreted as
       specified by the schema identified by the Schema ID.
 
@@ -1318,33 +1299,15 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
 5.4.3.  Examples of IOAM node data
 
-   An entry in the "node data list" array can have different formats,
-   following the needs of the deployment.  Some deployments might only
-   be interested in recording the node identifiers, whereas others might
-   be interested in recording node identifier and timestamp.  The
-   section provides example entries of the "node data list".
+   The format used for the entries in a packet's "node data list" array
+   can vary from packet to packet and deployment to deployment".  Some
+   deployments might only be interested in recording the node
+   identifiers, whereas others might be interested in recording node
+   identifiers and timestamps.  This section provides example entries of
+   the "node data list".
 
    0xD40000:  IOAM-Trace-Type is 0xD40000 (0b110101000000000000000000)
       then the format of node data is:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 24]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1373,6 +1336,16 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    0x900000:  IOAM-Trace-Type is 0x900000 (0b100100000000000000000000)
       then the format is:
 
+
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 24]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |   Hop_Lim     |              node_id                          |
@@ -1395,13 +1368,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    0x940000:  IOAM-Trace-Type is 0x940000 (0b100101000000000000000000)
       then the format is:
 
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 25]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
        |   Hop_Lim     |              node_id                          |
@@ -1414,6 +1380,27 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    0x308002:  IOAM-Trace-Type is 0x308002 (0b001100001000000000000010)
       then the format is:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 25]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1438,7 +1425,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
 5.5.  IOAM Proof of Transit Option-Type
 
-   IOAM Proof of Transit Option-Type is to support path or service
+   IOAM Proof of Transit Option-Type is used to support path or service
    function chain [RFC7665] verification use cases.  Proof-of-transit
    leverages mechanisms like Shamir's Secret Sharing Schema (SSSS)
    [SSS].  For further information on Proof-of-transit, please refer to
@@ -1450,14 +1437,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    is handed from node to node.  Correspondingly, two pieces of
    information are added as IOAM-Data-Fields to the packet:
 
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 26]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
    o  PktID: Unique identifier for the packet.
 
    o  Cumulative: Information which is handed from node to node and
@@ -1466,6 +1445,18 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    The IOAM Proof-of-Transit Option-Type consist of a fixed size "IOAM
    proof of transit option header" and "IOAM proof of transit option
    data fields":
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 26]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
    IOAM proof of transit option header:
 
@@ -1497,14 +1488,23 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       specifies the POT data that is included.  This document defines
       POT Type 0:
 
-      0: POT data is a 16 Octet field as described below.
+      0: POT data is a 16 Octet field to carry data associated to POT
+         procedures.  [I-D.ietf-sfc-proof-of-transit] describes an
+         implementation of POT and provides details on the data carried
+         in POT data.
 
       If a node receives an IOAM POT Type value that it does not
-      understand, the node MUST NOT change the contents of the IOAM-
-      Data-Fields.
+      understand, the node MUST NOT change, add to, or remove the
+      contents of the OAM-Data-Fields.
 
    IOAM POT flags:  8-bit.  Following flags are defined:
 
+      Bit 0  "Profile-to-use" (P-bit) (most significant bit).  For IOAM
+         POT types that use a maximum of two profiles to drive
+         computation, indicates which POT-profile (see
+         [I-D.ietf-sfc-proof-of-transit] for details) is used.  The two
+         profiles are numbered 0, 1.  This bit conveys whether profile 0
+         or profile 1 is used to compute the Cumulative.
 
 
 
@@ -1514,14 +1514,8 @@ Brockners, et al.       Expires December 3, 2021               [Page 27]
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
-      Bit 0  "Profile-to-use" (P-bit) (most significant bit).  For IOAM
-         POT types that use a maximum of two profiles to drive
-         computation, indicates which POT-profile (see
-         [I-D.ietf-sfc-proof-of-transit] for details) is used.  The two
-         profiles are numbered 0, 1.
-
       Bit 1-7  Undefined: These bits are available for assignment, see
-         Section 8.5.  Bit which have not been assigned MUST be set to
+         Section 8.5.  Bits which have not been assigned MUST be set to
          zero upon transmission and ignored upon receipt.
 
    POT Option data:  Variable-length field.  The type of which is
@@ -1547,21 +1541,27 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
 
-   Namespace-ID:  16-bit identifier of an IOAM-Namespace.  The
-      Namespace-ID value of 0x0000 is defined as the "Default-Namespace-
-      ID" (see Section 5.3) and MUST be known to all the nodes
-      implementing IOAM.  For any other Namespace-ID value that does not
-      match any Namespace-ID the node is configured to operate on, the
-      node MUST NOT change the contents of the IOAM-Data-Fields.
+   Namespace-ID:  16-bit identifier of an IOAM-Namespace (see
+      Section 5.5 above).
 
    IOAM POT Type:  8-bit identifier of a particular POT variant that
-      specifies the POT data that is included.  This section defines the
-      POT data when the IOAM POT Type is set to the value 0.
+      specifies the POT data that is included (see Section 5.5 above).
+      For this case here, IOAM POT Type is set to the value 0.
 
-   P bit:  1-bit.  "Profile-to-use" (P-bit) (most significant bit).
-      Indicates which POT-profile (see [I-D.ietf-sfc-proof-of-transit]
-      for details) is used to generate the Cumulative.  Any node
-      participating in POT will have a maximum of 2 profiles configured
+   Bit 0:  1-bit.  "Profile-to-use" (P-bit) (most significant bit), see
+      Section 5.5 above.
+
+   Bit 1-7:  Undefined (see Section 5.5 above).
+
+   PktID:  64-bit packet identifier.
+
+   Cumulative:  64-bit Cumulative that is updated at specific nodes by
+      processing per packet PktID field and configured parameters.
+
+   Note: Larger or smaller sizes of "PktID" and "Cumulative" data are
+   feasible and could be required for certain deployments, e.g., in case
+   of space constraints in the encapsulation protocols used.  Future
+
 
 
 
@@ -1570,21 +1570,6 @@ Brockners, et al.       Expires December 3, 2021               [Page 28]
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
-      that drive the computation of cumulative.  The two profiles are
-      numbered 0, 1.  This bit conveys whether profile 0 or profile 1 is
-      used to compute the Cumulative.
-
-   R (7 bits):  7-bit IOAM POT flags for future use.  MUST be set to
-      zero upon transmission and ignored upon receipt.
-
-   PktID:  64-bit packet identifier.
-
-   Cumulative:  64-bit Cumulative that is updated at specific nodes by
-      processing per packet PktID field and configured parameters.
-
-   Note: Larger or smaller sizes of "PktID" and "Cumulative" data are
-   feasible and could be required for certain deployments (e.g., in case
-   of space constraints in the encapsulation protocols used).  Future
    documents could introduce different sizes of data for "proof of
    transit".
 
@@ -1617,15 +1602,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 29]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
    Namespace-ID:  16-bit identifier of an IOAM-Namespace.  The
       Namespace-ID value of 0x0000 is defined as the "Default-Namespace-
       ID" (see Section 5.3) and MUST be known to all the nodes
@@ -1642,9 +1618,18 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
                64-bit sequence number added to a specific "packet group"
                which is used to detect packet loss, packet reordering,
                or packet duplication within the group.  The "packet
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 29]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
                group" is deployment dependent and defined at the IOAM
                encapsulating node, e.g., by n-tuple based classification
-               of packets.
+               of packets.  When this bit is set, "Bit 1" (for 32-bit
+               sequence number, see below) MUST be zero.
 
       Bit 1    When set indicates presence of a 32-bit sequence number
                added to a specific "packet group" which is used to
@@ -1652,7 +1637,8 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
                duplication within that group.  The "packet group" is
                deployment dependent and defined at the IOAM
                encapsulating node, e.g., by n-tuple based classification
-               of packets.
+               of packets.  When this bit is set, "Bit 0" (for 64-bit
+               sequence number, see above) MUST be zero.
 
       Bit 2    When set indicates presence of timestamp seconds,
                representing the time at which the packet entered the
@@ -1674,14 +1660,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
                node is not capable of populating this field, it assigns
                the value 0xFFFFFFFF.  Note that this is a legitimate
                value that is valid for 1 second in approximately 136
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 30]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
                years; the analyzer has to correlate several packets or
                compare the timestamp value to its own time-of-day in
                order to detect the error indication.
@@ -1696,6 +1674,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
                significant bits of the timestamp format that is
                specified in Section 6.  If a node is not capable of
                populating this field, it assigns the value 0xFFFFFFFF.
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 30]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
                Note that this is a legitimate value in the NTP format,
                valid for approximately 233 picoseconds in every second.
                If the NTP format is used the analyzer has to correlate
@@ -1724,20 +1710,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    details are presented below for the sake of completeness.
 
 
-
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 31]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
         0                   1                   2                   3
         0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
        +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -1751,14 +1723,23 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    Timestamp field format:
 
       Seconds: specifies the integer portion of the number of seconds
-      since the epoch.
+      since the PTP epoch.
 
       + Size: 32 bits.
 
       + Units: seconds.
 
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 31]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
       Nanoseconds: specifies the fractional portion of the number of
-      seconds since the epoch.
+      seconds since the PTP epoch.
 
       + Size: 32 bits.
 
@@ -1767,8 +1748,7 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    Epoch:
 
-      The PTP (see e.g., [RFC8877]) epoch is 1 January 1970 00:00:00
-      TAI, which is 31 December 1969 23:59:51.999918 UTC.
+      PTP epoch.  For details see e.g., [RFC8877].
 
    Resolution:
 
@@ -1785,15 +1765,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       among themselves.  Nodes MAY be synchronized to a global reference
       time.  Note that if PTP is used for synchronization, the timestamp
       MAY be derived from the PTP-synchronized clock, allowing the
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 32]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
       timestamp to be measured with respect to the clock of an PTP
       Grandmaster clock.
 
@@ -1805,6 +1776,22 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    The Network Time Protocol (NTP) [RFC5905] timestamp format is 64 bits
    long.  This format is specified in Section 4.2.1 of [RFC8877], and
    the details are presented below for the sake of completeness.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 32]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
 
 
         0                   1                   2                   3
@@ -1820,14 +1807,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    Timestamp field format:
 
       Seconds: specifies the integer portion of the number of seconds
-      since the epoch.
+      since the NTP epoch.
 
       + Size: 32 bits.
 
       + Units: seconds.
 
       Fraction: specifies the fractional portion of the number of
-      seconds since the epoch.
+      seconds since the NTP epoch.
 
       + Size: 32 bits.
 
@@ -1836,19 +1823,11 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    Epoch:
 
-      The epoch is 1 January 1900 at 00:00 UTC.
+      NTP Epoch.  For details see [RFC5905].
 
    Resolution:
 
       The resolution is 2^(-32) seconds.
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 33]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
 
    Wraparound:
 
@@ -1861,6 +1840,15 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       synchronized to UTC using NTP [RFC5905].  Thus, the timestamp MAY
       be derived from the NTP-synchronized clock, allowing the timestamp
       to be measured with respect to the clock of an NTP server.
+
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 33]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
       The NTP timestamp format is affected by leap seconds; it
       represents the number of seconds since the epoch minus the number
@@ -1888,16 +1876,28 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    Timestamp field format:
 
       Seconds: specifies the integer portion of the number of seconds
-      since the epoch.
+      since the POSIX epoch.
 
       + Size: 32 bits.
 
       + Units: seconds.
 
       Microseconds: specifies the fractional portion of the number of
-      seconds since the epoch.
+      seconds since the POSIX epoch.
 
       + Size: 32 bits.
+
+      + Units: the unit is microseconds.  The value of this field is in
+      the range 0 to (10^6)-1.
+
+   Epoch:
+
+      POSIX epoch.  For details, see [POSIX], appendix A.4.16.
+
+   Resolution:
+
+      The resolution is 1 microsecond.
+
 
 
 
@@ -1905,18 +1905,6 @@ Brockners, et al.       Expires December 3, 2021               [Page 34]
 
 Internet-Draft           In-situ OAM Data Fields               June 2021
 
-
-      + Units: the unit is microseconds.  The value of this field is in
-      the range 0 to (10^6)-1.
-
-   Epoch:
-
-      The epoch is 1 January 1970 00:00:00 TAI, which is 31 December
-      1969 23:59:51.999918 UTC.
-
-   Resolution:
-
-      The resolution is 1 microsecond.
 
    Wraparound:
 
@@ -1933,12 +1921,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       synchronized clock, allowing the timestamp to be measured with
       respect to the clock of an NTP server.
 
-      The POSIX-based timestamp format is affected by leap seconds; it
-      represents the number of seconds since the epoch minus the number
-      of leap seconds that have occurred since the epoch.  The value of
-      a timestamp during or slightly after a leap second could be
-      temporarily inaccurate.
-
 7.  IOAM Data Export
 
    IOAM nodes collect information for packets traversing a domain that
@@ -1950,17 +1932,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    Raw data export of IOAM data using IPFIX is discussed in
    [I-D.spiegel-ippm-ioam-rawexport].
-
-
-
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 35]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
 
 8.  IANA Considerations
 
@@ -1982,6 +1953,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       IOAM POT-Flags
 
       IOAM E2E-Type
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 35]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
       IOAM Namespace-ID
 
@@ -2011,13 +1990,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    Name:  Name of the newly registered Option-Type.
 
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 36]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
    Code point:  Desired value of the requested code point.
 
    Description:  Brief description of the newly registered Option-Type.
@@ -2037,6 +2009,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    Bit 1  ingress_if_id and egress_if_id in short format
 
    Bit 2  timestamp seconds
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 36]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
    Bit 3  timestamp fraction
 
@@ -2065,15 +2045,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    New registration requests MUST use the following template:
 
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 37]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
    Bit:  Desired bit to be allocated in the 24-bit IOAM Trace-Option-
       Type field for Pre-allocated Trace-Option-Type and Incremental
       Trace-Option-Type.
@@ -2094,6 +2065,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    Bit 1 - 3 are available for assignment via "IETF Review" process as
    per [RFC8126].
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 37]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
    New registration requests MUST use the following template:
 
@@ -2122,14 +2101,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    Code point:  Desired value of the requested code point.
 
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 38]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
    Description:  Brief description of the newly registered POT-Type.
 
    Reference:  Reference to the document that defines the new POT-Type.
@@ -2151,6 +2122,13 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       IOAM POT Option-Type.
 
    Description:  Brief description of the newly registered bit.
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 38]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
    Reference:  Reference to the document that defines the new bit.
 
@@ -2179,13 +2157,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    Reference:  Reference to the document that defines the new bit.
 
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 39]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
 8.7.  IOAM Namespace-ID Registry
 
    IANA is requested to set up an "IOAM Namespace-ID Registry",
@@ -2207,6 +2178,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    o  Check whether the request is neither a duplicate of nor
       conflicting with either an already existing allocation or a
       pending allocation.  In case of duplicates or conflicts, the
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 39]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
       expert will ask the requestor to update the allocation request
       accordingly.
 
@@ -2235,13 +2214,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    0x8000 - 0xFFFF:  unassigned
 
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 40]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
    New registration requests MUST use the following template:
 
    Name:  Name of the newly registered Namespace-ID.
@@ -2258,6 +2230,17 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       expert review will have the status "provisional".  Once the RFC,
       which defines the new Namespace-ID is published, the status is
       changed to "permanent".
+
+
+
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 40]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
 9.  Management and Deployment Considerations
 
@@ -2278,33 +2261,25 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    ones.  In particular, these threats are applicable by compromising
    the integrity of IOAM data, either by maliciously modifying IOAM
    options in transit, or by injecting packets with maliciously
-   generated IOAM options
+   generated IOAM options.  All nodes in the path of a IOAM carrying
+   packet can perform such an attack.
 
-   The Proof of Transit Option-Type (Section Section 5.5) is used for
+   The Proof of Transit Option-Type (see Section 5.5) is used for
    verifying the path of data packets.  The security considerations of
    POT are further discussed in [I-D.ietf-sfc-proof-of-transit].
 
-   From a confidentiality perspective, although IOAM options do not
-   contain user data, they can be used for network reconnaissance,
-   allowing attackers to collect information about network paths,
-   performance, queue states, buffer occupancy and other information.
-   Moreover, if IOAM data leaks from the IOAM domain it could enable
-   reconnaissance beyond the scope of the IOAM domain.  Note that in
+   In case an attacker gains access to several nodes in a network and
+   would be able to change the system software of these nodes, IOAM data
+   fields could be misused and repurposed for a use different from what
+   is specified in this document.  One type of misuse is the
+   implementation of a covert channel between network nodes.
 
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 41]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
-   case IOAM is used in "Direct Exporting" mode
-   [I-D.ioamteam-ippm-ioam-direct-export], the IOAM related trace
-   information would not be available in the customer data packets, but
-   would trigger export of packet related IOAM information at every
-   node, thus restricting the potential threat to the management plane
-   and mitigating the leakage threat.  IOAM data exporting and the way
-   it is secured is outside the scope of this document.
+   From a confidentiality perspective, although IOAM options are not
+   expected to contain user data, they can be used for network
+   reconnaissance, allowing attackers to collect information about
+   network paths, performance, queue states, buffer occupancy and other
+   information.  Moreover, if IOAM data leaks from the IOAM domain it
+   could enable reconnaissance beyond the scope of the IOAM domain.
 
    IOAM can be used as a means for implementing Denial of Service (DoS)
    attacks, or for amplifying them.  For example, a malicious attacker
@@ -2314,6 +2289,17 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    attack, in which an attacker pushes headers associated with IOAM
    Option-Types into data packets, causing these packets to be increased
    beyond the MTU size, resulting in fragmentation or in packet drops.
+   In case POT is used, an attacker could corrupt the POT data fields in
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 41]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
+   the packet, resulting in a verification failure of the POT data, even
+   if the packet followed the correct path.
 
    Since IOAM options can include timestamps, if network devices use
    synchronization protocols then any attack on the time protocol
@@ -2322,9 +2308,8 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    At the management plane, attacks can be set up by misconfiguring or
    by maliciously configuring IOAM-enabled nodes in a way that enables
-   other attacks.  Thus, IOAM configuration has to be secured in a way
-   that authenticates authorized users and verifies the integrity of
-   configuration procedures.
+   other attacks.  IOAM configuration should only managed by authorized
+   processes or users.
 
    Solutions to ensure the integrity of IOAM data fields are outside the
    scope of this document.  [I-D.brockners-ippm-ioam-data-integrity]
@@ -2338,24 +2323,16 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    IOAM encapsulation is expected to address the respective
    encapsulation-specific security considerations.
 
-   Notably, in most cases IOAM is expected to be deployed in specific
-   network domains, thus confining the potential attack vectors to
-   within the network domain.  A limited administrative domain provides
-   the operator with the means to select, monitor, and control the
-   access of all the network devices, making these devices trusted by
-   the operator.  Indeed, in order to limit the scope of threats
-   mentioned above to within the current network domain the network
-   operator is expected to enforce policies that prevent IOAM traffic
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 42]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
-   from leaking outside of the IOAM domain, and prevent IOAM data from
-   outside the domain to be processed and used within the domain.
+   Notably, IOAM is expected to be deployed in limited domains, thus
+   confining the potential attack vectors to within the limited domain.
+   A limited administrative domain provides the operator with the means
+   to select, monitor, and control the access of all the network
+   devices, making these devices trusted by the operator.  Indeed, in
+   order to limit the scope of threats mentioned above to within the
+   current limited domain the network operator is expected to enforce
+   policies that prevent IOAM traffic from leaking outside of the IOAM
+   domain, and prevent IOAM data from outside the domain to be processed
+   and used within the domain.
 
    The security considerations of a system that deploys IOAM, much like
    any system, has to be reviewed on a per-deployment-scenario basis,
@@ -2368,6 +2345,15 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    IOAM deployment considerations, including approaches to mitigate the
    above discussed threads and potential attacks are outside the scope
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 42]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
    of this document.  IOAM deployment considerations are discussed in
    [I-D.brockners-opsawg-ioam-deployment].
 
@@ -2386,29 +2372,21 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
 
    The authors would like to gracefully acknowledge useful review and
    insightful comments received from Joe Clarke, Al Morton, Tom Herbert,
-   Haoyu Song, Mickey Spiegel and Barak Gafni.
+   Haoyu Song, Mickey Spiegel, Roman Danyliw, Benjamin Kaduk, Ian Swett,
+   Martin Duke, Francesca Palombini, Lars Eggert, Dan Romascanu and
+   Barak Gafni.
 
 12.  References
 
 12.1.  Normative References
 
    [POSIX]    Institute of Electrical and Electronics Engineers, "IEEE
-              Std 1003.1-2008 (Revision of IEEE Std 1003.1-2004) - IEEE
+              Std 1003.1-2017 (Revision of IEEE Std 1003.1-2017) - IEEE
               Standard for Information Technology - Portable Operating
-              System Interface (POSIX(R))",  IEEE Std 1003.1-2008, 2008,
+              System Interface (POSIX(TM) Base Specifications, Issue
+              7)",  IEEE Std 1003.1-2017, 2017,
               <https://standards.ieee.org/findstds/
-              standard/1003.1-2008.html>.
-
-
-
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 43]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
+              standard/1003.1-2017.html>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -2424,6 +2402,13 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
               Writing an IANA Considerations Section in RFCs", BCP 26,
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/info/rfc8126>.
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 43]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -2456,22 +2441,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
               Youell, "Proof of Transit", draft-ietf-sfc-proof-of-
               transit-08 (work in progress), November 2020.
 
-
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 44]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
-   [I-D.ioamteam-ippm-ioam-direct-export]
-              Song, H., Gafni, B., Zhou, T., Li, Z., Brockners, F.,
-              Bhandari, S., Sivakolundu, R., and T. Mizrahi, "In-situ
-              OAM Direct Exporting", draft-ioamteam-ippm-ioam-direct-
-              export-00 (work in progress), October 2019.
-
    [I-D.kitamura-ipv6-record-route]
               Kitamura, H., "Record Route for IPv6 (PR6) Hop-by-Hop
               Option Extension", draft-kitamura-ipv6-record-route-00
@@ -2488,6 +2457,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
               and Maintenance (OAM) Tools", RFC 7276,
               DOI 10.17487/RFC7276, June 2014,
               <https://www.rfc-editor.org/info/rfc7276>.
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 44]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
 
    [RFC7384]  Mizrahi, T., "Security Requirements of Time Protocols in
               Packet Switched Networks", RFC 7384, DOI 10.17487/RFC7384,
@@ -2511,16 +2488,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
    [RFC7821]  Mizrahi, T., "UDP Checksum Complement in the Network Time
               Protocol (NTP)", RFC 7821, DOI 10.17487/RFC7821, March
               2016, <https://www.rfc-editor.org/info/rfc7821>.
-
-
-
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 45]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
 
    [RFC8300]  Quinn, P., Ed., Elzur, U., Ed., and C. Pignataro, Ed.,
               "Network Service Header (NSH)", RFC 8300,
@@ -2547,6 +2514,14 @@ Contributors' Addresses
       Research Triangle Park, NC  27709
       United States
 
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 45]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
       Email: cpignata@cisco.com
 
 
@@ -2570,14 +2545,6 @@ Contributors' Addresses
 
       Jennifer Lemon
       Broadcom
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 46]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
       270 Innovation Drive
       San Jose, CA  95134
       US
@@ -2603,6 +2570,14 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       London  E14 5JP
       United Kingdom
 
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 46]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
       Email: stephen.youell@jpmorgan.com
 
 
@@ -2626,14 +2601,6 @@ Internet-Draft           In-situ OAM Data Fields               June 2021
       Santa Clara, CA  95054
       US
 
-
-
-
-Brockners, et al.       Expires December 3, 2021               [Page 47]
-
-Internet-Draft           In-situ OAM Data Fields               June 2021
-
-
       Email: remy@barefootnetworks.com
 
 
@@ -2655,6 +2622,18 @@ Authors' Addresses
    Email: fbrockne@cisco.com
 
 
+
+
+
+
+
+
+
+Brockners, et al.       Expires December 3, 2021               [Page 47]
+
+Internet-Draft           In-situ OAM Data Fields               June 2021
+
+
    Shwetha Bhandari (editor)
    Thoughtspot
    3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR Layout
@@ -2671,6 +2650,27 @@ Authors' Addresses
    Israel
 
    Email: tal.mizrahi.phd@gmail.com
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
