@@ -20,6 +20,9 @@
 <!ENTITY RFC8126 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
 <!ENTITY RFC5905 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY RFC7384 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7384.xml">
+<!ENTITY RFC8915 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8915.xml">
+<!ENTITY RFC5905 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
+<!ENTITY RFC8039 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8039.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
@@ -38,7 +41,7 @@
 <!ENTITY I-D.ietf-ippm-ioam-flags SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-flags.xml">
 <!ENTITY I-D.zhou-ippm-ioam-yang SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.zhou-ippm-ioam-yang.xml">
 <!ENTITY I-D.mizrahi-ippm-ioam-profile SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.mizrahi-ippm-ioam-profile.xml">
-<!ENTITY I-D.ioamteam-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioamteam-ippm-ioam-direct-export.xml">
+<!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
 <!ENTITY I-D.ioametal-ippm-6man-ioam-ipv6-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioametal-ippm-6man-ioam-ipv6-deployment.xml">
 <!ENTITY I-D.weis-ippm-ioam-eth SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.weis-ippm-ioam-eth.xml">
 <!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-ioam-nsh.xml">
@@ -118,21 +121,16 @@
       </address>
     </author>
 
-    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-
-      <address>
-        <postal>
-          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
-          Road</street>
-
-          <city>Bangalore, KARNATAKA 560 087</city>
-
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari" role="editor">
+        <organization abbrev="Thoughtspot">Thoughtspot</organization>
+        <address>
+         <postal>
+          <street>3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR Layout</street>
+          <city>Bangalore, KARNATAKA 560 102</city>
           <country>India</country>
-        </postal>
-
-        <email>shwethab@cisco.com</email>
-      </address>
+         </postal>
+         <email>shwetha.bhandari@thoughtspot.com</email>
+        </address>
     </author>
 
     <author fullname="Daniel Bernier" initials="D." surname="Bernier">
@@ -153,7 +151,7 @@
       </address>
     </author>
 
-    <date day="7" month="September" year="2020"/>
+    <date year="2021"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -480,7 +478,7 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
         within the data packets. The IOAM Direct Export Option-Type consist of
         a fixed size "IOAM direct export option header". Direct Export for
         IOAM is defined in <xref
-        target="I-D.ioamteam-ippm-ioam-direct-export"/>.</t>
+        target="I-D.ietf-ippm-ioam-direct-export"/>.</t>
       </section>
     </section>
 
@@ -944,28 +942,47 @@ packets  |Encapsu-|                                   |Decapsu-|
       particular the loopback flag are found in <xref
       target="I-D.ietf-ippm-ioam-flags"/>.</t>
 
-      <t>The data elements of IOAM can be used for network reconnaissance,
+      <t>IOAM data can be subject to eavesdropping. Although the  
+      confidentiality of the user data is not at risk in this context, 
+      the IOAM data elements can be used for network reconnaissance,
       allowing attackers to collect information about network paths,
-      performance, queue states, buffer occupancy and other information. Note
-      that in case IOAM is used in "immediate export" mode (reference to be
-      added in a future revision), the IOAM related trace information would
-      not be available in the customer data packets, but would trigger export
-      of packet related IOAM information at every node. IOAM data export and
-      securing IOAM data export is outside the scope of this document.</t>
+      performance, queue states, buffer occupancy and other information. 
+      Recon is an improbable security threat in an IOAM deployment that
+      is within a confined physical domain. However, in deployments that 
+      are not confined to a single LAN, but span multiple inter-connected 
+      sites (for example, using an overlay network), the inter-site links can 
+	  be secured (e.g., by IPsec) in order to avoid external eavesdropping.
+      Another possible mitigation approach is to use the "direct exporting" 
+      mode <xref target="I-D.ietf-ippm-ioam-direct-export"/>.
+      In this case the IOAM related trace information would
+      not be available in the customer data packets, but would trigger 
+	  exporting of (secured) packet-related IOAM information at every node. 
+	  IOAM data export and securing IOAM data export is outside the scope of 
+	  this document.</t>
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
-      add an IOAM header to packets in order to consume the resources of
+      add an IOAM header to packets or modify an IOAM header in en route 
+	  packets in order to consume the resources of
       network devices that take part in IOAM or collectors that analyze the
       IOAM data. Another example is a packet length attack, in which an
       attacker pushes headers associated with IOAM Option-Types into data
       packets, causing these packets to be increased beyond the MTU size,
-      resulting in fragmentation or in packet drops.</t>
+      resulting in fragmentation or in packet drops. Such DoS attacks can be
+      mitigated by deploying IOAM in confined administrative domains, and
+      by defining performance limits on IOAM encapsulation and IOAM exporting.
+      By limiting the rate and/or percentage of packets that 
+      are subject to IOAM encpasulation and the rate of exported traffic, it
+      is possible to cofine the impact of such attacks.</t>
 
       <t>Since IOAM options may include timestamps, if network devices use
       synchronization protocols then any attack on the time protocol <xref
       target="RFC7384"/> can compromise the integrity of the timestamp-related
-      data fields.</t>
+      data fields. Synchronization attacks can be mitigated by combining a
+      secured time distribution scheme, e.g., <xref target="RFC8915"/>, and by 
+	  using redundant clock sources <xref target="RFC5905"/> and/or redundant 
+	  network paths for the time distribution protocol 
+	  <xref target="RFC8039"/>.</t>
 
       <t>At the management plane, attacks may be implemented by misconfiguring
       or by maliciously configuring IOAM-enabled nodes in a way that enables
@@ -1068,6 +1085,12 @@ packets  |Encapsu-|                                   |Decapsu-|
       &RFC7276;
 
       &RFC8300;
+	  
+	  &RFC8915;
+	  
+	  &RFC5905;
+
+	  &RFC8039;
 
       &I-D.ietf-nvo3-vxlan-gpe;
 
@@ -1077,7 +1100,7 @@ packets  |Encapsu-|                                   |Decapsu-|
 
       &I-D.ietf-ippm-ioam-flags;
 
-      &I-D.ioamteam-ippm-ioam-direct-export;
+      &I-D.ietf-ippm-ioam-direct-export;
 
       &I-D.zhou-ippm-ioam-yang;
 
