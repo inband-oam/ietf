@@ -140,7 +140,7 @@
       </address>
     </author>
 
-    <date day="1" month="June" year="2021"/>
+    <date day="24" month="June" year="2021"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -175,8 +175,8 @@
       traverses a path in the network. This document
       discusses the data fields and associated data types for in-situ OAM.
       In-situ OAM data fields can be encapsulated into a variety of protocols
-      such as NSH, Segment Routing, Geneve, IPv6, or
-      IPv4. In-situ OAM can be used to complement OAM mechanisms based on,
+      such as NSH, Segment Routing, Geneve, or IPv6. 
+      In-situ OAM can be used to complement OAM mechanisms based on,
       e.g., ICMP or other types of probe packets.</t>
     </abstract>
   </front>
@@ -783,7 +783,8 @@ The trace option data MUST be 4-octet aligned:
               target="Flags-Registry-Sec"/>. This document allocates a single
               flag as follows: <list style="hanging">
                   <t hangText="Bit 0">"Overflow" (O-bit) (most significant
-                  bit). If there are not enough octets left to record node
+                  bit). In case a network element is supposed to add node data to a packet,
+                  but detects that there are not enough octets left to record the node
                   data, the network element MUST NOT add any fields and MUST set
                   the overflow "O-bit" to "1" in the IOAM-Trace-Option header.
                   This is useful for transit nodes to ignore further
@@ -982,7 +983,9 @@ The trace option data MUST be 4-octet aligned:
                 identifier field to uniquely identify a node within the
                 IOAM-Namespace and associated IOAM-Domain. The procedure to
                 allocate, manage and map the node_ids is beyond the scope of
-                this document.</t>
+                this document. See
+                <xref target="I-D.brockners-opsawg-ioam-deployment"/> for 
+                a discussion of deployment related aspects of the node_id. </t>
               </list></t>
           </section>
 
