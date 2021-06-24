@@ -7,6 +7,7 @@
      An alternate method (rfc include) is described in the references. -->
 <!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
 <!ENTITY RFC6830 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
 <!ENTITY RFC7276 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7276.xml">
@@ -22,6 +23,7 @@
 <!ENTITY RFC7384 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7384.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY RFC8877 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8877.xml">
+<!ENTITY RFC8926 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8926.xml">
 <!ENTITY I-D.brockners-opsawg-ioam-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-opsawg-ioam-deployment.xml">
 <!ENTITY I-D.brockners-ippm-ioam-data-integrity SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-ippm-ioam-data-integrity.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
@@ -33,7 +35,6 @@
 <!ENTITY I-D.brockners-lisp-sr SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-lisp-sr.xml">
 <!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-6man-segment-routing-header.xml">
 <!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
-<!ENTITY I-D.ietf-nvo3-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-geneve.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.lapukhov-dataplane-probe.xml">
 <!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
@@ -170,7 +171,7 @@
     <abstract>
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
-      traverses a path between two points in the network. This document
+      traverses a path in the network. This document
       discusses the data fields and associated data types for in-situ OAM.
       In-situ OAM data fields can be encapsulated into a variety of protocols
       such as NSH, Segment Routing, Geneve, IPv6 (via extension header), or
@@ -195,7 +196,7 @@
       as Hybrid Type 1. IOAM mechanisms can be leveraged where mechanisms
       using e.g. ICMP do not apply or do not offer the desired results, such
       as proving that a certain traffic flow takes a pre-defined path, SLA
-      verification for the live data traffic, detailed statistics on traffic
+      verification for the data traffic, detailed statistics on traffic
       distribution paths in networks that distribute traffic across multiple
       paths, or scenarios in which probe traffic is potentially handled
       differently from regular data traffic by the network devices.</t>
@@ -232,9 +233,11 @@
 	
     <section anchor="Conventions" title="Conventions">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in <xref
-      target="RFC2119"/>.</t>
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP
+      14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only
+      when, they appear in all capitals, as shown here.</t>
+	  
 
       <t>Abbreviations used in this document:</t>
 
@@ -242,7 +245,7 @@
           <t hangText="E2E">Edge to Edge</t>
 
           <t hangText="Geneve:">Generic Network Virtualization Encapsulation
-          <xref target="I-D.ietf-nvo3-geneve"/></t>
+          <xref target="RFC8926"/></t>
 
           <t hangText="IOAM:">In-situ Operations, Administration, and
           Maintenance</t>
@@ -303,13 +306,13 @@
       to be copied from an Echo Request message to an Echo Reply message).</t>
 
       <t>IOAM control points: IOAM-Data-Fields are added to or removed from
-      the live user traffic by the devices which form the edge of a domain.
+      the user traffic by the devices which form the edge of a domain.
       Devices which form an IOAM-Domain can add, update or remove
       IOAM-Data-Fields. Edge devices of an IOAM-Domain can be hosts or network
       devices.</t>
 
       <t>Traffic-sets that IOAM is applied to: IOAM can be deployed on all or
-      only on subsets of the live user traffic. Using IOAM on a selected set
+      only on subsets of the user traffic. Using IOAM on a selected set
       of traffic (e.g., per interface, based on an access control list or flow
       specification defining a specific set of traffic, etc.) could be useful
       in deployments where the cost of processing IOAM-Data-Fields by
@@ -368,6 +371,9 @@
 
             <t>Edge-to-Edge (E2E) Option-Type</t>
           </list></t>
+		  
+		<t>Future IOAM-Option-Types can be allocated by IANA, as described in 
+		 <xref target="IOAM-type-registry"/>.</t>
       </section>
 
       <section title="IOAM-Domains and types of IOAM Nodes">
@@ -670,6 +676,11 @@
             every hop or whether certain hops in the domain weren't IOAM
             transit nodes.</t>
           </list></t>
+		  
+		  <t>It should be noted that the semantics of some of the node data 
+		  fields that are defined below, such as the queue depth and buffer 
+		  occupancy, are implementation specific. This approach is intended 
+		  to allow IOAM nodes with various different architectures.</t>
 
         <section anchor="TraceOptionDef"
                  title="Pre-allocated and Incremental Trace Option-Types">
@@ -2082,6 +2093,8 @@ be 4-octet aligned:
     <references title="Normative References">
       &RFC2119;
 
+      &RFC8174;
+
       &RFC5905;
 
       &RFC8126;
@@ -2157,7 +2170,7 @@ be 4-octet aligned:
 
       &I-D.ietf-nvo3-vxlan-gpe;
 
-      &I-D.ietf-nvo3-geneve;
+	  &RFC8926;
 
       &RFC8877;
 
