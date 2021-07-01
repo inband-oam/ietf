@@ -9,6 +9,8 @@
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
 <!ENTITY RFC8126 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
+<!ENTITY RFC5475 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5475.xml">
+<!ENTITY RFC7014 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7014.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
 <!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-ioam-nsh.xml">
@@ -25,10 +27,9 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-03" ipr="trust200902">
-
+<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-04"
+     ipr="trust200902">
   <front>
-
     <title abbrev="IOAM Direct Exporting">In-situ OAM Direct Exporting</title>
 
     <author fullname="Haoyu Song" initials="H." surname="Song">
@@ -48,7 +49,7 @@
         <email>haoyu.song@huawei.com</email>
       </address>
     </author>
-	
+
     <author fullname="Barak Gafni" initials="B." surname="Gafni">
       <organization abbrev="">Nvidia</organization>
 
@@ -67,7 +68,6 @@
       </address>
     </author>
 
-
     <author fullname="Tianran Zhou" initials="T." surname="Zhou">
       <organization abbrev="">Huawei</organization>
 
@@ -85,8 +85,7 @@
         <email>zhoutianran@huawei.com</email>
       </address>
     </author>
-	
-	
+
     <author fullname="Zhenbin Li" initials="Z." surname="Li">
       <organization abbrev="">Huawei</organization>
 
@@ -104,7 +103,7 @@
         <email>lizhenbin@huawei.com</email>
       </address>
     </author>
-	
+
     <author fullname="Frank Brockners" initials="F." surname="Brockners">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
 
@@ -129,16 +128,22 @@
       </address>
     </author>
 
-    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari" role="editor">
-        <organization abbrev="Thoughtspot">Thoughtspot</organization>
-        <address>
-         <postal>
-          <street>3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR Layout</street>
+    <author fullname="Shwetha Bhandari" initials="S." role="editor"
+            surname="Bhandari">
+      <organization abbrev="Thoughtspot">Thoughtspot</organization>
+
+      <address>
+        <postal>
+          <street>3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR
+          Layout</street>
+
           <city>Bangalore, KARNATAKA 560 102</city>
+
           <country>India</country>
-         </postal>
-         <email>shwetha.bhandari@thoughtspot.com</email>
-        </address>
+        </postal>
+
+        <email>shwetha.bhandari@thoughtspot.com</email>
+      </address>
     </author>
 
     <author fullname="Ramesh Sivakolundu" initials="R." surname="Sivakolundu">
@@ -157,9 +162,8 @@
       </address>
     </author>
 
-	
-	
-    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi" role="editor">
+    <author fullname="Tal Mizrahi" initials="T." role="editor"
+            surname="Mizrahi">
       <organization abbrev="">Huawei</organization>
 
       <address>
@@ -177,9 +181,7 @@
       </address>
     </author>
 
-
-    <date year="2021" />
-
+    <date year="2021"/>
 
     <area>TSV</area>
 
@@ -201,51 +203,48 @@
 
     <abstract>
       <t>In-situ Operations, Administration, and Maintenance (IOAM) is used
-      for recording and collecting operational and telemetry information. 
-	  Specifically, IOAM allows telemetry data to be pushed into data packets
-	  while they traverse the network. This document introduces a new IOAM 
-	  option type called the Direct Export (DEX) option, which is used as 
-	  a trigger for IOAM data to be directly exported or locally aggregated
-	  without being pushed into in-flight data packets. The exporting method
-	  and format are outside the scope of this document.</t>
+      for recording and collecting operational and telemetry information.
+      Specifically, IOAM allows telemetry data to be pushed into data packets
+      while they traverse the network. This document introduces a new IOAM
+      option type called the Direct Export (DEX) option, which is used as a
+      trigger for IOAM data to be directly exported or locally aggregated
+      without being pushed into in-flight data packets. The exporting method
+      and format are outside the scope of this document.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction" toc="default">
-      <t>IOAM <xref target="I-D.ietf-ippm-ioam-data"/> is used for 
-	  monitoring traffic in the network, and for incorporating IOAM data 
-	  fields into in-flight data packets.</t> 
+      <t>IOAM <xref target="I-D.ietf-ippm-ioam-data"/> is used for monitoring
+      traffic in the network, and for incorporating IOAM data fields into
+      in-flight data packets.</t>
 
-	  <t>IOAM makes use of four possible IOAM options, defined in
-	  <xref target="I-D.ietf-ippm-ioam-data"/>: 
-	  Pre-allocated Trace Option, Incremental Trace 
-	  Option, Proof of Transit (POT) Option, and Edge-to-Edge Option.</t>
-	  
-	  <t>This document defines a new IOAM option type (also known as an IOAM 
-	  type) called the Direct Export (DEX) option. This option is used as a 
-	  trigger for IOAM nodes to locally aggregate and process IOAM data, and/or 
-	  to export it to a receiving entity (or  entities). A "receiving entity" in this 
-	  context can be, for example, an external collector, analyzer, controller, 
-	  decapsulating node, or a software module in one of the IOAM nodes.</t>
-	  
-	  <t>Note that even though the IOAM Option-Type is called "Direct Export", 
-	  it depends on the deployment whether the receipt of a packet with DEX 
-	  option type leads to the creation of another packet. Some deployments 
-	  might simply use the packet with the DEX option type to trigger local 
-	  processing of OAM data.</t>
+      <t>IOAM makes use of four possible IOAM options, defined in <xref
+      target="I-D.ietf-ippm-ioam-data"/>: Pre-allocated Trace Option,
+      Incremental Trace Option, Proof of Transit (POT) Option, and
+      Edge-to-Edge Option.</t>
 
-	  <t>This draft has evolved from combining some of the concepts of 
-	  PBT-I from <xref target="I-D.song-ippm-postcard-based-telemetry"/> with 
-	  immediate exporting from <xref target="I-D.ietf-ippm-ioam-flags"/>.
-	  </t>
-	  
-	</section>
+      <t>This document defines a new IOAM option type (also known as an IOAM
+      type) called the Direct Export (DEX) option. This option is used as a
+      trigger for IOAM nodes to locally aggregate and process IOAM data,
+      and/or to export it to a receiving entity (or entities). A "receiving
+      entity" in this context can be, for example, an external collector,
+      analyzer, controller, decapsulating node, or a software module in one of
+      the IOAM nodes.</t>
+
+      <t>Note that even though the IOAM Option-Type is called "Direct Export",
+      it depends on the deployment whether the receipt of a packet with DEX
+      option type leads to the creation of another packet. Some deployments
+      might simply use the packet with the DEX option type to trigger local
+      processing of OAM data.</t>
+
+      <t>This draft has evolved from combining some of the concepts of PBT-I
+      from <xref target="I-D.song-ippm-postcard-based-telemetry"/> with
+      immediate exporting from <xref target="I-D.ietf-ippm-ioam-flags"/>.</t>
+    </section>
 
     <section anchor="Conventions" title="Conventions">
-
       <section title="Requirement Language">
-	
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
         "OPTIONAL" in this document are to be interpreted as described in BCP
@@ -254,41 +253,39 @@
       </section>
 
       <section title="Terminology">
-      <t>Abbreviations used in this document:</t>
+        <t>Abbreviations used in this document:</t>
 
-      <t><list hangIndent="11" style="hanging">
-          <t hangText="IOAM:">In-situ Operations, Administration, and
-          Maintenance</t>
+        <t><list hangIndent="11" style="hanging">
+            <t hangText="IOAM:">In-situ Operations, Administration, and
+            Maintenance</t>
 
-          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+            <t hangText="OAM:">Operations, Administration, and Maintenance</t>
 
-          <t hangText="DEX:">Direct EXporting</t>
-		  
-        </list></t>
+            <t hangText="DEX:">Direct EXporting</t>
+          </list></t>
       </section>
     </section>
 
+    <section anchor="OptionTypeSec"
+             title="The Direct Exporting (DEX) IOAM Option Type">
+      <section title="Overview">
+        <t>The DEX option is used as a trigger for collecting IOAM data
+        locally or for exporting it to a receiving entity (or entities).
+        Specifically, the DEX option can be used as a trigger for collecting
+        IOAM data by an IOAM node and locally aggregating it; thus, this
+        aggregated data can be periodically pushed to a receiving entity, or
+        pulled by a receiving entity on-demand.</t>
 
-    <section anchor="OptionTypeSec" title="The Direct Exporting (DEX) IOAM Option Type">  
+        <t>This option is incorporated into data packets by an IOAM
+        encapsulating node, and removed by an IOAM decapsulating node, as
+        illustrated in <xref target="DEXArch"/>. The option can be read but
+        not modified by transit nodes. Note: the terms IOAM encapsulating,
+        decapsulating and transit nodes are as defined in <xref
+        target="I-D.ietf-ippm-ioam-data"/>.</t>
 
-        <section title="Overview">
-	      <t>The DEX option is used as a trigger for collecting IOAM 
-		  data locally or for exporting it to a receiving entity (or entities).
-		  Specifically, the DEX option can be used as a trigger for collecting
-		  IOAM data by an IOAM node and locally aggregating it; thus, this 
-		  aggregated data can be periodically pushed to a receiving entity, 
-		  or pulled by a receiving entity on-demand.</t>
-		  
-		  <t>This option is incorporated into data packets by an IOAM 
-		  encapsulating node, and removed by an IOAM decapsulating node,
-		  as illustrated in <xref target="DEXArch"/>.
-		  The option can be read but not modified by transit nodes.
-		  Note: the terms IOAM encapsulating, decapsulating and transit nodes are 
-		  as defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-
-     <figure align="center" anchor="DEXArch" title="DEX Architecture">
-       <artwork align="left">
-         <![CDATA[
+        <figure align="center" anchor="DEXArch" title="DEX Architecture">
+          <artwork align="left"><![CDATA[
+         
                                     ^
                                     |Exported IOAM data
                                     |
@@ -307,126 +304,116 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
           export data                                  export data
 		  
            ]]></artwork>
+        </figure>
 
-     </figure>
+        <t>The DEX option is used as a trigger to collect and/or export IOAM
+        data. The trigger applies to transit nodes, the decapsulating node,
+        and the encapsulating node:</t>
 
-		  
-		  <t>The DEX option is used as a trigger to collect and/or export IOAM 
-		  data. The trigger applies to transit nodes, the decapsulating node, 
-		  and the encapsulating node:</t>
-		  
-          <t><list style="symbols">
-                      <t>An IOAM encapsulating node configured to incorporate 
-					  the DEX option encapsulates (possibly a subset of) the 
-					  packets it forwards with the DEX option, and MAY export 
-					  and/or collect the requested IOAM data immediately. Only 
-					  IOAM encapsulating nodes are allowed 
-					  to add the DEX option type to a packet.</t>
+        <t><list style="symbols">
+            <t>An IOAM encapsulating node configured to incorporate the DEX
+            option encapsulates (possibly a subset of) the packets it forwards
+            with the DEX option, and MAY export and/or collect the requested
+            IOAM data immediately. Only IOAM encapsulating nodes are allowed
+            to add the DEX option type to a packet.</t>
 
-                      <t>A transit node that processes a packet with the DEX 
-					  option MAY export and/or collect the requested IOAM data.
-					  </t>
+            <t>A transit node that processes a packet with the DEX option MAY
+            export and/or collect the requested IOAM data.</t>
 
-                      <t>An IOAM decapsulating node that processes a packet
-                      with the DEX option MAY export and/or collect the 
-					  requested IOAM data, and MUST decapsulate the IOAM 
-					  header.</t>
+            <t>An IOAM decapsulating node that processes a packet with the DEX
+            option MAY export and/or collect the requested IOAM data, and MUST
+            decapsulate the IOAM header.</t>
           </list></t>
 
-		  <t>As in <xref target="I-D.ietf-ippm-ioam-data"/>, the DEX option
-		  can be incorporated into all or a subset of the traffic that is
-		  forwarded by the encapsulating node, as further discussed in
-		  <xref target="SelectionSec"/> below. Moreover, IOAM nodes respond
-		  to the DEX trigger by exporting and/or collection IOAM data
-		  either for all traversing packets that carry the DEX
-		  option, or selectively only for a subset of these
-		  packets, as further discussed in <xref target="ExportSec"/> below.</t>
-		  
-		  <section anchor="SelectionSec" title="DEX Packet Selection">
+        <t>As in <xref target="I-D.ietf-ippm-ioam-data"/>, the DEX option can
+        be incorporated into all or a subset of the traffic that is forwarded
+        by the encapsulating node, as further discussed in <xref
+        target="SelectionSec"/> below. Moreover, IOAM nodes respond to the DEX
+        trigger by exporting and/or collection IOAM data either for all
+        traversing packets that carry the DEX option, or selectively only for
+        a subset of these packets, as further discussed in <xref
+        target="ExportSec"/> below.</t>
 
-		  <t>If an IOAM encapsulating node incorporates the DEX option into all
-		  the traffic it forwards it may lead to an excessive amount of exported
-		  data, which may overload the network and the receiving entity.
-		  Therefore, an IOAM encapsulating node that supports the DEX option MUST 
-		  support the ability to incorporate the DEX option selectively
-		  into a subset of the packets that are forwarded by it.</t>
+        <section anchor="SelectionSec" title="DEX Packet Selection">
+          <t>If an IOAM encapsulating node incorporates the DEX option into
+          all the traffic it forwards it may lead to an excessive amount of
+          exported data, which may overload the network and the receiving
+          entity. Therefore, an IOAM encapsulating node that supports the DEX
+          option MUST support the ability to incorporate the DEX option
+          selectively into a subset of the packets that are forwarded by
+          it.</t>
 
-		  <t>Various methods of packet selection and sampling have been previously
-		  defined, such as <xref target="RFC7014"/> and <xref target="RFC5475"/>.
-		  Similar techniques can be applied by an IOAM encapsulating node to
-		  apply DEX to a subset of the forwarded traffic.</t>
+          <t>Various methods of packet selection and sampling have been
+          previously defined, such as <xref target="RFC7014"/> and <xref
+          target="RFC5475"/>. Similar techniques can be applied by an IOAM
+          encapsulating node to apply DEX to a subset of the forwarded
+          traffic.</t>
 
-		  <t>The subset of traffic that is forwarded or transmitted with a DEX
-		  option SHOULD not exceed 1/N of the interface capacity on any of
-		  the IOAM encapsulating node's interfaces. It is noted that this
-		  requirement applies to the total traffic that incorporates a DEX option,
-		  including traffic that is forwarded by the IOAM encapsulating node and
-		  probe packets that are generated by the IOAM encapsulating node.
-		  In this context N is a parameter that can be configurable by network
-		  operators. If there is an upper bound, M, on the number of
-		  IOAM transit nodes in any path in the network, then it is recommended
-		  to use an N such that N >> M. The rationale is that a packet that 
-		  includes a DEX option may trigger an exported packet from each IOAM
-		  transit node along the path for a total of M exported packets. Thus,
-		  if N >> M then the number of exported packets is significantly lower
-		  than the number of data packets forwarded by the IOAM encapsulating 
-		  node. If there is no prior knowledge about the network topology or 
-		  size, it is recommended to use N>100.</t>
-		  </section>
+          <t>The subset of traffic that is forwarded or transmitted with a DEX
+          option SHOULD not exceed 1/N of the interface capacity on any of the
+          IOAM encapsulating node's interfaces. It is noted that this
+          requirement applies to the total traffic that incorporates a DEX
+          option, including traffic that is forwarded by the IOAM
+          encapsulating node and probe packets that are generated by the IOAM
+          encapsulating node. In this context N is a parameter that can be
+          configurable by network operators. If there is an upper bound, M, on
+          the number of IOAM transit nodes in any path in the network, then it
+          is recommended to use an N such that N &gt;&gt; M. The rationale is
+          that a packet that includes a DEX option may trigger an exported
+          packet from each IOAM transit node along the path for a total of M
+          exported packets. Thus, if N &gt;&gt; M then the number of exported
+          packets is significantly lower than the number of data packets
+          forwarded by the IOAM encapsulating node. If there is no prior
+          knowledge about the network topology or size, it is recommended to
+          use N&gt;100.</t>
+        </section>
 
+        <section anchor="ExportSec" title="Responding to the DEX Trigger">
+          <t>The DEX option specifies which data fields should be exported
+          and/or collected, as specified in <xref target="OptionSec"/>. As
+          mentioned above, the data can be locally collected, and optionally
+          can be aggregated and exported to a receiving entity, either
+          proactively or on-demand. If IOAM data is exported, the format and
+          encapsulation of the packet that contains the exported data is not
+          within the scope of the current document. For example, the export
+          format can be based on <xref
+          target="I-D.spiegel-ippm-ioam-rawexport"/>.</t>
 
-		  <section anchor="ExportSec" title="Responding to the DEX Trigger">
+          <t>An IOAM node that performs DEX-triggered exporting MUST support
+          the ability to limit the rate of the exported packets. The rate of
+          exported packets SHOULD be limited so that the number of exported
+          packets is significantly lower than the number of packets that are
+          exported by the device. The exported data rate SHOULD not exceed 1/N
+          of the interface capacity on any of the IOAM node's interfaces. It
+          is recommended to use N&gt;100. Depending on the IOAM node's
+          architecture considerations, the export rate may be limited to a
+          lower number in order to avoid loading the IOAM node.</t>
 
-		  <t>The DEX option specifies which data fields should be exported and/or
-		  collected, as specified in <xref target="OptionSec"/>.
-		  As mentioned above, the data can be locally collected, and optionally 
-		  can be aggregated and exported to a receiving entity, either 
-		  proactively or on-demand. If IOAM data is exported, the format and 
-		  encapsulation of the packet that contains the exported
-		  data is not within the scope of the current document. For example,
-		  the export format can be based on
-		  <xref target="I-D.spiegel-ippm-ioam-rawexport"/>.</t>
+          <t>Exported packets SHOULD not be exported over a path or a tunnel
+          that is subject to IOAM direct exporting. Furthermore, IOAM
+          encapsulating nodes that push a DEX option into traversing packets
+          MUST avoid pushing an IOAM header into IOAM exported packets. This
+          requirement is intended to prevent nested exporting and/or exporting
+          loops.</t>
 
-		  <t>An IOAM node that performs DEX-triggered exporting MUST support
-		  the ability to limit the rate of the exported packets.
-		  The rate of exported packets SHOULD be limited so that the number of
-		  exported packets is significantly lower than the number of packets
-		  that are exported by the device. The exported data rate SHOULD not exceed
-		  1/N of the interface capacity on any of the IOAM node's interfaces. 
-		  It is recommended to use N>100. Depending on the IOAM node's 
-		  architecture considerations, the export rate may be limited to a lower
-		  number in order to avoid loading the IOAM node.</t>
+          <t>A transit IOAM node that does not support the DEX option SHOULD
+          ignore it. A decapsulating node that does not support the DEX option
+          MUST remove it, along with any other IOAM options carried in the
+          packet if such exist.</t>
+        </section>
+      </section>
 
-		  <t>Exported packets SHOULD not be exported over a path or a tunnel that is
-		  subject to IOAM direct exporting. Furthermore, IOAM encapsulating nodes that 
-		  push a DEX option into traversing packets MUST avoid pushing an IOAM header 
-		  into IOAM exported packets. This requirement is intended to prevent nested 
-		  exporting and/or exporting loops.</t>
-		  </section>
-		  
-		  <t>A transit IOAM node that does not support the DEX option SHOULD 
-		  ignore it. A decapsulating node that does not support the DEX option
-		  MUST remove it, along with any other IOAM options carried in the 
-		  packet if such exist.</t>
-		  
+      <section anchor="OptionSec" title="The DEX Option Format">
+        <t>The format of the DEX option is depicted in <xref
+        target="OptionFormat"/>. The length of the DEX option is either 8
+        octets or 16 octets, as the Flow ID and the Sequence Number fields
+        (summing up to 8 octets) are optional. It is assumed that the lower
+        layer protocol indicates the length of the DEX option, thus indicating
+        whether the two optional fields are present.</t>
 
-		</section>
-
-
-        <section anchor="OptionSec" title="The DEX Option Format">
-
-	      <t>The format of the DEX option is depicted in 
-		  <xref target="OptionFormat"/>. The length of the DEX option
-		  is either 8 octets or 16 octets, as the Flow ID and the
-		  Sequence Number fields (summing up to 8 octets) are optional. 
-		  It is assumed that the lower layer protocol indicates 
-		  the length of the DEX option, thus indicating whether the two 
-		  optional fields are present.</t>
-		
-     <figure align="center" anchor="OptionFormat" title="DEX Option Format">
-
-       <artwork align="left">
-         <![CDATA[
+        <figure align="center" anchor="OptionFormat" title="DEX Option Format">
+          <artwork align="left"><![CDATA[
+         
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -440,165 +427,143 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
    |                     Sequence Number  (Optional)               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
            ]]></artwork>
+        </figure>
 
-     </figure>
+        <t><list hangIndent="16" style="hanging">
+            <t hangText="Namespace-ID">A 16-bit identifier of the IOAM
+            namespace, as defined in <xref
+            target="I-D.ietf-ippm-ioam-data"/>.</t>
 
+            <t hangText="Flags">A 16-bit field, comprised of 16 one-bit
+            subfields. Flags are allocated by IANA, as defined in <xref
+            target="IANAflags"/>.</t>
 
-     <t>
-       <list hangIndent="16"  style="hanging">
+            <t hangText="IOAM-Trace-Type">A 24-bit identifier which specifies
+            which data fields should be exported. The format of this field is
+            as defined in <xref target="I-D.ietf-ippm-ioam-data"/>.
+            Specifically, bit 23, which corresponds to the Checksum Complement
+            data field, should be assigned to be zero by the IOAM
+            encapsulating node, and ignored by transit and decapsulating
+            nodes. The reason for this is that the Checksum Complement is
+            intended for in-flight packet modifications and is not relevant
+            for direct exporting.</t>
 
-         <t hangText="Namespace-ID">A 16-bit identifier of the IOAM namespace, 
-		 as defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
-	   
-         <t hangText="Flags">A 16-bit field, comprised of 16 one-bit subfields.
-		 Flags are allocated by IANA, as defined in 
-		 <xref target="IANAflags"/>.</t>
+            <t hangText="Reserved">This field SHOULD be ignored by the
+            receiver.</t>
 
-         <t hangText="IOAM-Trace-Type">A 24-bit identifier which specifies 
-		 which data fields should be exported. The format of this field is
-		 as defined in <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically,
-		 bit 23, which corresponds to the Checksum Complement data field, 
-		 should be assigned to be zero by the IOAM encapsulating node,
-		 and ignored by transit and decapsulating nodes. The reason for this 
-		 is that the Checksum Complement is intended for in-flight packet 
-		 modifications and is not relevant for direct exporting.</t>
+            <t hangText="Flow ID">A 32-bit flow identifier. If the actual Flow
+            ID is shorter than 32 bits, it is zero padded in its most
+            significant bits. The field is set at the encapsulating node. The
+            Flow ID can be uniformly assigned by a central controller or
+            algorithmically generated by the encapsulating node. The latter
+            approach cannot guarantee the uniqueness of Flow ID, yet the
+            conflict probability is small due to the large Flow ID space. The
+            Flow ID can be used to correlate the exported data of the same
+            flow from multiple nodes and from multiple packets.</t>
 
-         <t hangText="Reserved">This field SHOULD be ignored by the 
-		 receiver.</t>
-
-         <t hangText="Flow ID">A 32-bit flow identifier. If the actual Flow ID 
-		 is shorter than 32 bits, it is zero padded in its most significant 
-		 bits. The field is set at the encapsulating node.  The Flow
-         ID can be uniformly assigned by a central controller or
-         algorithmically generated by the encapsulating node.  The latter approach
-         cannot guarantee the uniqueness of Flow ID, yet the conflict
-         probability is small due to the large Flow ID space. The Flow ID 
-		 can be used to correlate the exported data of the same flow from 
-		 multiple nodes and from multiple packets.</t>
-
-         <t hangText="Sequence Number">A 32-bit sequence number starting from 0 
-		 and increasing by 1 for each following monitored packet from the same
-		 flow at the encapsulating node. The Sequence Number, when combined 
-		 with the Flow ID, provides a convenient approach to correlate the 
-		 exported data from the same user packet.</t>
-		 
-       </list>
-     </t>
-
-
-		</section>
-
-		
-		
+            <t hangText="Sequence Number">A 32-bit sequence number starting
+            from 0 and increasing by 1 for each following monitored packet
+            from the same flow at the encapsulating node. The Sequence Number,
+            when combined with the Flow ID, provides a convenient approach to
+            correlate the exported data from the same user packet.</t>
+          </list></t>
+      </section>
     </section>
 
-	
     <section anchor="IANA" title="IANA Considerations">
-	
       <section anchor="IANAtype" title="IOAM Type">
-        <t>The "IOAM Type Registry" was defined in Section 7.2 of 
-		<xref target="I-D.ietf-ippm-ioam-data"/>.
-		IANA is requested to allocate the following code point from the 
-		"IOAM Type Registry" as follows:</t>
-		
+        <t>The "IOAM Type Registry" was defined in Section 7.2 of <xref
+        target="I-D.ietf-ippm-ioam-data"/>. IANA is requested to allocate the
+        following code point from the "IOAM Type Registry" as follows:</t>
+
         <t><list hangIndent="11" style="hanging">
-			<t hangText="TBD-type">IOAM Direct Export (DEX) Option Type</t>
-        </list></t>
-		  
-		<t>If possible, IANA is requested to allocate code point 4 (TBD-type).</t>
+            <t hangText="TBD-type">IOAM Direct Export (DEX) Option Type</t>
+          </list></t>
+
+        <t>If possible, IANA is requested to allocate code point 4
+        (TBD-type).</t>
       </section>
 
       <section anchor="IANAflags" title="IOAM DEX Flags">
         <t>IANA is requested to define an "IOAM DEX Flags" registry. This
-		registry includes 16 flag bits. Allocation should be performed based on 
-		the "RFC Required" procedure, as defined in <xref
-        target="RFC8126"></xref>.</t>
+        registry includes 16 flag bits. Allocation should be performed based
+        on the "RFC Required" procedure, as defined in <xref
+        target="RFC8126"/>.</t>
       </section>
-	  
     </section>
 
     <section anchor="Performance" title="Performance Considerations">
-      <t>The DEX option triggers IOAM data to be collected and/or 
-	  exported packets to be exported to a 
-	  receiving entity (or entities). In some cases this may impact the 
-	  receiving entity's performance,  or the performance along the paths 
-	  leading to it.</t>
-	  
-	  <t>Therefore, the performance impact of these exported packets is
-	  limited by taking two measures: at the encapsulating nodes, by 
-	  selective DEX encapsulation (<xref target="SelectionSec"/>), 
-	  and at the transit nodes, by limiting exporting rate 
-	  (<xref target="ExportSec"/>). 
-	  These two measures ensure that 
-	  direct exporting is used at a rate that does not significantly affect 
-	  the network bandwidth, and does not overload the receiving entity. 
-	  Moreover, it is possible to load balance the 
-	  exported data among multiple receiving entities, although the 
-	  exporting method is not within the scope of this document.</t>
+      <t>The DEX option triggers IOAM data to be collected and/or exported
+      packets to be exported to a receiving entity (or entities). In some
+      cases this may impact the receiving entity's performance, or the
+      performance along the paths leading to it.</t>
+
+      <t>Therefore, the performance impact of these exported packets is
+      limited by taking two measures: at the encapsulating nodes, by selective
+      DEX encapsulation (<xref target="SelectionSec"/>), and at the transit
+      nodes, by limiting exporting rate (<xref target="ExportSec"/>). These
+      two measures ensure that direct exporting is used at a rate that does
+      not significantly affect the network bandwidth, and does not overload
+      the receiving entity. Moreover, it is possible to load balance the
+      exported data among multiple receiving entities, although the exporting
+      method is not within the scope of this document.</t>
     </section>
 
-	
     <section anchor="Security" title="Security Considerations">
-      <t>The security considerations of IOAM in general are discussed in 
-	  <xref target="I-D.ietf-ippm-ioam-data"/>. Specifically, an attacker
-	  may try to use the functionality that is defined in this document 
-	  to attack the network.</t>
-	  
-	  <t>An attacker may attempt to overload network devices by injecting 
-	  synthetic packets that include the DEX option. Similarly, an on-path 
-	  attacker may maliciously incorporate the DEX option into transit 
-	  packets, or maliciously remove it from packets in which it is 
-	  incorporated.</t>
-	  
-	  <t>Forcing DEX, either in synthetic packets or in transit packets may 
-	  overload the receiving entity (or entities). Since this mechanism affects 
-	  multiple devices along the network path, it potentially amplifies the 
-	  effect on the network bandwidth and on the receiving entity's load.</t>
+      <t>The security considerations of IOAM in general are discussed in <xref
+      target="I-D.ietf-ippm-ioam-data"/>. Specifically, an attacker may try to
+      use the functionality that is defined in this document to attack the
+      network.</t>
+
+      <t>An attacker may attempt to overload network devices by injecting
+      synthetic packets that include the DEX option. Similarly, an on-path
+      attacker may maliciously incorporate the DEX option into transit
+      packets, or maliciously remove it from packets in which it is
+      incorporated.</t>
+
+      <t>Forcing DEX, either in synthetic packets or in transit packets may
+      overload the receiving entity (or entities). Since this mechanism
+      affects multiple devices along the network path, it potentially
+      amplifies the effect on the network bandwidth and on the receiving
+      entity's load.</t>
 
       <t>The amplification effect of DEX may be worse in wide area networks in
       which there are multiple IOAM domains. For example, if DEX is used in
       IOAM domain 1 for exporting IOAM data to a receiving entity, then the
-      exported packets of domain 1 can be forwarded through IOAM domain 2,
-      in which they are subject to DEX. The exported packets of domain 2 may
-      in turn be forwarded through another IOAM domain (or through domain
-      1), and theoretically this recursive amplification may continue
-      infinitely.</t>	  
-	  
-	  <t>In order to mitigate the attacks described above, the following
-	  requirements (<xref target="OptionTypeSec"/>) have been defined:</t>
+      exported packets of domain 1 can be forwarded through IOAM domain 2, in
+      which they are subject to DEX. The exported packets of domain 2 may in
+      turn be forwarded through another IOAM domain (or through domain 1), and
+      theoretically this recursive amplification may continue infinitely.</t>
 
-     <t><list style="symbols">
-         <t>Selective DEX (<xref target="SelectionSec"/>) is applied by 
-		 IOAM encpsulating nodes in order to limit the potential impact 
-		 of DEX attacks to a small fraction of the traffic.</t>
+      <t>In order to mitigate the attacks described above, the following
+      requirements (<xref target="OptionTypeSec"/>) have been defined:</t>
 
-         <t>Rate limiting of exported traffic (<xref target="ExportSec"/>)
-		 is applied by IOAM nodes in order to prevent overloading attacks 
-		 and in order to significantly limit the scale of amplification 
-		 attacks.</t>
-		 
-		 <t>IOAM encapsulating nodes are required to avoid pushing the DEX
-		 option into IOAM exported packets (<xref target="ExportSec"/>), 
-		 thus preventing some of the amplification and export loop scenarios.
-		 </t>
-		 
-       </list></t>
-	  
-	  <t>Although the exporting method is not within the scope of this 
-	  document, any exporting method MUST secure the exported data from the
-	  IOAM node to the receiving entity. Specifically, an IOAM node that 
-	  performs DEX exporting MUST send the exported data to a pre-configured 
-	  trusted receiving entity.</t>
-	  
-	  <t>IOAM is assumed to be deployed in a restricted administrative domain,
-	  thus limiting the scope of the threats above and their affect. This is
-	  a fundamental assumption with respect to the security aspects of IOAM, as
-	  further discussed in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+      <t><list style="symbols">
+          <t>Selective DEX (<xref target="SelectionSec"/>) is applied by IOAM
+          encpsulating nodes in order to limit the potential impact of DEX
+          attacks to a small fraction of the traffic.</t>
+
+          <t>Rate limiting of exported traffic (<xref target="ExportSec"/>) is
+          applied by IOAM nodes in order to prevent overloading attacks and in
+          order to significantly limit the scale of amplification attacks.</t>
+
+          <t>IOAM encapsulating nodes are required to avoid pushing the DEX
+          option into IOAM exported packets (<xref target="ExportSec"/>), thus
+          preventing some of the amplification and export loop scenarios.</t>
+        </list></t>
+
+      <t>Although the exporting method is not within the scope of this
+      document, any exporting method MUST secure the exported data from the
+      IOAM node to the receiving entity. Specifically, an IOAM node that
+      performs DEX exporting MUST send the exported data to a pre-configured
+      trusted receiving entity.</t>
+
+      <t>IOAM is assumed to be deployed in a restricted administrative domain,
+      thus limiting the scope of the threats above and their affect. This is a
+      fundamental assumption with respect to the security aspects of IOAM, as
+      further discussed in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
     </section>
-
-	
   </middle>
-
 
   <back>
     <references title="Normative References">
@@ -606,59 +571,56 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 
       &RFC8174;
 
+      &RFC5475;
+
+      &RFC7014;
+
       &I-D.ietf-ippm-ioam-data;
-	  
+    </references>
 
-	  </references>
     <references title="Informative References">
-	  &RFC8126;
-	  
-	  &I-D.spiegel-ippm-ioam-rawexport;
-	  
-	  &I-D.song-ippm-postcard-based-telemetry;
-	  
-	  &I-D.ietf-ippm-ioam-flags;
-	  
-	  </references>
+      &RFC8126;
 
-    <section anchor="appendix" title="Hop Limit and Hop Count in Direct Exporting">
+      &I-D.spiegel-ippm-ioam-rawexport;
 
-		  <t>In order to help correlate and order the exported packets, it is 
-		  possible to include the Hop_Lim/Node_ID data field in exported 
-		  packets; if the IOAM-Trace-Type 
-		  <xref target="I-D.ietf-ippm-ioam-data"/> has the Hop_Lim/Node_ID bit 
-		  set, then exported packets include the Hop_Lim/Node_ID data field, 
-		  which contains the TTL/Hop Limit value from a lower layer protocol.
-		  </t>
-		  
-		  <t>An alternative approach was considered during the design of this 
-		  document, according to which a 1-octet Hop Count field would be 
-		  included in the DEX header (presumably by claiming some space 
-		  from the Flags field). The Hop Limit would starts from 0 at the 
-		  encapsulating node and be incremented by each IOAM transit node 
-		  that supports the DEX option. In this approach the Hop Count field 
-		  value would also be included in the exported packet.</t> 
-		  
-		  <t>The main advantage of the Hop_Lim/Node_ID approach is that it 
-		  provides information about the current hop count without requiring 
-		  each transit node to modify the DEX option, thus simplifying the data 
-		  plane functionality of Direct Exporting.
-		  The main advantage of the Hop Count approach that was considered is 
-		  that it counts the number of IOAM-capable nodes without relying on 
-		  the lower layer TTL, especially when the lower layer cannot prvide 
-		  the accurate TTL information, e.g., Layer 2 Ethernet or hierarchical 
-		  VPN. The Hop Count approach would also explicitly allow to detect a 
-		  case where an IOAM-capable node fails to export packets. It would 
-		  also be possible to use a flag to indicate an optional Hop Count 
-		  field, which enables to control the tradeoff. On one hand it would 
-		  address the use cases that the Hop_Lim/Node_ID cannot cover, and 
-		  on the other hand it would not require transit switches to update 
-		  the option if it was not supported or disabled. For the sake of 
-		  simplicity the Hop Count approach was not pursued, and this field
-		  is not incorporated in the DEX header.</t>
-	
-	</section>
+      &I-D.song-ippm-postcard-based-telemetry;
 
+      &I-D.ietf-ippm-ioam-flags;
+    </references>
 
+    <section anchor="appendix"
+             title="Hop Limit and Hop Count in Direct Exporting">
+      <t>In order to help correlate and order the exported packets, it is
+      possible to include the Hop_Lim/Node_ID data field in exported packets;
+      if the IOAM-Trace-Type <xref target="I-D.ietf-ippm-ioam-data"/> has the
+      Hop_Lim/Node_ID bit set, then exported packets include the
+      Hop_Lim/Node_ID data field, which contains the TTL/Hop Limit value from
+      a lower layer protocol.</t>
+
+      <t>An alternative approach was considered during the design of this
+      document, according to which a 1-octet Hop Count field would be included
+      in the DEX header (presumably by claiming some space from the Flags
+      field). The Hop Limit would starts from 0 at the encapsulating node and
+      be incremented by each IOAM transit node that supports the DEX option.
+      In this approach the Hop Count field value would also be included in the
+      exported packet.</t>
+
+      <t>The main advantage of the Hop_Lim/Node_ID approach is that it
+      provides information about the current hop count without requiring each
+      transit node to modify the DEX option, thus simplifying the data plane
+      functionality of Direct Exporting. The main advantage of the Hop Count
+      approach that was considered is that it counts the number of
+      IOAM-capable nodes without relying on the lower layer TTL, especially
+      when the lower layer cannot prvide the accurate TTL information, e.g.,
+      Layer 2 Ethernet or hierarchical VPN. The Hop Count approach would also
+      explicitly allow to detect a case where an IOAM-capable node fails to
+      export packets. It would also be possible to use a flag to indicate an
+      optional Hop Count field, which enables to control the tradeoff. On one
+      hand it would address the use cases that the Hop_Lim/Node_ID cannot
+      cover, and on the other hand it would not require transit switches to
+      update the option if it was not supported or disabled. For the sake of
+      simplicity the Hop Count approach was not pursued, and this field is not
+      incorporated in the DEX header.</t>
+    </section>
   </back>
 </rfc>
