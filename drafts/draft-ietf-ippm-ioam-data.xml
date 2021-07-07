@@ -443,18 +443,20 @@
         <t>A subset or all of the IOAM-Option-Types and their corresponding
         IOAM-Data-Fields can be associated to an IOAM-Namespace.
         IOAM-Namespaces add further context to IOAM-Option-Types and
-        associated IOAM-Data-Fields. Any IOAM-Namespace MUST interpret the
-        IOAM-Option-Types and associated IOAM-Data-Fields per the definition
-        in this document. IOAM-Namespaces group nodes to support different
-        deployment approaches of IOAM (see a few example use-cases below) as
+        associated IOAM-Data-Fields. The IOAM-Option-Types and associated 
+		IOAM-Data-Fields are interpreted as defined in this document, 
+		regardless of the value of the IOAM-Namespace. However, 
+		IOAM-Namespaces group nodes to support different deployment approaches
+		of IOAM (see a few example use-cases below) as
         well as resolve issues which can occur due to IOAM-Data-Fields not
         being globally unique (e.g. IOAM node identifiers do not have to be
         globally unique). IOAM-Data-Fields significance is always within a
         particular IOAM-Namespace.</t>
 
         <t>An IOAM-Namespace is identified by a 16-bit namespace identifier
-        (Namespace-ID). IOAM-Namespace identifiers MUST be present and
-        populated in all IOAM-Option-Types. The Namespace-ID value is divided
+        (Namespace-ID). The IOAM-Namespace field is included in all the 
+		IOAM-Option-Types defined in this document, and MUST be included 
+		in all future IOAM-Option-Types. The Namespace-ID value is divided
         into two sub-ranges:</t>
 
         <t><list style="symbols">
@@ -499,15 +501,16 @@
             on Namespace-IDs to provide for proper IOAM-Domain isolation.</t>
 
             <t>IOAM-Namespaces provide additional context for IOAM-Data-Fields
-            and thus ensure that IOAM-Data-Fields are unique and can be
-            interpreted properly by management stations or network
-            controllers. While, for example, the node identifier field
-            (node_id, see below) does not need to be unique in a deployment
-            (e.g. if an operator wishes to use different node identifiers for
-            different IOAM layers, even within the same device; or node
-            identifiers might not be unique for other organizational reasons,
-            such as after a merger of two formerly separated organizations),
-            the combination of node_id and Namespace-ID will always be unique.
+			and thus can be used to ensure that IOAM-Data-Fields are unique and 
+			are interpreted properly by management stations or network 
+			controllers.  For example, the node identifier field (node_id, see 
+			below) does not need to be unique in a deployment (e.g. if an 
+			operator wishes to use different node identifiers for different 
+			IOAM layers, even within the same device; or node identifiers 
+			might not be unique for other organizational reasons, such as 
+			after a merger of two formerly separated organizations), the 
+			Namespace-ID can be used as a context identifier, such that 
+			the combination of node_id and Namespace-ID will always be unique.
             Similarly, IOAM-Namespaces can be used to define how certain
             IOAM-Data-Fields are interpreted: IOAM offers three different
             timestamp format options. The Namespace-ID can be used to
@@ -573,8 +576,8 @@
 	are IOAM capable exceeds the available space in the packet.</t>
 
         <t>To optimize hardware and software implementations, IOAM tracing is
-        defined as two separate options. Any deployment MAY choose to
-        configure and support one or both of the following options.</t>
+        defined as two separate options. A deployment can choose to configure 
+		and support one or both of the following options.</t>
 
         <t><list style="hanging">
             <t hangText="Pre-allocated Trace-Option:">This trace option is
@@ -612,9 +615,10 @@
             IOAM encapsulating node sets the fields in the Option-Type that
             control what IOAM-Data-Fields have to be collected and how large
             the node data list can grow. IOAM transit nodes push their node
-            data to the node data list, decrease the remaining length
-            available to subsequent nodes and adjust the lengths and possibly
-            checksums in outer headers.</t>
+			data to the node data list subject to any protocol constraints of 
+			the encapsulating layer. They then decrease the remaining length
+			available to subsequent nodes and adjust the lengths and possibly
+			checksums in outer headers.</t>
           </list></t>
 
         <t>A particular implementation of IOAM MAY choose to support only one
@@ -624,9 +628,9 @@
         with either the Incremental Trace-Option or the Pre-allocated
         Trace-Option could result in both Option-Types being present in a
         packet. Given that the operator knows which equipment is deployed in a
-        particular IOAM, the operator will decide by means of configuration
-        which type(s) of trace options will be used for a particular
-        domain.</t>
+        particular IOAM domain, the operator will decide by means of 
+		configuration which type(s) of trace options will be used for a 
+		particular domain.</t>
 
         <t>Every node data entry holds information for a particular IOAM
         transit node that is traversed by a packet. The IOAM decapsulating
@@ -741,9 +745,7 @@ The trace option data MUST be 4-octet aligned:
               and 2 of them are wide, then NodeLen would be 5. <vspace
               blankLines="1"/>An IOAM encapsulating node MUST set NodeLen.
               <vspace blankLines="1"/>A node receiving an IOAM Pre-allocated
-              or Incremental Trace-Option relies on the NodeLen value, or it
-              can ignore the NodeLen value and calculate the node length from
-              the IOAM-Trace-Type bits (see below).</t>
+              or Incremental Trace-Option relies on the NodeLen value.</t>
 
               <t anchor="TraceFlags" hangText="Flags">4-bit field. Flags are
               allocated by IANA, as specified in <xref
@@ -760,22 +762,24 @@ The trace option data MUST be 4-octet aligned:
               <t hangText="RemainingLen:">7-bit unsigned integer. This field
               specifies the data space in multiples of 4-octets remaining for
               recording the node data, before the node data list is considered
-              to have overflowed. Given that the sender knows the path MTU
-              (PMTU), the sender MAY set the initial value of RemainingLen
-              according to the number of node data bytes allowed before
-              exceeding the MTU. Subsequent nodes can carry out a simple
-              comparison between RemainingLen and NodeLen, along with the
-              length of the "Opaque State Snapshot" if applicable, to
-              determine whether or not data can be added by this node. When
-              node data is added, the node MUST decrease RemainingLen by the
-              amount of data added. In the pre-allocated trace option,
+              to have overflowed. The sender MUST assign the initial value of 
+			  the RemainingLen field. The sender MAY calculate the value of 
+			  the RemainingLen field by computing the number of node data 
+			  bytes allowed before exceeding the path MTU (PMTU), given that 
+			  the PMTU is known to the sender. Subsequent nodes can carry out 
+			  a simple comparison between RemainingLen and NodeLen, along with 
+			  the length of the "Opaque State Snapshot" if applicable, to 
+			  determine whether or not data can be added by this node.  When 
+			  node data is added, the node MUST decrease RemainingLen by the 
+			  amount of data added. In the pre-allocated trace option,
               RemainingLen is used to derive the offset in data space to
               record the node data element. Specifically, the recording of the
               node data element would start from RemainingLen - NodeLen -
-              sizeof(opaque snapshot) in 4 octet units. If RemainingLen
-              in a pre-allocated trace option exceeds the length of the
-              option, as specified in the preceding header, then the node
-              MUST NOT add any fields.</t>
+              sizeof(opaque snapshot) in 4 octet units. If RemainingLen in a 
+			  pre-allocated trace option exceeds the length of the option, 
+			  as specified in the lower layer header (which is not within the 
+			  scope of this document), then the node MUST NOT add any fields.
+			  </t>
 
               <t anchor="IOAMTraceType" hangText="IOAM-Trace-Type:">A 24-bit
               identifier which specifies which data types are used in this
@@ -829,10 +833,15 @@ The trace option data MUST be 4-octet aligned:
                   <t hangText="Bit 11">When set, indicates presence of buffer
                   occupancy in the node data.</t>
 
-                  <t hangText="Bit 12-21">Undefined. An IOAM encapsulating
-                  node MUST set the value of each of these bits to 0. If an
-                  IOAM transit node receives a packet with one or more of
-                  these bits set to 1, it MUST either: <list style="numbers">
+                  <t hangText="Bit 12-21">Undefined. These values are available 
+				  for future assignment in the IOAM Trace-Type Registry 
+				  (<xref target="ioam-trace-type-registry"/>). Every future 
+				  node data field corresponding to one of these bits MUST 
+				  be 4-octets long. An IOAM encapsulating node MUST set the 
+				  value of each of these bits to 0.  If an IOAM transit 
+				  node receives a packet with one or more of these bits set 
+				  to 1, it MUST either: 
+				  <list style="numbers">
                       <t>Add corresponding node data filled with the reserved
                       value 0xFFFFFFFF, after the node data fields for the
                       IOAM-Trace-Type bits defined above, such that the total
@@ -1811,7 +1820,7 @@ be 4-octet aligned:
         as per <xref target="RFC8126"/>.</t>
       </section>
 
-      <section title="IOAM Trace-Type Registry">
+      <section anchor="ioam-trace-type-registry" title="IOAM Trace-Type Registry">
         <t>This registry defines code point for each bit in the 24-bit
         IOAM-Trace-Type field for Pre-allocated trace option and Incremental
         trace option defined in <xref target="IOAM_tracing_option"/>. The
@@ -1917,8 +1926,8 @@ be 4-octet aligned:
         target="ioam_namespaces"/> of the current document. Registry entries
         for the values 0x8000 to 0xFFFF are to be assigned via the "Expert
         Review" policy defined in <xref target="RFC8126"/>. Upon a new 
-		allocation request, the responsible AD will appoint a designated 
-		expert, who will review the allocation request. The expert will post 
+		allocation request, a designated 
+		expert will review the allocation request. The expert will post 
 		the request on the mailing list of the IPPM working group in the IETF
 		(ippm@ietf.org), and possibly on other relevant 
 		mailing lists, to allow for community feedback. Based on the review, 
