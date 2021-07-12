@@ -27,7 +27,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-04"
+<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-05"
      ipr="trust200902">
   <front>
     <title abbrev="IOAM Direct Exporting">In-situ OAM Direct Exporting</title>
@@ -46,7 +46,7 @@
           <country>USA</country>
         </postal>
 
-        <email>haoyu.song@huawei.com</email>
+        <email>haoyu.song@futurewei.com</email>
       </address>
     </author>
 
@@ -285,7 +285,7 @@
 
         <figure align="center" anchor="DEXArch" title="DEX Architecture">
           <artwork align="left"><![CDATA[
-         
+
                                     ^
                                     |Exported IOAM data
                                     |
@@ -302,7 +302,7 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
           Insert DEX       Export         Export       Remove DEX
           option and      IOAM data      IOAM data     option and
           export data                                  export data
-		  
+
            ]]></artwork>
         </figure>
 
@@ -350,7 +350,7 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
           traffic.</t>
 
           <t>The subset of traffic that is forwarded or transmitted with a DEX
-          option SHOULD not exceed 1/N of the interface capacity on any of the
+          option SHOULD NOT exceed 1/N of the interface capacity on any of the
           IOAM encapsulating node's interfaces. It is noted that this
           requirement applies to the total traffic that incorporates a DEX
           option, including traffic that is forwarded by the IOAM
@@ -383,16 +383,16 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
           the ability to limit the rate of the exported packets. The rate of
           exported packets SHOULD be limited so that the number of exported
           packets is significantly lower than the number of packets that are
-          exported by the device. The exported data rate SHOULD not exceed 1/N
+          forwarded by the device. The exported data rate SHOULD NOT exceed 1/N
           of the interface capacity on any of the IOAM node's interfaces. It
           is recommended to use N&gt;100. Depending on the IOAM node's
           architecture considerations, the export rate may be limited to a
           lower number in order to avoid loading the IOAM node.</t>
 
-          <t>Exported packets SHOULD not be exported over a path or a tunnel
+          <t>Exported packets SHOULD NOT be exported over a path or a tunnel
           that is subject to IOAM direct exporting. Furthermore, IOAM
-          encapsulating nodes that push a DEX option into traversing packets
-          MUST avoid pushing an IOAM header into IOAM exported packets. This
+          encapsulating nodes that can identify a packet as an IOAM exported
+		  packet MUST NOT push a DEX option into such a packet. This
           requirement is intended to prevent nested exporting and/or exporting
           loops.</t>
 
