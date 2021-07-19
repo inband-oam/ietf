@@ -8,6 +8,8 @@
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
+<!ENTITY RFC5475 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5475.xml">
+<!ENTITY RFC7014 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7014.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
 <!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-ioam-nsh.xml">
@@ -22,7 +24,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-flags-04" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-flags-05" ipr="trust200902">
   <front>
     <title abbrev="IOAM Flags">In-situ OAM Flags</title>
 
@@ -260,6 +262,7 @@
     </section>
 
     <section anchor="LoopbackSec" title="Loopback in IOAM">
+    <section title="Loopback Overview">
       <t>Loopback is used for triggering each transit device along the path to
       loop back a copy of the data packet. Loopback allows an IOAM
       encapsulating node to trace the path to a given destination, and to
@@ -268,7 +271,40 @@
       Traceroute, that allows the encapsulating node to receive responses from
       multiple transit nodes along the path in less then one round-trip-time,
       and by sending a single packet.</t>
+	  
+	  <t>As illustrated in <xref target="LoopbackFig"/>, an IOAM encapsulating 
+	  node can push an IOAM encapsulation that includes the Loopback flag onto
+	  some or all of the packets it forwards. The IOAM transit node and the
+	  decapsulating node both creates copies of the packet and loop them back 
+	  to the encapsulating node. The decapsulating node also terminates the
+	  IOAM encapsulation, and then forwards the packet towards the destination. 
+	  The two IOAM looped back copies are terminated by the encapsulating node.
+	  </t>
 
+      <figure align="center" anchor="LoopbackFig" title="Loopback in IOAM.">
+        <artwork align="left"><![CDATA[
+         
+ +--------+     +--------+     +--------+     +--------+     +--------+
+ |        |     |  IOAM  |.....|  IOAM  |.....|  IOAM  |     |        |
+ +--------+     +--------+     +--------+     +--------+     +--------+
+ | L2/L3  |<===>| L2/L3  |<===>| L2/L3  |<===>| L2/L3  |<===>| L2/L3  |
+ +--------+     +--------+     +--------+     +--------+     +--------+
+   Source      Encapsulating    Transit      Decapsulating   Destination
+                   Node           Node           Node
+
+                <------------  IOAM domain  ----------->
+ 
+                     IOAM encap. with Loopback flag
+ Data packet  ------->============================>----------->
+                                   |             |
+                  IOAM looped back |             |
+                     <=============+             |
+                                 IOAM looped back|
+                     <===========================+
+           ]]></artwork>
+      </figure>
+	  
+	  
       <t>Loopback can be used only if a return path from transit nodes and
       destination nodes towards the source (encapsulating node) exists.
       Specifically, loopback is only applicable in encapsulations in which the
@@ -276,7 +312,10 @@
       header. If an encapsulating node receives a looped back packet that was
       not originated from the current encapsulating node, the packet is
       dropped.</t>
+    </section>
 
+    <section title="Loopback: Encapsulating Node Functionality">
+     <section title="Overview">
       <t>The encapsulating node either generates synthetic packets with an
       IOAM trace option that has the loopback flag set, or sets the loopack
       flag in a subset of the in-transit data packets. Loopback is used either
@@ -292,7 +331,50 @@
       processes this trace option only adds a single data field, which is the
       Hop_Lim and node_id data field. The reason for allowing a single data
       field per hop is to minimize the impact of amplification attacks.</t>
+	  
+	  <t>IOAM encapsulating nodes MUST NOT push an IOAM encapsulation with
+	  the Loopback flag onto data packets that already include an IOAM 
+	  encapsulation. This requirement is intended to prevent IOAM Loopback 
+	  nesting, where looped back packets may be subject to loopback in a 
+	  nested IOAM domain.</t>
+     </section>
+	 
+     <section anchor="SelectSec" title="Loopback Packet Selection">
+          <t>If an IOAM encapsulating node incorporates the Loopback flag into
+          all the traffic it forwards it may lead to an excessive amount of
+          looped back packets, which may overload the network and the encapsulating
+          node. Therefore, an IOAM encapsulating node that supports the Loopback 
+          flag MUST support the ability to incorporate the Loopback flag
+          selectively into a subset of the packets that are forwarded by
+          it.</t>
 
+          <t>Various methods of packet selection and sampling have been
+          previously defined, such as <xref target="RFC7014"/> and <xref
+          target="RFC5475"/>. Similar techniques can be applied by an IOAM
+          encapsulating node to apply Loopback to a subset of the forwarded
+          traffic.</t>
+
+          <t>The subset of traffic that is forwarded or transmitted with a Loopback
+          flag SHOULD NOT exceed 1/N of the interface capacity on any of the
+          IOAM encapsulating node's interfaces. It is noted that this
+          requirement applies to the total traffic that incorporates a Loopback
+          flag, including traffic that is forwarded by the IOAM
+          encapsulating node and probe packets that are generated by the IOAM
+          encapsulating node. In this context N is a parameter that can be
+          configurable by network operators. If there is an upper bound, M, on
+          the number of IOAM transit nodes in any path in the network, then it
+          is recommended to use an N such that N &gt;&gt; M. The rationale is
+          that a packet that includes the Loopback flag triggers a looped back
+          packet from each IOAM transit node along the path for a total of M
+          looped back packets. Thus, if N &gt;&gt; M then the number of looped back
+          packets is significantly lower than the number of data packets
+          forwarded by the IOAM encapsulating node. If there is no prior
+          knowledge about the network topology or size, it is recommended to
+          use N&gt;100.</t>
+     </section>
+    </section>
+
+    <section anchor="ReceiveSec" title="Receiving and Processing Loopback">
       <t>A loopback bit that is set indicates to the transit nodes processing
       this option that they are to create a copy of the received packet and
       send the copy back to the source of the packet. In this context the
@@ -310,11 +392,25 @@
       cleared in the copy of the packet that a node sends back towards the
       source. </t>
 
+      <t>An IOAM node that supports the reception and processing of the Loopback flag MUST support
+      the ability to limit the rate of the looped back packets. The rate of
+      looped back packets SHOULD be limited so that the number of looped back
+      packets is significantly lower than the number of packets that are
+      forwarded by the device. The looped back data rate SHOULD NOT exceed 1/N
+      of the interface capacity on any of the IOAM node's interfaces. It
+      is recommended to use N&gt;100. Depending on the IOAM node's
+      architecture considerations, the loopback response rate may be limited to a
+      lower number in order to avoid loading the IOAM node.</t>
+    </section>
+
+    <section title="Loopback on the Return Path">
       <t>On its way back towards the source, the copied packet is processed
       like any other packet with IOAM information, including adding any
       requested data at each transit node (assuming there is sufficient
       space).</t>
+    </section>
 
+    <section title="Terminating a Looped Back Packet">
       <t>Once the return packet reaches the IOAM domain boundary, IOAM
       decapsulation occurs as with any other packet containing IOAM
       information. Note that the looped back packet does not have the L-bit
@@ -337,6 +433,7 @@
       packet does not have any payload it is terminated. In either case, when
       the packet reaches the IOAM boundary its IOAM encapsulation is removed,
       preventing IOAM information from leaking out from the IOAM domain.</t>
+    </section>
     </section>
 
     <section anchor="UseCaseSec" title="Active Measurement with IOAM">
@@ -418,6 +515,15 @@
           packet, but the replication functionality in this context is outside
           the scope of this document.</t>
         </list></t>
+		
+	  <t>If the volume of traffic that incorporates the Active flag is large, 
+      it may overload the network and the IOAM node(s) that process the active
+	  measurement packet. Thus, the rate of the traffic that includes the 
+	  Active flag rate SHOULD NOT exceed 1/N of the interface capacity on any 
+	  of the IOAM node's interfaces. It is recommended to use N&gt;100. Depending 
+	  on the IOAM node's architecture considerations, the rate of Active-enabled
+	  IOAM packets may be limited to a lower number in order to avoid loading 
+	  the IOAM node.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -446,13 +552,14 @@
       analyzes the data. Therefore, it MUST be possible to use each of the
       mechanisms on a subset of the data traffic; an encapsulating node needs
       to be able to set the Loopback and Active flag selectively, in a way
-      that considers the effect on the network performance. Similarly, transit
-      and decapsulating nodes need to be able to selectively loop back packets
-      with the Loopback flag, and to selectively export packets. Specifically,
-      rate limiting can be enabled so as to ensure that the mechanisms are
+      that considers the effect on the network performance, as 
+	  further discussed in <xref target="SelectSec"/> and
+	  <xref target="UseCaseSec"/>.</t> 
+	  
+	  <t>Transit and decapsulating nodes that support Loopback need to be able to limit
+	  the looped back packets (<xref target="ReceiveSec"/>) so as to ensure that the mechanisms are
       used at a rate that does not significantly affect the network bandwidth,
-      and does not overload the receiving entity (or the source node in the
-      case of loopback).</t>
+      and does not overload the source node in the case of loopback.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -500,23 +607,33 @@
 	  loopback in that (inner) IOAM domain, causing the amplification to be
 	  worse than in the conventional case.</t>
 
-      <t>In order to mitigate the attacks described above, as described in
+      <t>In order to mitigate the performance-related attacks described above, as described in
       <xref target="Performance"/> it should be possible for IOAM-enabled
       devices to selectively apply the mechanisms that use the flags defined
       in this document to a subset of the traffic, and to limit the
-      performance of synthetically generated packets to a configurable rate;
-      specifically, network devices should be able to limit the rate of: (i)
-      looped-back traffic (at transit nodes), (ii) replicated active packets
-      (at encapsulating nodes), (iii) packets that are exported to a collector
-      (from either encapsulating nodes or transit nodes), and (iv)
-      synthetically generated packets (at encapsulating nodes).</t>
+      performance of synthetically generated packets to a configurable rate.
+      Specifically, IOAM nodes should be able to:</t>
+	  
+      <t><list style="symbols">
+          <t>Limit the rate of IOAM packets with the Loopback flag (IOAM 
+		  encapsulating nodes), as discussed in <xref target="SelectSec"/>.</t>
+		  
+		  <t>Limit the rate of looped back packets (IOAM transit and 
+		  decapsulating nodes), as discussed in <xref target="ReceiveSec"/>.
+		  </t>
+		  
+		  <t>Limit the rate of IOAM packets with the Active flag (IOAM 
+		  encapsulating nodes), as discussed in <xref target="UseCaseSec"/>.
+		  </t>
+		  
+        </list></t>
 
-      <t>Furthermore, as defined in <xref target="LoopbackSec"/>, transit
+      <t>As defined in <xref target="LoopbackSec"/>, transit
       nodes that process a packet with the Loopback flag only add a single
       data field, and truncate any payload that follows the IOAM option(s),
       thus significanly limiting the possible impact of an amplification
       attack.</t>
-
+		
       <t>IOAM is assumed to be deployed in a restricted administrative domain,
       thus limiting the scope of the threats above and their affect. This is a
       fundamental assumtion with respect to the security aspects of IOAM, as
@@ -529,6 +646,10 @@
       &RFC2119;
 
       &RFC8174;
+	  
+      &RFC5475;
+
+      &RFC7014;
 	  
       &I-D.ietf-ippm-ioam-data;
     </references>
