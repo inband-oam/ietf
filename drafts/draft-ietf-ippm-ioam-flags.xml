@@ -26,7 +26,7 @@
 <?rfc subcompact="no" ?>
 <rfc category="std" docName="draft-ietf-ippm-ioam-flags-05" ipr="trust200902">
   <front>
-    <title abbrev="IOAM Flags">In-situ OAM Flags</title>
+    <title abbrev="IOAM Flags">In-situ OAM Loopback and Active Flags</title>
 
     <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
       <organization abbrev="">Huawei</organization>
@@ -204,10 +204,10 @@
 
     <abstract>
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
-      operational and telemetry information in the packet while the packet
-      traverses a path between two points in the network. This document
-      presents new flags in the IOAM Trace Option headers. Specifically, the
-      document defines the Loopback and Active flags.</t>
+      operational and telemetry information in packets while they
+      traverse a path between two points in the network. This document
+      defines two new flags in the IOAM Trace Option headers, specifically the
+      the Loopback and Active flags.</t>
     </abstract>
   </front>
 
@@ -249,37 +249,36 @@
       <t anchor="TraceFlags" hangText="Flags">This document defines two new
       flags in the Pre-allocated and Incremental Trace options: <list
           style="hanging">
-          <t hangText="Bit 1">"Loopback" (L-bit). Loopback mode is used to
-          send a copy of a packet back towards the source, as further
+          <t hangText="Bit 1">"Loopback" (L-bit). When set, the Loopback flag
+          triggers sending a copy of a packet back towards the source, as further
           described in <xref target="LoopbackSec"/>.</t>
 
-          <t hangText="Bit 2">"Active" (A-bit). When set, this indicates that
-          this is an active IOAM packet, where "active" is used in the sense
-          defined in <xref target="RFC7799"/>, rather than a data packet. The
-          packet may be an IOAM probe packet, or a replicated data packet (the
+          <t hangText="Bit 2">"Active" (A-bit). When set, the Active flag indicates
+          that a packet is an active measurement packet rather than a data packet, 
+          where "active" is used in the sense defined in <xref target="RFC7799"/>.
+          The packet may be an IOAM probe packet, or a replicated data packet (the
           second and third use cases of <xref target="UseCaseSec"/>).</t>
         </list></t>
     </section>
 
     <section anchor="LoopbackSec" title="Loopback in IOAM">
-    <section title="Loopback Overview">
-      <t>Loopback is used for triggering each transit device along the path to
-      loop back a copy of the data packet. Loopback allows an IOAM
-      encapsulating node to trace the path to a given destination, and to
-      receive per-hop data about both the forward and the return path.
-      Loopback is intended to provide an accelerated alternative to
-      Traceroute, that allows the encapsulating node to receive responses from
-      multiple transit nodes along the path in less then one round-trip-time,
-      and by sending a single packet.</t>
+    <t>The Loopback flag is used to request that each transit device along the
+    path loops back a copy of the data packet to the sender. Loopback allows an
+    IOAM encapsulating node to trace the path to a given destination, and to
+    receive per-hop data about both the forward and the return path.
+    Loopback is intended to provide an accelerated alternative to
+    Traceroute, that allows the encapsulating node to receive responses from
+    multiple transit nodes along the path in less then one round-trip-time,
+    and by sending a single packet.</t>
 	  
-	  <t>As illustrated in <xref target="LoopbackFig"/>, an IOAM encapsulating 
-	  node can push an IOAM encapsulation that includes the Loopback flag onto
-	  some or all of the packets it forwards. The IOAM transit node and the
-	  decapsulating node both creates copies of the packet and loop them back 
-	  to the encapsulating node. The decapsulating node also terminates the
-	  IOAM encapsulation, and then forwards the packet towards the destination. 
-	  The two IOAM looped back copies are terminated by the encapsulating node.
-	  </t>
+    <t>As illustrated in <xref target="LoopbackFig"/>, an IOAM encapsulating 
+    node can push an IOAM encapsulation that includes the Loopback flag onto
+    some or all of the packets it forwards. The IOAM transit node and the
+    decapsulating node both creates copies of the packet and loop them back 
+    to the encapsulating node. The decapsulating node also terminates the
+    IOAM encapsulation, and then forwards the packet towards the destination. 
+    The two IOAM looped back copies are terminated by the encapsulating node.
+    </t>
 
       <figure align="center" anchor="LoopbackFig" title="Loopback in IOAM.">
         <artwork align="left"><![CDATA[
@@ -305,19 +304,17 @@
       </figure>
 	  
 	  
-      <t>Loopback can be used only if a return path from transit nodes and
-      destination nodes towards the source (encapsulating node) exists.
-      Specifically, loopback is only applicable in encapsulations in which the
-      identity of the encapsulating node is available in the encapsulation
-      header. If an encapsulating node receives a looped back packet that was
-      not originated from the current encapsulating node, the packet is
-      dropped.</t>
-    </section>
+    <t>Loopback can be used only if a return path from transit nodes and
+    destination nodes towards the source (encapsulating node) exists.
+    Specifically, loopback is only applicable in encapsulations in which the
+    identity of the encapsulating node is available in the encapsulation
+    header. If an encapsulating node receives a looped back packet that was
+    not originated from the current encapsulating node, the packet is
+    dropped.</t>
 
     <section title="Loopback: Encapsulating Node Functionality">
-     <section title="Overview">
       <t>The encapsulating node either generates synthetic packets with an
-      IOAM trace option that has the loopback flag set, or sets the loopack
+      IOAM trace option that has the Loopback flag set, or sets the loopack
       flag in a subset of the in-transit data packets. Loopback is used either
       proactively or on-demand, i.e., when a failure is detected. The
       encapsulating node also needs to ensure that sufficient space is
@@ -325,7 +322,7 @@
       transit nodes adding trace data on the original path and then again on
       the return path. </t>
 
-      <t>An IOAM trace option that has the loopback bit set MUST have the
+      <t>An IOAM trace option that has the Loopback flag set MUST have the
       value '1' in the most significant bit of IOAM-Trace-Type, and '0' in the
       rest of the bits of IOAM-Trace-Type. Thus, every transit node that
       processes this trace option only adds a single data field, which is the
@@ -337,7 +334,6 @@
 	  encapsulation. This requirement is intended to prevent IOAM Loopback 
 	  nesting, where looped back packets may be subject to loopback in a 
 	  nested IOAM domain.</t>
-     </section>
 	 
      <section anchor="SelectSec" title="Loopback Packet Selection">
           <t>If an IOAM encapsulating node incorporates the Loopback flag into
@@ -375,7 +371,7 @@
     </section>
 
     <section anchor="ReceiveSec" title="Receiving and Processing Loopback">
-      <t>A loopback bit that is set indicates to the transit nodes processing
+      <t>A Loopback flag that is set indicates to the transit nodes processing
       this option that they are to create a copy of the received packet and
       send the copy back to the source of the packet. In this context the
       source is the IOAM encapsulating node, and it is assumed that the source
@@ -438,18 +434,18 @@
 
     <section anchor="UseCaseSec" title="Active Measurement with IOAM">
       <t>Active measurement methods <xref target="RFC7799"/> make use of
-      synthetically generated packets in order to facilitate the measurement.
+      synthetically generated packets in order to facilitate measurement.
       This section presents use cases of active measurement using the IOAM
       Active flag.</t>
 
-      <t>The active flag indicates that a packet is used for active
+      <t>The Active flag indicates that a packet is used for active
       measurement. An IOAM decapsulating node that receives a packet with the
       Active flag set in one of its Trace options must terminate the packet.
-      The active flag is intended to simplify the implementation of
+      The Active flag is intended to simplify the implementation of
       decapsulating nodes by indicating that the packet should not be
       forwarded further. It is not intended as a replacement for existing
       active OAM protocols, which may run in higher layers and make use of the
-      active flag.</t>
+      Active flag.</t>
 
       <t>An example of an IOAM deployment scenario is illustrated in <xref
       target="NetworkFig"/>. The figure depicts two endpoints, a source and a
@@ -487,7 +483,7 @@
           Since the probe packets are sent between the endpoints, these
           packets are treated as data packets by the IOAM domain, and do not
           require special treatment at the IOAM layer. Specifically, the
-          active flag is not used in this case, and the IOAM layer needs not
+          Active flag is not used in this case, and the IOAM layer needs not
           be aware that an active measurement mechanism is used at a higher
           layer.</t>
 
@@ -511,7 +507,7 @@
           same path. The replica includes a Trace Option that has its Active
           flag set, indicating that the decapsulating node should terminate
           it. It should be noted that the current document defines the role of
-          the active flag in allowing the decapsulating node to terminate the
+          the Active flag in allowing the decapsulating node to terminate the
           packet, but the replication functionality in this context is outside
           the scope of this document.</t>
         </list></t>
@@ -545,7 +541,7 @@
       performance implications. When using the loopback mechanism a copy of
       the data packet is sent back to the sender, thus generating more traffic
       than originally sent by the endpoints. Using active measurement with the
-      active flag requires the use of synthetic (overhead) traffic.</t>
+      Active flag requires the use of synthetic (overhead) traffic.</t>
 
       <t>Each of the mechanisms that use the flags above has a cost in terms
       of the network bandwidth, and may potentially load the node that
@@ -578,13 +574,13 @@
           synthetic packets or transit packet, can potentially cause an
           amplification, since each device along the path creates a copy of
           the data packet and sends it back to the source. The attacker can
-          potentially leverage the loopback flag for a Distributed Denial of
+          potentially leverage the Loopback flag for a Distributed Denial of
           Service (DDoS) attack, as multiple devices send looped-back copies
           of a packet to a single source.</t>
 
-          <t>Active flag: the impact of synthetic packets with the active flag
+          <t>Active flag: the impact of synthetic packets with the Active flag
           is no worse than synthetic data packets in which the Active flag is
-          not set. By setting the active flag in en route packets an attacker
+          not set. By setting the Active flag in en route packets an attacker
           can prevent these packets from reaching their destination, since the
           packet is terminated by the decapsulating device; however, note that
           an on-path attacker may achieve the same goal by changing the
