@@ -46,6 +46,31 @@
       </address>
     </author>
 
+    <author fullname="Frank Brockners" initials="F." surname="Brockners" role="editor">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+	
+	
     <date year="2021"/>
 
     <area>General</area>
@@ -95,7 +120,7 @@
         <t>One possible use case is a set of Linux-based hosts that function
         as IOAM encapsulating and decapsulating nodes, interconnected by IOAM
         transit nodes that are not necessarily Linux-based. Thus, Linux-based
-        implementations are expected to interoperate with other implemenations
+        implementations are expected to interoperate with other implementations
         that comply to this profile.</t>
 
         <t>Another possible use case is a homogenous setting in which all IOAM
@@ -172,13 +197,6 @@
         encapsulated directly in an IPv6 Extension Header, without any
         additional layers that use a checksum.</t>
 
-        <t>Note that the Linux implementation does not update the Transit
-        Delay, Buffer Occupancy and Queue Depth fields when functioning as an
-        IOAM transit node. However, when functioning as an IOAM encapsulating
-        or decapsulating node, the Linux implementation can add/remove the
-        Pre-allocated Trace option including these fields if configured to do
-        so, and can interoperate with other IOAM nodes that support these
-        fields.</t>
       </section>
 
       <section title="IOAM Option Pre-allocated Trace Header Flags">
@@ -211,6 +229,26 @@
       </section>
     </section>
 
+    <section title="Notes about the IOAM Support in Linux">
+        <t>Note that the current Linux implementation does not update the Transit
+        Delay, Buffer Occupancy and Queue Depth fields when functioning as an
+        IOAM transit node. However, when functioning as an IOAM encapsulating
+        or decapsulating node, the Linux implementation can add/remove the
+        Pre-allocated Trace option including these fields if configured to do
+        so, and can interoperate with other IOAM nodes that support these
+        fields.</t>
+		
+		<t>The current Linux implementation supports the Opaque State 
+		Snapshot by incorporating a configurable constant value into this 
+		field. Similarly, the Namespace specific data is supported by 
+		incorporating a configurable constant value. Notably, Linux-based
+		IOAM nodes can interoperate with other nodes that use the Opaque
+		State Snapshot and/or the Namespace specific data in a more 
+		flexible manner.</t>
+		
+    </section>
+	
+	
     <section anchor="IANA" title="IANA Considerations">
       <t>This document does not include any requests from IANA.</t>
     </section>
