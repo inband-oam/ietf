@@ -196,22 +196,48 @@
       </section>
 
       <section title="IOAM Supported Data Fields">
-        <t>The current profile supports all the data field types that are
-        defined in <xref target="I-D.ietf-ippm-ioam-data-14"/> for the
-        Pre-allocated Trace Option-Type, except for the Checksum Complement
-        field, which is not required in this profile, since the IOAM Trace
-        Option-Type is encapsulated directly in an IPv6 Extension Header,
-        without any additional layers that use a checksum.</t>
+        <t>The current profile supports all the data field types defined in
+        <xref target="I-D.ietf-ippm-ioam-data-14"/> regarding the Pre-allocated
+        Trace Option-Type, except for the transit delay, the queue depth, the
+        checksum complement and the buffer occupancy. These four data field
+        types are passively supported, meaning the Linux implementation can add
+        the Pre-allocated Trace Option-Type including these fields, but cannot
+        populate them with system information. They are populated with empty
+        values and, therefore, interoperability is possible with other IOAM
+        nodes that support these fields.</t>
 
+	<texttable align="left" style="none">
+		<ttcol>Data field type</ttcol>
+		<ttcol>Status</ttcol>
+
+		<c>Hop_Lim and node_id (short format)</c><c>Supported</c>
+		<c>Ingress_if_id and egress_if_id (short format)</c><c>Supported</c>
+		<c>Timestamp seconds</c><c>Supported</c>
+		<c>Timestamp fraction</c><c>Supported</c>
+		<c>Transit delay</c><c>Passive support</c>
+		<c>Namespace specific data (short format)</c><c>Supported</c>
+		<c>Queue depth</c><c>Passive support</c>
+		<c>Checksum complement</c><c>Passive support</c>
+		<c>Hop_Lim and node_id (wide format)</c><c>Supported</c>
+		<c>Ingress_if_id and egress_if_id (wide format)</c><c>Supported</c>
+		<c>Namespace specific data (wide format)</c><c>Supported</c>
+		<c>Buffer occupancy</c><c>Passive support</c>
+		<c>Opaque State Snapshot</c><c>Supported</c>
+	</texttable>
+
+	<t>Both the Opaque State Snapshot and the Namespace specific data are
+	supported by incorporating configurable values into these fields.
+	Notably, Linux-based IOAM nodes can interoperate with other nodes that
+	use the Opaque State Snapshot and/or the Namespace specific data in a
+	more flexible way.</t>
+
+	<t>Note that the Checksum Complement is not required in this profile
+	since the IOAM Trace Option-Type is directly encapsulated in an IPv6
+	Extension Header, without any additional layers using a checksum.</t>
       </section>
 
-      <section title="IOAM Option Pre-allocated Trace Header Flags">
-        <t>This profile does not use any of the IOAM flags other than the
-        Overflow flag.</t>
-      </section>
-
-      <section title="Opaque State Snapshot">
-        <t>This profile supports the Opaque State Snapshot option.</t>
+      <section title="Trace Option-Type Flags">
+        <t>This profile only uses the Overflow flag.</t>
       </section>
 
       <section title="Timestamp Format">
@@ -233,25 +259,6 @@
         option that is not compliant to the current profile, the packet is
         discarded.</t>
       </section>
-    </section>
-
-    <section title="Notes about the IOAM Support in Linux">
-        <t>Note that the current Linux implementation does not update the Transit
-        Delay, Buffer Occupancy and Queue Depth fields when functioning as an
-        IOAM transit node. However, when functioning as an IOAM encapsulating
-        or decapsulating node, the Linux implementation can add/remove the
-        Pre-allocated Trace Option-Type including these fields if configured to do
-        so, and can interoperate with other IOAM nodes that support these
-        fields.</t>
-		
-		<t>The current Linux implementation supports the Opaque State 
-		Snapshot by incorporating a configurable constant value into this 
-		field. Similarly, the Namespace specific data is supported by 
-		incorporating a configurable constant value. Notably, Linux-based
-		IOAM nodes can interoperate with other nodes that use the Opaque
-		State Snapshot and/or the Namespace specific data in a more 
-		flexible manner.</t>
-		
     </section>
 	
 	
