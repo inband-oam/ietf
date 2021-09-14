@@ -39,9 +39,15 @@
     </author>
 
     <author fullname="Justin Iurman" initials="J." surname="Iurman">
-      <organization abbrev="">Universite de Liege</organization>
-
+      <organization abbrev="ULiege">Universite de Liege</organization>
       <address>
+        <postal>
+          <street>10, Allee de la decouverte (B28)</street>
+          <code>4000</code>
+          <city>Sart-Tilman</city>
+          <region>LIEGE</region>
+          <country>Belgium</country>
+        </postal>
         <email>justin.iurman@uliege.be</email>
       </address>
     </author>
@@ -83,7 +89,7 @@
       <t>In Situ Operations, Administration and Maintenance (IOAM) is used for
       monitoring network performance and for detecting traffic bottlenecks and
       anomalies. This document defines an IOAM profile that is used in the
-      Linux kernel implementation, starting from the Linux 5.14 kernel.</t>
+      Linux kernel implementation, starting from the Linux 5.15 kernel.</t>
     </abstract>
   </front>
 
@@ -129,38 +135,36 @@
 
       <section title="IOAM Version">
         <t>The current profile is based on <xref
-        target="I-D.ietf-ippm-ioam-data-12"/>, which is a work-in-progress
+        target="I-D.ietf-ippm-ioam-data-14"/>, which is a work-in-progress
         version of IOAM.</t>
       </section>
 
       <section title="IOAM Options">
-        <t>The current profile uses the Pre-allocated Trace Option. It is
+        <t>The current profile uses the Pre-allocated Trace Option-Type. It is
         assumed that one IOAM option is used in an IOAM encapsulated
         packet.</t>
       </section>
 
       <section title="Encapsulation">
         <t>The IOAM encapsulation uses an IPv6 Extension Header. This
-        extension header is used for the IOAM Pre-allocated Trace Option, as
-        defined in <xref target="I-D.ietf-ippm-ioam-ipv6-options-05"/>, which
+        extension header is used for the IOAM Pre-allocated Trace Option-Type,
+        as defined in <xref target="I-D.ietf-ippm-ioam-ipv6-options-06"/>, which
         is a work-in-progress version of the IPv6 IOAM option.</t>
 
         <t>The IPv6 Extension Header is a Hop-by-Hop Options header, that
-        contains the IOAM trace option. The Hop-by-Hop Options header can
+        contains the IOAM Trace Option-Type. The Hop-by-Hop Options header can
         include one or more options, such that one of these options is the IOAM
-        Pre-allocated Trace Option. <xref target="EHFig"/> illustrates the
+        Pre-allocated Trace Option-Type. <xref target="EHFig"/> illustrates the
         format of this Hop-by-Hop Options header when the IOAM Pre-allocated
-        Trace Option is the only Hop-by-Hop option. If more options are
+        Trace Option-Type is the only Hop-by-Hop option. If more options are
         present the format will change accordingly.</t>
 
         <t>As illustrated in <xref target="EHFig"/>, the first 2 octets are
         the Hop-by-Hop Options header <xref target="RFC8200"/>, followed by a
-        2 octet Padding field (two Pad1 options). The following 4 octets are
-        the IOAM IPv6 option header <xref
-        target="I-D.ietf-ippm-ioam-ipv6-options-05"/>. The IOAM Option
-        includes the 8 octet Pre-allocated Trace Option header <xref
-        target="I-D.ietf-ippm-ioam-data-12"/>, followed by the Option
-        Data.</t>
+        2 octet Padding field. The following 4 octets are the IOAM IPv6 option
+        header <xref target="I-D.ietf-ippm-ioam-ipv6-options-06"/>. The IOAM
+        Option includes the 8 octet Pre-allocated Trace Option-Type header <xref
+        target="I-D.ietf-ippm-ioam-data-14"/>, followed by the Option Data.</t>
 
         <figure align="center" anchor="EHFig"
                 title="IPv6 IOAM Extension Header Format">
@@ -190,22 +194,48 @@
       </section>
 
       <section title="IOAM Supported Data Fields">
-        <t>The current profile supports all the data field types that are
-        defined in <xref target="I-D.ietf-ippm-ioam-data-12"/> for the
-        Pre-allocated Trace option, except for the Checksum Complement field,
-        which is not required in this profile, since the IOAM Trace Option is
-        encapsulated directly in an IPv6 Extension Header, without any
-        additional layers that use a checksum.</t>
+        <t>The current profile supports all the data field types defined in
+        <xref target="I-D.ietf-ippm-ioam-data-14"/> regarding the Pre-allocated
+        Trace Option-Type, except for the transit delay, the queue depth, the
+        checksum complement and the buffer occupancy. These four data field
+        types are passively supported, meaning the Linux implementation can add
+        the Pre-allocated Trace Option-Type including these fields, but cannot
+        populate them with system information. They are populated with empty
+        values and, therefore, interoperability is possible with other IOAM
+        nodes that support these fields.</t>
 
+	<texttable align="left" style="none">
+		<ttcol>Data field type</ttcol>
+		<ttcol>Status</ttcol>
+
+		<c>Hop_Lim and node_id (short format)</c><c>Supported</c>
+		<c>Ingress_if_id and egress_if_id (short format)</c><c>Supported</c>
+		<c>Timestamp seconds</c><c>Supported</c>
+		<c>Timestamp fraction</c><c>Supported</c>
+		<c>Transit delay</c><c>Passive support</c>
+		<c>Namespace specific data (short format)</c><c>Supported</c>
+		<c>Queue depth</c><c>Passive support</c>
+		<c>Checksum complement</c><c>Passive support</c>
+		<c>Hop_Lim and node_id (wide format)</c><c>Supported</c>
+		<c>Ingress_if_id and egress_if_id (wide format)</c><c>Supported</c>
+		<c>Namespace specific data (wide format)</c><c>Supported</c>
+		<c>Buffer occupancy</c><c>Passive support</c>
+		<c>Opaque State Snapshot</c><c>Supported</c>
+	</texttable>
+
+	<t>Both the Opaque State Snapshot and the Namespace specific data are
+	supported by incorporating configurable values into these fields.
+	Notably, Linux-based IOAM nodes can interoperate with other nodes that
+	use the Opaque State Snapshot and/or the Namespace specific data in a
+	more flexible way.</t>
+
+	<t>Note that the Checksum Complement is not required in this profile
+	since the IOAM Trace Option-Type is directly encapsulated in an IPv6
+	Extension Header, without any additional layers using a checksum.</t>
       </section>
 
-      <section title="IOAM Option Pre-allocated Trace Header Flags">
-        <t>This profile does not use any of the IOAM flags other than the
-        Overflow flag.</t>
-      </section>
-
-      <section title="Opaque State Snapshot">
-        <t>This profile supports the Opaque State Snapshot option.</t>
+      <section title="Trace Option-Type Flags">
+        <t>This profile only uses the Overflow flag.</t>
       </section>
 
       <section title="Timestamp Format">
@@ -227,25 +257,6 @@
         option that is not compliant to the current profile, the packet is
         discarded.</t>
       </section>
-    </section>
-
-    <section title="Notes about the IOAM Support in Linux">
-        <t>Note that the current Linux implementation does not update the Transit
-        Delay, Buffer Occupancy and Queue Depth fields when functioning as an
-        IOAM transit node. However, when functioning as an IOAM encapsulating
-        or decapsulating node, the Linux implementation can add/remove the
-        Pre-allocated Trace option including these fields if configured to do
-        so, and can interoperate with other IOAM nodes that support these
-        fields.</t>
-		
-		<t>The current Linux implementation supports the Opaque State 
-		Snapshot by incorporating a configurable constant value into this 
-		field. Similarly, the Namespace specific data is supported by 
-		incorporating a configurable constant value. Notably, Linux-based
-		IOAM nodes can interoperate with other nodes that use the Opaque
-		State Snapshot and/or the Namespace specific data in a more 
-		flexible manner.</t>
-		
     </section>
 	
 	
@@ -278,7 +289,7 @@
 
       <?rfc include='reference.I-D.mizrahi-ippm-ioam-profile'?>
 
-      <reference anchor="I-D.ietf-ippm-ioam-data-12">
+      <reference anchor="I-D.ietf-ippm-ioam-data-14">
         <front>
           <title>Data Fields for In-situ OAM</title>
 
@@ -294,28 +305,27 @@
             <organization>Huawei</organization>
           </author>
 
-          <date day="21" month="February" year="2021"/>
+          <date day="24" month="June" year="2021"/>
 
           <abstract>
-            <t>In-situ Operations, Administration, and Maintenance (IOAM)
-            records operational and telemetry information in the packet while
-            the packet traverses a path between two points in the network.
-            This document discusses the data fields and associated data types
-            for in-situ OAM. In-situ OAM data fields can be encapsulated into
-            a variety of protocols such as NSH, Segment Routing, Geneve, IPv6
-            (via extension header), or IPv4. In-situ OAM can be used to
-            complement OAM mechanisms based on e.g. ICMP or other types of
-            probe packets.</t>
+	      <t>In-situ Operations, Administration, and Maintenance (IOAM)
+	      records operational and telemetry information in the packet while
+	      the packet traverses a path in the network. This document
+	      discusses the data fields and associated data types for in-situ
+	      OAM. In-situ OAM data fields can be encapsulated into a variety of
+	      protocols such as NSH, Segment Routing, Geneve, or IPv6.
+	      In-situ OAM can be used to complement OAM mechanisms based on,
+	      e.g., ICMP or other types of probe packets.</t>
           </abstract>
         </front>
 
-        <seriesInfo name="Internet-Draft" value="draft-ietf-ippm-ioam-data-12"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-ippm-ioam-data-14"/>
 
-        <format target="https://www.ietf.org/archive/id/draft-ietf-ippm-ioam-data-12.txt"
+        <format target="https://www.ietf.org/archive/id/draft-ietf-ippm-ioam-data-14.txt"
                 type="TXT"/>
       </reference>
 
-      <reference anchor="I-D.ietf-ippm-ioam-ipv6-options-05">
+      <reference anchor="I-D.ietf-ippm-ioam-ipv6-options-06">
         <front>
           <title>In-situ OAM IPv6 Options</title>
 
@@ -327,54 +337,7 @@
             <organization>Cisco Systems, Inc.</organization>
           </author>
 
-          <author fullname="Carlos Pignataro" initials="C."
-                  surname="Pignataro">
-            <organization>Cisco Systems, Inc.</organization>
-          </author>
-
-          <author fullname="Hannes Gredler" initials="H." surname="Gredler">
-            <organization>RtBrick Inc.</organization>
-          </author>
-
-          <author fullname="John Leddy" initials="J." surname="Leddy">
-            <organization>Comcast</organization>
-          </author>
-
-          <author fullname="Stephen Youell" initials="S." surname="Youell">
-            <organization>JP Morgan Chase</organization>
-          </author>
-
-          <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
-            <organization>Huawei Network.IO Innovation Lab</organization>
-          </author>
-
-          <author fullname="Aviv Kfir" initials="A." surname="Kfir">
-            <organization>Mellanox Technologies, Inc.</organization>
-          </author>
-
-          <author fullname="Barak Gafni" initials="B." surname="Gafni">
-            <organization>Mellanox Technologies, Inc.</organization>
-          </author>
-
-          <author fullname="Petr Lapukhov" initials="P." surname="Lapukhov">
-            <organization>Facebook</organization>
-          </author>
-
-          <author fullname="Mickey Spiegel" initials="M." surname="Spiegel">
-            <organization>Barefoot Networks, an Intel company</organization>
-          </author>
-
-          <author fullname="Suresh Krishnan" initials="S." surname="Krishnan">
-            <organization>Kaloom</organization>
-          </author>
-
-          <author fullname="Rajiv Asati" initials="R." surname="Asati">
-            <organization>Cisco Systems, Inc.</organization>
-          </author>
-
-          <author fullname="Mark Smith" initials="M." surname="Smith"/>
-
-          <date day="21" month="February" year="2021"/>
+          <date day="31" month="July" year="2021"/>
 
           <abstract>
             <t>In-situ Operations, Administration, and Maintenance (IOAM)
@@ -386,9 +349,9 @@
         </front>
 
         <seriesInfo name="Internet-Draft"
-                    value="draft-ietf-ippm-ioam-ipv6-options-05"/>
+                    value="draft-ietf-ippm-ioam-ipv6-options-06"/>
 
-        <format target="https://www.ietf.org/archive/id/draft-ietf-ippm-ioam-ipv6-options-05.txt"
+        <format target="https://www.ietf.org/archive/id/draft-ietf-ippm-ioam-ipv6-options-06.txt"
                 type="TXT"/>
       </reference>
     </references>
