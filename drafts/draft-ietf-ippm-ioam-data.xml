@@ -65,7 +65,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-14" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-15" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -140,7 +140,7 @@
       </address>
     </author>
 
-    <date day="24" month="June" year="2021"/>
+    <date day="3" month="October" year="2021"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -259,11 +259,9 @@
 
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
 
-          <t hangText="PMTU">Path MTU</t>
+          <t hangText="PMTU:">Path MTU</t>
 
           <t hangText="POT:">Proof of Transit</t>
-
-          <t hangText="SFC:">Service Function Chain</t>
 
           <t hangText="Short format:">"Short format" refers to
           an IOAM-Data-Field which comprises 4 octets.</t>
@@ -306,15 +304,20 @@
       focused on "limited domains" as defined in <xref target="RFC8799"/>.
       For IOAM, a limited domain could for example be an enterprise campus
       using physical connections between devices or an overlay network using virtual
-      connections / tunnels for connectivity between said devices. A limited
-      domain which uses IOAM is called an "IOAM domain". An IOAM domain
-      is bounded by its perimeter or edge. Designers of protocol
+      connections / tunnels for connectivity between said devices. 
+
+      A limited domain which uses IOAM may constitute one or multiple 
+      "IOAM domains", each disambiguated through separate namespace identifiers.
+      An IOAM domain is bounded by its perimeter or edge.  IOAM domains 
+      may overlap inside the limited domain.
+
+      Designers of protocol
       encapsulations for IOAM specify mechanisms to ensure that IOAM data
       stays within an IOAM domain. In addition, the operator of such a domain
       is expected to put provisions in place to ensure that IOAM data does not
       leak beyond the edge of an IOAM domain using, for example, packet
-      filtering methods. The operator has to consider the potential
-      operational impact of IOAM to mechanisms such as ECMP processing (e.g.
+      filtering methods. The operator SHOULD consider the potential
+      operational impact of IOAM to mechanisms such as ECMP processing (e.g.,
       load-balancing schemes based on packet length could be impacted by the
       increased packet size due to IOAM), path MTU (i.e., ensure that the MTU
       of all links within a domain is sufficiently large to support the
@@ -1348,9 +1351,7 @@ The trace option data MUST be 4-octet aligned:
                title="IOAM Proof of Transit Option-Type">
         <t>IOAM Proof of Transit Option-Type is used to support path or service
         function chain <xref target="RFC7665"/> verification use cases.
-        Proof-of-transit leverages mechanisms like Shamir's Secret Sharing
-        Schema (SSSS) <xref target="SSS"/>. For further information on
-        Proof-of-transit, please refer to <xref
+        For further information on Proof-of-transit, please refer to <xref
         target="I-D.ietf-sfc-proof-of-transit"/>. While details on how the
         IOAM data for the Proof-of-transit option is processed at IOAM
         encapsulating, decapsulating and transit nodes are outside the scope
@@ -1833,9 +1834,6 @@ be 4-octet aligned:
             <t>IOAM Namespace-ID</t>
           </list></t>
 
-        <t>New registries in this group can be created via RFC
-        Required process as per <xref target="RFC8126"/>.</t>
-
         <t>The subsequent sub-sections detail the registries herein
         contained.</t>
 
@@ -2223,10 +2221,11 @@ be 4-octet aligned:
       Kitamura and people involved in writing it.</t>
 
       <t>The authors would like to gracefully acknowledge useful review and
-      insightful comments received from Joe Clarke, Al Morton, Tom Herbert,
-      Haoyu Song, Mickey Spiegel, Roman Danyliw, Benjamin Kaduk, 
-      Ian Swett, Martin Duke, Francesca Palombini, Lars Eggert,
-      Dan Romascanu and Barak Gafni.</t>
+	      insightful comments received from Joe Clarke, Al Morton, Tom Herbert,
+	      Carlos Bernardos, Haoyu Song, Mickey Spiegel, Roman Danyliw, 
+	      Benjamin Kaduk, Murray S. Kucherawy, Ian Swett, Martin Duke, 
+	      Francesca Palombini, Lars Eggert, Alvaro Retana, Erik Kline,
+	      Robert Wilton, Zaheduzzaman Sarker, Dan Romascanu and Barak Gafni.</t>
     </section>
   </middle>
 
@@ -2323,16 +2322,6 @@ be 4-octet aligned:
 
       &I-D.brockners-ippm-ioam-data-integrity;
 
-      <reference anchor="SSS"
-                 target="https://en.wikipedia.org/wiki/Shamir%27s_Secret_Sharing">
-        <front>
-          <title>Shamir's Secret Sharing</title>
-
-          <author fullname="Wikipedia"/>
-
-          <date/>
-        </front>
-      </reference>
     </references>
 	
     <section numbered="no" title="Contributors' Addresses">
