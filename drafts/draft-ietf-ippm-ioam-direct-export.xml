@@ -27,7 +27,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-06"
+<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-07"
      ipr="trust200902">
   <front>
     <title abbrev="IOAM Direct Exporting">In-situ OAM Direct Exporting</title>
@@ -227,16 +227,18 @@
       <t>This document defines a new IOAM option type (also known as an IOAM
       type) called the Direct Export (DEX) option. This option is used as a
       trigger for IOAM nodes to locally aggregate and process IOAM data,
-      and/or to export it to a receiving entity (or entities). A "receiving
-      entity" in this context can be, for example, an external collector,
-      analyzer, controller, decapsulating node, or a software module in one of
-      the IOAM nodes.</t>
+      and/or to export it to a receiving entity (or entities). Throughout the
+      document this functionality is referred to as collection and/or
+      exporting. A "receiving entity" in this context can be, for example, an
+      external collector, analyzer, controller, decapsulating node, or a
+      software module in one of the IOAM nodes.</t>
 
       <t>Note that even though the IOAM Option-Type is called "Direct Export",
       it depends on the deployment whether the receipt of a packet with DEX
       option type leads to the creation of another packet. Some deployments
       might simply use the packet with the DEX option type to trigger local
-      processing of OAM data.</t>
+      processing of OAM data. The functionality of this local processing is
+      not within the scope of this document.</t>
 
       <t>This draft has evolved from combining some of the concepts of PBT-I
       from <xref target="I-D.song-ippm-postcard-based-telemetry"/> with
@@ -383,38 +385,45 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
           the ability to limit the rate of the exported packets. The rate of
           exported packets SHOULD be limited so that the number of exported
           packets is significantly lower than the number of packets that are
-          forwarded by the device. The exported data rate SHOULD NOT exceed 1/N
-          of the interface capacity on any of the IOAM node's interfaces. It
-          is recommended to use N&gt;100. Depending on the IOAM node's
+          forwarded by the device. The exported data rate SHOULD NOT exceed
+          1/N of the interface capacity on any of the IOAM node's interfaces.
+          It is recommended to use N&gt;100. Depending on the IOAM node's
           architecture considerations, the export rate may be limited to a
-          lower number in order to avoid loading the IOAM node.</t>
+          lower number in order to avoid loading the IOAM node. An IOAM node
+          MAY maintain a counter or a set of counters that count the events in
+          which the IOAM node receives a packet with the DEX option type and
+          does not collect and/or export data due to the rate limits.</t>
 
           <t>Exported packets SHOULD NOT be exported over a path or a tunnel
           that is subject to IOAM direct exporting. Furthermore, IOAM
           encapsulating nodes that can identify a packet as an IOAM exported
-		  packet MUST NOT push a DEX option into such a packet. This
+          packet MUST NOT push a DEX option into such a packet. This
           requirement is intended to prevent nested exporting and/or exporting
           loops.</t>
 
-          <t>A transit IOAM node that does not support the DEX option SHOULD
-          ignore it. A decapsulating node that does not support the DEX option
-          MUST remove it, along with any other IOAM options carried in the
-          packet if such exist.</t>
+          <t>A transit or decapsulating IOAM node that receives an unknown
+          IOAM option type ignores it (as defined in <xref
+          target="I-D.ietf-ippm-ioam-data"/>), and specifically nodes that do
+          not support the DEX option ignore it. Note that as per <xref
+          target="I-D.ietf-ippm-ioam-data"/> a decapsulating node removes the
+          IOAM encapsulation and all its IOAM options, and specifically in the
+          case where one of these options is a (possibly unknown) DEX
+          option.</t>
         </section>
       </section>
 
       <section anchor="OptionSec" title="The DEX Option Format">
         <t>The format of the DEX option is depicted in <xref
         target="OptionFormat"/>. The length of the DEX option is at least 8
-        octets. The DEX option MAY include one or more optional fields. The 
-		existence of the optional fields is indicated by the corresponding 
-		flags in the Extension-Flags field. Two optional fields are defined in 
-		this document, the Flow ID and the Sequence Number fields. Every 
-		optional field MUST be exactly 4 octets long. Thus, the Extension-Flags 
-		field explicitly indicates the length of the DEX option. Defining a new 
-		optional field requires an allocation of a corresponding flag in the 
-		Extension-Flags field, as specified in 
-		<xref target="IANAflags"/>.</t>
+        octets. The DEX option MAY include one or more optional fields. The
+        existence of the optional fields is indicated by the corresponding
+        flags in the Extension-Flags field. Two optional fields are defined in
+        this document, the Flow ID and the Sequence Number fields. Every
+        optional field MUST be exactly 4 octets long. Thus, the
+        Extension-Flags field explicitly indicates the length of the DEX
+        option. Defining a new optional field requires an allocation of a
+        corresponding flag in the Extension-Flags field, as specified in <xref
+        target="IANAflags"/>.</t>
 
         <figure align="center" anchor="OptionFormat" title="DEX Option Format">
           <artwork align="left"><![CDATA[
@@ -443,49 +452,48 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
             subfields. Flags are allocated by IANA, as defined in <xref
             target="IANAflags"/>.</t>
 
-            <t hangText="Extension-Flags">An 8-bit field, comprised of 8 
-			one-bit subfields. Extension-Flags are allocated by IANA, as 
-			defined in <xref target="IANAExtensionflags"/>. Every bit in the 
-			Extension-Flag field that is set to 1 indicates the existence of 
-			a corresponding optional 4-octet field. An IOAM node that receives 
-			a DEX option with an unknown flag set to 1 MUST ignore the 
-			corresponding optional field.</t>
-			
+            <t hangText="Extension-Flags">An 8-bit field, comprised of 8
+            one-bit subfields. Extension-Flags are allocated by IANA, as
+            defined in <xref target="IANAExtensionflags"/>. Every bit in the
+            Extension-Flag field that is set to 1 indicates the existence of a
+            corresponding optional 4-octet field. An IOAM node that receives a
+            DEX option with an unknown flag set to 1 MUST ignore the
+            corresponding optional field.</t>
+
             <t hangText="IOAM-Trace-Type">A 24-bit identifier which specifies
             which data fields should be exported. The format of this field is
             as defined in <xref target="I-D.ietf-ippm-ioam-data"/>.
             Specifically, the bit that corresponds to the Checksum Complement
-            data field should be assigned to be zero by the IOAM
-            encapsulating node, and ignored by transit and decapsulating
-            nodes. The reason for this is that the Checksum Complement is
-            intended for in-flight packet modifications and is not relevant
-            for direct exporting.</t>
+            data field should be assigned to be zero by the IOAM encapsulating
+            node, and ignored by transit and decapsulating nodes. The reason
+            for this is that the Checksum Complement is intended for in-flight
+            packet modifications and is not relevant for direct exporting.</t>
 
             <t hangText="Reserved">This field SHOULD be ignored by the
             receiver.</t>
-			
+
             <t hangText="Optional fields">The optional fields, if present,
-			reside after the Reserved field. The order of the optional fields
-			is according to the respective bits that are enabled in the 
-			Extension-Flags field. Each optional field is 4 octets long.</t>
+            reside after the Reserved field. The order of the optional fields
+            is according to the respective bits that are enabled in the
+            Extension-Flags field. Each optional field is 4 octets long.</t>
 
-            <t hangText="Flow ID">An optional 32-bit field representing the 
-			flow identifier. If the actual Flow ID is shorter than 32 bits, 
-			it is zero padded in its most significant bits. The field is set 
-			at the encapsulating node. The Flow ID can be uniformly assigned 
-			by a central controller or algorithmically generated by the 
-			encapsulating node. The latter approach cannot guarantee the 
-			uniqueness of Flow ID, yet the conflict probability is small due 
-			to the large Flow ID space. The Flow ID can be used to correlate 
-			the exported data of the same flow from multiple nodes and from 
-			multiple packets.</t>
+            <t hangText="Flow ID">An optional 32-bit field representing the
+            flow identifier. If the actual Flow ID is shorter than 32 bits, it
+            is zero padded in its most significant bits. The field is set at
+            the encapsulating node. The Flow ID can be uniformly assigned by a
+            central controller or algorithmically generated by the
+            encapsulating node. The latter approach cannot guarantee the
+            uniqueness of Flow ID, yet the conflict probability is small due
+            to the large Flow ID space. The Flow ID can be used to correlate
+            the exported data of the same flow from multiple nodes and from
+            multiple packets.</t>
 
-            <t hangText="Sequence Number">An optional 32-bit sequence number 
-			starting from 0 and increasing by 1 for each following monitored 
-			packet from the same flow at the encapsulating node. The Sequence 
-			Number, when combined with the Flow ID, provides a convenient 
-			approach to correlate the exported data from the same user packet.
-			</t>
+            <t hangText="Sequence Number">An optional 32-bit sequence number
+            starting from 0 and increasing by 1 for each following monitored
+            packet from the same flow at the encapsulating node. The Sequence
+            Number, when combined with the Flow ID, provides a convenient
+            approach to correlate the exported data from the same user
+            packet.</t>
           </list></t>
       </section>
     </section>
@@ -506,58 +514,52 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 
       <section anchor="IANAflags" title="IOAM DEX Flags">
         <t>IANA is requested to define an "IOAM DEX Flags" registry. This
-        registry includes 8 flag bits. Allocation is based on the 
-		"RFC Required" procedure, as defined in 
-		<xref target="RFC8126"/>.</t>
+        registry includes 8 flag bits. Allocation is based on the "RFC
+        Required" procedure, as defined in <xref target="RFC8126"/>.</t>
 
         <t>New registration requests MUST use the following template:</t>
 
         <t><list style="hanging">
-        	<t hangText="Bit:">Desired bit to be allocated in the 8 bit Flags 
-			field of the DEX option.</t>
+            <t hangText="Bit:">Desired bit to be allocated in the 8 bit Flags
+            field of the DEX option.</t>
 
-        	<t hangText="Description:">Brief description of the newly 
-			registered bit.</t>
+            <t hangText="Description:">Brief description of the newly
+            registered bit.</t>
 
-        	<t hangText="Reference:">Reference to the document that defines 
-			the new bit.</t>
-        </list></t>
+            <t hangText="Reference:">Reference to the document that defines
+            the new bit.</t>
+          </list></t>
       </section>
 
       <section anchor="IANAExtensionflags" title="IOAM DEX Extension-Flags">
-        <t>IANA is requested to define an "IOAM DEX Extension-Flags" registry. 
-		This registry includes 8 flag bits. Bit 0 (the most significant bit) 
-		and bit 1 in the registry are allocated by this document, and described 
-		in <xref target="OptionSec"/>. Allocation of the other bits should be 
-		performed based on the "RFC Required" procedure, as defined in 
-		<xref target="RFC8126"/>.</t>
-		
-		<t><list style="hanging">
-         <t hangText="Bit 0">"Flow ID [RFC XXXX] 
-         [RFC Editor: please replace with the RFC number of the current 
-		 document]"</t>
-		 
-         <t hangText="Bit 1">"Sequence Number [RFC XXXX] 
-         [RFC Editor: please replace with the RFC number of the current 
-		 document]"</t>
-		 
-        </list></t>
+        <t>IANA is requested to define an "IOAM DEX Extension-Flags" registry.
+        This registry includes 8 flag bits. Bit 0 (the most significant bit)
+        and bit 1 in the registry are allocated by this document, and
+        described in <xref target="OptionSec"/>. Allocation of the other bits
+        should be performed based on the "RFC Required" procedure, as defined
+        in <xref target="RFC8126"/>.</t>
+
+        <t><list style="hanging">
+            <t hangText="Bit 0">"Flow ID [RFC XXXX] [RFC Editor: please
+            replace with the RFC number of the current document]"</t>
+
+            <t hangText="Bit 1">"Sequence Number [RFC XXXX] [RFC Editor:
+            please replace with the RFC number of the current document]"</t>
+          </list></t>
 
         <t>New registration requests MUST use the following template:</t>
 
         <t><list style="hanging">
-        	<t hangText="Bit:">Desired bit to be allocated in the 8 bit 
-			Extension-Flags field of the DEX option.</t>
+            <t hangText="Bit:">Desired bit to be allocated in the 8 bit
+            Extension-Flags field of the DEX option.</t>
 
-        	<t hangText="Description:">Brief description of the newly 
-			registered bit.</t>
+            <t hangText="Description:">Brief description of the newly
+            registered bit.</t>
 
-        	<t hangText="Reference:">Reference to the document that defines 
-			the new bit.</t>
-        </list></t>
+            <t hangText="Reference:">Reference to the document that defines
+            the new bit.</t>
+          </list></t>
       </section>
-	  
-	  
     </section>
 
     <section anchor="Performance" title="Performance Considerations">
@@ -575,6 +577,11 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       the receiving entity. Moreover, it is possible to load balance the
       exported data among multiple receiving entities, although the exporting
       method is not within the scope of this document.</t>
+
+      <t>It should be noted that in some networks DEX data may be exported
+      over an out-of-band network, in which a large volume of exported traffic
+      does not compromise user traffic. In this case an operator may choose to
+      disable the exporting rate limiting.</t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
@@ -623,13 +630,20 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       <t>Although the exporting method is not within the scope of this
       document, any exporting method MUST secure the exported data from the
       IOAM node to the receiving entity. Specifically, an IOAM node that
-      performs DEX exporting MUST send the exported data to a pre-configured
-      trusted receiving entity.</t>
+      performs DEX exporting MUST send the exported data to a pre- configured
+      trusted receiving entity. Furthermore, an IOAM node MUST gain explicit
+      consent to export data to a receiving entity before starting to send
+      exported data.</t>
 
       <t>IOAM is assumed to be deployed in a restricted administrative domain,
       thus limiting the scope of the threats above and their affect. This is a
       fundamental assumption with respect to the security aspects of IOAM, as
       further discussed in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+    </section>
+
+    <section anchor="Acknowledgments" title="Acknowledgments">
+      <t>The authors thank Martin Duke, Tommy Pauly, Greg Mirsky, and other
+      members of the IPPM working group for many helpful comments.</t>
     </section>
   </middle>
 
@@ -656,8 +670,7 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       &I-D.ietf-ippm-ioam-flags;
     </references>
 
-    <section anchor="appendix"
-             title="Hop Limit in Direct Exporting">
+    <section anchor="appendix" title="Hop Limit in Direct Exporting">
       <t>In order to help correlate and order the exported packets, it is
       possible to include the Hop_Lim/Node_ID data field in exported packets;
       if the IOAM-Trace-Type <xref target="I-D.ietf-ippm-ioam-data"/> has the
@@ -672,7 +685,6 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       be incremented by each IOAM transit node that supports the DEX option.
       In this approach the Hop Count field value would also be included in the
       exported packet.</t>
-
     </section>
   </back>
 </rfc>
