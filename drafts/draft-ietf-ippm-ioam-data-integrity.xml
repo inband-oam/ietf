@@ -1,0 +1,975 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced. 
+     An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
+<!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
+<!ENTITY RFC6830 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6830.xml">
+<!ENTITY RFC7276 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7276.xml">
+<!ENTITY RFC7112 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7112.xml">
+<!ENTITY RFC6833 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6833.xml">
+<!ENTITY RFC2460 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2460.xml">
+<!ENTITY RFC791 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.0791.xml">
+<!ENTITY RFC6564 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6564.xml">
+<!ENTITY RFC7820 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7820.xml">
+<!ENTITY RFC7821 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7821.xml">
+<!ENTITY RFC8126 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
+<!ENTITY RFC5905 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5905.xml">
+<!ENTITY RFC7384 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7384.xml">
+<!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
+<!ENTITY RFC4302 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4302.xml">
+<!ENTITY RFC6090 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6090.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
+<!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
+<!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
+<!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
+<!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-6man-pdm-option.xml">
+<!ENTITY I-D.gont-v6ops-ipv6-ehs-in-real-world SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.gont-v6ops-ipv6-ehs-in-real-world.xml">
+<!ENTITY I-D.brockners-lisp-sr SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-lisp-sr.xml">
+<!ENTITY I-D.ietf-ippm-ioam-ipv6-options SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-ipv6-options.xml">
+<!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-6man-segment-routing-header.xml">
+<!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
+<!ENTITY I-D.ietf-nvo3-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-geneve.xml">
+<!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.lapukhov-dataplane-probe.xml">
+<!ENTITY I-D.ietf-ntp-packet-timestamps SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ntp-packet-timestamps.xml">
+<!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
+<!ENTITY I-D.ietf-ippm-ioam-flags SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-flags.xml">
+<!ENTITY I-D.zhou-ippm-ioam-yang SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.zhou-ippm-ioam-yang.xml">
+<!ENTITY I-D.mizrahi-ippm-ioam-profile SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.mizrahi-ippm-ioam-profile.xml">
+<!ENTITY I-D.ioamteam-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioamteam-ippm-ioam-direct-export.xml">
+<!ENTITY I-D.ioametal-ippm-6man-ioam-ipv6-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioametal-ippm-6man-ioam-ipv6-deployment.xml">
+<!ENTITY I-D.weis-ippm-ioam-eth SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.weis-ippm-ioam-eth.xml">
+<!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-ioam-nsh.xml">
+<!ENTITY I-D.brockners-ippm-ioam-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-ippm-ioam-geneve.xml">
+<!ENTITY I-D.gandhi-spring-ioam-sr-mpls SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.gandhi-spring-ioam-sr-mpls.xml">
+<!ENTITY I-D.ali-spring-ioam-srv6 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ali-spring-ioam-srv6.xml">
+<!ENTITY I-D.brockners-ippm-ioam-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-ippm-ioam-vxlan-gpe.xml">
+<!ENTITY I-D.ietf-detnet-security SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-detnet-security.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs), 
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space 
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-integrity-00"
+     ipr="trust200902">
+  <!-- ipr="full3978"-->
+
+  <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN" 
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <!-- The abbreviated title is used in the page header - it is only necessary if the 
+         full title is longer than 39 characters -->
+
+    <title abbrev="IOAM Data Fields Integrity">Integrity of In-situ OAM Data
+    Fields</title>
+
+    <!-- add 'role="editor"' below for the editors if appropriate -->
+
+    <!-- Another author who claims to be an editor -->
+
+    <author fullname="Frank Brockners" initials="F." surname="Brockners">
+      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+
+      <address>
+        <postal>
+          <street>Hansaallee 249, 3rd Floor</street>
+
+          <!-- Reorder these if your country does things differently -->
+
+          <city>DUESSELDORF</city>
+
+          <region>NORDRHEIN-WESTFALEN</region>
+
+          <code>40549</code>
+
+          <country>Germany</country>
+        </postal>
+
+        <email>fbrockne@cisco.com</email>
+
+        <!-- uri and facsimile elements may also be added -->
+      </address>
+    </author>
+
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
+      <organization abbrev="Thoughtspot">Thoughtspot</organization>
+
+      <address>
+        <postal>
+          <street>3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR
+          Layout</street>
+
+          <city>Bangalore, KARNATAKA 560 102</city>
+
+          <country>India</country>
+        </postal>
+
+        <email>shwetha.bhandari@thoughtspot.com</email>
+      </address>
+    </author>
+
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
+      <organization abbrev="">Huawei</organization>
+
+      <address>
+        <postal>
+          <street>8-2 Matam</street>
+
+          <city>Haifa</city>
+
+          <code>3190501</code>
+
+          <country>Israel</country>
+        </postal>
+
+        <email>tal.mizrahi.phd@gmail.com</email>
+      </address>
+    </author>
+
+    <date day="19" month="October" year="2021"/>
+
+    <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
+         in the current day for you. If only the current year is specified, xml2rfc will fill 
+	 in the current day and month for you. If the year is not the current one, it is 
+	 necessary to specify at least a month (xml2rfc assumes day="1" if not specified for the 
+	 purpose of calculating the expiry date).  With drafts it is normally sufficient to 
+	 specify just the year. -->
+
+    <!-- Meta-data Declarations -->
+
+    <area>tsv</area>
+
+    <workgroup>ippm</workgroup>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.  
+	 If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>in-situ</keyword>
+
+    <keyword>Telemetry, Tracing</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) collects 
+      operational and telemetry information in the packet while the packet
+      traverses a path between two points in the network. 
+      IETF protocols require features to ensure their security.
+      This document describes the integrity protection of IOAM data fields.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section title="Introduction" toc="default">
+      <t>"In-situ" Operations, Administration, and Maintenance (IOAM) collects 
+      OAM information within the packet while the packet traverses a
+      particular network domain. The term "in-situ" refers to the fact that
+      the OAM data is added to the data packets rather than is being sent
+      within packets specifically dedicated to OAM. IOAM is to complement
+      mechanisms such as Ping, Traceroute, or other active probing mechanisms.
+      In terms of "active" or "passive" OAM, "in-situ" OAM can be considered a
+      hybrid OAM type. "In-situ" mechanisms do not require extra packets to be
+      sent. IOAM adds information to the already available data packets and
+      therefore cannot be considered passive. In terms of the classification
+      given in <xref target="RFC7799"/> IOAM could be portrayed as Hybrid Type
+      I. IOAM mechanisms can be leveraged where mechanisms using e.g., ICMP do
+      not apply or do not offer the desired results, such as proving that a
+      certain traffic flow takes a pre-defined path, SLA verification for the
+      live data traffic, detailed statistics on traffic distribution paths in
+      networks that distribute traffic across multiple paths, or scenarios in
+      which probe traffic is potentially handled differently from regular data
+      traffic by the network devices.</t>
+
+      <t>The current <xref target="I-D.ietf-ippm-ioam-data"/> assumes that
+      IOAM is deployed in limited domains, where an operator has
+      means to select, monitor, and control the access to all the networking
+      devices, making the domain a trusted network. As such, IOAM tracing data
+      is carried in the packets in clear and there are no protections against
+      any node or middlebox tampering with the data. 
+      IOAM tracing data collected in an untrusted or semi-trusted environments 
+      requires integrity protection to support critical operational decisions.
+      </t>
+
+      <t>The following considerations and
+      requirements are to be taken into account in addition to addressing the
+      problem of detectability of any integrity breach of the IOAM trace data
+      collected: <list style="numbers">
+          <t>IOAM trace data is processed by the data plane, hence viability
+          of any method to prove integrity of the IOAM trace data must be
+          feasible at data plane processing/forwarding rates (IOAM data might
+          be applied to all traffic a router forwards).</t>
+
+          <t>IOAM trace data is carried within data packets. Additional space
+          required to prove integrity of the data needs to be optimal, i.e.
+          should not exceed the MTU or have adverse affect on packet
+          processing.</t>
+
+          <t>Replay protection of older IOAM trace data should be possible.
+          Without replay protection a rogue node can present the old IOAM
+          trace data masking any ongoing network issues/activity making the
+          IOAM trace data collection useless.</t>
+
+      </list></t>
+
+      <t>This document defines the methods to protect the integrity of IOAM
+	      data fields, using the IOAM Trace Option-Types 
+	      specified in <xref target="I-D.ietf-ippm-ioam-data"/>
+	      as example. The methods similarily apply to
+		      other IOAM Option-Types such as the DEX Option-Type
+	      <xref target="I-D.ietf-ippm-ioam-direct-export"/>.</t>
+    </section>
+
+    <section anchor="Conventions" title="Conventions">
+    	
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+      "OPTIONAL" in this document are to be interpreted as described in BCP 14
+      <xref target="RFC2119" format="default"/> <xref target="RFC8174" format="default"/>.
+      </t>
+
+      <t>Abbreviations used in this document:</t>
+
+      <t><list hangIndent="11" style="hanging">
+
+          <t hangText="IOAM:">In-situ Operations, Administration, and
+          Maintenance</t>
+
+          <t hangText="MTU:">Maximum Transmit Unit</t>
+
+          <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="POT:">Proof of Transit</t>
+
+          <t hangText="SFC:">Service Function Chain</t>
+        </list></t>
+    </section>
+
+    <section title="Threat Analysis">
+      <t>This section presents a threat analysis of integrity-related threats
+      in the context of IOAM. The threats that are discussed are assumed to be
+      independent of the lower layer protocols; it is assumed that threats at
+      other layers are handled by security mechanisms that are deployed at
+      these layers.</t>
+
+      <t>This document is focused on integrity protection for IOAM data
+      fields. Thus the threat analysis includes threats that are related to or
+      result from compromising the integrity of IOAM data fields. Other
+      security aspects such as confidentiality are not within the scope of
+      this document.</t>
+
+      <t>Throughout the analysis there is a distinction between on-path and
+      off-path attackers. As discussed in <xref
+      target="I-D.ietf-detnet-security"/>, on-path attackers are located in a
+      position that allows interception and modification of in-flight protocol
+      packets, whereas off-path attackers can only attack by generating
+      protocol packets.</t>
+
+      <t>The analysis also includes the impact of each of the threats.
+      Generally speaking, the impact of a successful attack on an OAM protocol
+      <xref target="RFC7276"/> is a false illusion of nonexistent failures or
+      preventing the detection of actual ones; in both cases, the attack may
+      result in denial of service (DoS). Furthermore, creating the false
+      illusion of a nonexistent issue may trigger unnecessary processing in
+      some of the IOAM nodes along the path, and may cause more IOAM-related
+      data to be exported to the management plane than is conventionally
+      necessary. Beyond these general impacts, threat-specific impacts are
+      discussed in each of the subsections below.</t>
+
+      <section anchor="ModifDataSec" title="Modification: IOAM Data Fields">
+        <t>Threat <list hangIndent="10" style="empty">
+            <t>An attacker can maliciously modify the IOAM data fields of
+            in-transit packets. The modification can either be applied to all
+            packets or selectively applied to a subset of the en route
+            packets. This threat is applicable to on-path attackers.</t>
+          </list></t>
+
+        <t>Impact <list hangIndent="10" style="empty">
+            <t>By systematically modifying the IOAM data fields of some or all
+            of the in-transit packets an attacker can create a false picture
+            of the paths in the network, the existence of faulty nodes and
+            their location, and the network performance.</t>
+          </list></t>
+      </section>
+
+      <section anchor="ModifHeaderSec"
+               title="Modification: IOAM Option-Type Headers">
+        <t>Threat <list hangIndent="10" style="empty">
+            <t>An on-path attacker can modify IOAM data fields in one or more
+            of the IOAM Option-Type headers in order to change or disrupt the
+            behavior of nodes processing IOAM data fields along the path.</t>
+          </list></t>
+
+        <t>Impact <list hangIndent="10" style="empty">
+            <t>Changing the header of IOAM Option-Types may have several
+            implications. An attacker can maliciously increase the processing
+            overhead in nodes that process IOAM data fields and increase the
+            on-the-wire overhead of IOAM data fields, for example by modifying
+            the IOAM-Trace-Type field in the IOAM Trace-option header. An
+            attacker can also prevent some of the nodes that process IOAM data
+            fields from incorporating IOAM data fields by modifying the
+            RemainingLen field.</t>
+          </list></t>
+      </section>
+
+      <section title="Injection: IOAM Data Fields">
+        <t>Threat <list hangIndent="10" style="empty">
+            <t>An attacker can inject packets with IOAM Option-Types and IOAM
+            data fields. This threat is applicable to both on-path and
+            off-path attackers.</t>
+          </list></t>
+
+        <t>Impact <list hangIndent="10" style="empty">
+            <t>This attack and it impacts are similar to <xref
+            target="ModifDataSec"/>.</t>
+          </list></t>
+      </section>
+
+      <section title="Injection: IOAM Option-Type Headers">
+        <t>Threat <list hangIndent="10" style="empty">
+            <t>An attacker can inject packets with IOAM Option-Type headers,
+            thus manipulating other nodes that process IOAM data fields in the
+            network. This threat is applicable to both on-path and off-path
+            attackers.</t>
+          </list></t>
+
+        <t>Impact <list hangIndent="10" style="empty">
+            <t>This attack and it impacts are similar to <xref
+            target="ModifHeaderSec"/>.</t>
+          </list></t>
+      </section>
+
+      <section title="Replay">
+        <t>Threat <list hangIndent="10" style="empty">
+            <t>An attacker can replay packets with IOAM data fields.
+            Specifically, an attacker may replay a previously transmitted IOAM
+            Option-Type with a new data packet, thus attaching old IOAM data
+            fields to a fresh user packet. This threat is applicable to both
+            on-path and off-path attackers.</t>
+          </list></t>
+
+        <t>Impact <list hangIndent="10" style="empty">
+            <t>As with previous threats, this threat may create a false image
+            of a nonexistent failure, or may overload nodes which process IOAM
+            data fields with unnecessary processing.</t>
+          </list></t>
+      </section>
+
+      <section title="Management and Exporting">
+        <t>Threat <list hangIndent="10" style="empty">
+            <t>Attacks that compromise the integrity of IOAM data fields can
+            be applied at the management plane, e.g., by manipulating network
+            management packets. Furthermore, the integrity of IOAM data fields
+            that are exported to a receiving entity can also be compromised.
+            Management plane attacks are not within the scope of this
+            document; the network management protocol is expected to include
+            inherent security capabilities. The integrity of exported data is
+            also not within the scope of this document. It is expected that
+            the specification of the export format will discuss the relevant
+            security aspects.</t>
+          </list></t>
+
+        <t>Impact <list hangIndent="10" style="empty">
+            <t>Malicious manipulation of the management protocol can cause
+            nodes that process IOAM data fields to malfunction, to be
+            overloaded, or to incorporate unnecessary IOAM data fields into
+            user packets. The impact of compromising the integrity of exported
+            IOAM data fields is similar to the impacts of previous threats
+            that were described in this section.</t>
+          </list></t>
+      </section>
+
+      <section title="Delay">
+        <t>Threat <list hangIndent="10" style="empty">
+            <t>An on-path attacker may delay some or all of the in-transit
+            packets that include IOAM data fields in order to create the false
+            illusion of congestion. Delay attacks are well known in the
+            context of deterministic networks <xref
+            target="I-D.ietf-detnet-security"/> and synchronization <xref
+            target="RFC7384"/>, and may be somewhat mitigated in these
+            environments by using redundant paths in a way that is resilient
+            to an attack along one of the paths. This approach does not
+            address the threat in the context of IOAM, as it does not meet the
+            requirement to measure a specific path or to detect a problem
+            along the path. It is noted that this threat is not within the
+            scope of the threats that are mitigated in the scope of this
+            document.</t>
+          </list></t>
+
+        <t>Impact <list hangIndent="10" style="empty">
+            <t>Since IOAM can be applied to a fraction of the traffic, an
+            attacker can detect and delay only the packets that include IOAM
+            data fields, thus preventing the authenticity of delay and load
+            measurements.</t>
+          </list></t>
+      </section>
+
+      <section title="Threat Summary">
+        <figure align="center" anchor="ThreatSummary"
+                title="Threat Analysis Summary">
+          <artwork align="left">
+            
++-------------------------------------------+--------+------------+
+| Threat                                    |In scope|Out of scope|
++-------------------------------------------+--------+------------+
+|Modification: IOAM Data Fields             |   +    |            |
++-------------------------------------------+--------+------------+
+|Modification: IOAM Option-Type Headers     |   +    |            |
++-------------------------------------------+--------+------------+
+|Injection: IOAM Data Fields                |   +    |            |
++-------------------------------------------+--------+------------+
+|Injection: IOAM Option-Type Headers        |   +    |            |
++-------------------------------------------+--------+------------+
+|Replay                                     |   +    |            |
++-------------------------------------------+--------+------------+
+|Management and Exporting                   |        |     +      |
++-------------------------------------------+--------+------------+
+|Delay                                      |        |     +      |
++-------------------------------------------+--------+------------+
+           </artwork>
+        </figure>
+      </section>
+    </section>
+
+    <section title="Methods of providing integrity to IOAM data fields">
+      <t>This section specifies additional IOAM Option-Types to carry
+      data fields to provide for integrity protection. Methods for
+      integrity protection can leverage symmetric or
+      asymmetric key based signatures as described in the sub-sections below.</t>
+
+      <section anchor="IP_Options" title="Integrity Protected IOAM Option-Types">
+        <t>Each of the IOAM Options defined in <xref
+        target="I-D.ietf-ippm-ioam-data"/> are extended to include Integrity
+        Protected (IP) IOAM Option-Types by allocating the following IOAM Option-Types
+        in the IOAM Option-Type registry.</t>
+
+        <t><list style="hanging">
+            <t hangText="64">IOAM Pre-allocated Trace Integrity Protected
+            Option-Type corresponds to IOAM Pre-allocated Trace Option-Type
+            with integrity protection.</t>
+
+            <t hangText="65">IOAM Incremental Trace Integrity Protected
+            Option-Type corresponds to IOAM Incremental Trace Option-Type with
+            integrity protection.</t>
+
+            <t hangText="66">IOAM POT Integrity Protected Option-Type
+            corresponds to IOAM POT Option-Type with integrity protection.</t>
+
+            <t hangText="67">IOAM E2E Integrity Protected Option-Type
+            corresponds to IOAM E2E Option-Type with integrity protection.</t>
+          </list></t>
+      </section>
+
+      <section anchor="IP_Sub-header"
+               title="Subheader for Integrity Protected IOAM Option-Types">
+
+        <t>An integrity data sub-header is used in IOAM
+        Integrity Protected Options. It is defined as follows:</t>
+
+        <t><figure>
+            <artwork>
+
+     0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Signature-suite|  Nonce length |         Reserved.             |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Nonce                                  ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Signature                               ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+
+</artwork>
+          </figure></t>
+
+        <t><list style="hanging">
+            <t hangText="Signature-suite:">8-bit unsigned integer. 
+            This field defines the algorithms used to compute the digest 
+            and the signature over the Option-Type header and data fields excluding 
+            the Signature field.</t>
+
+            <t hangText="Nonce length:">8-bit unsigned integer. This field
+            specifies the length of the Nonce field in octets.</t>
+
+            <t hangText="Reserved:">16-bit Reserved field. MUST be set to zero
+            upon transmission and ignored upon receipt.</t>
+
+            <t hangText="Nonce:"> Nonce is a variable length field with length specified
+            in Nonce length.</t>
+
+            <t hangText="Signature:"> Signature is the digital signature value generated
+            by the method and algorithm specified by Signature-suite.</t>
+          </list></t>
+
+        <t>The Integrity sub-header follows the IOAM Option-Type header when
+        the IOAM Option-Type is Integrity Protected Option. Pre-allocated and
+        incremental Trace option headers are as defined in <xref
+        target="I-D.ietf-ippm-ioam-data"/>. When the IOAM Option-Type is set to
+        the IOAM Pre-allocated Trace Integrity Protected Option-Type or IOAM
+        Incremental Trace Integrity Protected Option-Type then the Integrity
+        Protection subheader follows the original IOAM Option Type header: :
+        <figure>
+            <artwork>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        Namespace-ID           |NodeLen  | Flags | RemainingLen|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               IOAM-Trace-Type                 |  Reserved     |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Signature-suite|  Nonce length |         Reserved.             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Nonce                                  ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Signature                               ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</artwork>
+          </figure></t>
+
+        <t>IOAM POT option header as defined in <xref
+        target="I-D.ietf-ippm-ioam-data"/> is followed by Integrity Protection
+        subheader when IOAM Option Type is set to IOAM POT Integrity
+        Protected Option-Type: <figure>
+            <artwork>
+  0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|       Namespace-ID            |IOAM POT Type  | IOAM POT flags| 
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Signature-suite|  Nonce length |         Reserved.             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Nonce                                  ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Signature                               ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</artwork>
+          </figure></t>
+
+        <t>IOAM E2E option header as defined in <xref
+        target="I-D.ietf-ippm-ioam-data"/> is followed by Integrity Protection
+        subheader when IOAM Option Type is set to IOAM E2E Integrity
+        Protected Option-Type: <figure>
+            <artwork>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        Namespace-ID           |         IOAM-E2E-Type         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Signature-suite|  Nonce length |         Reserved.             |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Nonce                                  ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                       Signature                               ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</artwork>
+          </figure></t>
+      </section>
+
+      <section title="Space optimized symmetric key based signing of IOAM data">
+        <t>This method assumes that symmetric keys have been distributed to
+        the respective nodes as well as the Validator (the Validator receives
+        all the keys). The details of the mechanisms of how keys are
+        distributed are outside the scope of this document. The
+        "Signature" field is populated as follows: <list style="numbers">
+            <t>The first node creates a nonce and signature over the hash of
+            IOAM Option excluding the Signature field, the nonce and its
+            symmetric key. The nonce is included as a field in Integrity
+            Protection sub-header of the corresponding IOAM Option. The
+            resulting signature is included in the corresponding Signature
+            field.</t>
+
+            <t>Transit nodes will update the Signature field by creating
+            a signature of data where the data is [Signature ||
+            hash(node_data_list[x])] with its symmetric key in case of IOAM
+            Trace Integrity Protected Options. Transit nodes updating
+            IOAM POT Option will update the Signature field by creating a
+            signature of data where the data is [Signature || hash(IOAM POT
+            OPTION excluding Signature field)] with its symmetric key in case
+            of IOAM POT Integrity Protected Option.</t>
+
+            <t>The Validator will iteratively recreate the Signature over the
+            IOAM Option fields collected and matches the Signature field to
+            validate the data integrity.</t>
+          </list></t>
+
+        <t>This method uses the following algorithms: <list
+            style="numbers">
+            <t>The algorithm to calculate the signature using symmetric key MUST
+            be Advanced Encryption Standard (AES) AES-256. <xref
+            target="AES"/> <xref target="NIST.800-38D"/>.</t>
+
+            <t>The digest/hash algorithm used MUST be SHA-256 <xref
+            target="SHS"/>.</t>
+          </list></t>
+
+        <section title="Overhead consideration">
+          <t>The Signature would consume 32 bytes with AES-256. With
+          this method the Signature is carried only once for the entire
+          packet. As there are dedicated options for carrying IOAM data with
+          integrity protection, in case of performance concerns in calculating
+          signature and validating it, these options can be used for a subset
+          of the packets by using sampling of data to enable IOAM with
+          integrity protection.</t>
+        </section>
+      </section>
+
+      <section title="Space optimized asymmetric key based signing of trace data">
+        <t>This method assumes that asymmetric keys have been generated per
+        IOAM node and the respective nodes can access their keys. The
+        Validator receives all the public keys. The details of the mechanisms
+        of how keys are generated and shared are outside the scope of this
+        document. The " Signature" field is populated as follows:<list
+            style="numbers">
+            <t>The first node creates a nonce and signs over the hash of IOAM
+            Option it populates excluding the Signature field in the option,
+            the nonce and its private key. The resulting signature is included
+            in the Signature field.</t>
+
+            <t>Transit nodes will update the Signature field by creating
+            a signature of data where the data is [Signature ||
+            hash(node_data_list[x])] with its private key in case of IOAM
+            Trace Integrity Protected Options. Transit nodes updating
+            IOAM POT Option will update the Signature field by creating a
+            signature of data where the data is [Signature || hash(IOAM POT
+            OPTION excluding Signature field)] with its private key in case of
+            IOAM POT Integrity Protected Option.</t>
+
+            <t>The Validator will iteratively recreate the Signature over the
+            IOAM Option fields collected and matches the Signature field to
+            validate the data integrity using public keys of the IOAM
+            nodes.</t>
+          </list></t>
+
+        <t>This method uses the following algorithms: <list
+            style="numbers">
+            <t>The signature algorithm used MUST be the Elliptic Curve Digital
+            Signature Algorithm (ECDSA) with curve P-256 <xref
+            target="RFC6090"/> <xref target="DSS"/>.</t>
+
+            <t>The digest/hash algorithm used MUST be SHA-256 <xref
+            target="SHS"/>.</t>
+          </list></t>
+
+        <section title="Overhead consideration">
+          <t>The Signature consumes 32 bytes based on the SHA-256 ECDSA
+          P-256 algorithm employed. With this method the Signature is
+          only carried once for the entire packet. As there are dedicated
+          options for carrying IOAM data with integrity protection, in case of
+          performance concerns in calculating signature and validating it,
+          these options can be used for a subset of the packets by using
+          sampling of data to enable IOAM with integrity protection.</t>
+        </section>
+      </section>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+
+      <section anchor="IOAM-type-registry" title="IOAM Option-Type Registry">
+        <t>The following code points are defined in this draft in "IOAM
+        Option-Type Registry" :</t>
+
+        <t><list style="hanging">
+            <t hangText="64">IOAM Pre-allocated Trace Integrity Protected
+            Option-Type</t>
+
+            <t hangText="65">IOAM Incremental Trace Integrity Protected
+            Option-Type</t>
+
+            <t hangText="66">IOAM POT Integrity Protected Option-Type</t>
+
+            <t hangText="67">IOAM E2E Integrity Protected Option-Type</t>
+          </list></t>
+      </section>
+
+      <section anchor="IOAM-IP-registry"
+               title="IOAM Integrity Protection Algorithm Suite Registry">
+        <t>"IOAM Integrity Protection Algorithm Suite Registry" in the
+        "In-Situ OAM (IOAM) Protocol Parameters" group. The one-octet "IOAM
+        Integrity Protection Algorithm Suite Registry" identifiers assigned by
+        IANA identify the digest algorithm and signature algorithm used in the
+        Signature Suite Identifier field. IANA has registered the following
+        algorithm suite identifiers for the digest algorithm and for the
+        signature algorithm. <figure>
+            <artwork>
+           IOAM Integrity Protection Algorithm Suite Registry
+
+     Algorithm    Digest       Signature    Specification
+     Suite        Algorithm    Algorithm    Pointer
+     Identifier
+   +------------+------------+-------------+-----------------------+
+   | 0x0        | Reserved   | Reserved    | This document         |
+   +------------+------------+-------------+-----------------------+
+   | 0x1        | SHA-256    | ECDSA P-256 | [SHS] [DSS] [RFC6090] |
+   |            |            |             | This document         |
+   +------------+------------+-------------+-----------------------+
+   | 0x2        | SHA-256    | AES-256     | [AES] [NIST.800-38D]  |
+   |            |            |             | This document         |
+   +------------+------------+-------------+-----------------------+
+   | 0xEF-0xFF  | Unassigned | Unassigned  |                       |
+   +------------+------------+-------------+-----------------------+
+      </artwork>
+          </figure> Future assignments are to be made using the Standards
+        Action process defined in <xref target="RFC8126"/>. Assignments
+        consist of the one-octet algorithm suite identifier value and the
+        associated digest algorithm name and signature algorithm name.</t>
+      </section>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>This section will be completed in a future revision of this
+      document.</t>
+    </section>
+
+    <section title="Acknowledgements">
+      <t>The authors would like to thank Santhosh N, Rakesh Kandula, Saiprasad
+      Muchala, Al Morton, Greg Mirsky, Benjamin Kaduk and Martin Duke for their comments
+      and advice.</t>
+    </section>
+  </middle>
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+    <!-- References split into informative and normative -->
+
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
+     1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+     2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+        (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+
+     Both are cited textually in the same manner: by using xref elements.
+     If you use the PI option, xml2rfc will, by default, try to find included files in the same
+     directory as the including file. You can also define the XML_LIBRARY environment variable
+     with a value containing a set of directories to search.  These can be either in the local
+     filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+    <references title="Normative References">
+      &RFC2119;
+
+      &RFC8174;
+
+      <!--  &RFC5905; -->
+
+      &RFC8126;
+
+      <!--  
+
+      <reference anchor="POSIX"
+                 target="https://standards.ieee.org/findstds/standard/1003.1-2008.html">
+        <front>
+          <title>IEEE Std 1003.1-2008 (Revision of IEEE Std 1003.1-2004) -
+          IEEE Standard for Information Technology - Portable Operating System
+          Interface (POSIX(R))</title>
+
+          <author>
+            <organization>Institute of Electrical and Electronics
+            Engineers</organization>
+          </author>
+
+          <date year="2008"/>
+        </front>
+
+        <seriesInfo name="" value="IEEE Std 1003.1-2008"/>
+      </reference>
+
+      <reference anchor="IEEE1588v2"
+                 target="http://standards.ieee.org/findstds/standard/1588-2008.html">
+        <front>
+          <title>IEEE Std 1588-2008 - IEEE Standard for a Precision Clock
+          Synchronization Protocol for Networked Measurement and Control
+          Systems</title>
+
+          <author>
+            <organization>Institute of Electrical and Electronics
+            Engineers</organization>
+          </author>
+
+          <date year="2008"/>
+        </front>
+
+        <seriesInfo name="" value="IEEE Std 1588-2008"/>
+      </reference>
+
+-->
+    </references>
+
+    <references title="Informative References">
+      &RFC7799;
+
+<!--      &RFC8300; -->
+
+      &I-D.ietf-ippm-ioam-data;
+
+<!--
+      &I-D.ietf-sfc-proof-of-transit;
+
+      &I-D.ietf-nvo3-geneve;
+
+      &I-D.ietf-ippm-ioam-ipv6-options;
+
+      &I-D.ietf-sfc-ioam-nsh;
+
+      &I-D.brockners-ippm-ioam-geneve; -->
+
+      &I-D.ietf-detnet-security;
+
+      &I-D.ietf-ippm-ioam-direct-export;
+
+      &RFC7276;
+
+      &RFC7384;
+
+      &RFC6090;
+
+<!--
+      &RFC4302;
+
+      <reference anchor="McEliece"
+                 target="https://ipnpr.jpl.nasa.gov/progress_report2/42-44/44N.PDF">
+        <front>
+          <title>A Public-Key Cryptosystem Based on Algebraic Coding
+          Theory</title>
+
+          <author fullname="Robert McEliece" initials="R. J."
+                  surname="McEliece"/>
+
+          <date year="1978"/>
+        </front>
+      </reference>
+
+      <reference anchor="EdDSA25519"
+                 target="https://en.wikipedia.org/wiki/EdDSA#Ed25519">
+        <front>
+          <title>Edwards-curve Digital Signature Algorithm (EdDSA)</title>
+
+          <author fullname="Wikipedia"/>
+
+          <date year="2021"/>
+        </front>
+      </reference>
+
+      <reference anchor="BLS"
+                 target="https://en.wikipedia.org/wiki/BLS_digital_signature">
+        <front>
+          <title>BLS (Boneh&ndash;Lynn&ndash;Shacham) digital
+          signature</title>
+
+          <author fullname="Wikipedia"/>
+
+          <date year="2021"/>
+        </front>
+      </reference>
+
+      -->
+
+      <reference anchor="SHS"
+                 target="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">
+        <front>
+          <title>Secure Hash Standard (SHS)</title>
+
+          <author>
+            <organization>National Institute of Standards and
+            Technology</organization>
+          </author>
+
+          <date year="2015"/>
+        </front>
+
+        <seriesInfo name=""
+                    value="NIST FIPS Publication 180-4,               DOI 10.6028/NIST.FIPS.180-4"/>
+      </reference>
+
+      <reference anchor="DSS"
+                 target="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf">
+        <front>
+          <title>Digital Signature Standard (DSS)</title>
+
+          <author>
+            <organization>National Institute of Standards and
+            Technology</organization>
+          </author>
+
+          <date year="2013"/>
+        </front>
+
+        <seriesInfo name=""
+                    value="NIST FIPS Publication 186-4,               DOI 10.6028/NIST.FIPS.186-4"/>
+      </reference>
+
+      <reference anchor="AES"
+                 target="http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf">
+        <front>
+          <title>Advanced Encryption Standard (AES)</title>
+
+          <author>
+            <organization>National Institute of Standards and
+            Technology</organization>
+          </author>
+
+          <date year="2001"/>
+        </front>
+
+        <seriesInfo name="" value="FIPS PUB 197"/>
+      </reference>
+
+      <reference anchor="NIST.800-38D"
+                 target="http://csrc.nist.gov/publications/nistpubs/800-38D/SP-800-38D.pdf">
+        <front>
+          <title>Recommendation for Block Cipher Modes of Operation:
+          Galois/Counter Mode (GCM) and GMAC</title>
+
+          <author>
+            <organization>National Institute of Standards and
+            Technology</organization>
+          </author>
+
+          <date year="2001"/>
+        </front>
+
+        <seriesInfo name="" value="NIST Special Publication 800-38D"/>
+      </reference>
+
+    </references>
+  </back>
+</rfc>
