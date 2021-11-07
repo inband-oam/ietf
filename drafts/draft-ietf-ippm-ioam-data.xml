@@ -26,9 +26,9 @@
 <!ENTITY RFC8877 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8877.xml">
 <!ENTITY RFC8899 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8899.xml">
 <!ENTITY RFC8926 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8926.xml">
-<!ENTITY I-D.brockners-opsawg-ioam-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-opsawg-ioam-deployment.xml">
-<!ENTITY I-D.brockners-ippm-ioam-data-integrity SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-ippm-ioam-data-integrity.xml">
-<!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
+<!ENTITY I-D.ietf-ippm-ioam-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-deployment.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data-integrity SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data-integrity.xml">
+
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
 <!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-6man-pdm-option.xml">
@@ -65,7 +65,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-15" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-16" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -140,7 +140,7 @@
       </address>
     </author>
 
-    <date day="3" month="October" year="2021"/>
+    <date day="8" month="November" year="2021"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -279,14 +279,14 @@
         </list></t>
     </section>
 
-    <section title="Scope, Applicability, and Assumptions ">
+    <section title="Scope, Applicability, and Assumptions" anchor="IOAM_scope">
       <t>IOAM assumes a set of constraints as well as 
       guiding principles and concepts that go hand in hand with the definition
       of the IOAM data fields. These constraints, guiding principles, and
       concepts are described in this section. A discussion of how IOAM data 
       fields and the associated concepts are applied to an IOAM deployment
       are out of scope for this document. Please refer to 
-      <xref target="I-D.brockners-opsawg-ioam-deployment"/> for IOAM
+      <xref target="I-D.ietf-ippm-ioam-deployment"/> for IOAM
       deployment considerations.
 
       </t>
@@ -307,15 +307,15 @@
       connections / tunnels for connectivity between said devices. 
 
       A limited domain which uses IOAM may constitute one or multiple 
-      "IOAM domains", each disambiguated through separate namespace identifiers.
-      An IOAM domain is bounded by its perimeter or edge.  IOAM domains 
+      "IOAM-domains", each disambiguated through separate namespace identifiers.
+      An IOAM-domain is bounded by its perimeter or edge.  IOAM-domains 
       may overlap inside the limited domain.
 
       Designers of protocol
       encapsulations for IOAM specify mechanisms to ensure that IOAM data
-      stays within an IOAM domain. In addition, the operator of such a domain
+      stays within an IOAM-domain. In addition, the operator of such a domain
       is expected to put provisions in place to ensure that IOAM data does not
-      leak beyond the edge of an IOAM domain using, for example, packet
+      leak beyond the edge of an IOAM-domain using, for example, packet
       filtering methods. The operator SHOULD consider the potential
       operational impact of IOAM to mechanisms such as ECMP processing (e.g.,
       load-balancing schemes based on packet length could be impacted by the
@@ -393,9 +393,8 @@
       </section>
 
       <section title="IOAM-Domains and types of IOAM Nodes">
-        <t>IOAM is expected to be deployed in a specific domain. The part of
-        the network which employs IOAM is referred to as the "IOAM-Domain".
-        One or more IOAM-Option-Types are added to a packet upon entering the
+        <t><xref target="IOAM-type-registry"/> already mentioned that IOAM is expected to be deployed in a limited domain <xref target="RFC8799"/>. 
+        One or more IOAM-Option-Types are added to a packet upon entering an
         IOAM-Domain and are removed from the packet when exiting the domain.
         Within the IOAM-Domain, the IOAM-Data-Fields MAY be updated by network
         nodes that the packet traverses. An IOAM-Domain consists of "IOAM
@@ -413,7 +412,7 @@
         nodes which add or remove the IOAM-Data-Fields can also update the
         IOAM-Data-Fields at the same time. Or in other words, IOAM
         encapsulating or decapsulating nodes can also serve as IOAM transit
-        nodes at the same time. Note that not every node in an IOAM domain
+        nodes at the same time. Note that not every node in an IOAM-domain
         needs to be an IOAM transit node. For example, a deployment might
         require that packets traverse a set of firewalls which support IOAM.
         In that case, only the set of firewall nodes would be IOAM transit
@@ -426,12 +425,14 @@
         encapsulating node is responsible for applying the IOAM functionality
         to the selected subset.</t>
 
-        <t>An "IOAM transit node" read and/or write and/or process
+        <t>An "IOAM transit node" reads and/or writes and/or processes
         one or more of the IOAM-Data-Fields.
         If both the Pre-allocated and the Incremental Trace Option-Types are
         present in the packet, each IOAM transit node based on configuration and
-	    available implementation of IOAM populates IOAM trace data in
+	    available implementation of IOAM might populate IOAM trace data in
 	    either Pre-allocated or Incremental Trace Option-Type but not both.
+        Note that not populating any of the Trace Option-Types is also valid
+ 	 behavior for an IOAM transit node.
         A transit node MUST ignore IOAM-Option-Types that it does not
         understand. A transit node MUST NOT add new IOAM-Option-Types to a
         packet, MUST NOT remove IOAM-Option-Types from a packet, and
@@ -449,10 +450,7 @@
         IOAM-Namespace "A" from the packet. Note that this applies even
         for IOAM-Option-Types that the node does not understand, for
         example an IOAM-Option-Type other than the four described above,
-        that is added in a future revision. An IOAM decapsulating node
-        situated at the edge of an IOAM domain MUST remove all
-        IOAM-Option-Types and associated encapsulation headers for all
-        IOAM-Namespaces from the packet.</t>
+        that is added in a future revision.</t>
 
         <t>IOAM-Namespaces allow for a namespace-specific definition and
         interpretation of IOAM-Data-Fields. An interface-id could for example
@@ -464,9 +462,7 @@
       </section>
 
       <section anchor="ioam_namespaces" title="IOAM-Namespaces">
-        <t>An IOAM-Namespace can be associated to a subset or all of the 
-        the IOAM-Option-Types and their corresponding IOAM-Data-Fields.
-        IOAM-Namespaces add further context to IOAM-Option-Types and
+        <t>IOAM-Namespaces add further context to IOAM-Option-Types and
         associated IOAM-Data-Fields. The IOAM-Option-Types and associated 
 		IOAM-Data-Fields are interpreted as defined in this document, 
 		regardless of the value of the IOAM-Namespace. However, 
@@ -524,20 +520,26 @@
 
         <t><list style="symbols">
             <t>IOAM-Namespaces can be used by an operator to distinguish
-            different operational domains. Devices at domain edges can filter
-            on Namespace-IDs to provide for proper IOAM-Domain isolation.</t>
+            different IOAM-domains. Devices at edges of an IOAM-domain 
+            can filter
+            on Namespace-IDs to provide for proper IOAM-domain isolation.</t>
 
             <t>IOAM-Namespaces provide additional context for IOAM-Data-Fields
-			and thus can be used to ensure that IOAM-Data-Fields are unique and 
+			and thus can be used to ensure that IOAM-Data-Fields 
+                    are unique and 
 			are interpreted properly by management stations or network 
-			controllers.  For example, the node identifier field (node_id, see 
-			below) does not need to be unique in a deployment (e.g., if an 
-			operator wishes to use different node identifiers for different 
-			IOAM layers, even within the same device; or node identifiers 
-			might not be unique for other organizational reasons, such as 
-			after a merger of two formerly separated organizations), the 
-			Namespace-ID can be used as a context identifier, such that 
-			the combination of node_id and Namespace-ID will always be unique.
+			controllers.  The node identifier field (node_id, see 
+			below) does not need to be unique in a deployment. 
+                    This could be the case if an operator wishes to use
+                    different node identifiers for different 
+			IOAM layers, even within the same device or node identifiers 
+			might not be unique for other organizational reasons, 
+                    such as after a merger of two formerly 
+                    separated organizations. The Namespace-ID can be used as
+                    a context identifier, such that 
+			the combination of node_id and Namespace-ID will 
+                    always be unique.</t>
+            <t>
             Similarly, IOAM-Namespaces can be used to define how certain
             IOAM-Data-Fields are interpreted: IOAM offers three different
             timestamp format options. The Namespace-ID can be used to
@@ -554,19 +556,10 @@
             be for reasons of optimized space usage in the packet header. It
             could also stem from hardware or operational limitations on the
             size of the trace data that can be added and processed, preventing
-            collection of a full trace for a flow.<list style="symbols">
-                <t>Assigning different IOAM Namespace-IDs to different sets of
-                nodes or network partitions and using the Namespace-ID as a
-                selector at the IOAM encapsulating node, a full trace for a
-                flow could be collected and constructed via partial traces in
-                different packets of the same flow. Example: An operator could
-                choose to group the devices of a domain into two
-                IOAM-Namespaces, in a way that on average, only every second
-                hop would be recorded by any device. To retrieve a full view
-                of the deployment, the captured IOAM-Data-Fields of the two
-                IOAM-Namespaces need to be correlated.</t>
+            collection of a full trace for a flow.</t>
 
-                <t>Assigning different IOAM Namespace-IDs to different sets of
+                <t>By assigning different IOAM 
+                Namespace-IDs to different sets of
                 nodes or network partitions and using a separate instance of
                 an IOAM-Option-Type for each Namespace-ID, a full trace for a
                 flow could be collected and constructed via partial traces
@@ -580,23 +573,21 @@
                 belong. To retrieve a full view of the deployment, the
                 captured IOAM-Data-Fields of the two IOAM-Namespaces need to
                 be correlated.</t>
-              </list></t>
+              
           </list></t>
       </section>
 
       <section anchor="IOAM_tracing_option" title="IOAM Trace Option-Types">
-        <t>"IOAM tracing data" is expected to be collected at every
-        IOAM transit node that a packet traverses to ensure visibility into
-        the entire path a packet takes within an IOAM-Domain. I.e., in a
+        <t> In a
         typical deployment, all nodes in an IOAM-Domain would participate in
         IOAM and thus be IOAM transit nodes, IOAM encapsulating or IOAM
         decapsulating nodes. If not all nodes within a domain support IOAM
         functionality as defined in this document, IOAM tracing information
-        (i.e., node data, see below) will only be collected on those nodes
+        (i.e., node data, see below) can only be collected on those nodes
         which support IOAM functionality as defined in this document. Nodes
         which do not support IOAM functionality as defined in this document
         will forward the packet without any changes to the IOAM-Data-Fields.
-        The maximum number of hops and the minimum path MTU of the IOAM domain
+        The maximum number of hops and the minimum path MTU of the IOAM-domain
         is assumed to be known. An overflow indicator (O-bit) is defined
 	as one of the ways to deal with situations where the PMTU
 	was underestimated, i.e., where the number of hops which
@@ -657,7 +648,7 @@
         with either the Incremental Trace-Option or the Pre-allocated
         Trace-Option could result in both Option-Types being present in a
         packet. Given that the operator knows which equipment is deployed in a
-        particular IOAM domain, the operator will decide by means of 
+        particular IOAM-domain, the operator will decide by means of 
 		configuration which type(s) of trace options will be used for a 
 		particular domain.</t>
 
@@ -684,7 +675,7 @@
             <t>Time of day when the packet was processed by the node as well
             as the transit delay. Different definitions of processing time are
             feasible and expected, though it is important that all devices of
-            an in-situ OAM domain follow the same definition.</t>
+            an IOAM-domain follow the same definition.</t>
 
             <t>Generic data: Format-free information where syntax and semantic
             of the information is defined by the operator in a specific
@@ -935,9 +926,7 @@ The trace option data MUST be 4-octet aligned:
 
           <t>Some IOAM-Data-Fields defined below, such as interface
           identifiers or IOAM-Namespace specific data, are defined in both
-          "short format" as well as "wide format". "Short format" refers to
-          an IOAM-Data-Field which comprises 4 octets. "Wide format" refers to
-          an IOAM-Data-Field which comprises 8 octets.
+          "short format" as well as "wide format". 
           The  use of "short format" or "wide format" is not mutually exclusive.
           A deployment could choose to leverage both. For example,
           ingress_if_id_(short format) could be an identifier for the physical
@@ -987,7 +976,7 @@ The trace option data MUST be 4-octet aligned:
                 IOAM-Namespace and associated IOAM-Domain. The procedure to
                 allocate, manage and map the node_ids is beyond the scope of
                 this document. See
-                <xref target="I-D.brockners-opsawg-ioam-deployment"/> for 
+                <xref target="I-D.ietf-ippm-ioam-deployment"/> for 
                 a discussion of deployment related aspects of the node_id. </t>
               </list></t>
           </section>
@@ -1350,12 +1339,11 @@ The trace option data MUST be 4-octet aligned:
       <section anchor="IOAM_proof_of_transit_option"
                title="IOAM Proof of Transit Option-Type">
         <t>IOAM Proof of Transit Option-Type is used to support path or service
-        function chain <xref target="RFC7665"/> verification use cases.
-        For further information on Proof-of-transit, please refer to <xref
-        target="I-D.ietf-sfc-proof-of-transit"/>. While details on how the
+        function chain <xref target="RFC7665"/> verification use cases, i.e.,   
+        prove that traffic transited a defined path. While details on how the
         IOAM data for the Proof-of-transit option is processed at IOAM
         encapsulating, decapsulating and transit nodes are outside the scope
-        of the document, all of these approaches share the need to uniquely
+        of the document, proof of transit approaches share the need to uniquely
         identify a packet as well as iteratively operate on a set of
         information that is handed from node to node. Correspondingly, two
         pieces of information are added as IOAM-Data-Fields to the packet:</t>
@@ -1403,31 +1391,17 @@ IOAM proof of transit Option-Type IOAM-Data-Fields MUST be
             variant that specifies the POT data that is included. This
             document defines POT Type 0:<list style="hanging">
                 <t hangText="0:">POT data is a 16 Octet field to carry
-                	data associated to POT procedures.
-                  <xref
-                target="I-D.ietf-sfc-proof-of-transit"/> describes an
-                implementation of POT and provides details on the data
-                carried in POT data.</t>
+                	data associated to POT procedures.</t>
               </list>
             If a node receives an IOAM POT Type value that it does not
             understand, the node MUST NOT change, add to, or remove 
             the contents of the OAM-Data-Fields.</t>
 
-            <t hangText="IOAM POT flags:">8-bit. Following flags are
-            defined:<list style="hanging">
-                <t hangText="Bit 0">"Profile-to-use" (P-bit) (most significant
-                bit). For IOAM POT types that use a maximum of two profiles to
-                drive computation, indicates which POT-profile (see <xref
-                target="I-D.ietf-sfc-proof-of-transit"/> for details) is used. The
-                two profiles are numbered 0, 1. This bit conveys
-                whether profile 0 or profile 1 is used to compute the
-                Cumulative.</t>
-
-                <t hangText="Bit 1-7">Undefined:  These bits are 
+            <t hangText="IOAM POT flags:">8-bit. This document does not define
+             any flags. Bits 0-7 These bits are 
                 available for assignment, see <xref target="pot-flags-sec"/>. 
-                Bits which have not been assigned
-                MUST be set to zero upon transmission and ignored upon receipt.</t>
-              </list></t>
+                Bits which have not been assigned MUST be set to zero upon 
+                transmission and ignored upon receipt.</t>
 
             <t hangText="POT Option data:">Variable-length field. The type of
             which is determined by the IOAM-POT-Type.</t>
@@ -1550,7 +1524,7 @@ be 4-octet aligned:
 
                 <t hangText="Bit 2">When set indicates presence of timestamp
                 seconds, representing the time at which the packet entered the
-                IOAM domain. Within the IOAM encapsulating node, the time that
+                IOAM-domain. Within the IOAM encapsulating node, the time that
                 the timestamp is retrieved can depend on the implementation.
                 Some possibilities are: 1) the time at which the packet was
                 received by the node, 2) the time at which the packet was
@@ -1573,7 +1547,7 @@ be 4-octet aligned:
 
                 <t hangText="Bit 3">When set indicates presence of timestamp
                 fraction, representing the time at which the packet entered
-                the IOAM domain. This 4-octet field has three possible
+                the IOAM-domain. This 4-octet field has three possible
                 formats; based on either PTP (see e.g., <xref target="RFC8877"/>), NTP
                 <xref target="RFC5905"/>, or POSIX <xref target="POSIX"/>. The
                 three timestamp formats are specified in <xref
@@ -1865,6 +1839,13 @@ be 4-octet aligned:
 
         	<t hangText="Reference:">Reference to the document that defines the new Option-Type.</t>
         </list></t>
+
+
+        <t>The evaluation of a new registration request MUST also include
+        checking whether the new IOAM Option-Type includes an
+        IOAM-Namespace field and that the IOAM-Namespace field is the first
+        field in the newly defined header of the new Option-Type.</t>
+
       </section>
 
       <section anchor="ioam-trace-type-registry" title="IOAM Trace-Type Registry">
@@ -2036,7 +2017,8 @@ be 4-octet aligned:
         private use (managed by operators), as specified in <xref
         target="ioam_namespaces"/> of the current document. Registry entries
         for the values 0x8000 to 0xFFFF are to be assigned via the "Expert
-        Review" policy defined in <xref target="RFC8126"/>. </t>
+        Review" policy defined in <xref target="RFC8126"/>. 
+        </t>
 
         <t>Upon receiving a new allocation request, a designated 
 		expert will perform the following:<list style="symbols">
@@ -2110,7 +2092,7 @@ be 4-octet aligned:
 	Management and deployment aspects for IOAM have to be considered within the context of the
 	protocol IOAM data fields are encapsulated into and as such, are out of scope for this document.
 	For a discussion of IOAM deployment, please also refer to
-	<xref target="I-D.brockners-opsawg-ioam-deployment"/>, which outlines a framework for IOAM deployment
+	<xref target="I-D.ietf-ippm-ioam-deployment"/>, which outlines a framework for IOAM deployment
        	and provides best current practices.</t>
     </section>
 
@@ -2127,8 +2109,7 @@ be 4-octet aligned:
 
       <t>The Proof of Transit Option-Type (see <xref
       target="IOAM_proof_of_transit_option"/>) is used for verifying the path
-      of data packets. The security considerations of POT are further
-      discussed in <xref target="I-D.ietf-sfc-proof-of-transit"/>.</t>
+      of data packets, i.e., proving that packets transited through a defined set of nodes.</t>
 
       <t>In case an attacker gains access to several nodes in a network
       	and would be able to change the system software of these nodes,
@@ -2142,8 +2123,11 @@ be 4-octet aligned:
       contain user data, they can be used for network reconnaissance, allowing
       attackers to collect information about network paths, performance, queue
       states, buffer occupancy and other information. Moreover, if IOAM data
-      leaks from the IOAM domain it could enable reconnaissance beyond the scope
-      of the IOAM domain.</t>
+      leaks from the IOAM-domain it could enable reconnaissance beyond the scope
+      of the IOAM-domain. One possible application of such reconnaissance is 
+      to gauge the effectiveness of an ongoing attack, e.g., 
+      if buffers and queues are overflowing. </t>
+
 
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
@@ -2168,11 +2152,7 @@ be 4-octet aligned:
       other attacks. IOAM configuration should only managed by 
       authorized processes or users. </t>
 
-      <t>Solutions to ensure the integrity of IOAM data fields are outside
-      the scope of this document.  <xref target="I-D.brockners-ippm-ioam-data-integrity"/>
-      discusses several methods to ensure the integrity of IOAM data fields
-      for those deployments that have a need to protect the integrity of
-      IOAM data fields.</t>
+      <t>IETF protocols require features to ensure their security. While IOAM data fields don't represent a protocol by themselves, the IOAM data fields add to the protocol that the IOAM data fields are encapsulated into. Any specification that defines how IOAM data fields carried in an encapsulating protocol MUST provide for a mechanism for cryptographic integrity protection of the IOAM data fields. Cryptographic integrity protection could be either achieved through a mechanism of the encapsulating protocol or it could incorporate the mechanisms specified in <xref target="I-D.ietf-ippm-ioam-data-integrity"/>. </t>
 
       <t>The current document does not define a specific IOAM encapsulation.
       It has to be noted that some IOAM encapsulation types can introduce
@@ -2190,6 +2170,25 @@ be 4-octet aligned:
       policies that prevent IOAM traffic from leaking outside of the IOAM
       domain, and prevent IOAM data from outside the domain to be processed
       and used within the domain.</t>
+   
+      <t>This document does not define the data contents of custom fields 
+      like "Opaque State Snapshot" and "namespace specific data" IOAM
+      data fields. These custom data fields will have security 
+      considerations corresponding to their defined data contents 
+	      that need to be described where those formats are defined.</t>
+
+	<t>IOAM deployments which leverage both IOAM Trace Option-Types, i.e.,
+	the Pre-allocated Trace Option-Type and Incremental Trace Option-Type
+       can suffer from incomplete visibility if the information gathered via
+       the two Trace Option-Types is not correlated and aggregated 
+       appropriately. If IOAM transit nodes leverage the IOAM data fields
+       in the packet for further actions or insights, 
+       then IOAM transit nodes which only support one IOAM 
+       Trace Option-Type in an IOAM deployment which leverages both Trace
+       Option-Types, have limited visibility and thus can draw inappropriate
+       conclusions or take wrong actions.
+       </t>
+
 
       <t>The security considerations of a system that deploys IOAM, much like
       any system, has to be reviewed on a per-deployment-scenario basis, based
@@ -2203,7 +2202,7 @@ be 4-octet aligned:
       <t>IOAM deployment considerations, including approaches to mitigate the above
 	      discussed threads and potential attacks are outside the scope of this 
 	      document. IOAM deployment considerations are discussed in 
-	      <xref target="I-D.brockners-opsawg-ioam-deployment"/>.
+	      <xref target="I-D.ietf-ippm-ioam-deployment"/>.
       </t>
 
     </section>
@@ -2314,13 +2313,11 @@ be 4-octet aligned:
 
       &RFC8799;
 
-      &I-D.ietf-sfc-proof-of-transit;
-
       &I-D.spiegel-ippm-ioam-rawexport;
 
-      &I-D.brockners-opsawg-ioam-deployment;
+      &I-D.ietf-ippm-ioam-deployment;
 
-      &I-D.brockners-ippm-ioam-data-integrity;
+      &I-D.ietf-ippm-ioam-data-integrity;
 
     </references>
 	
