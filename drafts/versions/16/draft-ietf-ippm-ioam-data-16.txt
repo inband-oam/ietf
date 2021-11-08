@@ -94,7 +94,7 @@ Table of Contents
        5.4.3.  Examples of IOAM node data  . . . . . . . . . . . . .  24
      5.5.  IOAM Proof of Transit Option-Type . . . . . . . . . . . .  26
        5.5.1.  IOAM Proof of Transit Type 0  . . . . . . . . . . . .  28
-     5.6.  IOAM Edge-to-Edge Option-Type . . . . . . . . . . . . . .  29
+     5.6.  IOAM Edge-to-Edge Option-Type . . . . . . . . . . . . . .  28
    6.  Timestamp Formats . . . . . . . . . . . . . . . . . . . . . .  31
      6.1.  PTP Truncated Timestamp Format  . . . . . . . . . . . . .  31
      6.2.  NTP 64-bit Timestamp Format . . . . . . . . . . . . . . .  32
@@ -365,15 +365,15 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
 
 5.2.  IOAM-Domains and types of IOAM Nodes
 
-   Section 8.1 already mentioned that IOAM is expected to be deployed in
-   a limited domain [RFC8799].  One or more IOAM-Option-Types are added
-   to a packet upon entering an IOAM-Domain and are removed from the
-   packet when exiting the domain.  Within the IOAM-Domain, the IOAM-
-   Data-Fields MAY be updated by network nodes that the packet
-   traverses.  An IOAM-Domain consists of "IOAM encapsulating nodes",
-   "IOAM decapsulating nodes" and "IOAM transit nodes".  The role of a
-   node (i.e., encapsulating, transit, decapsulating) is defined within
-   an IOAM-Namespace (see below).  A node can have different roles in
+   Section 4 already mentioned that IOAM is expected to be deployed in a
+   limited domain [RFC8799].  One or more IOAM-Option-Types are added to
+   a packet upon entering an IOAM-Domain and are removed from the packet
+   when exiting the domain.  Within the IOAM-Domain, the IOAM-Data-
+   Fields MAY be updated by network nodes that the packet traverses.  An
+   IOAM-Domain consists of "IOAM encapsulating nodes", "IOAM
+   decapsulating nodes" and "IOAM transit nodes".  The role of a node
+   (i.e., encapsulating, transit, decapsulating) is defined within an
+   IOAM-Namespace (see below).  A node can have different roles in
    different IOAM-Namespaces.
 
    A device which adds at least one IOAM-Option-Type to the packet is
@@ -1524,7 +1524,7 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |        Namespace-ID           |IOAM POT Type=0|P|R R R R R R R|
+   |        Namespace-ID           |IOAM POT Type=0|R R R R R R R R|
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
    |                        PktID                                  |  |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -1544,10 +1544,7 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
       specifies the POT data that is included (see Section 5.5 above).
       For this case here, IOAM POT Type is set to the value 0.
 
-   Bit 0:  1-bit.  "Profile-to-use" (P-bit) (most significant bit), see
-      Section 5.5 above.
-
-   Bit 1-7:  Undefined (see Section 5.5 above).
+   Bit 0-7:  Undefined (see Section 5.5 above).
 
    PktID:  64-bit packet identifier.
 
@@ -1560,7 +1557,10 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
    documents could introduce different sizes of data for "proof of
    transit".
 
+5.6.  IOAM Edge-to-Edge Option-Type
 
+   The IOAM Edge-to-Edge Option-Type is to carry data that is added by
+   the IOAM encapsulating node and interpreted by IOAM decapsulating
 
 
 
@@ -1570,10 +1570,6 @@ Brockners, et al.         Expires May 12, 2022                 [Page 28]
 Internet-Draft           In-situ OAM Data Fields           November 2021
 
 
-5.6.  IOAM Edge-to-Edge Option-Type
-
-   The IOAM Edge-to-Edge Option-Type is to carry data that is added by
-   the IOAM encapsulating node and interpreted by IOAM decapsulating
    node.  The IOAM transit nodes MAY process the data but MUST NOT
    modify it.
 
@@ -1617,7 +1613,11 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
                or packet duplication within the group.  The "packet
                group" is deployment dependent and defined at the IOAM
                encapsulating node, e.g., by n-tuple based classification
+               of packets.  When this bit is set, "Bit 1" (for 32-bit
+               sequence number, see below) MUST be zero.
 
+      Bit 1    When set indicates presence of a 32-bit sequence number
+               added to a specific "packet group" which is used to
 
 
 
@@ -1626,11 +1626,6 @@ Brockners, et al.         Expires May 12, 2022                 [Page 29]
 Internet-Draft           In-situ OAM Data Fields           November 2021
 
 
-               of packets.  When this bit is set, "Bit 1" (for 32-bit
-               sequence number, see below) MUST be zero.
-
-      Bit 1    When set indicates presence of a 32-bit sequence number
-               added to a specific "packet group" which is used to
                detect packet loss, packet reordering, or packet
                duplication within that group.  The "packet group" is
                deployment dependent and defined at the IOAM
@@ -1674,6 +1669,11 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
                populating this field, it assigns the value 0xFFFFFFFF.
                Note that this is a legitimate value in the NTP format,
                valid for approximately 233 picoseconds in every second.
+               If the NTP format is used the analyzer has to correlate
+               several packets in order to detect the error indication.
+
+
+
 
 
 
@@ -1681,9 +1681,6 @@ Brockners, et al.         Expires May 12, 2022                 [Page 30]
 
 Internet-Draft           In-situ OAM Data Fields           November 2021
 
-
-               If the NTP format is used the analyzer has to correlate
-               several packets in order to detect the error indication.
 
       Bit 4-15 Undefined.  An IOAM encapsulating node MUST set the value
                of these bits to zero upon transmission and ignore upon
@@ -1730,6 +1727,9 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
       Nanoseconds: specifies the fractional portion of the number of
       seconds since the PTP epoch.
 
+      + Size: 32 bits.
+
+
 
 
 
@@ -1737,8 +1737,6 @@ Brockners, et al.         Expires May 12, 2022                 [Page 31]
 
 Internet-Draft           In-situ OAM Data Fields           November 2021
 
-
-      + Size: 32 bits.
 
       + Units: nanoseconds.  The value of this field is in the range 0
       to (10^9)-1.
@@ -1786,6 +1784,8 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
               Figure 2: NTP [RFC5905] 64-bit Timestamp Format
 
    Timestamp field format:
+
+
 
 
 
@@ -1918,8 +1918,8 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
    e.g., IPFIX.  The mechanisms and associated data formats for
    exporting IOAM data is outside the scope of this document.
 
-   Raw data export of IOAM data using IPFIX is discussed in
-   [I-D.spiegel-ippm-ioam-rawexport].
+   A way to perform raw data export of IOAM data using IPFIX is
+   discussed in [I-D.spiegel-ippm-ioam-rawexport].
 
 8.  IANA Considerations
 
@@ -2098,12 +2098,9 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
 8.5.  IOAM POT-Flags Registry
 
    This registry defines code points for each bit in the 8 bit flags for
-   IOAM POT Option-Type defined in Section 5.5.  The meaning of Bit 0
-   for IOAM POT flags is defined in this document in Section 5.5:
+   IOAM POT Option-Type defined in Section 5.5.
 
-   Bit 0  "Profile-to-use" (P-bit)
-
-   The meaning for Bits 1 - 7 are available for assignment via "IETF
+   The meaning for Bits 0 - 7 are available for assignment via "IETF
    Review" process as per [RFC8126].
 
    New registration requests MUST use the following template:
@@ -2123,14 +2120,15 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
 
    Bit 0  64-bit sequence number
 
+   Bit 1  32-bit sequence number
+
+
 
 
 Brockners, et al.         Expires May 12, 2022                 [Page 38]
 
 Internet-Draft           In-situ OAM Data Fields           November 2021
 
-
-   Bit 1  32-bit sequence number
 
    Bit 2  timestamp seconds
 
@@ -2173,11 +2171,13 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
 
    o  Solicit feedback from relevant working groups and communities to
       ensure that the new allocation request has been properly reviewed
-      and that rough consensus on the request exists.  At a minumum, the
+      and that rough consensus on the request exists.  At a minimum, the
       expert will solicit feedback from the IPPM working group in the
       IETF by posting the request to the ippm@ietf.org mailing list.
       The expert will allow for a 3-week review period on the mailing
       lists.  If the feedback received from the relevant working groups
+      and communities within the review period indicates rough consensus
+      on the request, the expert will approve the request and ask IANA
 
 
 
@@ -2186,8 +2186,6 @@ Brockners, et al.         Expires May 12, 2022                 [Page 39]
 Internet-Draft           In-situ OAM Data Fields           November 2021
 
 
-      and communities within the review period indicates rough consensus
-      on the request, the expert will approve the request and ask IANA
       for allocating the new Namespace-ID.  In case the expert senses a
       lack of consensus from the feedback received, the expert will ask
       the requestor to engage with the corresponding working groups and
@@ -2232,6 +2230,8 @@ Internet-Draft           In-situ OAM Data Fields           November 2021
    document.  For a discussion of IOAM deployment, please also refer to
    [I-D.ietf-ippm-ioam-deployment], which outlines a framework for IOAM
    deployment and provides best current practices.
+
+
 
 
 

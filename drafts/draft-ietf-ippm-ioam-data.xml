@@ -393,7 +393,7 @@
       </section>
 
       <section title="IOAM-Domains and types of IOAM Nodes">
-        <t><xref target="IOAM-type-registry"/> already mentioned that IOAM is expected to be deployed in a limited domain <xref target="RFC8799"/>. 
+        <t><xref target="IOAM_scope"/> already mentioned that IOAM is expected to be deployed in a limited domain <xref target="RFC8799"/>. 
         One or more IOAM-Option-Types are added to a packet upon entering an
         IOAM-Domain and are removed from the packet when exiting the domain.
         Within the IOAM-Domain, the IOAM-Data-Fields MAY be updated by network
@@ -1415,7 +1415,7 @@ IOAM proof of transit option of IOAM POT Type 0:
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|        Namespace-ID           |IOAM POT Type=0|P|R R R R R R R|
+|        Namespace-ID           |IOAM POT Type=0|R R R R R R R R|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                        PktID                                  |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  P
@@ -1438,11 +1438,7 @@ IOAM proof of transit option of IOAM POT Type 0:
               (see <xref target="IOAM_proof_of_transit_option"/> 
               above). For this case here, IOAM POT Type is set to the value 0.</t>
 
-              <t hangText="Bit 0:">1-bit. "Profile-to-use" (P-bit) (most
-              significant bit), see <xref target="IOAM_proof_of_transit_option"/> 
-              above. </t>
-
-              <t hangText="Bit 1-7:">Undefined (see <xref target="IOAM_proof_of_transit_option"/> 
+              <t hangText="Bit 0-7:">Undefined (see <xref target="IOAM_proof_of_transit_option"/> 
               above).</t>
 
               <t hangText="PktID:">64-bit packet identifier.</t>
@@ -1780,7 +1776,8 @@ be 4-octet aligned:
       mechanisms and associated data formats for exporting IOAM data is
       outside the scope of this document.</t>
 
-      <t>Raw data export of IOAM data using IPFIX is discussed in <xref
+      <t>A way to perform raw data export of IOAM data 
+      using IPFIX is discussed in <xref
       target="I-D.spiegel-ippm-ioam-rawexport"/>.</t>
     </section>
 
@@ -1957,13 +1954,9 @@ be 4-octet aligned:
       <section anchor="pot-flags-sec" title="IOAM POT-Flags Registry">
         <t>This registry defines code points for each bit in the 8 bit flags
         for IOAM POT Option-Type defined in <xref
-        target="IOAM_proof_of_transit_option"/>. The meaning of Bit 0 for IOAM
-        POT flags is defined in this document in <xref
-        target="IOAM_proof_of_transit_option"/>:</t>
+        target="IOAM_proof_of_transit_option"/>. </t>
 
-        <t><list style="hanging">
-            <t hangText="Bit 0">"Profile-to-use" (P-bit)</t>
-          </list> The meaning for Bits 1 - 7 are available for assignment via
+        <t>The meaning for Bits 0 - 7 are available for assignment via
         "IETF Review" process as per <xref target="RFC8126"/>.</t>
 
         <t>New registration requests MUST use the following template:</t>
@@ -2034,7 +2027,7 @@ be 4-octet aligned:
 
             <t>Solicit feedback from relevant working groups and communities to ensure
                that the new allocation request has been properly reviewed
-               and that rough consensus on the request exists. At a minumum,
+               and that rough consensus on the request exists. At a minimum,
                the expert will solicit feedback from the IPPM working group
                in the IETF by posting the request to the ippm@ietf.org
                mailing list. The expert will allow for a 3-week review
