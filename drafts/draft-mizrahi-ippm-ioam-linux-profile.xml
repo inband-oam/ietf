@@ -151,8 +151,12 @@
       </section>
 
       <section title="Encapsulation">
-        <t>The IOAM encapsulation uses an IPv6 Extension Header. This
-        extension header is used for the IOAM Pre-allocated Trace Option-Type,
+        <t>This profile uses an IPv6 encapsulation for the IOAM option, i.e.,
+		the option is encapsulated in an IPv6 Extension Header.
+		Generally speaking, this extension header may be an extension of
+		an IPv6 tunnel header, or it may be an extension of the end-to-end
+		IPv6 header. Both cases are discussed below.
+		The extension header is used for the IOAM Pre-allocated Trace Option-Type,
         as defined in <xref target="I-D.ietf-ippm-ioam-ipv6-options-06"/>,
         which is a work-in-progress version of the IPv6 IOAM option.</t>
 
@@ -201,7 +205,9 @@
         <t>Starting from the Linux 5.16 kernel, the IOAM encapsulation might
         also use an IPv6 tunnel for in-transit packets, as defined in
         <xref target="RFC2473"/>, and as illustrated in
-        <xref target="tunnel66"/>.</t>
+        <xref target="tunnel66"/>. The kernel supports both alternatives:
+		either encapsulation using an IPv6 tunnel, or pushing the IOAM
+		option as an IPv6 extension header of the existing IPv6 header.</t>
 
         <figure align="center" anchor="tunnel66" title="IOAM in IPv6 Tunnel Encapsulation">
           <artwork align="left"><![CDATA[
