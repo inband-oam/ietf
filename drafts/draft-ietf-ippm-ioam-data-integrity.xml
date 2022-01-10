@@ -159,6 +159,26 @@
       </address>
     </author>
 
+    <author fullname="Justin Iurman" initials="J." surname="Iurman">
+      <organization abbrev="ULiege">Universite de Liege</organization>
+
+      <address>
+        <postal>
+          <street>10, Allee de la decouverte (B28)</street>
+
+          <code>4000</code>
+
+          <city>Sart-Tilman</city>
+
+          <region>LIEGE</region>
+
+          <country>Belgium</country>
+        </postal>
+
+        <email>justin.iurman@uliege.be</email>
+      </address>
+    </author>
+
     <date day="19" month="October" year="2021"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
@@ -189,31 +209,31 @@
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>In-situ Operations, Administration, and Maintenance (IOAM) collects 
+      <t>In-situ Operations, Administration, and Maintenance (IOAM) records 
       operational and telemetry information in the packet while the packet
-      traverses a path between two points in the network. 
-      IETF protocols require features to ensure their security.
-      This document describes the integrity protection of IOAM data fields.</t>
+      traverses a path in the network. IETF protocols require features to
+      ensure their security. This document describes the integrity protection
+      of IOAM data fields.</t>
     </abstract>
   </front>
 
   <middle>
     <section title="Introduction" toc="default">
-      <t>"In-situ" Operations, Administration, and Maintenance (IOAM) collects 
+      <t>"In-situ" Operations, Administration, and Maintenance (IOAM) records 
       OAM information within the packet while the packet traverses a
       particular network domain. The term "in-situ" refers to the fact that
-      the OAM data is added to the data packets rather than is being sent
+      the OAM data is added to the data packets rather than being sent
       within packets specifically dedicated to OAM. IOAM is to complement
-      mechanisms such as Ping, Traceroute, or other active probing mechanisms.
+      mechanisms such as Ping or Traceroute.
       In terms of "active" or "passive" OAM, "in-situ" OAM can be considered a
       hybrid OAM type. "In-situ" mechanisms do not require extra packets to be
       sent. IOAM adds information to the already available data packets and
       therefore cannot be considered passive. In terms of the classification
-      given in <xref target="RFC7799"/> IOAM could be portrayed as Hybrid Type
-      I. IOAM mechanisms can be leveraged where mechanisms using e.g., ICMP do
+      given in <xref target="RFC7799"/>, IOAM could be portrayed as Hybrid Type
+      I. IOAM mechanisms can be leveraged where mechanisms using, e.g., ICMP do
       not apply or do not offer the desired results, such as proving that a
       certain traffic flow takes a pre-defined path, SLA verification for the
-      live data traffic, detailed statistics on traffic distribution paths in
+      data traffic, detailed statistics on traffic distribution paths in
       networks that distribute traffic across multiple paths, or scenarios in
       which probe traffic is potentially handled differently from regular data
       traffic by the network devices.</t>
@@ -224,7 +244,7 @@
       devices, making the domain a trusted network. As such, IOAM tracing data
       is carried in the packets in clear and there are no protections against
       any node or middlebox tampering with the data. 
-      IOAM tracing data collected in an untrusted or semi-trusted environments 
+      IOAM tracing data collected in an untrusted or semi-trusted environment 
       requires integrity protection to support critical operational decisions.
       </t>
 
@@ -239,12 +259,12 @@
 
           <t>IOAM trace data is carried within data packets. Additional space
           required to prove integrity of the data needs to be optimal, i.e.
-          should not exceed the MTU or have adverse affect on packet
+          should not exceed the MTU or have adverse effect on packet
           processing.</t>
 
           <t>Replay protection of older IOAM trace data should be possible.
-          Without replay protection a rogue node can present the old IOAM
-          trace data masking any ongoing network issues/activity making the
+          Without replay protection, a rogue node can present the old IOAM
+          trace data, masking any ongoing network issues/activity and making the
           IOAM trace data collection useless.</t>
 
       </list></t>
@@ -278,7 +298,7 @@
 
           <t hangText="POT:">Proof of Transit</t>
 
-          <t hangText="SFC:">Service Function Chain</t>
+          <t hangText="E2E:">Edge to Edge</t>
         </list></t>
     </section>
 
@@ -323,7 +343,7 @@
 
         <t>Impact <list hangIndent="10" style="empty">
             <t>By systematically modifying the IOAM data fields of some or all
-            of the in-transit packets an attacker can create a false picture
+            of the in-transit packets, an attacker can create a false picture
             of the paths in the network, the existence of faulty nodes and
             their location, and the network performance.</t>
           </list></t>
@@ -332,8 +352,8 @@
       <section anchor="ModifHeaderSec"
                title="Modification: IOAM Option-Type Headers">
         <t>Threat <list hangIndent="10" style="empty">
-            <t>An on-path attacker can modify IOAM data fields in one or more
-            of the IOAM Option-Type headers in order to change or disrupt the
+            <t>An on-path attacker can modify the header in IOAM Option-Types
+            in order to change or disrupt the
             behavior of nodes processing IOAM data fields along the path.</t>
           </list></t>
 
@@ -342,7 +362,7 @@
             implications. An attacker can maliciously increase the processing
             overhead in nodes that process IOAM data fields and increase the
             on-the-wire overhead of IOAM data fields, for example by modifying
-            the IOAM-Trace-Type field in the IOAM Trace-option header. An
+            the IOAM-Trace-Type field in the IOAM Trace Option-Type header. An
             attacker can also prevent some of the nodes that process IOAM data
             fields from incorporating IOAM data fields by modifying the
             RemainingLen field.</t>
@@ -357,7 +377,7 @@
           </list></t>
 
         <t>Impact <list hangIndent="10" style="empty">
-            <t>This attack and it impacts are similar to <xref
+            <t>This attack and its impacts are similar to <xref
             target="ModifDataSec"/>.</t>
           </list></t>
       </section>
@@ -371,7 +391,7 @@
           </list></t>
 
         <t>Impact <list hangIndent="10" style="empty">
-            <t>This attack and it impacts are similar to <xref
+            <t>This attack and its impacts are similar to <xref
             target="ModifHeaderSec"/>.</t>
           </list></t>
       </section>
@@ -429,7 +449,7 @@
             address the threat in the context of IOAM, as it does not meet the
             requirement to measure a specific path or to detect a problem
             along the path. It is noted that this threat is not within the
-            scope of the threats that are mitigated in the scope of this
+            scope of the threats that are mitigated in this
             document.</t>
           </list></t>
 
@@ -472,10 +492,10 @@
       <t>This section specifies additional IOAM Option-Types to carry
       data fields to provide for integrity protection. Methods for
       integrity protection can leverage symmetric or
-      asymmetric key based signatures as described in the sub-sections below.</t>
+      asymmetric key based signatures as described in the subsections below.</t>
 
       <section anchor="IP_Options" title="Integrity Protected IOAM Option-Types">
-        <t>Each of the IOAM Options defined in <xref
+        <t>Each of the IOAM Option-Types defined in <xref
         target="I-D.ietf-ippm-ioam-data"/> are extended to include Integrity
         Protected (IP) IOAM Option-Types by allocating the following IOAM Option-Types
         in the IOAM Option-Type registry.</t>
@@ -497,23 +517,23 @@
           </list></t>
       </section>
 
-      <section anchor="IP_Sub-header"
+      <section anchor="IP_Subheader"
                title="Subheader for Integrity Protected IOAM Option-Types">
 
-        <t>An integrity data sub-header is used in IOAM
-        Integrity Protected Options. It is defined as follows:</t>
+        <t>An integrity subheader is used in IOAM
+        Integrity Protected Option-Types. It is defined as follows:</t>
 
         <t><figure>
             <artwork>
 
-     0                   1                   2                   3
+    0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |Signature-suite|  Nonce length |         Reserved.             |
+   |Signature-suite|  Nonce length |           Reserved            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                        Nonce                                  ~
+   |                             Nonce                             ~
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                       Signature                               ~
+   |                           Signature                           ~
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -532,74 +552,74 @@
             <t hangText="Reserved:">16-bit Reserved field. MUST be set to zero
             upon transmission and ignored upon receipt.</t>
 
-            <t hangText="Nonce:"> Nonce is a variable length field with length specified
+            <t hangText="Nonce:"> Variable length field with length specified
             in Nonce length.</t>
 
-            <t hangText="Signature:"> Signature is the digital signature value generated
+            <t hangText="Signature:"> Digital signature value generated
             by the method and algorithm specified by Signature-suite.</t>
           </list></t>
 
-        <t>The Integrity sub-header follows the IOAM Option-Type header when
-        the IOAM Option-Type is Integrity Protected Option. Pre-allocated and
-        incremental Trace option headers are as defined in <xref
+        <t>The Integrity subheader follows the IOAM Option-Type header when
+        the IOAM Option-Type is an Integrity Protected Option-Type. Pre-allocated and
+        incremental Trace Option-Type headers are as defined in <xref
         target="I-D.ietf-ippm-ioam-data"/>. When the IOAM Option-Type is set to
         the IOAM Pre-allocated Trace Integrity Protected Option-Type or IOAM
-        Incremental Trace Integrity Protected Option-Type then the Integrity
-        Protection subheader follows the original IOAM Option Type header: :
+        Incremental Trace Integrity Protected Option-Type, then the Integrity
+        Protection subheader follows the original IOAM Option-Type header:
         <figure>
             <artwork>
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|        Namespace-ID           |NodeLen  | Flags | RemainingLen|
+|         Namespace-ID          | NodeLen | Flags | RemainingLen|
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|               IOAM-Trace-Type                 |  Reserved     |
+|                IOAM-Trace-Type                |   Reserved    |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Signature-suite|  Nonce length |         Reserved.             |
+|Signature-suite|  Nonce length |           Reserved            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Nonce                                  ~
+|                             Nonce                             ~
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       Signature                               ~
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-
-</artwork>
-          </figure></t>
-
-        <t>IOAM POT option header as defined in <xref
-        target="I-D.ietf-ippm-ioam-data"/> is followed by Integrity Protection
-        subheader when IOAM Option Type is set to IOAM POT Integrity
-        Protected Option-Type: <figure>
-            <artwork>
-  0                   1                   2                   3
- 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|       Namespace-ID            |IOAM POT Type  | IOAM POT flags| 
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Signature-suite|  Nonce length |         Reserved.             |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Nonce                                  ~
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       Signature                               ~
+|                           Signature                           ~
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 </artwork>
           </figure></t>
 
-        <t>IOAM E2E option header as defined in <xref
-        target="I-D.ietf-ippm-ioam-data"/> is followed by Integrity Protection
-        subheader when IOAM Option Type is set to IOAM E2E Integrity
-        Protected Option-Type: <figure>
+        <t>The IOAM POT Option-Type header, as defined in <xref
+        target="I-D.ietf-ippm-ioam-data"/>, is followed by the Integrity
+        Protection subheader when the IOAM Option-Type is set to the IOAM POT
+        Integrity Protected Option-Type: <figure>
             <artwork>
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|        Namespace-ID           |         IOAM-E2E-Type         |
+|         Namespace-ID          | IOAM-POT-Type | IOAM-POT-Flags| 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|Signature-suite|  Nonce length |         Reserved.             |
+|Signature-suite|  Nonce length |           Reserved            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                        Nonce                                  ~
+|                             Nonce                             ~
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                       Signature                               ~
+|                           Signature                           ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</artwork>
+          </figure></t>
+
+        <t>The IOAM E2E Option-Type header, as defined in <xref
+        target="I-D.ietf-ippm-ioam-data"/>, is followed by the Integrity
+        Protection subheader when the IOAM Option-Type is set to the IOAM E2E
+        Integrity Protected Option-Type: <figure>
+            <artwork>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|         Namespace-ID          |         IOAM-E2E-Type         |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Signature-suite|  Nonce length |           Reserved            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                             Nonce                             ~
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                           Signature                           ~
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 </artwork>
@@ -615,7 +635,7 @@
             <t>The first node creates a nonce and signature over the hash of
             IOAM Option excluding the Signature field, the nonce and its
             symmetric key. The nonce is included as a field in Integrity
-            Protection sub-header of the corresponding IOAM Option. The
+            Protection subheader of the corresponding IOAM Option. The
             resulting signature is included in the corresponding Signature
             field.</t>
 
