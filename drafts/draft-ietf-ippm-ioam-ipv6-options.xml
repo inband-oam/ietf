@@ -20,7 +20,7 @@
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-06"
+<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-07"
      ipr="trust200902">
   <front>
     <title abbrev="In-situ OAM IPv6 encapsulation">In-situ OAM IPv6
@@ -64,7 +64,7 @@
 
  
 
-    <date day="31" month="July" year="2021"/>
+    <date day="6" month="February" year="2022"/>
 
     <area>Transport Area</area>
 
@@ -155,13 +155,11 @@
       Destination Options header, with distinct content.</t>
 
       <t>In order for IOAM to work in IPv6 networks, IOAM MUST be explicitly
-      enabled per interface on every node within the IOAM domain. Unless a
-      particular interface is explicitly enabled (i.e., explicitly configured)
-      for IOAM, a router MUST drop packets that contain extension headers
-      carrying IOAM data-fields. This is the default behavior and is
-      independent of whether the Hop-by-Hop options or Destination options are
-      used to encode the IOAM data. This ensures that IOAM data does not
-      unintentionally get forwarded outside the IOAM domain.</t>
+         enabled per interface on every node within the IOAM domain.  Unless a
+         particular interface is explicitly enabled (i.e., explicitly
+         configured) for IOAM, a router MUST ignore IOAM Options.  As
+         additional security, IOAM domains SHOULD provide a mechanism to
+	 prevent injections at ingress or leaks at egress.</t>
 
       <t>An IPv6 packet carrying IOAM data in an Extension header can have
       other extension headers, compliant with <xref target="RFC8200"/>.</t>
@@ -353,41 +351,6 @@
         employed to meet the requirements listed in <xref
         target="v6_requirement"/>.</t>
 
-        <section title="IPv6-in-IPv6 encapsulation">
-          <t>The "IPv6-in-IPv6" approach preserves the original IP
-          packet and add an IPv6 header including IOAM data fields in an
-          extension header in front of it, to forward traffic within and
-          across an IOAM domain. The overlay network formed by the additional
-          IPv6 header with the IOAM data fields included in an extension
-          header is referred to as IOAM Overlay Network (ION) in this
-          document.</t>
-          <t>The following steps should be taken to perform an
-          IPv6-in-IPv6 approach: <list style="numbers">
-              <t> The source address of the
-              outer IPv6 header is that of the IOAM encapsulating node. The
-              destination address of the outer IPv6 header is the same as the
-              inner IPv6 destination address, i.e., the destination address of
-              the packet does not change.</t>
-
-              <t>To simplify debugging in case of leaked IOAM data fields,
-              consider a new IOAM E2E destination option to identify
-              the Source IOAM domain (AS, v6 prefix). Insert this option into
-              the IOAM destination options EH attached to the outer IPv6
-              header. This additional information would allow for easy
-              identification of an AS operator that is the source of packets
-              with leaked IOAM information. Note that leaked packets with IOAM
-              data fields would only occur in case a router would be
-              misconfigured.</t>
-
-              <t>All the IOAM options are defined with type "00" - skip over
-              this option and continue processing the header. Presence of
-              these options must not cause packet drops in network elements
-              that do not understand the option. In addition, <xref
-              target="I-D.ietf-6man-hbh-header-handling"/> should be
-              considered.</t>
-            </list></t>
-        </section>
-
         <section title="IP-in-IPv6 encapsulation with ULA">
           <t>The "IP-in-IPv6 encapsulation with ULA" <xref target="RFC4193"/>
           approach can be used to apply IOAM to either an IPv6 or an IPv4
@@ -523,17 +486,6 @@
                 type="TXT"/>
       </reference>
 
-      <reference anchor="I-D.ietf-6man-hbh-header-handling">
-        <front>
-          <title>IPv6 Hop-by-Hop Options Extension Header</title>
-
-          <author fullname="Fred Baker" initials="F" surname="Baker"/>
-
-          <author fullname="R. Bonica" initials="R" surname="Bonica"/>
-
-          <date day="16" month="March" year="2016"/>
-        </front>
-      </reference>
     </references>
     <section numbered="no" title="Contributors' Addresses">
           <t><figure>
