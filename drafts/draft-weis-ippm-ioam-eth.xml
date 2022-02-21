@@ -9,8 +9,9 @@
 <!ENTITY RFC4303 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4303.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
+<!ENTITY RFC8926 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8926.xml">
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data.xml">
-<!ENTITY I-D.ietf-nvo3-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-geneve.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data-integrity SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-data-integrity.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc tocompact="no"?>
@@ -93,20 +94,19 @@
     </author>
 
     <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
+        <organization abbrev="Thoughtspot">Thoughtspot</organization>
 
-      <address>
-        <postal>
-          <street>Cessna Business Park, Sarjapura Marathalli Outer Ring
-          Road</street>
+        <address>
+         <postal>
+          <street>3rd Floor, Indiqube Orion, 24th Main Rd, Garden Layout, HSR Layout</street>
 
-          <city>Bangalore, KARNATAKA 560 087</city>
+          <city>Bangalore, KARNATAKA 560 102</city>
 
           <country>India</country>
-        </postal>
+         </postal>
 
-        <email>shwethab@cisco.com</email>
-      </address>
+         <email>shwetha.bhandari@thoughtspot.com</email>
+        </address>
     </author>
 
     <author fullname="Vengada Prasad Govindan" initials="V."
@@ -219,7 +219,7 @@
     </author>
 
     <author fullname="Aviv Kfir" initials="A." surname="Kfir">
-      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+      <organization abbrev="">Nvidia</organization>
 
       <address>
         <postal>
@@ -232,12 +232,12 @@
           <country>U.S.A.</country>
         </postal>
 
-        <email>avivk@mellanox.com</email>
+        <email>avivk@nvidia.com</email>
       </address>
     </author>
 
     <author fullname="Barak Gafni" initials="B." surname="Gafni">
-      <organization abbrev="">Mellanox Technologies, Inc.</organization>
+      <organization abbrev="">Nvidia</organization>
 
       <address>
         <postal>
@@ -250,7 +250,7 @@
           <country>U.S.A.</country>
         </postal>
 
-        <email>gbarak@mellanox.com</email>
+	<email>gbarak@nvidia.com</email>
       </address>
     </author>
 
@@ -291,7 +291,7 @@
       </address>
     </author>
 
-    <date day="28" month="April" year="2020"/>
+    <date day="21" month="February" year="2022"/>
 
     <area>Transport Area</area>
 
@@ -319,7 +319,7 @@
       the IOAM data fields follows an encapsulation header that uses an EtherType to 
       denote the type of protocol data unit. Examples of these protocols are GRE <xref
       target="RFC2784"/> <xref
-      target="RFC2890"/> and Geneve <xref target="I-D.ietf-nvo3-geneve"/>).
+      target="RFC2890"/> and Geneve <xref target="RFC8926"/>).
       This document outlines how IOAM data fields are encoded in these
       encapsultion headers.</t>
     </section>
@@ -380,7 +380,7 @@
 
       <t><list style="hanging">
           <t hangText="IOAM Type:">8-bit field defining the IOAM Option type,
-          as defined in Section 7.2 of <xref
+          as defined in Section 5.1 of <xref
           target="I-D.ietf-ippm-ioam-data"/>.</t>
 
           <t hangText="IOAM HDR Len:">8 bit Length field contains the length
@@ -394,8 +394,8 @@
           discard the packet.</t>
 
           <t hangText="IOAM Option and Data Space:">IOAM option header and
-          data is present as specified by the IOAM-Type field, and is defined
-          in Section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+          data is present as specified by the IOAM-Option-Type field, and is defined
+          in Section 5 of <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
         </list>Multiple IOAM options MAY be included within the encapsulation header. 
         For example, if a GRE encapsulation contains two IOAM options before the data 
         payload, the Next Protocol field of the first IOAM option will contain the value of
@@ -503,7 +503,7 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ]]></artwork>
           </figure>The Geneve header and fields are defined in <xref
-        target="I-D.ietf-nvo3-geneve"/>. The Geneve Protocol Type value is
+        target="RFC8926"/>. The Geneve Protocol Type value is
         TBD_IOAM.</t>
       </section>
     </section>
@@ -519,12 +519,12 @@
       encapsulation, any security considerations of the respective encapsulation
       header is applicable. When the encapsulation is GRE, the security considerations of
       <xref target="RFC2890"/> is applicable.  When the encapsulation is Geneve, the 
-      security considerations of <xref target="I-D.ietf-nvo3-geneve"/> is applicable.</t>
+      security considerations of <xref target="RFC8926"/> is applicable.</t>
 
-      <t>IOAM data transported in an OAM E2E header SHOULD be integrity
-      protected (e.g., with IPsec ESP <xref target="RFC4303"/>) to detect
-      changes made by a device between the sending and receiving OAM
-      endpoints.</t>
+      <t>IOAM data fields SHOULD be integrity
+	      protected (e.g., with <xref target="I-D.ietf-ippm-ioam-data-integrity"/>) to detect
+      changes made by a device between the IOAM encapsulating node and the IOAM decapsulating node. 
+      </t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -552,9 +552,10 @@
 
       &RFC2784;
 
+      &RFC8926;
+
       &I-D.ietf-ippm-ioam-data;
 
-      &I-D.ietf-nvo3-geneve;
 
       <reference anchor="ETYPES"
                  target="https://www.iana.org/assignments/ieee-802-numbers/ieee-802-numbers.xhtml">
@@ -569,7 +570,7 @@
     </references>
 
     <references title="Informative References">
-      &RFC4303;
+      &I-D.ietf-ippm-ioam-data-integrity;
     </references>
   </back>
 </rfc>
