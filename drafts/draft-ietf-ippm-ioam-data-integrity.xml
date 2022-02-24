@@ -603,10 +603,14 @@
       </section>
     </section>
 
-    <section title="Methods for integrity protection">
-      <t>Methods for integrity protection can leverage symmetric or asymmetric
-      key based signatures, as described in the subsections below. Both methods
-      work as follows:
+    <section title="Methods for space optimized integrity protection">
+      <t>Methods for space optimized integrity protection can leverage symmetric
+      or asymmetric key based signatures, as described in the subsections below.
+      The Signature consumes 32 octets and is carried only once for the entire
+      packet. In case of performance concerns, such method can be applied to a
+      subset of the traffic by using sampling of data to enable IOAM with
+      integrity protection. Both symmetric and asymmetric signature methods work
+      as follows:
 
         <list style="numbers">
           <t>The encapsulating node creates a nonce and stores it in the Nonce
@@ -654,22 +658,8 @@
         all the keys). The details of the mechanisms responsible for key
         distribution are outside the scope of this document.</t>
 
-        <t>This method uses the following algorithms:
-          <list style="numbers">
-            <t>The signature algorithm MUST be Advanced Encryption Standard
-            (AES) AES-256. <xref target="AES"/> <xref target="NIST.800-38D"/>.</t>
-
-            <t>The digest/hash algorithm MUST be SHA-256 <xref target="SHS"/>.</t>
-          </list>
-        </t>
-
-        <t>The Signature consumes 32 octets with AES-256. With
-        this method, the Signature is carried only once for the entire
-        packet. As there are dedicated options for carrying IOAM-Data-Fields with
-        integrity protection, in case of performance concerns in computing
-        signature and validating it, these options can be used for a subset
-        of the packets by using sampling of data to enable IOAM with
-        integrity protection.</t>
+        <t>This method MUST use an algorithm pair defined in <xref
+        target="IOAM-IP-registry"/> and the approach MUST be symmetric.</t>
       </section>
 
       <section title="Asymmetric key based signature">
@@ -679,23 +669,8 @@
         responsible for key distribution are outside the scope of this
         document.</t>
 
-        <t>This method uses the following algorithms:
-          <list style="numbers">
-            <t>The signature algorithm MUST be Elliptic Curve Digital
-            Signature Algorithm (ECDSA) with curve P-256 <xref
-            target="RFC6090"/> <xref target="DSS"/>.</t>
-
-            <t>The digest/hash algorithm MUST be SHA-256 <xref target="SHS"/>.</t>
-          </list>
-        </t>
-
-        <t>The Signature consumes 32 octets with ECDSA
-        P-256. With this method, the Signature is
-        carried only once for the entire packet. As there are dedicated
-        options for carrying IOAM-Data-Fields with integrity protection, in case of
-        performance concerns in computing signature and validating it,
-        these options can be used for a subset of the packets by using
-        sampling of data to enable IOAM with integrity protection.</t>
+        <t>This method MUST use an algorithm pair defined in <xref
+        target="IOAM-IP-registry"/> and the approach MUST be asymmetric.</t>
       </section>
     </section>
 
@@ -726,24 +701,25 @@
         IANA identify the digest algorithm and signature algorithm used in the
         Signature Suite Identifier field. IANA has registered the following
         algorithm suite identifiers for the digest algorithm and for the
-        signature algorithm. <figure>
+        signature algorithm. <figure title="IOAM Integrity Protection Algorithm
+        Suite Registry">
             <artwork>
-           IOAM Integrity Protection Algorithm Suite Registry
-
-     Algorithm    Digest       Signature    Specification
-     Suite        Algorithm    Algorithm    Pointer
-     Identifier
-   +------------+------------+-------------+-----------------------+
-   | 0x0        | Reserved   | Reserved    | This document         |
-   +------------+------------+-------------+-----------------------+
-   | 0x1        | SHA-256    | ECDSA P-256 | [SHS] [DSS] [RFC6090] |
-   |            |            |             | This document         |
-   +------------+------------+-------------+-----------------------+
-   | 0x2        | SHA-256    | AES-256     | [AES] [NIST.800-38D]  |
-   |            |            |             | This document         |
-   +------------+------------+-------------+-----------------------+
-   | 0xEF-0xFF  | Unassigned | Unassigned  |                       |
-   +------------+------------+-------------+-----------------------+
+ Algorithm
+ Suite        Digest        Signature    Specification
+ Identifier   Algorithm     Algorithm    Pointer           Approach
++-----------+------------+-------------+----------------+------------+
+| 0x00      | Reserved   | Reserved    | This document  |    None    |
++-----------+------------+-------------+----------------+------------+
+| 0x01      | SHA-256    | ECDSA P-256 | [SHS] [DSS]    | Asymmetric |
+|           |            |             | [RFC6090]      |            |
+|           |            |             | This document  |            |
++-----------+------------+-------------+----------------+------------+
+| 0x02      | SHA-256    | AES-256     | [AES]          | Symmetric  |
+|           |            |             | [NIST.800-38D] |            |
+|           |            |             | This document  |            |
++-----------+------------+-------------+----------------+------------+
+| 0x03-0xFF | Unassigned | Unassigned  |                |            |
++-----------+------------+-------------+----------------+------------+
       </artwork>
           </figure> Future assignments are to be made using the Standards
         Action process defined in <xref target="RFC8126"/>. Assignments
