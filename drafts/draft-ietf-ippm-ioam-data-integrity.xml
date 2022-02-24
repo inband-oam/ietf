@@ -93,7 +93,7 @@
     <!-- The abbreviated title is used in the page header - it is only necessary if the 
          full title is longer than 39 characters -->
 
-    <title abbrev="IOAM Data Fields Integrity">Integrity of In-situ OAM Data
+    <title abbrev="IOAM-Data-Fields Integrity">Integrity of In-situ OAM Data
     Fields</title>
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
@@ -213,7 +213,7 @@
       operational and telemetry information in the packet while the packet
       traverses a path in the network. IETF protocols require features to
       ensure their security. This document describes the integrity protection
-      of IOAM data fields.</t>
+      of IOAM-Data-Fields.</t>
     </abstract>
   </front>
 
@@ -241,39 +241,39 @@
       <t>The current <xref target="I-D.ietf-ippm-ioam-data"/> assumes that
       IOAM is deployed in limited domains, where an operator has
       means to select, monitor, and control the access to all the networking
-      devices, making the domain a trusted network. As such, IOAM data fields
+      devices, making the domain a trusted network. As such, IOAM-Data-Fields
       are carried in clear within packets and there are no protections against
       any node or middlebox tampering with the data. 
-      IOAM data fields collected in an untrusted or semi-trusted environment
+      IOAM-Data-Fields collected in an untrusted or semi-trusted environment
       require integrity protection to support critical operational decisions.
       </t>
 
       <t>The following considerations and
       requirements are to be taken into account in addition to addressing the
-      problem of detectability of any integrity breach of the IOAM data fields
+      problem of detectability of any integrity breach of the IOAM-Data-Fields
       collected: <list style="numbers">
           <t>IOAM data is processed by the data plane, hence viability
-          of any method to prove integrity of the IOAM data fields must be
+          of any method to prove integrity of the IOAM-Data-Fields must be
           feasible at data plane processing/forwarding rates (IOAM might
           be applied to all traffic a router forwards).</t>
 
           <t>IOAM data is carried within packets. Additional space
-          required to prove integrity of the IOAM data fields needs to be optimal, i.e.
+          required to prove integrity of the IOAM-Data-Fields needs to be optimal, i.e.
           should not exceed the MTU or have adverse effect on packet
           processing.</t>
 
           <t>Replay protection of older IOAM data should be possible.
           Without replay protection, a rogue node can present the old IOAM
           data, masking any ongoing network issues/activity and making the
-          IOAM data fields collection useless.</t>
+          IOAM-Data-Fields collection useless.</t>
 
       </list></t>
 
-      <t>This document defines the methods to protect the integrity of IOAM
-	      data fields, using the IOAM Option-Types
+      <t>This document defines the methods to protect the integrity of
+	      IOAM-Data-Fields, using the IOAM Option-Types
 	      specified in <xref target="I-D.ietf-ippm-ioam-data"/>
 	      as an example. The methods similarily apply to
-		      other IOAM Option-Types with data fields.</t>
+		      other IOAM Option-Types which contain IOAM-Data-Fields.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
@@ -308,9 +308,9 @@
       other layers are handled by security mechanisms that are deployed at
       these layers.</t>
 
-      <t>This document is focused on integrity protection for IOAM data
-      fields. Thus the threat analysis includes threats that are related to or
-      result from compromising the integrity of IOAM data fields. Other
+      <t>This document is focused on integrity protection for IOAM-Data-Fields.
+      Thus the threat analysis includes threats that are related to or
+      result from compromising the integrity of IOAM-Data-Fields. Other
       security aspects such as confidentiality are not within the scope of
       this document.</t>
 
@@ -332,16 +332,16 @@
       necessary. Beyond these general impacts, threat-specific impacts are
       discussed in each of the subsections below.</t>
 
-      <section anchor="ModifDataSec" title="Modification: IOAM Data Fields">
+      <section anchor="ModifDataSec" title="Modification: IOAM-Data-Fields">
         <t>Threat <list hangIndent="10" style="empty">
-            <t>An attacker can maliciously modify the IOAM data fields of
+            <t>An attacker can maliciously modify the IOAM-Data-Fields of
             in-transit packets. The modification can either be applied to all
             packets or selectively applied to a subset of the en route
             packets. This threat is applicable to on-path attackers.</t>
           </list></t>
 
         <t>Impact <list hangIndent="10" style="empty">
-            <t>By systematically modifying the IOAM data fields of some or all
+            <t>By systematically modifying the IOAM-Data-Fields of some or all
             of the in-transit packets, an attacker can create a false picture
             of the paths in the network, the existence of faulty nodes and
             their location, and the network performance.</t>
@@ -353,26 +353,26 @@
         <t>Threat <list hangIndent="10" style="empty">
             <t>An on-path attacker can modify the header in IOAM Option-Types
             in order to change or disrupt the
-            behavior of nodes processing IOAM data fields along the path. This
+            behavior of nodes processing IOAM-Data-Fields along the path. This
             threat is not within the scope of this document.</t>
           </list></t>
 
         <t>Impact <list hangIndent="10" style="empty">
             <t>Changing the header of IOAM Option-Types may have several
             implications. An attacker can maliciously increase the processing
-            overhead in nodes that process IOAM data fields and increase the
-            on-the-wire overhead of IOAM data fields, for example by modifying
+            overhead in nodes that process IOAM-Data-Fields and increase the
+            on-the-wire overhead of IOAM-Data-Fields, for example by modifying
             the IOAM-Trace-Type field in the IOAM Trace Option-Type header. An
-            attacker can also prevent some of the nodes that process IOAM data
-            fields from incorporating IOAM data fields by modifying the
-            RemainingLen field.</t>
+            attacker can also prevent some of the nodes that process
+            IOAM-Data-Fields from incorporating IOAM-Data-Fields, by modifying
+            the RemainingLen field in the IOAM Trace Option-Type header.</t>
           </list></t>
       </section>
 
-      <section title="Injection: IOAM Data Fields">
+      <section title="Injection: IOAM-Data-Fields">
         <t>Threat <list hangIndent="10" style="empty">
-            <t>An attacker can inject packets with IOAM Option-Types and IOAM
-            data fields. This threat is applicable to both on-path and
+            <t>An attacker can inject packets with IOAM Option-Types and
+            IOAM-Data-Fields. This threat is applicable to both on-path and
             off-path attackers.</t>
           </list></t>
 
@@ -385,7 +385,7 @@
       <section title="Injection: IOAM Option-Type Headers">
         <t>Threat <list hangIndent="10" style="empty">
             <t>An attacker can inject packets with IOAM Option-Type headers,
-            thus manipulating other nodes that process IOAM data fields in the
+            thus manipulating other nodes that process IOAM-Data-Fields in the
             network. This threat is applicable to both on-path and off-path
             attackers. This threat is not within the scope of this document.</t>
           </list></t>
@@ -398,9 +398,9 @@
 
       <section title="Management and Exporting">
         <t>Threat <list hangIndent="10" style="empty">
-            <t>Attacks that compromise the integrity of IOAM data fields can
+            <t>Attacks that compromise the integrity of IOAM-Data-Fields can
             be applied at the management plane, e.g., by manipulating network
-            management packets. Furthermore, the integrity of IOAM data fields
+            management packets. Furthermore, the integrity of IOAM-Data-Fields
             that are exported to a receiving entity can also be compromised.
             Management plane attacks are not within the scope of this
             document; the network management protocol is expected to include
@@ -412,10 +412,10 @@
 
         <t>Impact <list hangIndent="10" style="empty">
             <t>Malicious manipulation of the management protocol can cause
-            nodes that process IOAM data fields to malfunction, to be
-            overloaded, or to incorporate unnecessary IOAM data fields into
+            nodes that process IOAM-Data-Fields to malfunction, to be
+            overloaded, or to incorporate unnecessary IOAM-Data-Fields into
             user packets. The impact of compromising the integrity of exported
-            IOAM data fields is similar to the impacts of previous threats
+            IOAM-Data-Fields is similar to the impacts of previous threats
             that were described in this section.</t>
           </list></t>
       </section>
@@ -423,7 +423,7 @@
       <section title="Delay">
         <t>Threat <list hangIndent="10" style="empty">
             <t>An on-path attacker may delay some or all of the in-transit
-            packets that include IOAM data fields in order to create the false
+            packets that include IOAM-Data-Fields in order to create the false
             illusion of congestion. Delay attacks are well known in the
             context of deterministic networks <xref
             target="I-D.ietf-detnet-security"/> and synchronization <xref
@@ -439,8 +439,8 @@
 
         <t>Impact <list hangIndent="10" style="empty">
             <t>Since IOAM can be applied to a fraction of the traffic, an
-            attacker can detect and delay only the packets that include IOAM
-            data fields, thus preventing the authenticity of delay and load
+            attacker can detect and delay only the packets that include
+            IOAM-Data-Fields, thus preventing the authenticity of delay and load
             measurements.</t>
           </list></t>
       </section>
@@ -453,11 +453,11 @@
 +-------------------------------------------+--------+------------+
 | Threat                                    |In scope|Out of scope|
 +-------------------------------------------+--------+------------+
-|Modification: IOAM Data Fields             |   +    |            |
+|Modification: IOAM-Data-Fields             |   +    |            |
 +-------------------------------------------+--------+------------+
 |Modification: IOAM Option-Type Headers     |        |     +      |
 +-------------------------------------------+--------+------------+
-|Injection: IOAM Data Fields                |   +    |            |
+|Injection: IOAM-Data-Fields                |   +    |            |
 +-------------------------------------------+--------+------------+
 |Injection: IOAM Option-Type Headers        |        |     +      |
 +-------------------------------------------+--------+------------+
@@ -472,7 +472,7 @@
 
     <section title="Integrity Protected Option-Types">
     <t>This section defines new IOAM Option-Types to be allocated in the IOAM
-    Option-Type Registry. Their purpose is to carry IOAM data fields with
+    Option-Type Registry. Their purpose is to carry IOAM-Data-Fields with
     integrity protection. Each of the IOAM Option-Types defined in <xref
     target="I-D.ietf-ippm-ioam-data"/> is extended as follows:</t>
 
@@ -516,7 +516,7 @@
       <t><list style="hanging">
         <t hangText="Signature-suite:">8-bit unsigned integer. 
         This field defines the algorithms used to compute the digest 
-        and the signature over the Option-Type data fields.</t>
+        and the signature over the IOAM-Data-Fields.</t>
 
         <t hangText="Nonce length:">8-bit unsigned integer. This field
         specifies the length of the Nonce in octets.</t>
@@ -611,22 +611,22 @@
         <list style="numbers">
           <t>The encapsulating node creates a nonce and stores it in the Nonce
           field of the Integrity Protection subheader. The signature is
-          generated over the Nonce field and the hash of data fields it has
-          inserted, i.e., sign(Nonce || hash(data fields)). Data fields that
+          generated over the Nonce field and the hash of IOAM-Data-Fields it has
+          inserted, i.e., sign(Nonce || hash(IOAM-Data-Fields)). IOAM-Data-Fields that
           will be updated in-place MUST be excluded from the signature (e.g.,
           the POT Cumulative field). The signature is stored in the Signature
           field of the Integrity Protection subheader. Important note: if all
-          the inserted data fields will be updated in-place, or if there is no
-          data field at all, the encapsulating node MUST NOT use an Integrity
+          the inserted IOAM-Data-Fields are to be updated in-place, or if there is no
+          IOAM-Data-Field at all, the encapsulating node MUST NOT use an Integrity
           Protected Option-Type.</t>
 
           <t>A transit node generates a signature over the Signature field and
-          the hash of data fields it has inserted, i.e.,
-          sign(Signature || hash(data fields)). Data fields that are updated
+          the hash of IOAM-Data-Fields it has inserted, i.e.,
+          sign(Signature || hash(IOAM-Data-Fields)). IOAM-Data-Fields that are updated
           in-place MUST be excluded from the signature (e.g., the POT Cumulative
           field). The signature is stored in the Signature field of the
-          Integrity Protection subheader. Important note: if all the data fields
-          involved are updated in-place, or if there is no data field involved,
+          Integrity Protection subheader. Important note: if all the IOAM-Data-Fields
+          involved are updated in-place, or if there is no IOAM-Data-Field involved,
           the transit node MUST NOT generate a signature and MUST NOT update the
           Signature field.</t>
 
@@ -635,7 +635,7 @@
           decapsulating node is also the Validator, for obvious performance
           reasons.</t>
 
-          <t>The Validator recreates the signature over data fields collected
+          <t>The Validator recreates the signature over IOAM-Data-Fields collected
           and checks the integrity against the Signature field. In order to
           recompute the signature, the Validator iteratively follows the same
           procedure as for the encapsulating, transit and decapsulating nodes,
@@ -665,7 +665,7 @@
 
         <t>The Signature consumes 32 octets with AES-256. With
         this method, the Signature is carried only once for the entire
-        packet. As there are dedicated options for carrying IOAM data with
+        packet. As there are dedicated options for carrying IOAM-Data-Fields with
         integrity protection, in case of performance concerns in computing
         signature and validating it, these options can be used for a subset
         of the packets by using sampling of data to enable IOAM with
@@ -692,7 +692,7 @@
         <t>The Signature consumes 32 octets with ECDSA
         P-256. With this method, the Signature is
         carried only once for the entire packet. As there are dedicated
-        options for carrying IOAM data with integrity protection, in case of
+        options for carrying IOAM-Data-Fields with integrity protection, in case of
         performance concerns in computing signature and validating it,
         these options can be used for a subset of the packets by using
         sampling of data to enable IOAM with integrity protection.</t>
