@@ -5,8 +5,8 @@
 SFC                                                    F. Brockners, Ed.
 Internet-Draft                                                     Cisco
 Intended status: Standards Track                        S. Bhandari, Ed.
-Expires: October 5, 2022                                     Thoughtspot
-                                                          April 03, 2022
+Expires: October 29, 2022                                    Thoughtspot
+                                                          April 27, 2022
 
 
  Network Service Header (NSH) Encapsulation for In-situ OAM (IOAM) Data
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on October 5, 2022.
+   This Internet-Draft will expire on October 29, 2022.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Brockners & Bhandari     Expires October 5, 2022                [Page 1]
+Brockners & Bhandari    Expires October 29, 2022                [Page 1]
 
 Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
 
@@ -73,7 +73,7 @@ Table of Contents
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
      8.2.  Informative References  . . . . . . . . . . . . . . . . .   7
-   Appendix A.  Discussion of the IOAM encapsulation approach  . . .   7
+   Appendix A.  Discussion of the IOAM encapsulation approach  . . .   8
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   9
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Brockners & Bhandari     Expires October 5, 2022                [Page 2]
+Brockners & Bhandari    Expires October 29, 2022                [Page 2]
 
 Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
 
@@ -157,17 +157,21 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
    |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   The NSH header and fields are defined in [RFC8300].  The "NSH Next
-   Protocol" value (referred to as "NP" in the diagram above) is
-   TBD_IOAM.
+   The NSH header and fields are defined in [RFC8300].  The O-bit MUST
+   be handled following the rules in [I-D.ietf-sfc-oam-packet].  The
+   "NSH Next Protocol" value (referred to as "NP" in the diagram above)
+   is TBD_IOAM.
+
+
+
+
+Brockners & Bhandari    Expires October 29, 2022                [Page 3]
+
+Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
+
 
    The IOAM related fields in NSH are defined as follows:
 
-
-
-Brockners & Bhandari     Expires October 5, 2022                [Page 3]
-
-Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
 
 
       IOAM-Type:  8-bit field defining the IOAM-Option-Type, as defined
@@ -210,20 +214,23 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
    IANA is requested to allocate protocol numbers for the following "NSH
    Next Protocol" related to IOAM:
 
+
+
+
+
+
+
+
+Brockners & Bhandari    Expires October 29, 2022                [Page 4]
+
+Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
+
+
                  +---------------+-------------+---------------+
                  | Next Protocol | Description | Reference     |
                  +---------------+-------------+---------------+
                  | x             | TBD_IOAM    | This document |
                  +---------------+-------------+---------------+
-
-
-
-
-
-
-Brockners & Bhandari     Expires October 5, 2022                [Page 4]
-
-Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
 
 
 5.  Security Considerations
@@ -234,14 +241,16 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
    domain to avoid malicious configuration and use, which could include
    injecting malicious IOAM packets into a domain.  For additional IOAM
    related security considerations, see Section 10 in
-   [I-D.ietf-ippm-ioam-data].
+   [I-D.ietf-ippm-ioam-data].  For additional OAM and NSH related
+   security considerations see Section 5 of [I-D.ietf-sfc-oam-packet].
 
 6.  Acknowledgements
 
    The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
    Raghavan, Ranganathan T S, Karthik Babu Harichandra Babu, Akshaya
    Nadahalli, Stefano Previdi, Hemant Singh, Erik Nordmark, LJ Wobker,
-   Andrew Yourtchenko and Greg Mirsky for the comments and advice.
+   Andrew Yourtchenko, Greg Mirsky and Mohamed Boucadair for the
+   comments and advice.
 
 7.  Contributors
 
@@ -266,20 +275,15 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
       Email: hannes@rtbrick.com
 
 
-      John Leddy
-      Email: john@leddy.net
 
 
-
-
-
-
-
-
-
-Brockners & Bhandari     Expires October 5, 2022                [Page 5]
+Brockners & Bhandari    Expires October 29, 2022                [Page 5]
 
 Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
+
+
+      John Leddy
+      Email: john@leddy.net
 
 
       Stephen Youell
@@ -324,19 +328,25 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
               for In-situ OAM", draft-ietf-ippm-ioam-data-17 (work in
               progress), December 2021.
 
+
+
+
+
+
+Brockners & Bhandari    Expires October 29, 2022                [Page 6]
+
+Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
+
+
+   [I-D.ietf-sfc-oam-packet]
+              Boucadair, M., "OAM Packet and Behavior in the Network
+              Service Header (NSH)", draft-ietf-sfc-oam-packet-01 (work
+              in progress), April 2022.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-Brockners & Bhandari     Expires October 5, 2022                [Page 6]
-
-Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
-
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -354,7 +364,7 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
    [I-D.ietf-ippm-ioam-deployment]
               Brockners, F., Bhandari, S., Bernier, D., and T. Mizrahi,
               "In-situ OAM Deployment", draft-ietf-ippm-ioam-
-              deployment-00 (work in progress), October 2021.
+              deployment-01 (work in progress), April 2022.
 
    [I-D.ietf-ippm-ioam-direct-export]
               Song, H., Gafni, B., Zhou, T., Li, Z., Brockners, F.,
@@ -373,6 +383,17 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
               DOI 10.17487/RFC7665, October 2015,
               <https://www.rfc-editor.org/info/rfc7665>.
 
+
+
+
+
+
+
+Brockners & Bhandari    Expires October 29, 2022                [Page 7]
+
+Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
+
+
 Appendix A.  Discussion of the IOAM encapsulation approach
 
    This section lists several approaches considered for encapsulating
@@ -386,14 +407,6 @@ Appendix A.  Discussion of the IOAM encapsulation approach
 
    Hardware and software friendly implementation: Hardware forwarders
    benefit from an encapsulation that minimizes iterative look-ups of
-
-
-
-Brockners & Bhandari     Expires October 5, 2022                [Page 7]
-
-Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
-
-
    fields within the packet: Any operation which looks up the value of a
    field within the packet, based on which another lookup is performed,
    consumes additional gates and time in an implementation - both of
@@ -427,6 +440,16 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
        variable length meta-data.  The length field is 6-bits, resulting
        in a maximum of 256 (2^6 x 4) octets.
 
+
+
+
+
+
+Brockners & Bhandari    Expires October 29, 2022                [Page 8]
+
+Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
+
+
    2.  Encapsulation of IOAM-Data-Fields using the "Next Protocol"
        field.  Each IOAM-Option-Type (e.g trace, proof-of-transit, and
        edge-to-edge) would be specified by its own "next protocol".
@@ -441,14 +464,6 @@ Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
    result in.  In addition, this option does not constrain IOAM data to
    a maximum of 256 octets, thus allowing support for very large
    deployments.
-
-
-
-
-Brockners & Bhandari     Expires October 5, 2022                [Page 8]
-
-Internet-Draft      NSH encapsulation for In-situ OAM         April 2022
-
 
 Authors' Addresses
 
@@ -486,19 +501,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Brockners & Bhandari     Expires October 5, 2022                [Page 9]
+Brockners & Bhandari    Expires October 29, 2022                [Page 9]
