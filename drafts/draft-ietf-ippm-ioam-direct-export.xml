@@ -14,7 +14,7 @@
 <!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
 <!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-ioam-nsh.xml">
-<!ENTITY I-D.ioametal-ippm-6man-ioam-ipv6-options SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ioametal-ippm-6man-ioam-ipv6-options.xml">
+<!ENTITY I-D.ietf-ippm-ioam-ipv6-options SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-ipv6-options.xml">
 <!ENTITY I-D.song-ippm-postcard-based-telemetry SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.song-ippm-postcard-based-telemetry.xml">
 <!ENTITY I-D.ietf-ippm-ioam-flags SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-flags.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
@@ -27,7 +27,7 @@
 <?rfc sortrefs="yes" ?>
 <?rfc compact="yes" ?>
 <?rfc subcompact="no" ?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-07"
+<rfc category="std" docName="draft-ietf-ippm-ioam-direct-export-08"
      ipr="trust200902">
   <front>
     <title abbrev="IOAM Direct Exporting">In-situ OAM Direct Exporting</title>
@@ -68,42 +68,6 @@
       </address>
     </author>
 
-    <author fullname="Tianran Zhou" initials="T." surname="Zhou">
-      <organization abbrev="">Huawei</organization>
-
-      <address>
-        <postal>
-          <street>156 Beiqing Rd.</street>
-
-          <city>Beijing</city>
-
-          <code>100095</code>
-
-          <country>China</country>
-        </postal>
-
-        <email>zhoutianran@huawei.com</email>
-      </address>
-    </author>
-
-    <author fullname="Zhenbin Li" initials="Z." surname="Li">
-      <organization abbrev="">Huawei</organization>
-
-      <address>
-        <postal>
-          <street>156 Beiqing Rd.</street>
-
-          <city>Beijing</city>
-
-          <code>100095</code>
-
-          <country>China</country>
-        </postal>
-
-        <email>lizhenbin@huawei.com</email>
-      </address>
-    </author>
-
     <author fullname="Frank Brockners" initials="F." surname="Brockners">
       <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
 
@@ -128,8 +92,7 @@
       </address>
     </author>
 
-    <author fullname="Shwetha Bhandari" initials="S." role="editor"
-            surname="Bhandari">
+    <author fullname="Shwetha Bhandari" initials="S." surname="Bhandari">
       <organization abbrev="Thoughtspot">Thoughtspot</organization>
 
       <address>
@@ -146,24 +109,7 @@
       </address>
     </author>
 
-    <author fullname="Ramesh Sivakolundu" initials="R." surname="Sivakolundu">
-      <organization abbrev="Cisco">Cisco Systems, Inc.</organization>
-
-      <address>
-        <postal>
-          <street>170 West Tasman Dr.</street>
-
-          <city>SAN JOSE, CA 95134</city>
-
-          <country>U.S.A.</country>
-        </postal>
-
-        <email>sramesh@cisco.com</email>
-      </address>
-    </author>
-
-    <author fullname="Tal Mizrahi" initials="T." role="editor"
-            surname="Mizrahi">
+    <author fullname="Tal Mizrahi" initials="T." surname="Mizrahi">
       <organization abbrev="">Huawei</organization>
 
       <address>
@@ -181,7 +127,7 @@
       </address>
     </author>
 
-    <date year="2021"/>
+    <date year="2022"/>
 
     <area>TSV</area>
 
@@ -331,7 +277,7 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
         be incorporated into all or a subset of the traffic that is forwarded
         by the encapsulating node, as further discussed in <xref
         target="SelectionSec"/> below. Moreover, IOAM nodes respond to the DEX
-        trigger by exporting and/or collection IOAM data either for all
+        trigger by exporting and/or collecting IOAM data either for all
         traversing packets that carry the DEX option, or selectively only for
         a subset of these packets, as further discussed in <xref
         target="ExportSec"/> below.</t>
@@ -407,8 +353,15 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
           not support the DEX option ignore it. Note that as per <xref
           target="I-D.ietf-ippm-ioam-data"/> a decapsulating node removes the
           IOAM encapsulation and all its IOAM options, and specifically in the
-          case where one of these options is a (possibly unknown) DEX
-          option.</t>
+          case where one of these options is a (possibly unknown) DEX option.
+          The ability to skip over a (possibly unknown) DEX option in the
+          parsing or in the decapsulation procedure is dependent on the
+          specific encapsulation, which is outside the scope of this document.
+          For example, when IOAM is encapsulated in IPv6 <xref
+          target="I-D.ietf-ippm-ioam-ipv6-options"/> the DEX option is
+          incorporated either in a Hop-by-Hop options header or in a
+          Destination options header, and thus can be skipped using the length
+          field in the options header.</t>
         </section>
       </section>
 
@@ -464,7 +417,7 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
             which data fields should be exported. The format of this field is
             as defined in <xref target="I-D.ietf-ippm-ioam-data"/>.
             Specifically, the bit that corresponds to the Checksum Complement
-            data field should be assigned to be zero by the IOAM encapsulating
+            data field SHOULD be assigned to be zero by the IOAM encapsulating
             node, and ignored by transit and decapsulating nodes. The reason
             for this is that the Checksum Complement is intended for in-flight
             packet modifications and is not relevant for direct exporting.</t>
@@ -480,13 +433,14 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
             <t hangText="Flow ID">An optional 32-bit field representing the
             flow identifier. If the actual Flow ID is shorter than 32 bits, it
             is zero padded in its most significant bits. The field is set at
-            the encapsulating node. The Flow ID can be uniformly assigned by a
-            central controller or algorithmically generated by the
-            encapsulating node. The latter approach cannot guarantee the
-            uniqueness of Flow ID, yet the conflict probability is small due
-            to the large Flow ID space. The Flow ID can be used to correlate
-            the exported data of the same flow from multiple nodes and from
-            multiple packets.</t>
+            the encapsulating node. The Flow ID can be used to correlate the
+            exported data of the same flow from multiple nodes and from
+            multiple packets. Flow ID values are expected to be allocated in a
+            way that avoids collisions. For example, random assignment of Flow
+            ID values can be subject to birthday problem conflicts, while
+            centralized allocation can avoid this problem. The specification
+            of the Flow ID allocation method is not within the scope of this
+            document.</t>
 
             <t hangText="Sequence Number">An optional 32-bit sequence number
             starting from 0 and increasing by 1 for each following monitored
@@ -635,6 +589,12 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       consent to export data to a receiving entity before starting to send
       exported data.</t>
 
+      <t>An attacker may keep track of the information sent in DEX headers as
+      a means of reconnaissance. This form of recon can be mitigated to some
+      extent by careful allocation of the Flow ID and Sequence Number space,
+      in a way that does not compromise privacy aspects such as customer
+      identities.</t>
+
       <t>IOAM is assumed to be deployed in a restricted administrative domain,
       thus limiting the scope of the threats above and their affect. This is a
       fundamental assumption with respect to the security aspects of IOAM, as
@@ -668,6 +628,8 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       &I-D.song-ippm-postcard-based-telemetry;
 
       &I-D.ietf-ippm-ioam-flags;
+
+      &I-D.ietf-ippm-ioam-ipv6-options;
     </references>
 
     <section anchor="appendix" title="Hop Limit in Direct Exporting">
@@ -685,6 +647,44 @@ packets   |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       be incremented by each IOAM transit node that supports the DEX option.
       In this approach the Hop Count field value would also be included in the
       exported packet.</t>
+    </section>
+
+    <section numbered="false" title="Contributors" toc="default">
+      <t>The Editors would like to recognize the contributions of the
+      following individuals to this document.</t>
+
+      <t>
+        <figure>
+          <artwork><![CDATA[ 
+   Tianran Zhou
+   Huawei
+   156 Beiqing Rd.
+   Beijing  100095
+   China
+
+   Email: zhoutianran@huawei.com
+
+
+   Zhenbin Li
+   Huawei
+   156 Beiqing Rd.
+   Beijing  100095
+   China
+
+   Email: lizhenbin@huawei.com
+
+
+   Ramesh Sivakolundu
+   Cisco Systems, Inc.
+   170 West Tasman Dr.
+   SAN JOSE, CA 95134
+   U.S.A.
+
+   Email: sramesh@cisco.com
+
+]]></artwork>
+        </figure>
+      </t>
     </section>
   </back>
 </rfc>
