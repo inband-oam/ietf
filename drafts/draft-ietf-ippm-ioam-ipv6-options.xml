@@ -12,7 +12,7 @@
 <!ENTITY RFC5036 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5036.xml">
 <!ENTITY RFC4193 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4193.xml">
 <!ENTITY RFC1772 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1772.xml">
-<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
+<!ENTITY RFC9197 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9197.xml">
 <!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
 ]>
 <?rfc toc="yes"?>
@@ -20,7 +20,7 @@
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-08"
+<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-09"
      ipr="trust200902">
   <front>
     <title abbrev="In-situ OAM IPv6 encapsulation">In-situ OAM IPv6
@@ -62,9 +62,9 @@
       </address>
     </author>
 
- 
 
-    <date day="9" month="February" year="2022"/>
+
+    <date day="16" month="June" year="2022"/>
 
     <area>Transport Area</area>
 
@@ -150,7 +150,7 @@
       using two types of extension headers in IPv6 packets - either Hop-by-Hop
       Options header or Destination options header. Deployments select one of these
       extension header types depending on how IOAM is used, as described in
-      section 4 of <xref target="I-D.ietf-ippm-ioam-data"/>. Multiple options
+      section 4 of <xref target="RFC9197"/>. Multiple options
       with the same Option Type MAY appear in the same Hop-by-Hop Options or
       Destination Options header, with distinct content.</t>
 
@@ -199,64 +199,64 @@
           <t hangText="Reserved:">8-bit field MUST be set to zero upon
           transmission and ignored upon reception.</t>
 
-          <t hangText="IOAM Type:">8-bit field as defined in section 7.2 in
-          <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+          <t hangText="IOAM Type:">8-bit field as defined in section 7.1 in
+          <xref target="RFC9197"/>.</t>
 
           <t hangText="Option Data:">Variable-length field.
           Option-Type-specific data.</t>
         </list></t>
 
-      <t>In-situ OAM Option-Types are inserted as Option data as follows:<list style="numbers">
+      <t>IOAM Option data is inserted as follows:<list style="numbers">
           <t>Pre-allocated Trace Option: The in-situ OAM Preallocated Trace
-          Option-Type defined in <xref target="I-D.ietf-ippm-ioam-data"/> is
+          Option-Type defined in <xref target="RFC9197"/> is
           represented as an IPv6 option in the Hop-by-Hop extension header: <list
               style="hanging">
-              <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
-              type of option. xxxxx=TBD.</t>
+              <t hangText="Option Type:">TBD_1_1 8-bit identifier of the
+              IPv6 Option Type for IOAM.</t>
 
-              <t hangText="IOAM Option-Type:">IOAM Pre-allocated Trace Option-Type.</t>
+              <t hangText="IOAM Type:">IOAM Pre-allocated Trace Option-Type.</t>
             </list></t>
 
           <t>Incremental Trace Option: The in-situ OAM Incremental Trace
-          Option-Type defined in <xref target="I-D.ietf-ippm-ioam-data"/> is
+          Option-Type defined in <xref target="RFC9197"/> is
           represented as an IPv6 option in the Hop-by-Hop extension header: <list
               style="hanging">
-              <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
-              type of option. xxxxx=TBD.</t>
+              <t hangText="Option Type:">TBD_1_1 8-bit identifier of the
+              IPv6 Option Type for IOAM.</t>
 
-              <t hangText="IOAM Option-Type:">IOAM Incremental Trace Option-Type.</t>
+              <t hangText="IOAM Type:">IOAM Incremental Trace Option-Type.</t>
             </list></t>
 
           <t>Proof of Transit Option: The in-situ OAM POT Option-Type defined in
-          <xref target="I-D.ietf-ippm-ioam-data"/> is represented as an IPv6
+          <xref target="RFC9197"/> is represented as an IPv6
           option in the Hop-by-Hop extension header: <list style="hanging">
-              <t hangText="Option Type:">001xxxxx 8-bit identifier of the IOAM
-              type of option. xxxxx=TBD.</t>
+              <t hangText="Option Type:">TBD_1_1 8-bit identifier of the
+              IPv6 Option Type for IOAM.</t>
 
-              <t hangText="IOAM Option-Type:">IOAM POT Option-Type.</t>
+              <t hangText="IOAM Type:">IOAM POT Option-Type.</t>
             </list></t>
 
           <t>Edge to Edge Option: The in-situ OAM E2E option defined in <xref
-          target="I-D.ietf-ippm-ioam-data"/> is represented as an IPv6 option
+          target="RFC9197"/> is represented as an IPv6 option
           in Destination extension header: <list style="hanging">
-              <t hangText="Option Type:">000xxxxx 8-bit identifier of the IOAM
-              type of option. xxxxx=TBD.</t>
+              <t hangText="Option Type:">TBD_1_0 8-bit identifier of the
+              IPv6 Option Type for IOAM.</t>
 
-              <t hangText="IOAM Option-Type:">IOAM E2E Option-Type.</t>
+              <t hangText="IOAM Type:">IOAM E2E Option-Type.</t>
             </list></t>
 
           <t>Direct Export (DEX) Option: The in-situ OAM Direct Export Option-Type defined in <xref
           target="I-D.ietf-ippm-ioam-direct-export"/> is represented as an IPv6 option
           in the Hop-by-Hop extension header: <list style="hanging">
-              <t hangText="Option Type:">000xxxxx 8-bit identifier of the IOAM
-              type of option. xxxxx=TBD.</t>
+              <t hangText="Option Type:">TBD_1_0 8-bit identifier of the
+              IPv6 Option Type for IOAM.</t>
 
-              <t hangText="IOAM Option-Type:">IOAM Direct Export (DEX) Option-Type.</t>
+              <t hangText="IOAM Type:">IOAM Direct Export (DEX) Option-Type.</t>
             </list></t>
 
         </list>All the in-situ OAM IPv6 options defined here have alignment
       requirements. Specifically, they all require 4n alignment. This ensures
-      that fields specified in <xref target="I-D.ietf-ippm-ioam-data"/> are
+      that fields specified in <xref target="RFC9197"/> are
       aligned at a multiple-of-4 offset from the start of the Hop-by-Hop and
       Destination Options header. In addition, to maintain IPv6 extension
       header 8-octet alignment and avoid the need to add or remove padding at
@@ -265,7 +265,7 @@
       8-octets.</t>
 
       <t>IPv6 options can have a maximum length of 255 octets. Consequently,
-	      the total lenght of IOAM Option-Types including all data fields
+	      the total length of IOAM Option-Types including all data fields
 	      is also limited to 255 octets when encapsulated into IPv6.</t>
     </section>
 
@@ -298,7 +298,7 @@
             of transit routers and switches to a sufficiently high value.
             Careful control of the MTU in a network is one of the reasons why
             IOAM is considered a domain-specific feature (see also <xref
-            target="I-D.ietf-ippm-ioam-data"/>). In addition, the PMTU
+            target="RFC9197"/>). In addition, the PMTU
             tolerance range in the IOAM domain should be identified (e.g.,
             through configuration) and IOAM encapsulation operations and/or
             IOAM data field insertion (in case of incremental tracing) should
@@ -317,13 +317,12 @@
             ensure that if a leak occurs, network elements outside the domain are
             not affected (i.e., they continue to process other valid packets).</t>
 
-            <t hangText="C5">The source that inserts and leaks the IOAM
+            <t hangText="C5">An Autonomous System (AS) that inserts and leaks the IOAM
             data needs to be easy to identify for the purpose of troubleshooting,
-            due to the high complexity of troubleshooting a source that
-            inserted the IOAM data and did not remove it when the packet
-            traversed across an Autonomous System (AS). Such a troubleshooting process
-            might require coordination between multiple operators, complex configuration
-            verification, packet capture analysis, etc.</t>
+            due to the high complexity in identifying the source of the leak.
+            Such a troubleshooting process might require coordination between
+            multiple operators, complex configuration verification,
+            packet capture analysis, etc.</t>
 
             <t hangText="C6">Compliance with <xref target="RFC8200"/>
             requires OAM data to be encapsulated instead of header/option
@@ -355,7 +354,8 @@
           <t>The "IP-in-IPv6 encapsulation with ULA" <xref target="RFC4193"/>
           approach can be used to apply IOAM to either an IPv6 or an IPv4
           network. In addition, it fulfills requirement C4 (avoid leaks) by
-          using ULA for the ION. The original IP packet is preserved. An IPv6 header
+          using ULA for the IOAM Overlay Network (ION).
+          The original IP packet is preserved. An IPv6 header
           including IOAM data fields in an extension header is added in front
           of it, to forward traffic within and across the IOAM domain. IPv6
           addresses for the ION, i.e. the outer IPv6 addresses are assigned
@@ -403,7 +403,7 @@
       <t>This document describes the encapsulation of IOAM data fields in
       IPv6. Security considerations of the specific IOAM data fields for each
       case (i.e., Trace, Proof of Transit, and E2E) are described and defined
-      in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+      in <xref target="RFC9197"/>.</t>
 
       <t>As this document describes new options for IPv6, these are similar to
       the security considerations of <xref target="RFC8200"/> and the
@@ -451,7 +451,7 @@
 
       &RFC8174;
 
-      &I-D.ietf-ippm-ioam-data;
+      &RFC9197;
 
       &I-D.ietf-ippm-ioam-direct-export;
 
@@ -504,7 +504,7 @@
 
 
    John Leddy
-   Email: john@leddy.net 
+   Email: john@leddy.net
 
 
    Stephen Youell
