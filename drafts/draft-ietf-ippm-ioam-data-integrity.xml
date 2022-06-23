@@ -24,9 +24,10 @@
 <!ENTITY RFC4302 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4302.xml">
 <!ENTITY RFC6090 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6090.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
+<!ENTITY RFC9197 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9197.xml">
+<!ENTITY RFC9055 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9055.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
 <!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
-<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
 <!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-6man-pdm-option.xml">
@@ -50,7 +51,6 @@
 <!ENTITY I-D.gandhi-spring-ioam-sr-mpls SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.gandhi-spring-ioam-sr-mpls.xml">
 <!ENTITY I-D.ali-spring-ioam-srv6 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ali-spring-ioam-srv6.xml">
 <!ENTITY I-D.brockners-ippm-ioam-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.brockners-ippm-ioam-vxlan-gpe.xml">
-<!ENTITY I-D.ietf-detnet-security SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-detnet-security.xml">
 <!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -238,7 +238,7 @@
       which probe traffic is potentially handled differently from regular data
       traffic by the network devices.</t>
 
-      <t>The current <xref target="I-D.ietf-ippm-ioam-data"/> assumes that
+      <t><xref target="RFC9197"/> assumes that
       IOAM is deployed in limited domains, where an operator has
       means to select, monitor, and control the access to all the networking
       devices, making the domain a trusted network. As such, IOAM-Data-Fields
@@ -271,7 +271,7 @@
 
       <t>This document defines the methods to protect the integrity of
 	      IOAM-Data-Fields, using the IOAM Option-Types
-	      specified in <xref target="I-D.ietf-ippm-ioam-data"/>
+	      specified in <xref target="RFC9197"/>
 	      as an example. The methods similarly apply to
 		      other IOAM Option-Types which contain IOAM-Data-Fields.</t>
     </section>
@@ -316,7 +316,7 @@
 
       <t>Throughout the analysis there is a distinction between on-path and
       off-path attackers. As discussed in <xref
-      target="I-D.ietf-detnet-security"/>, on-path attackers are located in a
+      target="RFC9055"/>, on-path attackers are located in a
       position that allows interception and modification of in-flight protocol
       packets, whereas off-path attackers can only attack by generating
       protocol packets.</t>
@@ -426,7 +426,7 @@
             packets that include IOAM-Data-Fields in order to create the false
             illusion of congestion. Delay attacks are well known in the
             context of deterministic networks <xref
-            target="I-D.ietf-detnet-security"/> and synchronization <xref
+            target="RFC9055"/> and synchronization <xref
             target="RFC7384"/>, and may be somewhat mitigated in these
             environments by using redundant paths in a way that is resilient
             to an attack along one of the paths. This approach does not
@@ -474,7 +474,7 @@
     <t>This section defines new IOAM Option-Types to be allocated in the IOAM
     Option-Type Registry. Their purpose is to carry IOAM-Data-Fields with
     integrity protection. Each of the IOAM Option-Types defined in <xref
-    target="I-D.ietf-ippm-ioam-data"/> is extended as follows:</t>
+    target="RFC9197"/> is extended as follows:</t>
 
         <t><list style="hanging">
             <t hangText="64">IOAM Pre-allocated Trace Integrity Protected
@@ -534,7 +534,7 @@
       <section title="Integrity Protected Trace Option-Types">
         <t>Both the IOAM Pre-allocated Trace Option-Type header and the IOAM
         Incremental Trace Option-Type header, as defined in <xref
-        target="I-D.ietf-ippm-ioam-data"/>, are followed by the Integrity
+        target="RFC9197"/>, are followed by the Integrity
         Protection subheader when the IOAM Option-Type is respectively set to
         the IOAM Pre-allocated Trace Integrity Protected Option-Type or the IOAM
         Incremental Trace Integrity Protected Option-Type:
@@ -560,7 +560,7 @@
 
       <section title="Integrity Protected POT Option-Type">
         <t>The IOAM POT Option-Type header, as defined in <xref
-        target="I-D.ietf-ippm-ioam-data"/>, is followed by the Integrity
+        target="RFC9197"/>, is followed by the Integrity
         Protection subheader when the IOAM Option-Type is set to the IOAM POT
         Integrity Protected Option-Type: <figure>
             <artwork>
@@ -582,7 +582,7 @@
 
       <section title="Integrity Protected E2E Option-Type">
         <t>The IOAM E2E Option-Type header, as defined in <xref
-        target="I-D.ietf-ippm-ioam-data"/>, is followed by the Integrity
+        target="RFC9197"/>, is followed by the Integrity
         Protection subheader when the IOAM Option-Type is set to the IOAM E2E
         Integrity Protected Option-Type: <figure>
             <artwork>
@@ -610,49 +610,53 @@
       packet. In case of performance concerns, such method can be applied to a
       subset of the traffic by using sampling of data to enable IOAM with
       integrity protection. Both symmetric and asymmetric signature methods work
-      as follows:
+      similarly, as follows:
 
         <list style="numbers">
           <t>The encapsulating node creates a nonce and stores it in the Nonce
           field of the Integrity Protection subheader. The signature is
           generated over the Nonce field and the hash of IOAM-Data-Fields it has
-          inserted, i.e., sign(Nonce || hash(IOAM-Data-Fields)). IOAM-Data-Fields that
-          will be updated in-place MUST be excluded from the signature (e.g.,
-          the POT Cumulative field). The signature is stored in the Signature
-          field of the Integrity Protection subheader. Important note: if all
-          the inserted IOAM-Data-Fields are to be updated in-place, or if there is no
-          IOAM-Data-Field at all, the encapsulating node MUST NOT use an Integrity
+          inserted, i.e., sign(Nonce || hash(IOAM-Data-Fields)). IOAM-Data-Fields
+          supposed to be modified by other IOAM nodes on the path MUST be excluded
+          from the signature (e.g., the POT Cumulative field). The signature is
+          stored in the Signature field of the Integrity Protection subheader.
+          Important note: if all the inserted IOAM-Data-Fields are supposed to be
+          modified by other IOAM nodes on the path, or if there is no IOAM-Data-Field
+          inserted at all, then the encapsulating node MUST NOT use an Integrity
           Protected Option-Type.</t>
 
           <t>A transit node generates a signature over the Signature field and
           the hash of IOAM-Data-Fields it has inserted, i.e.,
-          sign(Signature || hash(IOAM-Data-Fields)). IOAM-Data-Fields that are updated
-          in-place MUST be excluded from the signature (e.g., the POT Cumulative
-          field). The signature is stored in the Signature field of the
-          Integrity Protection subheader. Important note: if all the IOAM-Data-Fields
-          involved are updated in-place, or if there is no IOAM-Data-Field involved,
-          the transit node MUST NOT generate a signature and MUST NOT update the
-          Signature field.</t>
+          sign(Signature || hash(IOAM-Data-Fields)). IOAM-Data-Fields modified
+          in-place by the transit node MUST be excluded from the signature
+          (e.g., the POT Cumulative field). The signature is stored in the Signature
+          field of the Integrity Protection subheader. Important note: if the
+          transit node does not insert IOAM-Data-Fields (e.g., it only modifies
+          IOAM-Data-Fields in-place, or does nothing), then the transit node
+          MUST NOT generate a signature and MUST NOT update the Signature field.</t>
 
-          <t>The decapsulating node behaves exactly the same as a transit node.
-          The only difference is that the signature MAY NOT be required when the
-          decapsulating node is also the Validator, for obvious performance
-          reasons.</t>
-
-          <t>The Validator recreates the signature over IOAM-Data-Fields collected
-          and checks the integrity against the Signature field. In order to
-          recompute the signature, the Validator iteratively follows the same
-          procedure as for the encapsulating, transit and decapsulating nodes,
-          in that order. It is trivial in some cases (e.g., POT Type-0 or E2E),
-          where only the encapsulating node generates a signature. For other
-          cases where transit nodes also generate a signature (e.g., Trace
-          Option-Types), node-ids MUST be recorded. Details on how the mapping
-          between node-ids and keys is implemented are outside the scope of this
-          document.</t>
+          <t>The decapsulating node (aka the Validator) is responsible for the
+          integrity verification of the IOAM-Data-Fields collected. Serving as
+          the Validator, the decapsulating
+          node MUST NOT generate a signature based on IOAM-Data-Fields it has
+          inserted, if any, and therefore MUST NOT update the Signature field.
+          To validate the IOAM-Data-Fields integrity, the Validator
+          recomputes the signature by iteratively following the same procedure
+          as for the encapsulating and transit nodes, in that order, using their
+          respective keys (see <xref target="SymmetricMethod" /> or 
+          <xref target="AsymmetricMethod" /> depending on the approach, i.e., symmetric
+          or asymmetric). The recomputed signature is then compared to the
+          Signature field. It is trivial in some cases (e.g., with POT Type-0 or
+          E2E Option-Types), where only the encapsulating node generates a
+          signature, as specified by the method described in this section.
+          For other cases where transit nodes also generate a signature (e.g.,
+          with Trace Option-Types), node-ids MUST be included in
+          IOAM-Data-Fields. Details on how the mapping between node-ids and keys
+          is implemented on the Validator are outside the scope of this document.</t>
         </list>
       </t>
 
-      <section title="Symmetric key based signature">
+      <section anchor="SymmetricMethod" title="Symmetric key based signature">
         <t>This method assumes that symmetric keys have been distributed to
         the respective nodes as well as the Validator (the Validator receives
         all the keys). The details of the mechanisms responsible for key
@@ -662,7 +666,7 @@
         target="IOAM-IP-registry"/> and the approach MUST be symmetric.</t>
       </section>
 
-      <section title="Asymmetric key based signature">
+      <section anchor="AsymmetricMethod" title="Asymmetric key based signature">
         <t>This method assumes that asymmetric keys have been generated per
         IOAM node and the respective nodes can access their keys (the
         Validator receives all the public keys). The details of the mechanisms
@@ -733,9 +737,8 @@
 
         <section title="Replay protection">
         <t>The nonce makes a signature chain unique but does not necessarily
-        prevent replay attacks. To enable replay protection, both the encap node
-        and the validator MUST synchronize on a unique nonce, e.g., based on a
-        timestamp only valid for a short period of time.</t>
+        prevent replay attacks. To enable replay protection, the encapsulating node
+        and the Validator MUST use a common, unique nonce.</t>
         </section>
     </section>
 
@@ -817,7 +820,7 @@
 
 <!--      &RFC8300; -->
 
-      &I-D.ietf-ippm-ioam-data;
+      &RFC9197;
 
 <!--
       &I-D.ietf-sfc-proof-of-transit;
@@ -830,7 +833,7 @@
 
       &I-D.brockners-ippm-ioam-geneve; -->
 
-      &I-D.ietf-detnet-security;
+      &RFC9055;
 
 <!--      &I-D.ietf-ippm-ioam-direct-export; -->
 
