@@ -20,7 +20,7 @@
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-08"
+<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-09"
      ipr="trust200902">
   <front>
     <title abbrev="In-situ OAM IPv6 encapsulation">In-situ OAM IPv6
@@ -64,7 +64,7 @@
 
 
 
-    <date day="16" month="June" year="2022"/>
+    <date day="25" month="September" year="2022"/>
 
     <area>Transport Area</area>
 
@@ -129,9 +129,7 @@
             <t hangText="E2E:">Edge-to-Edge</t>
 
             <t hangText="IOAM:">In-situ Operations, Administration, and
-            Maintenance</t>
-
-            <t hangText="ION:">IOAM Overlay Network</t>
+            Maintenance as defined in <xref target="RFC9197"/></t>
 
             <t hangText="OAM:">Operations, Administration, and Maintenance</t>
 
@@ -156,7 +154,7 @@
          enabled per interface on every node within the IOAM domain.  Unless a
          particular interface is explicitly enabled (i.e., explicitly
          configured) for IOAM, a router MUST ignore IOAM Options.  As
-         additional security, IOAM domains SHOULD provide a mechanism to
+         additional security, IOAM domains MUST provide a mechanism to
 	 prevent injections at ingress or leaks at egress.</t>
 
       <t>An IPv6 packet carrying IOAM data in an Extension header can have
@@ -304,14 +302,16 @@
 
             <t hangText="C3">Packets with IOAM data or associated ICMP errors,
             should not arrive at destinations that have no knowledge of IOAM.
-            For exmample, if IOAM is used in in transit devices, misleading ICMP
+            For example, if IOAM is used in in transit devices, misleading ICMP
             errors due to addition and/or presence of OAM data in a packet could
             confuse the host that sent the packet if it did not insert the OAM
-            information.</t>
+            information. The entities that communicate the errors to devices
+            outside of the IOAM domain MUST remove any IOAM data from the packet
+            included in the error message.</t>
 
             <t hangText="C4">OAM data leaks can affect the forwarding behavior
             and state of network elements outside an IOAM domain. IOAM domains
-            SHOULD provide a mechanism to prevent data leaks or be able to
+            MUST provide a mechanism to prevent data leaks or be able to
             ensure that if a leak occurs, network elements outside the domain are
             not affected (i.e., they continue to process other valid packets).</t>
 
@@ -320,12 +320,23 @@
             due to the high complexity in identifying the source of the leak.
             Such a troubleshooting process might require coordination between
             multiple operators, complex configuration verification,
-            packet capture analysis, etc.</t>
+            packet capture analysis, etc. This requirement may require 
+            additional option or fields to be defined to identify the domain
+            that inserted the IOAM data,  this is not addressed
+            in this document.</t>
 
             <t hangText="C6">Compliance with <xref target="RFC8200"/>
             requires OAM data to be encapsulated instead of header/option
             insertion directly into in-flight packets using the original IPv6
             header.</t>
+
+            <t hangText="C7">The IOAM Incremental Trace Option-Type expands the
+            option length that may affect the processing of extension
+            headers and options that follow IOAM options.
+            Hence when IOAM Incremental Trace Option-Type is 
+            used in the deployment the RemainingLen field of the option
+            must follow the guidance in <xref target="RFC9197"/> and must
+            be computed and set appropriately. </t>
           </list></t>
       </section>
 
@@ -352,12 +363,13 @@
           <t>The "IP-in-IPv6 encapsulation with ULA" <xref target="RFC4193"/>
           approach can be used to apply IOAM to either an IPv6 or an IPv4
           network. In addition, it fulfills requirement C4 (avoid leaks) by
-          using ULA for the IOAM Overlay Network (ION).
+          using ULA for the IOAM Overlay Network.
           The original IP packet is preserved. An IPv6 header
           including IOAM data fields in an extension header is added in front
           of it, to forward traffic within and across the IOAM domain. IPv6
-          addresses for the ION, i.e. the outer IPv6 addresses are assigned
-          from the ULA space. Addressing and routing in the ION are to be
+          addresses for the IOAM Overlay Network, i.e. the outer IPv6 
+          addresses are assigned from the ULA space. 
+          Addressing and routing in the IOAM Overlay Network are to be
           configured so that the IP-in-IPv6 encapsulated packets follow the
           same path as the original, non-encapsulated packet would have taken.
           This would create an internal IPv6 forwarding topology using the
@@ -370,9 +382,9 @@
           in MPLS to establish and maintain an LSP forwarding topology that is
           parallel to the network's IGP forwarding topology.</t>
 
-          <t>Transit across the ION could leverage the transit approach for
-          traffic between BGP border routers, as described in <xref
-          target="RFC1772"/>, "A.2.3 Encapsulation". Assuming that the
+          <t>Transit across the IOAM Overlay Network  could leverage the 
+          transit approach for traffic between BGP border routers, as described
+          in <xref target="RFC1772"/>, "A.2.3 Encapsulation". Assuming that the
           operational guidelines specified in Section 4 of <xref
           target="RFC4193"/> are properly followed, the probability of leaks
           in this approach will be almost close to zero. If the packets do
@@ -418,11 +430,17 @@
 
       <t><figure>
           <artwork><![CDATA[
-   Hex Value    Binary Value      Description           Reference
+   Hex Value    Binary Value      Description            Reference
                 act chg rest
-   ----------------------------------------------------------------
-   TBD_1_0      00   0  TBD_1     IOAM                  [This draft]
-   TBD_1_1      00   1  TBD_1     IOAM                  [This draft]
+   ------------------------------------------------------------------
+   TBD_1_0      00   0  TBD_1     IOAM                   [This draft]
+                                  destination option 
+                                  and 
+                                  IOAM hop-by-hop option               
+   TBD_1_1      00   1  TBD_1     IOAM                   [This draft]
+                                  destination option 
+                                  and 
+                                  IOAM hop-by-hop option
 ]]></artwork>
         </figure></t>
     </section>
