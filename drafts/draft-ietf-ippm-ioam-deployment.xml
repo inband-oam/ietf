@@ -5,6 +5,8 @@
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced. 
      An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC9197 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9197.xml">
+<!ENTITY RFC8926 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8926.xml">
 <!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
 <!ENTITY RFC2119 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC7799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7799.xml">
@@ -27,7 +29,6 @@
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC8799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8799.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
-<!ENTITY I-D.ietf-ippm-ioam-data SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
 <!ENTITY I-D.ietf-ippm-6man-pdm-option SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-6man-pdm-option.xml">
@@ -36,7 +37,7 @@
 <!ENTITY I-D.ietf-ippm-ioam-ipv6-options SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-ipv6-options.xml">
 <!ENTITY I-D.ietf-6man-segment-routing-header SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-6man-segment-routing-header.xml">
 <!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
-<!ENTITY I-D.ietf-nvo3-geneve SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-nvo3-geneve.xml">
+<!ENTITY I-D.ietf-ippm-ioam-conf-state SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-conf-state.xml">
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.lapukhov-dataplane-probe.xml">
 <!ENTITY I-D.ietf-ntp-packet-timestamps SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ntp-packet-timestamps.xml">
 <!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
@@ -78,7 +79,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="bcp" docName="draft-ietf-ippm-ioam-deployment-01"
+<rfc category="info" docName="draft-ietf-ippm-ioam-deployment-02"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -171,7 +172,7 @@
       </address>
     </author>
 
-    <date day="11" month="April" year="2022"/>
+    <date day="12" month="October" year="2022"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -202,7 +203,7 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) collects 
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
-      provides a framework for IOAM deployment and provides best current
+      provides a framework for IOAM deployment and discusses best current
       practices.</t>
     </abstract>
   </front>
@@ -245,7 +246,7 @@
           <t hangText="E2E:">Edge to Edge</t>
 
           <t hangText="Geneve:">Generic Network Virtualization Encapsulation
-          <xref target="I-D.ietf-nvo3-geneve"/></t>
+          <xref target="RFC8926"/></t>
 
           <t hangText="GRE:">Generic Routing Encapsulation</t>
 
@@ -471,7 +472,7 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
             delay, buffer occupancy in case the packet was buffered, queue
             depth in case the packet was queued)</t>
           </list>The Option-Types of incremental tracing and pre-allocated
-        tracing are defined in <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+        tracing are defined in <xref target="RFC9197"/>.</t>
       </section>
 
       <section anchor="IOAM-proof-of-transit" title="Proof of Transit IOAM">
@@ -483,7 +484,7 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 
         <t>The IOAM Proof of Transit Option-Type consist of a fixed size "IOAM
         proof of transit option header" and "IOAM proof of transit option data
-        fields". For details see <xref target="I-D.ietf-ippm-ioam-data"/>.</t>
+        fields". For details see <xref target="RFC9197"/>.</t>
       </section>
 
       <section anchor="IOAM-edge-to-edge" title="Edge to Edge IOAM">
@@ -495,7 +496,7 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
         <t>The IOAM Edge-to-Edge Option-Type consist of a fixed size "IOAM
         Edge-to-Edge Option-Type header" and "IOAM Edge-to-Edge Option-Type
         data fields". For details see <xref
-        target="I-D.ietf-ippm-ioam-data"/>.</t>
+        target="RFC9197"/>.</t>
       </section>
 
       <section title="Direct Export IOAM">
@@ -510,7 +511,7 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
 
     <section anchor="ioam-encap" title="IOAM Encapsulations">
       <t>IOAM data fields and associated data types for in-situ OAM are
-      defined in <xref target="I-D.ietf-ippm-ioam-data"/>. The in-situ OAM
+      defined in <xref target="RFC9197"/>. The in-situ OAM
       data field can be transported by a variety of transport protocols,
       including NSH, Segment Routing, Geneve, BIER, IPv6, etc.</t>
 
@@ -954,6 +955,10 @@ packets  |Encapsu-|                                   |Decapsu-|
       that restrict the scope and features of the IOAM specification, thereby
       limiting it to a subset of the full functionality. IOAM profiles are
       defined in <xref target="I-D.mizrahi-ippm-ioam-profile"/>.</t>
+
+      <t>For deployments where the IOAM capabilities of a node are unknown,
+      <xref target="I-D.ietf-ippm-ioam-conf-state"/> <xref target="I-D.ietf-ippm-ioam-flags"/> could be used 
+	      to discover the enabled IOAM capabilities of nodes. </t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -1127,11 +1132,11 @@ packets  |Encapsu-|                                   |Decapsu-|
 
 	  &RFC8799;
 
+	  &RFC9197;
+
+	  &RFC8926;
+
       &I-D.ietf-nvo3-vxlan-gpe;
-
-      &I-D.ietf-nvo3-geneve;
-
-      &I-D.ietf-ippm-ioam-data;
 
       &I-D.ietf-ippm-ioam-flags;
 
@@ -1146,6 +1151,8 @@ packets  |Encapsu-|                                   |Decapsu-|
       &I-D.ietf-sfc-proof-of-transit;
 
       &I-D.ietf-ippm-ioam-ipv6-options;
+
+      &I-D.ietf-ippm-ioam-conf-state;
 
       &I-D.weis-ippm-ioam-eth;
 
