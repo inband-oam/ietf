@@ -470,11 +470,10 @@
       </section>
     </section>
 
-    <section title="Integrity Protected Option-Types">
-    <t>This section defines new IOAM Option-Types to be allocated in the IOAM
-    Option-Type Registry. Their purpose is to carry IOAM-Data-Fields with
-    integrity protection. Each of the IOAM Option-Types defined in <xref
-    target="RFC9197"/> is extended as follows:</t>
+    <section anchor="NewIOAMOptionTypes" title="Integrity Protected Option-Types">
+    <t>This section defines new IOAM Option-Types. Their purpose is to carry
+    IOAM-Data-Fields with integrity protection. Each of the IOAM Option-Types
+    defined in <xref target="RFC9197"/> is extended as follows:</t>
 
         <t><list style="hanging">
             <t hangText="64">IOAM Pre-allocated Trace Integrity Protected
@@ -492,11 +491,11 @@
             corresponds to the IOAM E2E Option-Type with integrity protection.</t>
           </list></t>
 
-      <t>The Integrity Protection subheader follows the IOAM Option-Type
+      <t>The IOAM Integrity Protection header follows the IOAM Option-Type
       header when the IOAM Option-Type is an Integrity Protected Option-Type.
       It is defined as follows:</t>
 
-      <t><figure>
+      <t><figure title="IOAM Integrity Protection header">
             <artwork>
 
  0                   1                   2                   3
@@ -515,8 +514,9 @@
 
       <t><list style="hanging">
         <t hangText="Signature-suite:">8-bit unsigned integer. 
-        This field defines the algorithms used to compute the digest 
-        and the signature over the IOAM-Data-Fields.</t>
+        This field defines the algorithm pair used to compute the digest
+        and the signature over the IOAM-Data-Fields, as defined in <xref
+        target="IOAM-IP-registry"/>.</t>
 
         <t hangText="Nonce length:">8-bit unsigned integer. This field
         specifies the length of the Nonce in octets.</t>
@@ -535,7 +535,7 @@
         <t>Both the IOAM Pre-allocated Trace Option-Type header and the IOAM
         Incremental Trace Option-Type header, as defined in <xref
         target="RFC9197"/>, are followed by the Integrity
-        Protection subheader when the IOAM Option-Type is respectively set to
+        Protection header when the IOAM Option-Type is respectively set to
         the IOAM Pre-allocated Trace Integrity Protected Option-Type or the IOAM
         Incremental Trace Integrity Protected Option-Type:
         <figure>
@@ -561,7 +561,7 @@
       <section title="Integrity Protected POT Option-Type">
         <t>The IOAM POT Option-Type header, as defined in <xref
         target="RFC9197"/>, is followed by the Integrity
-        Protection subheader when the IOAM Option-Type is set to the IOAM POT
+        Protection header when the IOAM Option-Type is set to the IOAM POT
         Integrity Protected Option-Type: <figure>
             <artwork>
  0                   1                   2                   3
@@ -583,7 +583,7 @@
       <section title="Integrity Protected E2E Option-Type">
         <t>The IOAM E2E Option-Type header, as defined in <xref
         target="RFC9197"/>, is followed by the Integrity
-        Protection subheader when the IOAM Option-Type is set to the IOAM E2E
+        Protection header when the IOAM Option-Type is set to the IOAM E2E
         Integrity Protected Option-Type: <figure>
             <artwork>
  0                   1                   2                   3
@@ -614,12 +614,12 @@
 
         <list style="numbers">
           <t>The encapsulating node creates a nonce and stores it in the Nonce
-          field of the Integrity Protection subheader. The signature is
+          field of the IOAM Integrity Protection header. The signature is
           generated over the Nonce field and the hash of IOAM-Data-Fields it has
           inserted, i.e., sign(Nonce || hash(IOAM-Data-Fields)). IOAM-Data-Fields
           supposed to be modified by other IOAM nodes on the path MUST be excluded
           from the signature (e.g., the POT Cumulative field). The signature is
-          stored in the Signature field of the Integrity Protection subheader.
+          stored in the Signature field of the IOAM Integrity Protection header.
           Important note: if all the inserted IOAM-Data-Fields are supposed to be
           modified by other IOAM nodes on the path, or if there is no IOAM-Data-Field
           inserted at all, then the encapsulating node MUST NOT use an Integrity
@@ -630,7 +630,7 @@
           sign(Signature || hash(IOAM-Data-Fields)). IOAM-Data-Fields modified
           in-place by the transit node MUST be excluded from the signature
           (e.g., the POT Cumulative field). The signature is stored in the Signature
-          field of the Integrity Protection subheader. Important note: if the
+          field of the IOAM Integrity Protection header. Important note: if the
           transit node does not insert IOAM-Data-Fields (e.g., it only modifies
           IOAM-Data-Fields in-place, or does nothing), then the transit node
           MUST NOT generate a signature and MUST NOT update the Signature field.</t>
@@ -680,55 +680,64 @@
 
     <section anchor="IANA" title="IANA Considerations">
 
-      <section anchor="IOAM-type-registry" title="IOAM Option-Type Registry">
-        <t>This draft defines the following new code points in the IOAM
-        Option-Type Registry:</t>
+      <section anchor="IOAM-type-registry" title="IOAM Option-Types">
+        <t>IANA is requested to define the following new code points in the
+        "IOAM Option-Type" registry:</t>
 
         <t><list style="hanging">
             <t hangText="64">IOAM Pre-allocated Trace Integrity Protected
-            Option-Type</t>
+            Option-Type (see <xref target="NewIOAMOptionTypes"/>)</t>
 
             <t hangText="65">IOAM Incremental Trace Integrity Protected
-            Option-Type</t>
+            Option-Type (see <xref target="NewIOAMOptionTypes"/>)</t>
 
-            <t hangText="66">IOAM POT Integrity Protected Option-Type</t>
+            <t hangText="66">IOAM POT Integrity Protected Option-Type
+            (see <xref target="NewIOAMOptionTypes"/>)</t>
 
-            <t hangText="67">IOAM E2E Integrity Protected Option-Type</t>
+            <t hangText="67">IOAM E2E Integrity Protected Option-Type
+            (see <xref target="NewIOAMOptionTypes"/>)</t>
           </list></t>
       </section>
 
       <section anchor="IOAM-IP-registry"
-               title="IOAM Integrity Protection Algorithm Suite Registry">
-        <t>"IOAM Integrity Protection Algorithm Suite Registry" in the
-        "In-Situ OAM (IOAM) Protocol Parameters" group. The one-octet "IOAM
-        Integrity Protection Algorithm Suite Registry" identifiers assigned by
-        IANA identify the digest algorithm and signature algorithm used in the
-        Signature Suite Identifier field. IANA has registered the following
-        algorithm suite identifiers for the digest algorithm and for the
-        signature algorithm. <figure title="IOAM Integrity Protection Algorithm
-        Suite Registry">
+               title="IOAM Integrity Protection Algorithm Suite">
+        <t>IANA is requested to define a new registry named "IOAM Integrity
+        Protection Algorithm Suite", inside the "In Situ OAM (IOAM)" registry
+        group.</t>
+
+        <t>The new registry defines 256 code points to identify the digest and
+        signature algorithms used in the Signature-suite field, as explained in
+        <xref target="NewIOAMOptionTypes"/>. The following code points are
+        defined in this document:
+
+        <figure title="IOAM Integrity Protection Algorithm Suite">
             <artwork>
  Algorithm
- Suite        Digest        Signature    Specification
- Identifier   Algorithm     Algorithm    Pointer           Approach
+ Suite        Digest       Signature                  Specification
+ Identifier   Algorithm    Algorithm     Approach     Pointer
++-----------+------------+-------------+------------+----------------+
+| 0x00      | Reserved   | Reserved    |    None    | This document  |
++-----------+------------+-------------+------------+----------------+
+| 0x01      | SHA-256    | ECDSA P-256 | Asymmetric | [SHS] [DSS]    |
+|           |            |             |            | [RFC6090]      |
+|           |            |             |            | This document  |
 +-----------+------------+-------------+----------------+------------+
-| 0x00      | Reserved   | Reserved    | This document  |    None    |
-+-----------+------------+-------------+----------------+------------+
-| 0x01      | SHA-256    | ECDSA P-256 | [SHS] [DSS]    | Asymmetric |
-|           |            |             | [RFC6090]      |            |
-|           |            |             | This document  |            |
-+-----------+------------+-------------+----------------+------------+
-| 0x02      | SHA-256    | AES-256     | [AES]          | Symmetric  |
-|           |            |             | [NIST.800-38D] |            |
-|           |            |             | This document  |            |
-+-----------+------------+-------------+----------------+------------+
-| 0x03-0xFF | Unassigned | Unassigned  |                |            |
-+-----------+------------+-------------+----------------+------------+
+| 0x02      | SHA-256    | AES-256     | Symmetric  | [AES]          |
+|           |            |             |            | [NIST.800-38D] |
+|           |            |             |            | This document  |
++-----------+------------+-------------+------------+----------------+
+| 0x03-0xFE | Unassigned | Unassigned  |            |                |
++-----------+------------+-------------+------------+----------------+
+| 0xFF      | Reserved   | Reserved    |    None    | This document  |
++-----------+------------+-------------+------------+----------------+
       </artwork>
-          </figure> Future assignments are to be made using the Standards
-        Action process defined in <xref target="RFC8126"/>. Assignments
-        consist of the one-octet algorithm suite identifier value and the
-        associated digest algorithm name and signature algorithm name.</t>
+          </figure> Code points 3-254 are available for assignment via the "IETF
+        Review" process, as per <xref target="RFC8126"/>.</t>
+
+        <t>New registration requests MUST use the following template: the value
+        of the requested code point, the associated digest algorithm name and
+        signature algorithm name, the corresponding approach, and a reference to
+        the document that defines the requested code point.</t>
       </section>
     </section>
 
