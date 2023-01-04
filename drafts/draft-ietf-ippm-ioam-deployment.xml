@@ -5,6 +5,11 @@
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced. 
      An alternate method (rfc include) is described in the references. -->
+<!ENTITY RFC8799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8799.xml">
+<!ENTITY RFC9326 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9326.xml">
+<!ENTITY RFC2784 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2784.xml">
+<!ENTITY RFC8279 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8279.xml">
+<!ENTITY RFC9322 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9322.xml">
 <!ENTITY RFC9197 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9197.xml">
 <!ENTITY RFC8926 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8926.xml">
 <!ENTITY RFC7665 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7665.xml">
@@ -27,7 +32,7 @@
 <!ENTITY RFC8039 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8039.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
-<!ENTITY RFC8799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8799.xml">
+<!ENTITY I-D.ietf-ippm-ioam-data-integrity SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-data-integrity.xml">
 <!ENTITY I-D.ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-proof-of-transit.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.previdi-isis-segment-routing-extensions.xml">
@@ -41,10 +46,8 @@
 <!ENTITY I-D.lapukhov-dataplane-probe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.lapukhov-dataplane-probe.xml">
 <!ENTITY I-D.ietf-ntp-packet-timestamps SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ntp-packet-timestamps.xml">
 <!ENTITY I-D.spiegel-ippm-ioam-rawexport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.spiegel-ippm-ioam-rawexport.xml">
-<!ENTITY I-D.ietf-ippm-ioam-flags SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-flags.xml">
 <!ENTITY I-D.zhou-ippm-ioam-yang SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.zhou-ippm-ioam-yang.xml">
 <!ENTITY I-D.mizrahi-ippm-ioam-profile SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.mizrahi-ippm-ioam-profile.xml">
-<!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
 <!ENTITY I-D.weis-ippm-ioam-eth SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.weis-ippm-ioam-eth.xml">
 <!ENTITY I-D.ietf-sfc-ioam-nsh SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-sfc-ioam-nsh.xml">
 <!ENTITY I-D.xzlnp-bier-ioam SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.xzlnp-bier-ioam.xml">
@@ -79,8 +82,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="info" docName="draft-ietf-ippm-ioam-deployment-02"
-     ipr="trust200902">
+<rfc category="info" docName="draft-ietf-ippm-ioam-deployment-05" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -172,7 +174,7 @@
       </address>
     </author>
 
-    <date day="12" month="October" year="2022"/>
+    <date day="4" month="January" year="2023"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -203,8 +205,8 @@
       <t>In-situ Operations, Administration, and Maintenance (IOAM) collects 
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
-      provides a framework for IOAM deployment and discusses best current
-      practices.</t>
+      provides a framework for IOAM deployment and provides IOAM deployment
+      considerations and guidance.</t>
     </abstract>
   </front>
 
@@ -221,7 +223,7 @@
       sent. IOAM adds information to the already available data packets and
       therefore cannot be considered passive. In terms of the classification
       given in <xref target="RFC7799"/> IOAM could be portrayed as Hybrid Type
-      I. IOAM mechanisms can be leveraged where mechanisms using e.g. ICMP do
+      I. IOAM mechanisms can be leveraged where mechanisms using e.g., ICMP do
       not apply or do not offer the desired results, such as proving that a
       certain traffic flow takes a pre-defined path, SLA verification for the
       live data traffic, detailed statistics on traffic distribution paths in
@@ -232,23 +234,17 @@
 
     <section anchor="Conventions" title="Conventions">
 
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", 
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and 
-      "OPTIONAL" in this document are to be interpreted as described in BCP 14 
-      <xref target="RFC2119" format="default"/> <xref target="RFC8174" format="default"/> 
-      when, and only when, they appear in all capitals, as shown here.</t>
-
       <t>Abbreviations used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
-          <t hangText="BIER:">Bit Index Explicit Replication</t>
-
-          <t hangText="E2E:">Edge to Edge</t>
+          <t hangText="BIER:">Bit Index Explicit Replication
+	  <xref target="RFC8279"/></t>
 
           <t hangText="Geneve:">Generic Network Virtualization Encapsulation
           <xref target="RFC8926"/></t>
 
-          <t hangText="GRE:">Generic Routing Encapsulation</t>
+          <t hangText="GRE:">Generic Routing Encapsulation
+          <xref target="RFC2784"/></t>
 
           <t hangText="IOAM:">In-situ Operations, Administration, and
           Maintenance</t>
@@ -261,12 +257,6 @@
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
 
           <t hangText="POT:">Proof of Transit</t>
-
-          <t hangText="SFC:">Service Function Chain</t>
-
-          <t hangText="SID:">Segment Identifier</t>
-
-          <t hangText="SR:">Segment Routing</t>
 
           <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
           Generic Protocol Extension <xref
@@ -285,7 +275,7 @@
       devices. An IOAM-domain is defined by its perimeter or edge. The
       operator of an IOAM-domain is expected to put provisions in place to
       ensure that packets which contain IOAM data fields do not leak beyond
-      the edge of an IOAM domain, e.g. using for example packet filtering
+      the edge of an IOAM domain, e.g., using for example packet filtering
       methods. The operator should consider the potential operational impact
       of IOAM to mechanisms such as ECMP load-balancing schemes (e.g., load-balancing
       schemes based on packet length could be impacted by the increased packet
@@ -308,9 +298,15 @@
       <t>An "IOAM transit node" updates one or more of the IOAM-Data-Fields.
       If both the Pre-allocated and the Incremental Trace Option-Types are
       present in the packet, each IOAM transit node will update at most one of
-      these Option-Types. A transit node does not add new IOAM-Option-Types to
+      these Option-Types. 
+      Note that in case both Trace Option-Types are present in a packet, it 
+      is up to the IOAM data processing systems (see <xref target="export"/>)
+      to integrate the data from the two Trace Option-Types to form
+      a view of the entire journey of the packet.
+      A transit node does not add new IOAM-Option-Types to
       a packet, and does not change the IOAM-Data-Fields of an IOAM
-      Edge-to-Edge Option-Type.</t>
+      Edge-to-Edge Option-Type.
+      </t>
 
       <t>An "IOAM decapsulating node" removes IOAM-Option-Type(s) from
       packets.</t>
@@ -325,11 +321,7 @@
       IOAM-Namespaces from the packet.</t>
 
       <t>IOAM-Namespaces allow for a namespace-specific definition and
-      interpretation of IOAM-Data-Fields. An interface-id could for example
-      point to a physical interface (e.g., to understand which physical
-      interface of an aggregated link is used when receiving or transmitting a
-      packet) whereas in another case it could refer to a logical interface
-      (e.g., in case of tunnels). Please refer to <xref
+      interpretation of IOAM-Data-Fields. Please refer to <xref
       target="ioam_namespaces"/> for a discussion of IOAM-Namespaces.</t>
 
       <figure align="center" anchor="IOAM-roles" title="Roles of IOAM nodes">
@@ -437,7 +429,8 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
         associated data. All IOAM-Data-Fields are defined in the context of an
         IOAM-Namespace.</t>
 
-        <t>IOAM tracing can collect the following types of information:</t>
+	<t>IOAM tracing can for example collect the following 
+	types of information:</t>
 
         <t><list style="symbols">
             <t>Identification of the IOAM node. An IOAM node identifier can
@@ -459,7 +452,7 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
             of the information is defined by the operator in a specific
             deployment. For a specific IOAM-Namespace, all IOAM nodes should
             interpret the generic data the same way. Examples for generic IOAM
-            data include geo-location information (location of the node at the
+            data include geolocation information (location of the node at the
             time the packet was processed), buffer queue fill level or cache
             fill level at the time the packet was processed, or even a battery
             charge level.</t>
@@ -478,9 +471,8 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       <section anchor="IOAM-proof-of-transit" title="Proof of Transit IOAM">
         <t>IOAM Proof of Transit Option-Type is to support path or service
         function chain <xref target="RFC7665"/> verification use cases.
-        Proof-of-transit uses methods like nested hashing or nested encryption
-        of the IOAM data or mechanisms such as Shamir's Secret Sharing Schema
-        (SSSS).</t>
+        Proof-of-transit could use methods like nested hashing or nested encryption
+        of the IOAM data.</t>
 
         <t>The IOAM Proof of Transit Option-Type consist of a fixed size "IOAM
         proof of transit option header" and "IOAM proof of transit option data
@@ -505,7 +497,7 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
         within the data packets. The IOAM Direct Export Option-Type consist of
         a fixed size "IOAM direct export option header". Direct Export for
         IOAM is defined in <xref
-        target="I-D.ietf-ippm-ioam-direct-export"/>.</t>
+        target="RFC9326"/>.</t>
       </section>
     </section>
 
@@ -534,37 +526,7 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
       <section title="GRE">
         <t>IOAM encapsulation for GRE is outlined as part of the "EtherType
         Protocol Identification of In-situ OAM Data" in <xref
-        target="I-D.weis-ippm-ioam-eth"/>, though no example protocol header
-        stacks are provided in the document. When used with GRE, the
-        IOAM-Option-Types (the below diagram uses "IOAM" as shorthand for
-        IOAM-Option-Types) are sequenced in behind the GRE header that follows
-        the "outer" IP header. <xref target="GRE-example"/> shows two example
-        protocol header stacks that use GRE along with IOAM.</t>
-
-        <figure align="center" anchor="GRE-example"
-                title="GRE with IOAM examples">
-          <artwork align="left"><![CDATA[
-        Example 1                     Example 2
-
-   |      ...       |            |       ...      |  
-   +----------------+            +----------------+
-   | TCP/UDP header |            |    IP, ...     |  
-   +----------------+            +----------------+
-   |    IP header   |            |   Eth. header  |
-   +----------------+            +----------------+
-   |      IOAM      |            |      IOAM      |
-   +----------------+            +----------------+
-   |    GRE header  |            |    GRE header  |
-   +----------------+            +----------------+
-   |    IP header   |            |    IP header   |
-   +----------------+            +----------------+
-   |     Layer 2    |            |     Layer 2    |
-   +----------------+            +----------------+
-   |     Layer 1    |            |     Layer 1    |      
-   +----------------+            +----------------+
-
-]]></artwork>
-        </figure>
+        target="I-D.weis-ippm-ioam-eth"/>.</t>
       </section>
 
       <section title="Geneve">
@@ -656,14 +618,21 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
     </section>
 
     <section anchor="IOAM-framework" title="IOAM Deployment Considerations">
-      <t>This section discusses several aspects of an IOAM deployment,
-      including IOAM Namespaces, IOAM Layering, traffic-sets that IOAM is
-      applied to and IOAM loopback mode.</t>
+      <t>This section describes several concepts of IOAM, and provides considerations
+      that need to be taken to account when implementing IOAM in a network domain.
+      This includes concepts like IOAM Namespaces, IOAM Layering, traffic-sets that IOAM is
+      applied to and IOAM loopback mode. For a definition of IOAM Namespaces
+      and IOAM layering, please refer to <xref target="RFC9197"/>. 
+      IOAM loopback mode is defined in <xref target="RFC9322"/>.</t>
 
       <section anchor="ioam_namespaces" title="IOAM Namespaces">
         <t>IOAM-Namespaces add further context to IOAM-Option-Types and
-        associated IOAM-Data-Fields. IOAM-Namespaces support several different
-        uses:</t>
+	associated IOAM-Data-Fields. IOAM-Namespaces are defined in
+	Section 4.3 of <xref target="RFC9197"/>. The Namespace-ID is
+	part of the IOAM Option-Type definition, see e.g., Section
+	4.4 of <xref target="RFC9197"/> for IOAM Trace Option-Types
+	or Section 4.6 of <xref target="RFC9197"/> for the IOAM Edge-to-Edge Option-Type.
+	IOAM-Namespaces support several uses:</t>
 
         <t><list style="symbols">
             <t>IOAM-Namespaces can be used by an operator to distinguish
@@ -685,7 +654,14 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
             Namespace-ID can be used to determine the timestamp format.
             IOAM-Data-Fields (e.g., buffer occupancy) which do not have a unit
             associated are to be interpreted within the context of a
-            IOAM-Namespace.</t>
+	    IOAM-Namespace. The Namespace-ID could also be used to distinguish
+	    between different types of interfaces: An interface-id could for example
+	    point to a physical interface (e.g., to understand which physical
+	    interface of an aggregated link is used when receiving or transmitting a
+	    packet) whereas in another case it could refer to a logical interface
+	    (e.g., in case of tunnels). Namespace-IDs could be used to 
+	    distinguish between the different types of interfaces.
+            </t>
 
             <t>IOAM-Namespaces can be used to identify different sets of
             devices (e.g., different types of devices) in a deployment: If an
@@ -731,25 +707,25 @@ packets  |Encapsu-|     | Transit|     | Transit|     |Decapsu-|
         stacked on top of each other, IOAM-Data-Fields could be present in
         different protocol fields at different layers. Layering allows
         operators to instrument the protocol layer they want to measure. The
-        behavior follows the ships-in-the-night model, i.e. IOAM-Data-Fields
-        in one layer are independent from IOAM-Data-Fields in another layer.
+        behavior follows the ships-in-the-night model, i.e., IOAM-Data-Fields
+        in one layer are independent of IOAM-Data-Fields in another layer.
         Or in other words: Even though the term "layering" often implies some
         form of hierarchy and relationship, in IOAM, layers are independent
-        from each other and don't assume any relationship among them. The
+        of each other and don't assume any relationship among them. The
         different layers could, but do not have to share the same IOAM
-        encapsulation mechanisms. Similarly, the sematics of the
-        IOAM-Data-Fields, can, do not have to be associated to across
-        different layers. For example, a node which inserts node-id
+	encapsulation mechanisms. Similarly, the semantics of the IOAM-Data-
+	Fields, can, but do not have to be associated to cross different layers.
+        For example, a node which inserts node-id
         information into two different layers could use "node-id=10" for one
         layer and "node-id=1000" for the second layer.</t>
 
         <t><xref target="IOAM-layering"/> shows an example of IOAM layering.
         The figure shows a Geneve tunnel carried over IPv6 which starts at
         node A and ends at node D. IOAM information is encapsulated in IPv6 as
-        well as in Geneve. At the IPv6 layer, node A is IOAM encapsulating
+        well as in Geneve. At the IPv6 layer, node A is the IOAM encapsulating
         node (into IPv6), node D is the IOAM decapsulating node and node B and
-        node C are IOAM transit nodes. At the Geneve layer, node A is IOAM
-        encapsulating node (into Geneve) and node D is IOAM decapsulating node
+        node C are IOAM transit nodes. At the Geneve layer, node A is the IOAM
+        encapsulating node (into Geneve) and node D is the IOAM decapsulating node
         (from Geneve). The use of IOAM at both layers as shown in the example
         here could be used to reveal which nodes of an underlay (here the IPv6
         network) are traversed by tunneled packet in an overlay (here the
@@ -785,7 +761,7 @@ packets  |Encapsu-|                                   |Decapsu-|
         <t>IOAM offers two different IOAM Option-Types for tracing:
         "Incremental" Trace-Option-Type and "Pre-allocated" Trace-Option-Type.
         "Incremental" refers to a mode of operation where the packet is
-        expanded at every IOAM node that addes IOAM-Data-Fields.
+        expanded at every IOAM node that adds IOAM-Data-Fields.
         "Pre-Allocated" describes a mode of operation where the IOAM
         encapsulating node allocates room for all IOAM-Data-Fields in the
         entire IOAM domain. More specifically:</t>
@@ -803,14 +779,23 @@ packets  |Encapsu-|                                   |Decapsu-|
             defined as a container of node data fields where each node
             allocates and pushes its node data immediately following the
             option header.</t>
-          </list>A deployment can choose to configure and support one or both
-        of the IOAM Trace-Option-Types. The operator decides by means of
-        configuration which Trace-Option-Type(s) will be used for a particular
-        domain. Deployments can mix devices which include either the
-        Incremental Trace-Option-Type or the Pre-allocated Trace-Option-Type,
-        e.g., in case different types of packet forwarders and associated
-        different types of IOAM implementations exist in a deployment. As a
-        result, both Option-Types can be present in a packet. IOAM
+        </list>
+
+	Which IOAM Trace-Option-Types can be supported is not only a function of
+        operator-defined configuration, but may also be limited by protocol
+        constraints unique to a given encapsulating protocol.
+
+	For encapsulating protocols which support both IOAM Trace-Option-Types,
+	the operator decides by means of configuration which 
+	Trace-Option-Type(s) will be used for a particular domain.
+	In this case, deployments can mix devices which include either the
+        Incremental Trace-Option-Type or the Pre-allocated Trace-Option-Type.
+        If for example different types of packet forwarders and associated
+	different types of IOAM implementations exist in a deployment and
+	the encapsulating protocol supports both IOAM Trace-Option-Types,
+	a deployment can mix devices which include either the
+	Incremental Trace-Option-Type or the Pre-allocated Trace-Option-Type. 
+	As a result, both Option-Types can be present in a packet. IOAM
         decapsulating nodes remove both types of Trace-Option-Types from the
         packet.</t>
 
@@ -846,16 +831,16 @@ packets  |Encapsu-|                                   |Decapsu-|
             transit nodes will expand the packet and insert the
             IOAM-Data-Fields as long as there is space available in the
             packet, i.e. as long as the size of the packet stays within the
-            bounds of the MTU of any of the links in the IOAM domain. There is
+            bounds of the MTU of the links in the IOAM domain. There is
             no need for the operator to configure the IOAM encapsulation node
             with the maximum number of nodes that IOAM information could be
             collected from. The operator has to ensure that the minimum MTU of
-            any of the links in the IOAM domain is known to all IOAM transit
+            the links in the IOAM domain is known to all IOAM transit
             nodes.</t>
           </list></t>
       </section>
 
-      <section title="Traffic-sets That IOAM Is Applied To">
+      <section title="Traffic-sets that IOAM Is Applied To">
         <t>IOAM can be deployed on all or only on subsets of the live user
         traffic, e.g., per interface, based on an access control list or flow
         specification defining a specific set of traffic, etc.</t>
@@ -874,7 +859,7 @@ packets  |Encapsu-|                                   |Decapsu-|
         copy back towards the source. Loopack applies to IOAM deployments
         where the encapsulating node is either a host or the start of a
         tunnel: For details on IOAM loopback, please refer to <xref
-        target="I-D.ietf-ippm-ioam-flags"/>.</t>
+        target="RFC9322"/>.</t>
       </section>
 
       <section title="IOAM Active Mode">
@@ -882,7 +867,7 @@ packets  |Encapsu-|                                   |Decapsu-|
         packet as opposed to regular user data traffic. Active mode is
 	expected to be used for active measurement using IOAM. 
         For details on IOAM active mode, please refer to <xref
-        target="I-D.ietf-ippm-ioam-flags"/>.</t>
+        target="RFC9322"/>.</t>
 
 	<t>Example use-cases for IOAM Active Mode include:<list style="symbols">
             <t>Endpoint detailed active measurement: Synthetic probe packets
@@ -947,7 +932,7 @@ packets  |Encapsu-|                                   |Decapsu-|
       <t>The YANG model for configuring IOAM in network nodes which support
       IOAM is defined in <xref target="I-D.zhou-ippm-ioam-yang"/>.</t>
 
-      <t>A deployment can leverage IOAM profiles is to limit the scope of IOAM
+      <t>A deployment can leverage IOAM profiles to limit the scope of IOAM
       features, allowing simpler implementation, verification, and
       interoperability testing in the context of specific use cases that do
       not require the full functionality of IOAM. An IOAM profile defines a
@@ -957,7 +942,7 @@ packets  |Encapsu-|                                   |Decapsu-|
       defined in <xref target="I-D.mizrahi-ippm-ioam-profile"/>.</t>
 
       <t>For deployments where the IOAM capabilities of a node are unknown,
-      <xref target="I-D.ietf-ippm-ioam-conf-state"/> <xref target="I-D.ietf-ippm-ioam-flags"/> could be used 
+      <xref target="I-D.ietf-ippm-ioam-conf-state"/> could be used 
 	      to discover the enabled IOAM capabilities of nodes. </t>
     </section>
 
@@ -971,14 +956,14 @@ packets  |Encapsu-|                                   |Decapsu-|
       detection of failures or anomalies, or create a false illusion of
       nonexistent ones.</t>
 
-      <t>The Proof of Transit Option-Type (Section <xref
+      <t>The Proof of Transit Option-Type (<xref
       target="IOAM-proof-of-transit"/>) is used for verifying the path of data
       packets. The security considerations of POT are further discussed in
       <xref target="I-D.ietf-sfc-proof-of-transit"/>.</t>
 
       <t>Security considerations related to the use of IOAM flags, in
       particular the loopback flag are found in <xref
-      target="I-D.ietf-ippm-ioam-flags"/>.</t>
+      target="RFC9322"/>.</t>
 
       <t>IOAM data can be subject to eavesdropping. Although the  
       confidentiality of the user data is not at risk in this context, 
@@ -987,40 +972,49 @@ packets  |Encapsu-|                                   |Decapsu-|
       performance, queue states, buffer occupancy and other information. 
       Recon is an improbable security threat in an IOAM deployment that
       is within a confined physical domain. However, in deployments that 
-      are not confined to a single LAN, but span multiple inter-connected 
-      sites (for example, using an overlay network), the inter-site links can 
-	  be secured (e.g., by IPsec) in order to avoid external eavesdropping.
+      are not confined to a single LAN, but span multiple interconnected 
+      sites (for example, using an overlay network), the inter-site links
+      are expected to be secured (e.g., by IPsec)
+      in order to avoid external eavesdropping and introduction 
+      of malicious or false data.
       Another possible mitigation approach is to use the "direct exporting" 
-      mode <xref target="I-D.ietf-ippm-ioam-direct-export"/>.
+      mode <xref target="RFC9326"/>.
       In this case the IOAM related trace information would
       not be available in the customer data packets, but would trigger 
-	  exporting of (secured) packet-related IOAM information at every node. 
-	  IOAM data export and securing IOAM data export is outside the scope of 
-	  this document.</t>
+      exporting of (secured) packet-related IOAM information at every node. 
+      IOAM data export and securing IOAM data export is outside the scope of 
+      this document.</t>
 
       <t>IOAM can be used as a means for implementing Denial of Service (DoS)
       attacks, or for amplifying them. For example, a malicious attacker can
       add an IOAM header to packets or modify an IOAM header in en route 
-	  packets in order to consume the resources of
+      packets in order to consume the resources of
       network devices that take part in IOAM or collectors that analyze the
       IOAM data. Another example is a packet length attack, in which an
       attacker pushes headers associated with IOAM Option-Types into data
       packets, causing these packets to be increased beyond the MTU size,
-      resulting in fragmentation or in packet drops. Such DoS attacks can be
-      mitigated by deploying IOAM in confined administrative domains, and
-      by defining performance limits on IOAM encapsulation and IOAM exporting.
-      By limiting the rate and/or percentage of packets that 
-      are subject to IOAM encpasulation and the rate of exported traffic, it
-      is possible to cofine the impact of such attacks.</t>
+      resulting in fragmentation or in packet drops. 
+      Such DoS attacks can be mitigated by deploying IOAM in confined
+      administrative domains, and by limiting the rate and/or the percentage
+      of packets that an IOAM encapsulating node adds IOAM information to,
+      as well as limiting rate and/or percentage of packets that an IOAM
+      transit or an IOAM decapsulating node creates to export 
+      IOAM information extracted from the data packets that carry IOAM information.</t>
 
-      <t>Since IOAM options may include timestamps, if network devices use
-      synchronization protocols then any attack on the time protocol <xref
-      target="RFC7384"/> can compromise the integrity of the timestamp-related
+      <t>Even though IOAM focused on limited domains <xref target="RFC8799"/>, there might
+      be deployments for which it is important for IOAM transit nodes
+      and IOAM decapsulating nodes to know that the data received hadn't been tampered with. 
+      In those cases, the IOAM data should be integrity protected.
+      Integrity protection of IOAM data
+      fields is described in <xref target="I-D.ietf-ippm-ioam-data-integrity"/>.
+      In addition, since IOAM options may include timestamps, if network devices use
+      synchronization protocols then any attack on the time protocol <xref target="RFC7384"/>
+      can compromise the integrity of the timestamp-related
       data fields. Synchronization attacks can be mitigated by combining a
       secured time distribution scheme, e.g., <xref target="RFC8915"/>, and by 
-	  using redundant clock sources <xref target="RFC5905"/> and/or redundant 
-	  network paths for the time distribution protocol 
-	  <xref target="RFC8039"/>.</t>
+      using redundant clock sources <xref target="RFC5905"/> and/or redundant 
+      network paths for the time distribution protocol <xref target="RFC8039"/>.
+      </t>
 
       <t>At the management plane, attacks may be implemented by misconfiguring
       or by maliciously configuring IOAM-enabled nodes in a way that enables
@@ -1028,14 +1022,21 @@ packets  |Encapsu-|                                   |Decapsu-|
       authenticates authorized users and verifies the integrity of
       configuration procedures.</t>
 
-      <t>Notably, IOAM is expected to be deployed in specific network domains,
-      thus confining the potential attack vectors to within the network
+      <t>Notably, IOAM is expected to be deployed in limited network domains (<xref target="RFC8799"/>),
+      thus confining the potential attack vectors to within the limited 
       domain. Indeed, in order to limit the scope of threats to within the
       current network domain the network operator is expected to enforce
-      policies that prevent IOAM traffic from leaking outside of the IOAM
-      domain, and prevent IOAM data from outside the domain to be processed
-      and used within the domain. Note that the Immediate Export mode
-      (reference to be added in a future revision) can mitigate the potential
+      policies that prevent IOAM traffic from leaking outside the IOAM
+      domain, and prevent an attacker from introducing malicious or false 
+      IOAM data to be processed and used within the IOAM domain.
+      IOAM data leakage could lead to privacy 
+      issues. Consider an IOAM encapsulating node that is a home gateway 
+      in an operator's network. A home gateway is often identified with an individual,
+      and revealing IOAM data such as "IOAM node identifier"
+      or geolocation information outside of the limited domain
+      could be harmful for that user. 
+      Note that the Direct Export mode
+      <xref target="RFC9326"/> can mitigate the potential
       threat of IOAM data leaking through data packets.</t>
     </section>
 
@@ -1065,10 +1066,6 @@ packets  |Encapsu-|                                   |Decapsu-|
      with a value containing a set of directories to search.  These can be either in the local
      filing system or remote ones accessed by http (http://domain/dir/... ).-->
 
-    <references title="Normative References">
-      &RFC2119;
-
-      &RFC8174; 
 
       <!--  &RFC5905; -->
 
@@ -1111,7 +1108,6 @@ packets  |Encapsu-|                                   |Decapsu-|
       </reference>
 
 -->
-    </references>
 
     <references title="Informative References">
       &RFC7665;
@@ -1134,13 +1130,18 @@ packets  |Encapsu-|                                   |Decapsu-|
 
 	  &RFC9197;
 
+	  &RFC9322;
+
+	  &RFC9326;
+
+	  &RFC8279;
+
 	  &RFC8926;
 
+	  &RFC2784;
+
+
       &I-D.ietf-nvo3-vxlan-gpe;
-
-      &I-D.ietf-ippm-ioam-flags;
-
-      &I-D.ietf-ippm-ioam-direct-export;
 
       &I-D.zhou-ippm-ioam-yang;
 
@@ -1153,6 +1154,8 @@ packets  |Encapsu-|                                   |Decapsu-|
       &I-D.ietf-ippm-ioam-ipv6-options;
 
       &I-D.ietf-ippm-ioam-conf-state;
+
+      &I-D.ietf-ippm-ioam-data-integrity;
 
       &I-D.weis-ippm-ioam-eth;
 
@@ -1167,6 +1170,7 @@ packets  |Encapsu-|                                   |Decapsu-|
       &I-D.ali-spring-ioam-srv6;
 
       &I-D.brockners-ippm-ioam-vxlan-gpe;
+
     </references>
   </back>
 </rfc>
