@@ -637,22 +637,27 @@
 
           <t>The decapsulating node (aka the Validator) is responsible for the
           integrity verification of the IOAM-Data-Fields collected. Serving as
-          the Validator, the decapsulating
-          node MUST NOT generate a signature based on IOAM-Data-Fields it has
-          inserted, if any, and therefore MUST NOT update the Signature field.
-          To validate the IOAM-Data-Fields integrity, the Validator
-          recomputes the signature by iteratively following the same procedure
-          as for the encapsulating and transit nodes, in that order, using their
-          respective keys (see <xref target="SymmetricMethod" /> or 
-          <xref target="AsymmetricMethod" /> depending on the approach, i.e., symmetric
-          or asymmetric). The recomputed signature is then compared to the
-          Signature field. It is trivial in some cases (e.g., with POT Type-0 or
-          E2E Option-Types), where only the encapsulating node generates a
-          signature, as specified by the method described in this section.
-          For other cases where transit nodes also generate a signature (e.g.,
-          with Trace Option-Types), node-ids MUST be included in
-          IOAM-Data-Fields. Details on how the mapping between node-ids and keys
-          is implemented on the Validator are outside the scope of this document.</t>
+          the Validator, the decapsulating node MUST NOT generate a signature
+          based on IOAM-Data-Fields it has inserted, if any, and therefore MUST
+          NOT update the Signature field. In order to check the IOAM-Data-Fields
+          integrity, the Validator verifies the signature chain by iteratively
+          following the same procedure in the reverse order (i.e., from the last
+          node to the encapsulating node). For each node, the Validator applies
+          the corresponding key (see <xref target="SymmetricMethod" /> or
+          <xref target="AsymmetricMethod" /> depending on the approach, i.e.,
+          symmetric or asymmetric) to the signature (initially, the Signature
+          field) to retrieve both the previous signature and the hash of the
+          IOAM-Data-Fields signed by the node. The retrieved hash is then
+          compared to the computed hash of the corresponding IOAM-Data-Fields
+          inserted by the node. As a result, the Validator can detect if the
+          IOAM-Data-Fields integrity is intact or was altered. The validation is
+          trivial in some cases (e.g., with POT Type-0 or E2E Option-Types),
+          where only the encapsulating node generates a signature, as specified
+          by the method described above in this section. For other cases where
+          transit nodes also generate a signature (e.g., with Trace Option-Types),
+          node-ids MUST be included in IOAM-Data-Fields. Details on how the
+          mapping between node-ids and keys is implemented on the Validator are
+          outside the scope of this document.</t>
         </list>
       </t>
 
