@@ -13,6 +13,9 @@
 <!ENTITY RFC4193 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4193.xml">
 <!ENTITY RFC1772 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1772.xml">
 <!ENTITY RFC9197 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9197.xml">
+<!ENTITY RFC8799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8799.xml">
+<!ENTITY RFC4302 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4302.xml">
+
 <!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
 ]>
 <?rfc toc="yes"?>
@@ -64,7 +67,7 @@
 
 
 
-    <date day="01" month="February" year="2023"/>
+    <date day="04" month="February" year="2023"/>
 
     <area>Transport Area</area>
 
@@ -123,8 +126,8 @@
       networks, such as the IPv6 Performance and Diagnostic Metrics
       Destination Option described in <xref target="RFC8250"/>.</t>
 
-      <t>IOAM data fields can be encapsulated two types of extension headers 
-      in IPv6 packets - either Hop-by-Hop Options header or 
+      <t>IOAM data fields can be encapsulated with two types of extension headers
+      in IPv6 packets - either Hop-by-Hop Options header or
       Destination options header.  Multiple options
       with the same Option Type MAY appear in the same Hop-by-Hop Options or
       Destination Options header, with distinct content.</t>
@@ -166,12 +169,12 @@
 
       <t><list style="hanging">
           <t hangText="Option Type:">8-bit option type identifier as defined
-          in<xref target="IANA"/>.</t>
+          in <xref target="IANA"/>.</t>
 
           <t hangText="Opt Data Len:">8-bit unsigned integer. Length of this
           option, in octets, not including the first 2 octets.</t>
 
-          <t hangText="Reserved:">8-bit field MUST be set to zero 
+          <t hangText="Reserved:">8-bit field MUST be set to zero
           by the source.</t>
 
           <t hangText="IOAM Type:">8-bit field as defined in section 7.1 in
@@ -183,7 +186,7 @@
 
       <t>IOAM Option data is inserted as follows:<list style="numbers">
           <t>Pre-allocated Trace Option: The IOAM Preallocated Trace
-          Option-Type defined in <xref target="RFC9197"/> is
+          Option-Type defined in Section 4.4 of <xref target="RFC9197"/> is
           represented as an IPv6 option in the Hop-by-Hop extension header: <list
               style="hanging">
               <t hangText="Option Type:">TBD_1_1 8-bit identifier of the
@@ -193,7 +196,7 @@
             </list></t>
 
           <t>Incremental Trace Option: The IOAM Incremental Trace
-          Option-Type defined in <xref target="RFC9197"/> is
+          Option-Type defined in Section 4.4 of <xref target="RFC9197"/> is
           represented as an IPv6 option in the Hop-by-Hop extension header: <list
               style="hanging">
               <t hangText="Option Type:">TBD_1_1 8-bit identifier of the
@@ -203,7 +206,7 @@
             </list></t>
 
           <t>Proof of Transit Option: The IOAM POT Option-Type defined in
-          <xref target="RFC9197"/> is represented as an IPv6
+          Section 4.5 of <xref target="RFC9197"/> is represented as an IPv6
           option in the Hop-by-Hop extension header: <list style="hanging">
               <t hangText="Option Type:">TBD_1_1 8-bit identifier of the
               IPv6 Option Type for IOAM.</t>
@@ -211,8 +214,8 @@
               <t hangText="IOAM Type:">IOAM POT Option-Type.</t>
             </list></t>
 
-          <t>Edge to Edge Option: The IOAM E2E option defined in <xref
-          target="RFC9197"/> is represented as an IPv6 option
+          <t>Edge to Edge Option: The IOAM E2E option defined in Section 4.6
+          <xref target="RFC9197"/> is represented as an IPv6 option
           in Destination extension header: <list style="hanging">
               <t hangText="Option Type:">TBD_1_0 8-bit identifier of the
               IPv6 Option Type for IOAM.</t>
@@ -220,9 +223,10 @@
               <t hangText="IOAM Type:">IOAM E2E Option-Type.</t>
             </list></t>
 
-          <t>Direct Export (DEX) Option: The IOAM Direct Export Option-Type defined in <xref
-          target="I-D.ietf-ippm-ioam-direct-export"/> is represented as an IPv6 option
-          in the Hop-by-Hop extension header: <list style="hanging">
+          <t>Direct Export (DEX) Option: The IOAM Direct Export Option-Type defined in
+          Section 3.2 of <xref target="I-D.ietf-ippm-ioam-direct-export"/> is represented
+          as an IPv6 option in the Hop-by-Hop extension header:
+          <list style="hanging">
               <t hangText="Option Type:">TBD_1_0 8-bit identifier of the
               IPv6 Option Type for IOAM.</t>
 
@@ -250,68 +254,55 @@
       <section anchor="v6_requirement"
                title="Considerations for IOAM deployment and implementation
                in IPv6 networks">
+
         <t>IOAM deployments in IPv6 networks should take the following
         considerations and requirements into account:<list style="hanging">
-            <t hangText="C1">Implementations of IOAM MUST ensure that the 
-            addition of IOAM data fields does not alter the way routers 
-            forward packets or the forwarding decisions they make. 
-            Packets with added OAM information must follow the same path 
+            <t hangText="C1">IOAM MUST be deployed as a limited domain feature
+            as defined in <xref target="RFC8799"/>. </t>
+            <t hangText="C2">Implementations of IOAM MUST ensure that the
+            addition of IOAM data fields does not alter the way routers
+            forward packets or the forwarding decisions they make.
+            Packets with added OAM information must follow the same path
             within the domain as an identical packet without OAM information
-            would, even in the presence of Equal-Cost Multi-Path (ECMP). 
-            This behavior is especially important for deployments where 
-            IOAM data fields are only added "on-demand". 
-            Implementations of IOAM MUST ensure that ECMP behavior for 
+            would, even in the presence of Equal-Cost Multi-Path (ECMP).
+            This behavior is especially important for deployments where
+            IOAM data fields are only added "on-demand".
+            Implementations of IOAM MUST ensure that ECMP behavior for
             packets with and without IOAM data fields is the same.</t>
 
-            <t hangText="C2">
-       
-            In order to maintain the integrity of packets in an IOAM domain, 
+            <t hangText="C3">
+            In order to maintain the integrity of packets in an IOAM domain,
             the Maximum Transmission Unit (MTU) of transit routers and switches
-            must be configured to a value that prevents fragmentation.
-            The PMTU tolerance range must be identified and IOAM encapsulation 
-            operations or data field insertion must not exceed this range. 
-            Control of the MTU is critical to the proper operation of IOAM and 
-            is one of the reasons it is considered a domain-specific feature 
-            (see also <xref target="RFC9197"/>). 
-            The PMTU tolerance must be identified through configuration and 
+            must be configured to a value that prevents does not lead to an ICMP
+            Packet Too Big error message being sent to the originator and
+            the packet being dropped.
+            The PMTU tolerance range must be identified and IOAM encapsulation
+            operations or data field insertion must not exceed this range.
+            Control of the MTU is critical to the proper operation of IOAM and
+            is one of the reasons it is considered a limited domain feature
+            (see also <xref target="RFC8799"/>).
+            The PMTU tolerance must be identified through configuration and
             IOAM operations must not exceed the packet size beyond PMTU.</t>
-            
 
-            <t hangText="C3">Packets containing IOAM data or ICMP errors should 
-            not reach destinations that are not aware of IOAM. Misleading ICMP 
-            errors caused by the presence of OAM data may confuse the source 
-            device if it did not add the OAM information.
-            Entities communicating errors to devices outside the IOAM 
-            domain must remove any IOAM data from the error message.</t>
 
-            <t hangText="C4">To ensure proper network behavior and state, 
-            IOAM domains must have a mechanism in place to prevent IOAM data 
-            leaks from affecting network elements outside the domain. 
-            If a leak does occur, it must be ensured that the network elements
-            outside the domain continue to process other valid packets 
-            unaffected.</t>
+            <t hangText="C4"> <xref target="RFC8200"/>
+            precludes insertion of IOAM data directly into the original IPv6
+            header of in-flight packets. Therefore, in order to add IOAM data,
+            in-flight packets must be encapsulated in an outer header,
+            and the IOAM data added to that header.
+            </t>
 
-            <t hangText="C5">To facilitate troubleshooting in case of IOAM 
-            data leaks, the Autonomous System (AS) responsible for inserting 
-            and leaking the data must be easily identifiable. 
-            The identification process may involve coordination among multiple operators,
-            verification of configurations, packet analysis, etc. 
-            The requirement may necessitate additional options or fields to identify 
-            the domain that inserted the IOAM data, however, 
-            this is beyond the scope of this document.</t>
-
-            <t hangText="C6">Compliance with <xref target="RFC8200"/>
-            requires OAM data to be encapsulated instead of header/option
-            insertion directly into in-flight packets using the original IPv6
-            header.</t>
-
-            <t hangText="C7">The IOAM Incremental Trace Option-Type expands the
+            <t hangText="C5">The IOAM Incremental Trace Option-Type expands the
             option length that may affect the processing of extension
             headers and options that follow IOAM options.
             Hence when the IOAM Incremental Trace Option-Type is
             used in the deployment the RemainingLen field of the option
             MUST follow the guidance in <xref target="RFC9197"/> and must
-            be computed and set appropriately. </t>
+            be computed and set appropriately.
+            In addition IOAM Incremental Trace Option-Type MUST not be
+            deployed in conjuction with Authentication Header (AH) as defined in
+            <xref target="RFC4302"/>. </t>
+
           </list></t>
       </section>
 
@@ -339,6 +330,18 @@
       <t>As this document describes new options for IPv6, these are similar to
       the security considerations of <xref target="RFC8200"/> and the
       weakness documented in <xref target="RFC8250"/>.</t>
+
+     <section title="Applicability of AH">
+      <t> IOAM is a limited domain feature (refer to <xref target="RFC8799"/>).
+      The network devices in an IOAM domain are trusted to add, update and remove
+      IOAM options according to the constraints specified in <xref target="RFC8200"/>.
+      IOAM domain does not rely on the Authentication Header (AH) as defined in
+      <xref target="RFC4302"/> to secure IOAM options.
+      The use of IOAM options with AH and its processing is not defined
+      in this document. Future documents may define use of IOAM with AH and
+      its processing.</t>
+     </section>
+
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -399,11 +402,9 @@
 
       &RFC8250;
 
-      &RFC5036;
+      &RFC4302;
 
-      &RFC1772;
-
-      &RFC4193;
+      &RFC8799;
 
       <reference anchor="I-D.kitamura-ipv6-record-route">
         <front>
@@ -444,7 +445,7 @@
             <t>Mark Smith</t>
           </list></t>
     </section>
-    
+
     <section numbered="no" title="Contributors' Addresses">
           <t><figure>
               <artwork><![CDATA[
