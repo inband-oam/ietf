@@ -68,7 +68,7 @@ Table of Contents
    4.  IOAM Deployment In IPv6 Networks  . . . . . . . . . . . . . .   5
      4.1.  Considerations for IOAM deployment and implementation in
            IPv6 networks . . . . . . . . . . . . . . . . . . . . . .   5
-     4.2.  IOAM domains bounded by hosts . . . . . . . . . . . . . .   6
+     4.2.  IOAM domains bounded by hosts . . . . . . . . . . . . . .   7
      4.3.  IOAM domains bounded by network devices . . . . . . . . .   7
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
      5.1.  Applicability of AH . . . . . . . . . . . . . . . . . . .   7
@@ -76,10 +76,10 @@ Table of Contents
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   9
    Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
    Contributors' Addresses . . . . . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -134,18 +134,18 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
    IPv6 networks, such as the IPv6 Performance and Diagnostic Metrics
    Destination Option described in [RFC8250].
 
+   At the time this document was written, several implementations of
+   IOAM i for IPv6 exist, e.g., IOAM for IPv6 in the Linux Kernel
+   (supported from Kernel version 5.15 onwards IPv6 IOAM in Linux Kernel
+   (https://github.com/torvalds/linux/
+   commit/7c804e91df523a37c29e183ea2b10ac73c3a4f3d)), IOAM for IPv6 in
+   VPP (https://docs.fd.io/vpp/17.04/ioam_ipv6_doc.html).
+
    IOAM data fields can be encapsulated with two types of extension
    headers in IPv6 packets - either Hop-by-Hop Options header or
    Destination options header.  Multiple options with the same Option
    Type MAY appear in the same Hop-by-Hop Options or Destination Options
    header, with distinct content.
-
-   In order for IOAM to work in IPv6 networks, IOAM MUST be explicitly
-   enabled per interface on every node within the IOAM domain.  Unless a
-   particular interface is explicitly enabled (i.e., explicitly
-   configured) for IOAM, a router MUST ignore IOAM Options.  As
-   additional security, IOAM domains MUST provide a mechanism to prevent
-   unauthorized injections at ingress or leaks at egress.
 
    An IPv6 packet carrying IOAM data in an extension header can have
    other extension headers, compliant with [RFC8200].
@@ -272,7 +272,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 4.1.  Considerations for IOAM deployment and implementation in IPv6
       networks
 
-   IOAM deployments in IPv6 networks should take the following
+   IOAM deployments in IPv6 networks MUST take the following
    considerations and requirements into account:
 
 
@@ -291,17 +291,21 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
       information must follow the same path within the domain as an
       identical packet without OAM information would, even in the
       presence of Equal-Cost Multi-Path (ECMP).  This behavior is
-      especially important for deployments where IOAM data fields are
-      only added "on-demand".  Implementations of IOAM MUST ensure that
-      ECMP behavior for packets with and without IOAM data fields is the
-      same.
+      important for deployments where IOAM data fields are only added
+      "on-demand".  Implementations of IOAM MUST ensure that ECMP
+      behavior for packets with and without IOAM data fields is the
+      same.  In order for IOAM to work in IPv6 networks, IOAM MUST be
+      explicitly enabled per interface on every node within the IOAM
+      domain.  Unless a particular interface is explicitly enabled
+      (i.e., explicitly configured) for IOAM, a router MUST ignore IOAM
+      Options.
 
    C3  In order to maintain the integrity of packets in an IOAM domain,
       the Maximum Transmission Unit (MTU) of transit routers and
-      switches must be configured to a value that prevents does not lead
-      to an ICMP Packet Too Big error message being sent to the
-      originator and the packet being dropped.  The PMTU tolerance range
-      must be identified and IOAM encapsulation operations or data field
+      switches must be configured to a value that does not lead to an
+      ICMP Packet Too Big error message being sent to the originator and
+      the packet being dropped.  The PMTU tolerance range must be
+      identified and IOAM encapsulation operations or data field
       insertion must not exceed this range.  Control of the MTU is
       critical to the proper operation of IOAM and is one of the reasons
       it is considered a limited domain feature (see also [RFC8799]).
@@ -309,25 +313,21 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
       IOAM operations must not exceed the packet size beyond PMTU.
 
    C4  [RFC8200] precludes insertion of IOAM data directly into the
-      original IPv6 header of in-flight packets.  Therefore, in order to
-      add IOAM data, in-flight packets must be encapsulated in an outer
-      header, and the IOAM data added to that header.
+      original IPv6 header of in-flight packets.  IOAM deployments which
+      do not encapsulate/decapsulate IOAM on the host but desire to
+      encapsulate/decapsulate IOAM on transit nodes MUST add an
+      additional IPv6 header to the original packet.  IOAM data is added
+      to this additional IPv6 header.
 
    C5  The IOAM Incremental Trace Option-Type expands the option length
       that may affect the processing of extension headers and options
       that follow IOAM options.  Hence when the IOAM Incremental Trace
       Option-Type is used in the deployment the RemainingLen field of
       the option MUST follow the guidance in [RFC9197] and must be
-      computed and set appropriately.  In addition IOAM Incremental
+      computed and set appropriately.  In addition the IOAM Incremental
       Trace Option-Type MUST not be deployed in conjuction with
       Authentication Header (AH) as defined in [RFC4302].
 
-4.2.  IOAM domains bounded by hosts
-
-   For deployments where the IOAM domain is bounded by hosts, hosts will
-   perform the operation of IOAM data field encapsulation and
-   decapsulation.  IOAM data is carried in IPv6 packets as Hop-by-Hop or
-   Destination options as specified in this document.
 
 
 
@@ -337,6 +337,13 @@ Bhandari & Brockners      Expires 8 August 2023                 [Page 6]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
+
+4.2.  IOAM domains bounded by hosts
+
+   For deployments where the IOAM domain is bounded by hosts, hosts will
+   perform the operation of IOAM data field encapsulation and
+   decapsulation.  IOAM data is carried in IPv6 packets as Hop-by-Hop or
+   Destination options as specified in this document.
 
 4.3.  IOAM domains bounded by network devices
 
@@ -375,6 +382,18 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
    http://www.iana.org/assignments/ipv6-parameters/ipv6-
    parameters.xhtml#ipv6-parameters-2
 
+
+
+
+
+
+
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 7]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
       Hex Value    Binary Value      Description            Reference
                    act chg rest
       ------------------------------------------------------------------
@@ -386,13 +405,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
                                      destination option
                                      and
                                      IOAM hop-by-hop option
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 7]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
 
 7.  Acknowledgements
 
@@ -427,6 +439,17 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+
+
+
+
+
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 8]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
    [RFC9197]  Brockners, F., Ed., Bhandari, S., Ed., and T. Mizrahi,
               Ed., "Data Fields for In Situ Operations, Administration,
               and Maintenance (IOAM)", RFC 9197, DOI 10.17487/RFC9197,
@@ -440,15 +463,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
               draft-kitamura-ipv6-record-route-00, November 2000,
               <https://tools.ietf.org/id/draft-kitamura-ipv6-record-
               route-00.txt>.
-
-
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 8]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
 
    [RFC4302]  Kent, S., "IP Authentication Header", RFC 4302,
               DOI 10.17487/RFC4302, December 2005,
@@ -466,7 +480,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
    [RFC8799]  Carpenter, B. and B. Liu, "Limited Domains and Internet
               Protocols", RFC 8799, DOI 10.17487/RFC8799, July 2020,
-              <https://www.rfc-editor.org/info/rfc8799>.
+              <https://www.rfc-editor.org/rfc/rfc8799>.
 
 Contributors
 
@@ -485,6 +499,13 @@ Contributors
 
    *  Tal Mizrahi
 
+
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 9]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
    *  Aviv Kfir
 
    *  Barak Gafni
@@ -498,13 +519,6 @@ Contributors
    *  Rajiv Asati
 
    *  Mark Smith
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 9]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
 
 Contributors' Addresses
 
@@ -540,6 +554,14 @@ Contributors' Addresses
 
 
       Aviv Kfir
+
+
+
+Bhandari & Brockners      Expires 8 August 2023                [Page 10]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
       Mellanox Technologies, Inc.
       350 Oakmead Parkway, Suite 100
       Sunnyvale, CA  94085
@@ -553,13 +575,6 @@ Contributors' Addresses
       Sunnyvale, CA  94085
       U.S.A.
       Email: gbarak@mellanox.com
-
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                [Page 10]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 
       Petr Lapukhov
@@ -596,6 +611,13 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
       AU
       Email: markzzzsmith+id@gmail.com
 
+
+
+Bhandari & Brockners      Expires 8 August 2023                [Page 11]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
 Authors' Addresses
 
    Shwetha Bhandari (editor)
@@ -606,34 +628,12 @@ Authors' Addresses
    Email: shwetha.bhandari@thoughtspot.com
 
 
-
-
-
-
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                [Page 11]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
-
    Frank Brockners (editor)
    Cisco Systems, Inc.
    Hansaallee 249, 3rd Floor
    40549 DUESSELDORF
    Germany
    Email: fbrockne@cisco.com
-
-
-
-
-
-
-
-
-
-
 
 
 
