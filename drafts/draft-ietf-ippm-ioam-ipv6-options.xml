@@ -196,16 +196,6 @@
               <t hangText="IOAM Type:">IOAM Pre-allocated Trace Option-Type.</t>
             </list></t>
 
-          <t>Incremental Trace Option: The IOAM Incremental Trace
-          Option-Type defined in Section 4.4 of <xref target="RFC9197"/> is
-          represented as an IPv6 option in the Hop-by-Hop extension header: <list
-              style="hanging">
-              <t hangText="Option Type:">TBD_1_1 8-bit identifier of the
-              IPv6 Option Type for IOAM.</t>
-
-              <t hangText="IOAM Type:">IOAM Incremental Trace Option-Type.</t>
-            </list></t>
-
           <t>Proof of Transit Option: The IOAM POT Option-Type defined in
           Section 4.5 of <xref target="RFC9197"/> is represented as an IPv6
           option in the Hop-by-Hop extension header: <list style="hanging">
@@ -238,11 +228,7 @@
       requirements. Specifically, they all require 4n alignment. This ensures
       that fields specified in <xref target="RFC9197"/> are
       aligned at a multiple-of-4 offset from the start of the Hop-by-Hop and
-      Destination Options header. In addition, to maintain IPv6 extension
-      header 8-octet alignment and avoid the need to add or remove padding at
-      every hop, the Trace-Type for Incremental Trace Option in IPv6 MUST be
-      selected such that the IOAM node data length is a multiple of
-      8-octets.</t>
+      Destination Options header.</t>
 
       <t>IPv6 options can have a maximum length of 255 octets. Consequently,
 	      the total length of IOAM Option-Types including all data fields
@@ -299,18 +285,6 @@
             MUST add an additional IPv6 header to the original packet. 
             IOAM data is added to this additional IPv6 header.
             </t>
-
-            <t hangText="C5">The IOAM Incremental Trace Option-Type expands the
-            option length that may affect the processing of extension
-            headers and options that follow IOAM options.
-            Hence when the IOAM Incremental Trace Option-Type is
-            used in the deployment the RemainingLen field of the option
-            MUST follow the guidance in <xref target="RFC9197"/> and must
-            be computed and set appropriately.
-            In addition the IOAM Incremental Trace Option-Type MUST not be
-            deployed in conjuction with Authentication Header (AH) as defined in
-            <xref target="RFC4302"/>. </t>
-      	   
 
           </list></t>
       </section>

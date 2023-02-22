@@ -68,18 +68,18 @@ Table of Contents
    4.  IOAM Deployment In IPv6 Networks  . . . . . . . . . . . . . .   5
      4.1.  Considerations for IOAM deployment and implementation in
            IPv6 networks . . . . . . . . . . . . . . . . . . . . . .   5
-     4.2.  IOAM domains bounded by hosts . . . . . . . . . . . . . .   7
-     4.3.  IOAM domains bounded by network devices . . . . . . . . .   7
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+     4.2.  IOAM domains bounded by hosts . . . . . . . . . . . . . .   6
+     4.3.  IOAM domains bounded by network devices . . . . . . . . .   6
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
      5.1.  Applicability of AH . . . . . . . . . . . . . . . . . . .   7
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
-   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
+   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   7
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   7
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
-     8.2.  Informative References  . . . . . . . . . . . . . . . . .   9
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .   8
    Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
-   Contributors' Addresses . . . . . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
+   Contributors' Addresses . . . . . . . . . . . . . . . . . . . . .   9
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
 
 1.  Introduction
 
@@ -210,23 +210,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
        IOAM Type:  IOAM Pre-allocated Trace Option-Type.
 
-   2.  Incremental Trace Option: The IOAM Incremental Trace Option-Type
-       defined in Section 4.4 of [RFC9197] is represented as an IPv6
-       option in the Hop-by-Hop extension header:
-
-       Option Type:  TBD_1_1 8-bit identifier of the IPv6 Option Type
-          for IOAM.
-
-       IOAM Type:  IOAM Incremental Trace Option-Type.
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 4]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
-
-   3.  Proof of Transit Option: The IOAM POT Option-Type defined in
+   2.  Proof of Transit Option: The IOAM POT Option-Type defined in
        Section 4.5 of [RFC9197] is represented as an IPv6 option in the
        Hop-by-Hop extension header:
 
@@ -235,7 +219,14 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
        IOAM Type:  IOAM POT Option-Type.
 
-   4.  Edge to Edge Option: The IOAM E2E option defined in Section 4.6
+
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 4]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
+   3.  Edge to Edge Option: The IOAM E2E option defined in Section 4.6
        [RFC9197] is represented as an IPv6 option in Destination
        extension header:
 
@@ -244,7 +235,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
        IOAM Type:  IOAM E2E Option-Type.
 
-   5.  Direct Export (DEX) Option: The IOAM Direct Export Option-Type
+   4.  Direct Export (DEX) Option: The IOAM Direct Export Option-Type
        defined in Section 3.2 of [I-D.ietf-ippm-ioam-direct-export] is
        represented as an IPv6 option in the Hop-by-Hop extension header:
 
@@ -256,11 +247,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
    All the IOAM IPv6 options defined here have alignment requirements.
    Specifically, they all require 4n alignment.  This ensures that
    fields specified in [RFC9197] are aligned at a multiple-of-4 offset
-   from the start of the Hop-by-Hop and Destination Options header.  In
-   addition, to maintain IPv6 extension header 8-octet alignment and
-   avoid the need to add or remove padding at every hop, the Trace-Type
-   for Incremental Trace Option in IPv6 MUST be selected such that the
-   IOAM node data length is a multiple of 8-octets.
+   from the start of the Hop-by-Hop and Destination Options header.
 
    IPv6 options can have a maximum length of 255 octets.  Consequently,
    the total length of IOAM Option-Types including all data fields is
@@ -275,13 +262,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
    IOAM deployments in IPv6 networks MUST take the following
    considerations and requirements into account:
 
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 5]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
-
    C1  IOAM MUST be deployed as a limited domain feature as defined in
       [RFC8799].
 
@@ -294,6 +274,14 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
       important for deployments where IOAM data fields are only added
       "on-demand".  Implementations of IOAM MUST ensure that ECMP
       behavior for packets with and without IOAM data fields is the
+
+
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 5]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
       same.  In order for IOAM to work in IPv6 networks, IOAM MUST be
       explicitly enabled per interface on every node within the IOAM
       domain.  Unless a particular interface is explicitly enabled
@@ -319,25 +307,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
       additional IPv6 header to the original packet.  IOAM data is added
       to this additional IPv6 header.
 
-   C5  The IOAM Incremental Trace Option-Type expands the option length
-      that may affect the processing of extension headers and options
-      that follow IOAM options.  Hence when the IOAM Incremental Trace
-      Option-Type is used in the deployment the RemainingLen field of
-      the option MUST follow the guidance in [RFC9197] and must be
-      computed and set appropriately.  In addition the IOAM Incremental
-      Trace Option-Type MUST not be deployed in conjuction with
-      Authentication Header (AH) as defined in [RFC4302].
-
-
-
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 6]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
-
 4.2.  IOAM domains bounded by hosts
 
    For deployments where the IOAM domain is bounded by hosts, hosts will
@@ -358,6 +327,16 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
    IPv6.  Security considerations of the specific IOAM data fields for
    each case (i.e., Trace, Proof of Transit, and E2E) are described and
    defined in [RFC9197].
+
+
+
+
+
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 6]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
 
    As this document describes new options for IPv6, these are similar to
    the security considerations of [RFC8200] and the weakness documented
@@ -381,18 +360,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
    http://www.iana.org/assignments/ipv6-parameters/ipv6-
    parameters.xhtml#ipv6-parameters-2
-
-
-
-
-
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 7]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
 
       Hex Value    Binary Value      Description            Reference
                    act chg rest
@@ -420,6 +387,13 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 8.  References
 
+
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 7]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
 8.1.  Normative References
 
    [I-D.ietf-ippm-ioam-direct-export]
@@ -427,8 +401,8 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
               Mizrahi, "In Situ Operations, Administration, and
               Maintenance (IOAM) Direct Exporting", Work in Progress,
               Internet-Draft, draft-ietf-ippm-ioam-direct-export-11, 23
-              September 2022, <https://www.ietf.org/archive/id/draft-
-              ietf-ippm-ioam-direct-export-11.txt>.
+              September 2022, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-ippm-ioam-direct-export-11>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -438,17 +412,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-
-
-
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 8]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
 
    [RFC9197]  Brockners, F., Ed., Bhandari, S., Ed., and T. Mizrahi,
               Ed., "Data Fields for In Situ Operations, Administration,
@@ -478,9 +441,18 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
               Option", RFC 8250, DOI 10.17487/RFC8250, September 2017,
               <https://www.rfc-editor.org/info/rfc8250>.
 
+
+
+
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 8]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
    [RFC8799]  Carpenter, B. and B. Liu, "Limited Domains and Internet
               Protocols", RFC 8799, DOI 10.17487/RFC8799, July 2020,
-              <https://www.rfc-editor.org/rfc/rfc8799>.
+              <https://www.rfc-editor.org/info/rfc8799>.
 
 Contributors
 
@@ -498,13 +470,6 @@ Contributors
    *  Stephen Youell
 
    *  Tal Mizrahi
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 9]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
 
    *  Aviv Kfir
 
@@ -535,6 +500,12 @@ Contributors' Addresses
       Email: hannes@rtbrick.com
 
 
+
+Bhandari & Brockners      Expires 8 August 2023                 [Page 9]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
       John Leddy
       Email: john@leddy.net
 
@@ -554,14 +525,6 @@ Contributors' Addresses
 
 
       Aviv Kfir
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                [Page 10]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
-
       Mellanox Technologies, Inc.
       350 Oakmead Parkway, Suite 100
       Sunnyvale, CA  94085
@@ -593,6 +556,12 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
       Email: mickey.spiegel@intel.com
 
 
+
+Bhandari & Brockners      Expires 8 August 2023                [Page 10]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
+
       Suresh Krishnan
       Kaloom
       Email: suresh@kaloom.com
@@ -610,13 +579,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
       HEIDELBERG, VIC  3084
       AU
       Email: markzzzsmith+id@gmail.com
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                [Page 11]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
 
 Authors' Addresses
 
@@ -651,22 +613,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                [Page 12]
+Bhandari & Brockners      Expires 8 August 2023                [Page 11]
