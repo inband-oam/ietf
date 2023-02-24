@@ -5,8 +5,8 @@
 ippm                                                    S. Bhandari, Ed.
 Internet-Draft                                               Thoughtspot
 Intended status: Standards Track                       F. Brockners, Ed.
-Expires: 8 August 2023                                             Cisco
-                                                         4 February 2023
+Expires: 28 August 2023                                            Cisco
+                                                        24 February 2023
 
 
                         In-situ OAM IPv6 Options
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 August 2023.
+   This Internet-Draft will expire on 28 August 2023.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                 [Page 1]
+Bhandari & Brockners     Expires 28 August 2023                 [Page 1]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -63,7 +63,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   2
      2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   2
-     2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   3
+     2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   2
    3.  In-situ OAM Metadata Transport in IPv6  . . . . . . . . . . .   3
    4.  IOAM Deployment In IPv6 Networks  . . . . . . . . . . . . . .   5
      4.1.  Considerations for IOAM deployment and implementation in
@@ -85,13 +85,12 @@ Table of Contents
 
    In-situ Operations, Administration, and Maintenance (IOAM) records
    operational and telemetry information in the packet while the packet
-   traverses a path between two points in the network.  This document
-   outlines how IOAM data fields are encapsulated in the IPv6 [RFC8200]
-   and discusses deployment options for networks that use
-   IPv6-encapsulated IOAM data fields.  These options have distinct
-   deployment considerations; for example, the IOAM domain can either be
-   between hosts, or be between IOAM encapsulating and decapsulating
-   network nodes that forward traffic, such as routers.
+   traverses a path between two points in the network.  IOAM concepts
+   and associated nomenclature, as well as IOAM data fields are defined
+   in [RFC9197].  IOAM is a functionality that applies to limited
+   domains [RFC8799].  This document outlines how IOAM data fields are
+   encapsulated in IPv6 [RFC8200] and discusses deployment requirements
+   for networks that use IPv6-encapsulated IOAM data fields.
 
 2.  Conventions
 
@@ -103,20 +102,17 @@ Table of Contents
    14 [RFC2119] [RFC8174] when, and only when, they appear in all
    capitals, as shown here.
 
-
-
-
-
-
-
-Bhandari & Brockners      Expires 8 August 2023                 [Page 2]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
-
-
 2.2.  Abbreviations
 
    Abbreviations used in this document:
+
+
+
+
+Bhandari & Brockners     Expires 28 August 2023                 [Page 2]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
+
 
    E2E:       Edge-to-Edge
 
@@ -129,20 +125,20 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 3.  In-situ OAM Metadata Transport in IPv6
 
-   In-situ OAM in IPv6 is used to enhance diagnostics of IPv6 networks.
-   It complements other mechanisms designed to enhance diagnostics of
-   IPv6 networks, such as the IPv6 Performance and Diagnostic Metrics
+   IOAM in IPv6 is used to enhance diagnostics of IPv6 networks.  It
+   complements other mechanisms designed to enhance diagnostics of IPv6
+   networks, such as the IPv6 Performance and Diagnostic Metrics
    Destination Option described in [RFC8250].
 
    At the time this document was written, several implementations of
-   IOAM i for IPv6 exist, e.g., IOAM for IPv6 in the Linux Kernel
+   IOAM for IPv6 exist, e.g., IOAM for IPv6 in the Linux Kernel
    (supported from Kernel version 5.15 onwards IPv6 IOAM in Linux Kernel
    (https://github.com/torvalds/linux/
    commit/7c804e91df523a37c29e183ea2b10ac73c3a4f3d)), IOAM for IPv6 in
    VPP (https://docs.fd.io/vpp/17.04/ioam_ipv6_doc.html).
 
    IOAM data fields can be encapsulated with two types of extension
-   headers in IPv6 packets - either Hop-by-Hop Options header or
+   headers in IPv6 packets - either the Hop-by-Hop Options header or the
    Destination options header.  Multiple options with the same Option
    Type MAY appear in the same Hop-by-Hop Options or Destination Options
    header, with distinct content.
@@ -150,8 +146,8 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
    An IPv6 packet carrying IOAM data in an extension header can have
    other extension headers, compliant with [RFC8200].
 
-   IPv6 Hop-by-Hop and Destination Option format for carrying in-situ
-   OAM data fields:
+   IPv6 Hop-by-Hop and Destination Option format for carrying IOAM data
+   fields:
 
 
 
@@ -165,7 +161,11 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                 [Page 3]
+
+
+
+
+Bhandari & Brockners     Expires 28 August 2023                 [Page 3]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -221,7 +221,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                 [Page 4]
+Bhandari & Brockners     Expires 28 August 2023                 [Page 4]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -267,9 +267,9 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
    C2  Implementations of IOAM MUST ensure that the addition of IOAM
       data fields does not alter the way routers forward packets or the
-      forwarding decisions they make.  Packets with added OAM
+      forwarding decisions they make.  Packets with added IOAM
       information must follow the same path within the domain as an
-      identical packet without OAM information would, even in the
+      identical packet without IOAM information would, even in the
       presence of Equal-Cost Multi-Path (ECMP).  This behavior is
       important for deployments where IOAM data fields are only added
       "on-demand".  Implementations of IOAM MUST ensure that ECMP
@@ -277,7 +277,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                 [Page 5]
+Bhandari & Brockners     Expires 28 August 2023                 [Page 5]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -333,7 +333,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                 [Page 6]
+Bhandari & Brockners     Expires 28 August 2023                 [Page 6]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -389,7 +389,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                 [Page 7]
+Bhandari & Brockners     Expires 28 August 2023                 [Page 7]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -445,7 +445,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                 [Page 8]
+Bhandari & Brockners     Expires 28 August 2023                 [Page 8]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -501,7 +501,7 @@ Contributors' Addresses
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                 [Page 9]
+Bhandari & Brockners     Expires 28 August 2023                 [Page 9]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -557,7 +557,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                [Page 10]
+Bhandari & Brockners     Expires 28 August 2023                [Page 10]
 
 Internet-Draft       In-situ OAM IPv6 encapsulation        February 2023
 
@@ -613,4 +613,4 @@ Authors' Addresses
 
 
 
-Bhandari & Brockners      Expires 8 August 2023                [Page 11]
+Bhandari & Brockners     Expires 28 August 2023                [Page 11]

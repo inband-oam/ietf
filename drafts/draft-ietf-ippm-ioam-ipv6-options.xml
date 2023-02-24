@@ -67,7 +67,7 @@
 
 
 
-    <date day="04" month="February" year="2023"/>
+    <date day="24" month="February" year="2023"/>
 
     <area>Transport Area</area>
 
@@ -85,13 +85,13 @@
     <section title="Introduction">
       <t>In-situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
-      traverses a path between two points in the network. This document
-      outlines how IOAM data fields are encapsulated in the IPv6 <xref
-      target="RFC8200"/> and discusses deployment options for networks that
-      use IPv6-encapsulated IOAM data fields. These options have distinct
-      deployment considerations; for example, the IOAM domain can either be
-      between hosts, or be between IOAM encapsulating and decapsulating network
-      nodes that forward traffic, such as routers.</t>
+      traverses a path between two points in the network. IOAM concepts 
+      and associated nomenclature, as well as IOAM data fields are
+      defined in <xref target="RFC9197"/>. IOAM is a functionality that
+      applies to limited domains <xref target="RFC8799"/>. 
+      This document outlines how IOAM data fields are encapsulated in IPv6 <xref
+      target="RFC8200"/> and discusses deployment requirements for networks that
+      use IPv6-encapsulated IOAM data fields.</t>
     </section>
 
 
@@ -121,12 +121,12 @@
     </section>
 
     <section title="In-situ OAM Metadata Transport in IPv6">
-      <t>In-situ OAM in IPv6 is used to enhance diagnostics of IPv6 networks.
+      <t>IOAM in IPv6 is used to enhance diagnostics of IPv6 networks.
       It complements other mechanisms designed to enhance diagnostics of IPv6
       networks, such as the IPv6 Performance and Diagnostic Metrics
       Destination Option described in <xref target="RFC8250"/>.</t>
       
-      <t> At the time this document was written, several implementations of IOAM i
+      <t> At the time this document was written, several implementations of IOAM 
       for IPv6 exist, e.g., IOAM for IPv6 in the Linux Kernel (supported from Kernel 
       version 5.15 onwards 
       <eref target="https://github.com/torvalds/linux/commit/7c804e91df523a37c29e183ea2b10ac73c3a4f3d">
@@ -135,16 +135,16 @@
       IOAM for IPv6 in VPP </eref>. 
       </t>
       <t>IOAM data fields can be encapsulated with two types of extension headers
-      in IPv6 packets - either Hop-by-Hop Options header or
-      Destination options header.  Multiple options
+      in IPv6 packets - either the Hop-by-Hop Options header or
+      the Destination options header.  Multiple options
       with the same Option Type MAY appear in the same Hop-by-Hop Options or
       Destination Options header, with distinct content.</t>
 
       <t>An IPv6 packet carrying IOAM data in an extension header can have
       other extension headers, compliant with <xref target="RFC8200"/>.</t>
 
-      <t>IPv6 Hop-by-Hop and Destination Option format for carrying in-situ
-      OAM data fields:<figure>
+      <t>IPv6 Hop-by-Hop and Destination Option format for carrying 
+      IOAM data fields:<figure>
           <artwork><![CDATA[
 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -249,8 +249,8 @@
             <t hangText="C2">Implementations of IOAM MUST ensure that the
             addition of IOAM data fields does not alter the way routers
             forward packets or the forwarding decisions they make.
-            Packets with added OAM information must follow the same path
-            within the domain as an identical packet without OAM information
+            Packets with added IOAM information must follow the same path
+            within the domain as an identical packet without IOAM information
             would, even in the presence of Equal-Cost Multi-Path (ECMP).
             This behavior is important for deployments where
             IOAM data fields are only added "on-demand".
