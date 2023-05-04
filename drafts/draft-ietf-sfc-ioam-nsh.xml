@@ -19,12 +19,10 @@
 <!ENTITY RFC3232 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3232.xml">
 <!ENTITY RFC8300 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8300.xml">
 <!ENTITY RFC9197 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9197.xml">
+<!ENTITY RFC9322 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9322.xml">
+<!ENTITY RFC9326 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9326.xml">
+<!ENTITY RFC9378 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9378.xml">
 <!ENTITY I-D.ietf-sfc-oam-packet SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-oam-packet.xml">
-<!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-direct-export.xml">
-<!ENTITY I-D.ietf-ippm-ioam-deployment SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-deployment.xml">
-<!ENTITY I-D.ietf-ippm-ioam-flags SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ippm-ioam-flags.xml">
-<!ENTITY I-D.brockners-inband-oam-requirements SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-requirements.xml">
-<!ENTITY I-D.brockners-inband-oam-transport SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.brockners-inband-oam-transport.xml">
 <!ENTITY I-D.penno-sfc-trace SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.penno-sfc-trace.xml">
 <!ENTITY I-D.ietf-spring-segment-routing SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-spring-segment-routing.xml">
 <!ENTITY I-D.previdi-isis-segment-routing-extensions SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.previdi-isis-segment-routing-extensions.xml">
@@ -63,7 +61,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-sfc-ioam-nsh-11" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-sfc-ioam-nsh-12" ipr="trust200902">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -96,8 +94,6 @@
 
           <city>DUESSELDORF</city>
 
-          <region>NORDRHEIN-WESTFALEN</region>
-
           <code>40549</code>
 
           <country>Germany</country>
@@ -127,7 +123,7 @@
       </address>
     </author>
 
-    <date day="30" month="September" year="2022"/>
+    <date day="4" month="May" year="2023"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill
          in the current day for you. If only the current year is specified, xml2rfc will fill
@@ -169,18 +165,16 @@
 
   <middle>
     <section title="Introduction" toc="default">
-      <t>In-situ OAM (IOAM), as defined in
+      <t>IOAM, as defined in
       <xref target="RFC9197"/>, is used to record and collect OAM
       information while the packet traverses a particular network domain. The
       term "in-situ" refers to the fact that the OAM data is added to the data
       packets rather than is being sent within packets specifically dedicated
       to OAM. This document defines how IOAM data fields are transported as
       part of the Network Service Header (NSH) <xref target="RFC8300"/>
-      encapsulation for the Service Function Chaining (SFC) <xref
+      encapsulation for the Service Function Chaining (SFC) Architecture <xref
       target="RFC7665"/>. The IOAM-Data-Fields are defined in
-      <xref target="RFC9197"/>. An implementation of IOAM which
-      leverages NSH to carry the IOAM data is available from the FD.io open
-      source software project <xref target="FD.io"/>.</t>
+      <xref target="RFC9197"/>.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
@@ -206,25 +200,28 @@
         </list></t>
     </section>
 
+
+
     <section title="IOAM encapsulation with NSH">
       <t>The NSH is defined in <xref target="RFC8300"/>. IOAM-Data-Fields are
       carried as NSH payload using a next protocol header which follows the
-      NSH headers. An IOAM header is added containing the different
+      NSH headers. An IOAM header is added containing the 
       IOAM-Data-Fields. The IOAM-Data-Fields MUST follow the definitions
-      corresponding to IOAM-Option-Types (e.g., see Section 5 of 
+      corresponding to IOAM-Option-Types (e.g., see Section 4 of 
       <xref target="RFC9197"/> and Section 3.2 of <xref
-      target="I-D.ietf-ippm-ioam-direct-export"/>). In an administrative
+      target="RFC9326"/>). In an administrative
       domain where IOAM is used, insertion of the IOAM header in NSH is
       enabled at the NSH tunnel endpoints, which also serve as IOAM
       encapsulating/decapsulating nodes by means of configuration.
-      The operator MUST ensure that all nodes along the service 
-      path support IOAM. Otherwise packets with IOAM are likely 
-      to be dropped per <xref target="RFC8300"/>.
-      There can be multiple IOAM headers added by encapsulating nodes
+      The operator MUST ensure that SFC-aware nodes along the
+      Service Function Path support IOAM, otherwise packets might
+      be dropped (see Section 3 further below, as well as <xref target="RFC8300"/>
+      Section 2.2).
+      There MAY be multiple IOAM headers added by encapsulating nodes
       as configured. 
-      The IOAM transit nodes (e.g., an SFF) MUST process
+      The IOAM transit nodes (e.g., an Service Function Forwarder) MUST process
       all the IOAM headers that are relevant based on its configuration.
-      See <xref target="I-D.ietf-ippm-ioam-deployment"/> for a discussion
+      See <xref target="RFC9378"/> for a discussion
       of deployment related aspects of IOAM-Data-fields.</t>
 
       <t><figure>
@@ -247,7 +244,7 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+&lt;-+
 |                                                               |
 |                                                               |
-|                 Payload + Padding (L2/L3/ESP/...)             |
+|                 Payload + Padding (L2/L3/...)                 |
 |                                                               |
 |                                                               |
 |                                                               |
@@ -269,8 +266,9 @@
               IOAM-Option-Type, as defined in the IOAM Option-Type Registry
 	      specified in <xref target="RFC9197"/>.</t>
 
-              <t hangText="IOAM HDR Len:">8 bit Length field contains the
-              length of the IOAM header in 4-octet units.</t>
+              <t hangText="IOAM HDR Len:">8-bit field that contains the
+              length of the IOAM header in multiples of 4-octets,
+              including the "IOAM-Type" and "IOAM HDR Len" fields.</t>
 
               <t hangText="Reserved bits:">Reserved bits are present for
               future use. The reserved bits MUST be set to 0x0 upon
@@ -283,11 +281,13 @@
 
               <t hangText="IOAM Option and Data Space:">IOAM-Data-Fields as
               specified by the IOAM-Type field. IOAM-Data-Fields are defined
-              corresponding to the IOAM-Option-Type (e.g., see Section 5 of
+              corresponding to the IOAM-Option-Type (e.g., see Section 4 of
 	      <xref target="RFC9197"/> and Section 3.2 of
-              <xref target="I-D.ietf-ippm-ioam-direct-export"/>).</t>
+              <xref target="RFC9326"/>) and are always aligned by 4 octets,
+              thus there is no padding field.</t>
             </list></t>
         </list></t>
+
 
       <t>Multiple IOAM-Option-Types MAY be included within the NSH
       encapsulation. For example, if a NSH encapsulation contains two
@@ -296,39 +296,50 @@
       Protocol field of the second IOAM-Option-Type will contain the "NSH Next
       Protocol" number indicating the type of the data payload. The
       applicability of the IOAM Active and Loopback flags <xref
-      target="I-D.ietf-ippm-ioam-flags"/> is outside the scope of this
-      document and may be specified in the future. When a packet with IOAM is
-      received at an NSH based forwarding node such as an Service Function
-      Forwarder (SFF) that does not understand IOAM header, it SHOULD drop the
-      packet. The mechanism to maintain and notify of such events are outside
+      target="RFC9322"/> is outside the scope of this document and may be 
+      specified in the future.</t>
+
+      <t>In case the IOAM Incremental Trace Option-Type is used, an SFC-aware node
+      that serves as an IOAM transit node, needs to adjust the "IOAM HDR Len" field
+      accordingly, see Section 4.4 in <xref target="RFC9197"/>.</t>
+
+      <t>Per Section 2.2 of <xref target="RFC8300"/>, packets with Next Protocol
+      values not supported SHOULD be silently dropped by default.
+      Thus, when a packet with IOAM is received at an NSH based forwarding 
+      node such as an Service Function Forwarder (SFF) that does not
+      support the IOAM header, it SHOULD drop the packet. The mechanism to
+      maintain and notify of such events are outside
       the scope of this document.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
-      <t>IANA is requested to allocate protocol numbers for the following "NSH
-      Next Protocol" related to IOAM:</t>
+      <t>IANA is requested to allocate a code point for IOAM in the 
+      <eref target="https://www.iana.org/assignments/nsh/nsh.xhtml#next-protocol">
+      "NSH Next Protocol" registry</eref>: 
+	</t>
 
       <t><figure>
-          <artwork>              +---------------+-------------+---------------+
+	      <artwork>
+	      +---------------+-------------+---------------+
               | Next Protocol | Description | Reference     |
               +---------------+-------------+---------------+
-              | x             | TBD_IOAM    | This document |
+              | TBD           | TBD_IOAM    | This document |
               +---------------+-------------+---------------+
-
-</artwork>
+              </artwork>
         </figure></t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <t>IOAM is considered a "per domain" feature, where one or several
-      operators decide on leveraging and configuring IOAM according to their
-      needs. Still, operators need to properly secure the IOAM domain to avoid
+      <t>IOAM is considered a "per domain" feature, where the 
+      operator decides on leveraging and configuring IOAM according to the operator's 
+      needs. The operator needs to properly secure the IOAM domain to avoid
       malicious configuration and use, which could include injecting malicious
       IOAM packets into a domain. For additional IOAM related security
-      considerations, see Section 10 in <xref target="RFC9197"/>.
+      considerations, see Section 9 in <xref target="RFC9197"/>.
       For additional OAM and NSH related security considerations 
       see Section 5 of <xref target="I-D.ietf-sfc-oam-packet"/>.</t>
     </section>
+
 
     <section title="Acknowledgements">
       <t>The authors would like to thank Eric Vyncke, Nalini Elkins, Srihari
@@ -442,21 +453,12 @@
     <references title="Informative References">
       &RFC7665;
 
-      &I-D.ietf-ippm-ioam-direct-export;
+      &RFC9378;
 
-      &I-D.ietf-ippm-ioam-deployment;
+      &RFC9326;
 
-      &I-D.ietf-ippm-ioam-flags;
+      &RFC9322;
 
-      <reference anchor="FD.io" target="https://fd.io/">
-        <front>
-          <title>Fast Data Project: FD.io</title>
-
-          <author/>
-
-          <date/>
-        </front>
-      </reference>
     </references>
 
     <section anchor="appendix"
