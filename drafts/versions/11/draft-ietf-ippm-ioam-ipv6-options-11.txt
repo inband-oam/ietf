@@ -5,8 +5,8 @@
 ippm                                                    S. Bhandari, Ed.
 Internet-Draft                                               Thoughtspot
 Intended status: Standards Track                       F. Brockners, Ed.
-Expires: 23 October 2023                                           Cisco
-                                                           21 April 2023
+Expires: 5 November 2023                                           Cisco
+                                                              4 May 2023
 
 
                         In-situ OAM IPv6 Options
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 October 2023.
+   This Internet-Draft will expire on 5 November 2023.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Bhandari & Brockners     Expires 23 October 2023                [Page 1]
+Bhandari & Brockners     Expires 5 November 2023                [Page 1]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
 
 
 Table of Contents
@@ -72,14 +72,14 @@ Table of Contents
      4.3.  IOAM domains bounded by network devices . . . . . . . . .   6
    5.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
      5.1.  Applicability of AH . . . . . . . . . . . . . . . . . . .   7
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
    7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   8
    8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   8
      8.1.  Normative References  . . . . . . . . . . . . . . . . . .   8
      8.2.  Informative References  . . . . . . . . . . . . . . . . .   9
    Contributors  . . . . . . . . . . . . . . . . . . . . . . . . . .   9
    Contributors' Addresses . . . . . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Bhandari & Brockners     Expires 23 October 2023                [Page 2]
+Bhandari & Brockners     Expires 5 November 2023                [Page 2]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
 
 
    IOAM:      In-situ Operations, Administration, and Maintenance as
@@ -165,9 +165,9 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
 
 
 
-Bhandari & Brockners     Expires 23 October 2023                [Page 3]
+Bhandari & Brockners     Expires 5 November 2023                [Page 3]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
 
 
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -221,9 +221,9 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
 
 
 
-Bhandari & Brockners     Expires 23 October 2023                [Page 4]
+Bhandari & Brockners     Expires 5 November 2023                [Page 4]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
 
 
    3.  Edge to Edge Option: The IOAM E2E option defined in Section 4.6
@@ -277,9 +277,9 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
 
 
 
-Bhandari & Brockners     Expires 23 October 2023                [Page 5]
+Bhandari & Brockners     Expires 5 November 2023                [Page 5]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
 
 
       data fields does not alter the way routers forward packets or the
@@ -333,9 +333,9 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
 
 
 
-Bhandari & Brockners     Expires 23 October 2023                [Page 6]
+Bhandari & Brockners     Expires 5 November 2023                [Page 6]
 
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
 
 
 5.  Security Considerations
@@ -347,8 +347,7 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
    defined in [RFC9197].
 
    As this document describes new options for IPv6, the security
-   considerations of [RFC8200] and the weakness documented in [RFC8250]
-   apply.
+   considerations of [RFC8200] and [RFC8250] apply.
 
    From a network-protection perspective, there is an assumed trust
    model such that any node that adds IOAM to a packet, removes IOAM
@@ -356,6 +355,12 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
    be allowed to do so.  By default, packets that include IPv6 extension
    headers with IOAM information MUST NOT be leaked through the
    boundaries of the IOAM-Domain.
+
+   IOAM-Domain boundary routers MUST filter any incoming traffic from
+   outside the IOAM-Domain that contains IPv6 extension headers with
+   IOAM information.  IOAM-Domain boundary routers MUST also filter any
+   outgoing traffic leaving the IOAM-Domain that contains IPv6 extension
+   headers with IOAM information.
 
    In the general case, an IOAM node only adds, removes, or modifies an
    IPv6 extension header with IOAM information, if the directive to do
@@ -377,6 +382,18 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
    Future documents may define the use of IOAM with AH and its
    processing.
 
+
+
+
+
+
+
+
+Bhandari & Brockners     Expires 5 November 2023                [Page 7]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
+
+
 6.  IANA Considerations
 
    This draft requests the following IPv6 Option Type assignments from
@@ -385,14 +402,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
 
    http://www.iana.org/assignments/ipv6-parameters/ipv6-
    parameters.xhtml#ipv6-parameters-2
-
-
-
-
-Bhandari & Brockners     Expires 23 October 2023                [Page 7]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
-
 
       Hex Value    Binary Value      Description            Reference
                    act chg rest
@@ -431,6 +440,16 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+
+
+
+
+
+Bhandari & Brockners     Expires 5 November 2023                [Page 8]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
+
+
    [RFC9197]  Brockners, F., Ed., Bhandari, S., Ed., and T. Mizrahi,
               Ed., "Data Fields for In Situ Operations, Administration,
               and Maintenance (IOAM)", RFC 9197, DOI 10.17487/RFC9197,
@@ -441,14 +460,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
               Maintenance (IOAM) Direct Exporting", RFC 9326,
               DOI 10.17487/RFC9326, November 2022,
               <https://www.rfc-editor.org/info/rfc9326>.
-
-
-
-
-Bhandari & Brockners     Expires 23 October 2023                [Page 8]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
-
 
 8.2.  Informative References
 
@@ -487,6 +498,14 @@ Contributors
 
    *  Carlos Pignataro
 
+
+
+
+Bhandari & Brockners     Expires 5 November 2023                [Page 9]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
+
+
    *  Hannes Gredler
 
    *  John Leddy
@@ -498,13 +517,6 @@ Contributors
    *  Aviv Kfir
 
    *  Barak Gafni
-
-
-
-Bhandari & Brockners     Expires 23 October 2023                [Page 9]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
-
 
    *  Petr Lapukhov
 
@@ -543,6 +555,13 @@ Contributors' Addresses
       Email: stephen.youell@jpmorgan.com
 
 
+
+
+Bhandari & Brockners     Expires 5 November 2023               [Page 10]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
+
+
       Tal Mizrahi
       Huawei Network.IO Innovation Lab
       Israel
@@ -554,14 +573,6 @@ Contributors' Addresses
       350 Oakmead Parkway, Suite 100
       Sunnyvale, CA  94085
       U.S.A.
-
-
-
-Bhandari & Brockners     Expires 23 October 2023               [Page 10]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
-
-
       Email: avivk@mellanox.com
 
 
@@ -601,6 +612,12 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
       Email: rajiva@cisco.com
 
 
+
+Bhandari & Brockners     Expires 5 November 2023               [Page 11]
+
+Internet-Draft       In-situ OAM IPv6 encapsulation             May 2023
+
+
       Mark Smith
       PO BOX 521
       HEIDELBERG, VIC  3084
@@ -608,15 +625,6 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
       Email: markzzzsmith+id@gmail.com
 
 Authors' Addresses
-
-
-
-
-
-Bhandari & Brockners     Expires 23 October 2023               [Page 11]
-
-Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
-
 
    Shwetha Bhandari (editor)
    Thoughtspot
@@ -661,12 +669,4 @@ Internet-Draft       In-situ OAM IPv6 encapsulation           April 2023
 
 
 
-
-
-
-
-
-
-
-
-Bhandari & Brockners     Expires 23 October 2023               [Page 12]
+Bhandari & Brockners     Expires 5 November 2023               [Page 12]
