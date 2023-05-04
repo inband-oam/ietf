@@ -13,17 +13,17 @@
 <!ENTITY RFC4193 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4193.xml">
 <!ENTITY RFC1772 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1772.xml">
 <!ENTITY RFC9197 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9197.xml">
-<!ENTITY RFC8799 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8799.xml">
 <!ENTITY RFC4302 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4302.xml">
+<!ENTITY RFC9098 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9098.xml">
+<!ENTITY RFC9326 SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9326.xml">
 
-<!ENTITY I-D.ietf-ippm-ioam-direct-export SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml-ids/reference.I-D.ietf-ippm-ioam-direct-export.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc tocompact="no"?>
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-10"
+<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-11"
      ipr="trust200902">
   <front>
     <title abbrev="In-situ OAM IPv6 encapsulation">In-situ OAM IPv6
@@ -52,8 +52,6 @@
 
           <city>DUESSELDORF</city>
 
-          <region>NORDRHEIN-WESTFALEN</region>
-
           <code>40549</code>
 
           <country>Germany</country>
@@ -67,7 +65,7 @@
 
 
 
-    <date day="24" month="February" year="2023"/>
+    <date day="4" month="May" year="2023"/>
 
     <area>Transport Area</area>
 
@@ -87,8 +85,7 @@
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. IOAM concepts 
       and associated nomenclature, as well as IOAM data fields are
-      defined in <xref target="RFC9197"/>. IOAM is a functionality that
-      applies to limited domains <xref target="RFC8799"/>. 
+      defined in <xref target="RFC9197"/>. 
       This document outlines how IOAM data fields are encapsulated in IPv6 <xref
       target="RFC8200"/> and discusses deployment requirements for networks that
       use IPv6-encapsulated IOAM data fields.</t>
@@ -215,7 +212,7 @@
             </list></t>
 
           <t>Direct Export (DEX) Option: The IOAM Direct Export Option-Type defined in
-          Section 3.2 of <xref target="I-D.ietf-ippm-ioam-direct-export"/> is represented
+          Section 3.2 of <xref target="RFC9326"/> is represented
           as an IPv6 option in the hop-by-hop extension header:
           <list style="hanging">
               <t hangText="Option Type:">TBD_1_0 8-bit identifier of the
@@ -244,8 +241,17 @@
 
         <t>IOAM deployments in IPv6 networks MUST take the following
         considerations and requirements into account:<list style="hanging">
-            <t hangText="C1">IOAM MUST be deployed as a limited domain feature
-            as defined in <xref target="RFC8799"/>. </t>
+            <t hangText="C1">
+            IOAM MUST be deployed in an IOAM-Domain. An IOAM-Domain
+            is a set of nodes that use IOAM. An IOAM-Domain is bounded by
+            its perimeter or edge. The set of nodes forming an IOAM-Domain
+            may be connected to the same physical infrastructure
+            (e.g., a service provider's network). They may also be remotely
+            connected to each other (e.g., an enterprise VPN or an overlay).
+            It is expected that all nodes in an IOAM-Domain are managed by
+            the same administrative entity. Please refer to
+            <xref target="RFC9197"/>) for more details on IOAM-Domains.
+	    </t>
             <t hangText="C2">Implementations of IOAM MUST ensure that the
             addition of IOAM data fields does not alter the way routers
             forward packets or the forwarding decisions they make.
@@ -270,9 +276,7 @@
             the packet being dropped.
             The PMTU tolerance range must be identified and IOAM encapsulation
             operations or data field insertion must not exceed this range.
-            Control of the MTU is critical to the proper operation of IOAM and
-            is one of the reasons it is considered a limited domain feature
-            (see also <xref target="RFC8799"/>).
+            Control of the MTU is critical to the proper operation of IOAM.
             The PMTU tolerance must be identified through configuration and
             IOAM operations must not exceed the packet size beyond PMTU.</t>
 
@@ -306,22 +310,45 @@
 
     <section title="Security Considerations">
       <t>This document describes the encapsulation of IOAM data fields in
-      IPv6. Security considerations of the specific IOAM data fields for each
-      case (i.e., Trace, Proof of Transit, and E2E) are described and defined
-      in <xref target="RFC9197"/>.</t>
+      IPv6. For general IOAM security considerations,
+      see <xref target="RFC9197"/>. Security considerations of the specific
+      IOAM data fields for each case (i.e., Trace, Proof of Transit, and E2E)
+      are also described and defined in <xref target="RFC9197"/>.</t>
 
-      <t>As this document describes new options for IPv6, these are similar to
-      the security considerations of <xref target="RFC8200"/> and the
-      weakness documented in <xref target="RFC8250"/>.</t>
+      <t>As this document describes new options for IPv6, the
+      security considerations of <xref target="RFC8200"/> and 
+      <xref target="RFC8250"/> apply.</t>
+
+      <t>From a network-protection perspective, there is an assumed
+        trust model such that any node that adds IOAM to a packet,
+        removes IOAM from a packet, or modifies IOAM data fields 
+        of a packet is assumed to be allowed to do so.  By default, packets that
+        include IPv6 extension headers with IOAM information MUST NOT
+        be leaked through the boundaries of the IOAM-Domain.</t>
+      <t>IOAM-Domain boundary routers MUST filter any incoming traffic
+	from outside the IOAM-Domain that contains IPv6 extension headers
+	with IOAM information. IOAM-Domain boundary routers MUST 
+	also filter any outgoing traffic leaving the IOAM-Domain that 
+        contains IPv6 extension headers with IOAM information.</t>
+      <t>In the general case, an IOAM node only adds, removes, or modifies
+        an IPv6 extension header with IOAM information, if the
+        directive to do so comes from a trusted source and the directive
+        is validated.</t>
+
+      <t>Problems may occur if the above behaviors are not implemented
+      or if the assumed trust model is violated (e.g., through a security
+      breach). In addition to the security considerations discussed in
+      <xref target="RFC9197"/>, the security considerations associated
+      with IPv6 extension headers listed in <xref target="RFC9098"/> apply.</t>
 
      <section title="Applicability of AH">
-      <t> IOAM is a limited domain feature (refer to <xref target="RFC8799"/>).
-      The network devices in an IOAM domain are trusted to add, update and remove
+      <t> 
+      The network devices in an IOAM-Domain are trusted to add, update and remove
       IOAM options according to the constraints specified in <xref target="RFC8200"/>.
       IOAM domain does not rely on the Authentication Header (AH) as defined in
       <xref target="RFC4302"/> to secure IOAM options.
       The use of IOAM options with AH and its processing is not defined
-      in this document. Future documents may define use of IOAM with AH and
+      in this document. Future documents may define the use of IOAM with AH and
       its processing.</t>
      </section>
 
@@ -376,7 +403,7 @@
 
       &RFC9197;
 
-      &I-D.ietf-ippm-ioam-direct-export;
+      &RFC9326;
 
     </references>
 
@@ -387,7 +414,7 @@
 
       &RFC4302;
 
-      &RFC8799;
+      &RFC9098;
 
       <reference anchor="I-D.kitamura-ipv6-record-route">
         <front>
