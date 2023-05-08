@@ -23,7 +23,7 @@
 <?rfc tocdepth="3"?>
 <?rfc symrefs="yes"?>
 <?rfc sortrefs="yes"?>
-<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-11"
+<rfc category="std" docName="draft-ietf-ippm-ioam-ipv6-options-12"
      ipr="trust200902">
   <front>
     <title abbrev="In-situ OAM IPv6 encapsulation">In-situ OAM IPv6
@@ -65,7 +65,7 @@
 
 
 
-    <date day="4" month="May" year="2023"/>
+    <date day="7" month="May" year="2023"/>
 
     <area>Transport Area</area>
 
@@ -89,6 +89,11 @@
       This document outlines how IOAM data fields are encapsulated in IPv6 <xref
       target="RFC8200"/> and discusses deployment requirements for networks that
       use IPv6-encapsulated IOAM data fields.</t>
+      <t>The terms "encapsulation" and "decapsulation" are used in this document
+      in the same way as in <xref target="RFC9197"/>: 
+      An IOAM encapsulating node incorporates one or more IOAM-Option-Types
+      into packets. An IOAM decapsulating node removes IOAM-Option-Type(s)
+      from packets.</t>
     </section>
 
 
@@ -145,7 +150,7 @@
           <artwork><![CDATA[
 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Option Type  |  Opt Data Len |   Reserved    |   IOAM Type   |
+|  Option Type  |  Opt Data Len |   Reserved    | IOAM-Opt-Type |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
 |                                                               |  |
 .                                                               .  I
@@ -175,7 +180,8 @@
           <t hangText="Reserved:">8-bit field MUST be set to zero
           by the source.</t>
 
-          <t hangText="IOAM Type:">8-bit field as defined in section 7.1 in
+          <t hangText="IOAM-Option-Type:"> Abbreviated to "IOAM-Opt-Type"
+	  in the diagram above: 8-bit field as defined in section 4.1 of 
           <xref target="RFC9197"/>.</t>
 
           <t hangText="Option Data:">Variable-length field.
@@ -296,7 +302,9 @@
       <section title="IOAM domains bounded by hosts">
         <t>For deployments where the IOAM domain is bounded by hosts, hosts
         will perform the operation of IOAM data field encapsulation and
-        decapsulation. IOAM data is carried in IPv6 packets as hop-by-hop or
+        decapsulation, i.e., hosts will place the IOAM data fields
+        directly in the IPv6 header or remove the IOAM data fields directly
+        from the IPv6 header. IOAM data is carried in IPv6 packets as hop-by-hop or
         destination options as specified in this document.</t>
       </section>
 
@@ -304,7 +312,9 @@
         <t>For deployments where the IOAM domain is bounded by network
         devices, network devices such as routers form the edge of an IOAM
         domain. Network devices will perform the operation of IOAM data field
-        encapsulation and decapsulation.</t>
+        encapsulation and decapsulation. Network devices will encapsulate
+        IOAM data fields in an additional, outer, IPv6 header which 
+        carries the IOAM data fields.</t>
       </section>
     </section>
 
