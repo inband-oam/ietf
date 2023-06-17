@@ -264,20 +264,20 @@
 
           <t>IOAM data is carried within packets. Additional space
           required to prove integrity of the IOAM-Data-Fields needs to be optimal, i.e.
-          should not exceed the MTU or have adverse effect on packet
+          should not exceed the Maximum Transmission Unit (MTU) or have adverse effect on packet
           processing.</t>
 
-          <t>Replay protection of older IOAM data should be possible.
+          <t>Protection against replay of old IOAM data should be possible.
           Without replay protection, a rogue node can present the old IOAM
           data, masking any ongoing network issues/activity and making the
           IOAM-Data-Fields collection useless.</t>
 
       </list></t>
 
-      <t>This document defines the methods to protect the integrity of
+      <t>This document defines a method to protect the integrity of
 	      IOAM-Data-Fields, using the IOAM Option-Types
 	      specified in <xref target="RFC9197"/>
-	      as an example. The methods similarly apply to
+	      as an example. The method similarly applies to
 		      other IOAM Option-Types which contain IOAM-Data-Fields.</t>
     </section>
 
@@ -295,13 +295,9 @@
       <t>Abbreviations used in this document:</t>
 
       <t><list hangIndent="11" style="hanging">
-
-          <t hangText="IOAM:">In-situ Operations, Administration, and
-          Maintenance</t>
-
-          <t hangText="MTU:">Maximum Transmit Unit</t>
-
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+
+          <t hangText="IOAM:">In-situ OAM</t>
 
           <t hangText="POT:">Proof of Transit</t>
 
@@ -343,10 +339,10 @@
 
       <section anchor="ModifDataSec" title="Modification: IOAM-Data-Fields">
         <t>Threat <list hangIndent="10" style="empty">
-            <t>An attacker can maliciously modify the IOAM-Data-Fields of
+            <t>An on-path attacker can modify the IOAM-Data-Fields of
             in-transit packets. The modification can either be applied to all
             packets or selectively applied to a subset of the en route
-            packets. This threat is applicable to on-path attackers.</t>
+            packets.</t>
           </list></t>
 
         <t>Impact <list hangIndent="10" style="empty">
@@ -362,8 +358,7 @@
         <t>Threat <list hangIndent="10" style="empty">
             <t>An on-path attacker can modify the header in IOAM Option-Types
             in order to change or disrupt the
-            behavior of nodes processing IOAM-Data-Fields along the path. This
-            threat is not within the scope of this document.</t>
+            behavior of nodes processing IOAM-Data-Fields along the path.</t>
           </list></t>
 
         <t>Impact <list hangIndent="10" style="empty">
@@ -374,7 +369,11 @@
             the IOAM-Trace-Type field in the IOAM Trace Option-Type header. An
             attacker can also prevent some of the nodes that process
             IOAM-Data-Fields from incorporating IOAM-Data-Fields, by modifying
-            the RemainingLen field in the IOAM Trace Option-Type header.</t>
+            the RemainingLen field in the IOAM Trace Option-Type header. Another
+            possibility for the attacker is to remove the context of
+            IOAM-Data-Fields by modifying the Namespace-ID field in IOAM
+            Option-Type headers, which makes the integrity protection of
+            IOAM-Data-Fields completely useless.</t>
           </list></t>
       </section>
 
@@ -396,12 +395,29 @@
             <t>An attacker can inject packets with IOAM Option-Type headers,
             thus manipulating other nodes that process IOAM-Data-Fields in the
             network. This threat is applicable to both on-path and off-path
-            attackers. This threat is not within the scope of this document.</t>
+            attackers.</t>
           </list></t>
 
         <t>Impact <list hangIndent="10" style="empty">
             <t>This attack and its impacts are similar to <xref
             target="ModifHeaderSec"/>.</t>
+          </list></t>
+      </section>
+
+      <section title="Replay">
+        <t>Threat <list hangIndent="10" style="empty">
+            <t>An attacker can replay packets with IOAM-Data-Fields.
+            Specifically, an attacker may replay a previously transmitted IOAM
+            Option-Type with a new data packet, therefore attaching old
+            IOAM-Data-Fields to a fresh user packet. This threat is applicable
+            to both on-path and off-path attackers.</t>
+          </list></t>
+
+        <t>Impact <list hangIndent="10" style="empty">
+            <t>By replaying old IOAM-Data-Fields, and as for previous threats,
+            an attacker can create a false picture of a nonexistent failure, or
+            overload nodes which process IOAM-Data-Fields with unnecessary
+            processing.</t>
           </list></t>
       </section>
 
@@ -464,11 +480,13 @@
 +-------------------------------------------+--------+------------+
 |Modification: IOAM-Data-Fields             |   +    |            |
 +-------------------------------------------+--------+------------+
-|Modification: IOAM Option-Type Headers     |        |     +      |
+|Modification: IOAM Option-Type Headers     |   +    |            |
 +-------------------------------------------+--------+------------+
 |Injection: IOAM-Data-Fields                |   +    |            |
 +-------------------------------------------+--------+------------+
-|Injection: IOAM Option-Type Headers        |        |     +      |
+|Injection: IOAM Option-Type Headers        |   +    |            |
++-------------------------------------------+--------+------------+
+|Replay                                     |   +    |            |
 +-------------------------------------------+--------+------------+
 |Management and Exporting                   |        |     +      |
 +-------------------------------------------+--------+------------+
@@ -512,9 +530,13 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |Signature-suite|  Nonce length |           Reserved            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                             Nonce                             ~
+|                                                               |
+~                             Nonce                             ~
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                           Signature                           ~
+|                                                               |
+~                           Signature                           ~
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 
@@ -522,7 +544,7 @@
           </figure></t>
 
       <t><list style="hanging">
-        <t hangText="Signature-suite:">8-bit unsigned integer. 
+        <t hangText="Signature-suite:">8-bit unsigned integer.
         This field defines the algorithm pair used to compute the digest
         and the signature over the IOAM-Data-Fields, as defined in <xref
         target="IOAM-IP-registry"/>.</t>
@@ -537,7 +559,9 @@
         in Nonce length.</t>
 
         <t hangText="Signature:"> Digital signature value generated
-        by the method and algorithm specified by Signature-suite.</t>
+        by the algorithm pair specified by Signature-suite. The Signature
+        length depends on the Signature-suite value.
+        </t>
       </list></t>
 
       <section title="Integrity Protected Trace Option-Types">
@@ -558,13 +582,28 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |Signature-suite|  Nonce length |           Reserved            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                             Nonce                             ~
+|                                                               |
+~                             Nonce                             ~
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                           Signature                           ~
+|                                                               |
+~                           Signature                           ~
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 </artwork>
           </figure></t>
+
+        <t>Header fields involved in the integrity protection of
+        IOAM-Data-Fields:
+
+          <list style="numbers">
+            <t>Namespace-ID</t>
+            <t>NodeLen</t>
+            <t>Flags: only bits 1 (Loopback) and 2 (Active)</t>
+            <t>IOAM-Trace-Type</t>
+          </list>
+        </t>
       </section>
 
       <section title="Integrity Protected POT Option-Type">
@@ -580,13 +619,26 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |Signature-suite|  Nonce length |           Reserved            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                             Nonce                             ~
+|                                                               |
+~                             Nonce                             ~
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                           Signature                           ~
+|                                                               |
+~                           Signature                           ~
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 </artwork>
           </figure></t>
+
+        <t>Header fields involved in the integrity protection of
+        IOAM-Data-Fields:
+
+          <list style="numbers">
+            <t>Namespace-ID</t>
+            <t>IOAM-POT-Type</t>
+          </list>
+        </t>
       </section>
 
       <section title="Integrity Protected E2E Option-Type">
@@ -602,93 +654,107 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |Signature-suite|  Nonce length |           Reserved            |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                             Nonce                             ~
+|                                                               |
+~                             Nonce                             ~
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                           Signature                           ~
+|                                                               |
+~                           Signature                           ~
+|                                                               |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
 </artwork>
           </figure></t>
+
+        <t>Header fields involved in the integrity protection of
+        IOAM-Data-Fields:
+
+          <list style="numbers">
+            <t>Namespace-ID</t>
+            <t>IOAM-E2E-Type</t>
+          </list>
+        </t>
       </section>
     </section>
 
-    <section title="Methods for space optimized integrity protection">
-      <t>Methods for space optimized integrity protection can leverage symmetric
-      or asymmetric key based signatures, as described in the subsections below.
-      The Signature consumes 32 octets and is carried only once for the entire
-      packet. In case of performance concerns, such method can be applied to a
-      subset of the traffic by using sampling of data to enable IOAM with
-      integrity protection. Both symmetric and asymmetric signature methods work
-      similarly, as follows:
+    <section title="Space optimized integrity protection method">
+      <t>This section defines a space optimized method for integrity protection
+      of IOAM-Data-Fields. With this method, the signature consumes as few bytes
+      as possible and is carried only once per packet. In case of performance
+      concerns, the method can be applied to a subset of the traffic by using
+      sampling of data.</t>
 
-        <list style="numbers">
-          <t>The encapsulating node creates a nonce and stores it in the Nonce
-          field of the IOAM Integrity Protection header. The signature is
-          generated over the Nonce field and the hash of IOAM-Data-Fields it has
-          inserted, i.e., sign(Nonce || hash(IOAM-Data-Fields)). IOAM-Data-Fields
-          supposed to be modified by other IOAM nodes on the path MUST be excluded
-          from the signature (e.g., the POT Cumulative field). The signature is
-          stored in the Signature field of the IOAM Integrity Protection header.
-          Important note: if all the inserted IOAM-Data-Fields are supposed to be
-          modified by other IOAM nodes on the path, or if there is no IOAM-Data-Field
-          inserted at all, then the encapsulating node MUST NOT use an Integrity
-          Protected Option-Type.</t>
+      <t>The space optimized method uses a symmetric key based signature
+      algorithm, as defined below. Due to its space optimized constraint
+      regarding the signature, it seems infeasible for the method to use an
+      asymmetric key based signature algorithm. However, a new document could
+      specifically define it if a solution is found in the future. New methods
+      could also be specifically defined by new documents.</t>
 
-          <t>A transit node generates a signature over the Signature field and
-          the hash of IOAM-Data-Fields it has inserted, i.e.,
-          sign(Signature || hash(IOAM-Data-Fields)). IOAM-Data-Fields modified
-          in-place by the transit node MUST be excluded from the signature
-          (e.g., the POT Cumulative field). The signature is stored in the Signature
-          field of the IOAM Integrity Protection header. Important note: if the
-          transit node does not insert IOAM-Data-Fields (e.g., it only modifies
-          IOAM-Data-Fields in-place, or does nothing), then the transit node
-          MUST NOT generate a signature and MUST NOT update the Signature field.</t>
-
-          <t>The decapsulating node (aka the Validator) is responsible for the
-          integrity verification of the IOAM-Data-Fields collected. Serving as
-          the Validator, the decapsulating node MUST NOT generate a signature
-          based on IOAM-Data-Fields it has inserted, if any, and therefore MUST
-          NOT update the Signature field. In order to check the IOAM-Data-Fields
-          integrity, the Validator verifies the signature chain by iteratively
-          following the same procedure in the reverse order (i.e., from the last
-          node to the encapsulating node). For each node, the Validator applies
-          the corresponding key (see <xref target="SymmetricMethod" /> or
-          <xref target="AsymmetricMethod" /> depending on the approach, i.e.,
-          symmetric or asymmetric) to the signature (initially, the Signature
-          field) to retrieve both the previous signature and the hash of the
-          IOAM-Data-Fields signed by the node. The retrieved hash is then
-          compared to the computed hash of the corresponding IOAM-Data-Fields
-          inserted by the node. As a result, the Validator can detect if the
-          IOAM-Data-Fields integrity is intact or was altered. The validation is
-          trivial in some cases (e.g., with POT Type-0 or E2E Option-Types),
-          where only the encapsulating node generates a signature, as specified
-          by the method described above in this section. For other cases where
-          transit nodes also generate a signature (e.g., with Trace Option-Types),
-          node-ids MUST be included in IOAM-Data-Fields. Details on how the
-          mapping between node-ids and keys is implemented on the Validator are
-          outside the scope of this document.</t>
-        </list>
-      </t>
-
-      <section anchor="SymmetricMethod" title="Symmetric key based signature">
+      <section title="Symmetric key based signature algorithm">
         <t>This method assumes that symmetric keys have been distributed to
         the respective nodes as well as the Validator (the Validator receives
         all the keys). The details of the mechanisms responsible for key
         distribution are outside the scope of this document.</t>
 
-        <t>This method MUST use an algorithm pair defined in <xref
-        target="IOAM-IP-registry"/> and the approach MUST be symmetric.</t>
-      </section>
+        <t>The symmetric key based signature algorithm MUST use SHA-256
+        (<xref target="SHS"/>) as the Digest Algorithm, and MUST use Advanced
+        Encryption Standard (<xref target="AES"/>) with a key length of 256 bits
+        and the Galois/Counter Mode (<xref target="NIST.800-38D"/>) as the
+        Signature Algorithm (AES-256-GCM). The corresponding Signature Suite
+        Identifier is 1, as defined in <xref target="IOAM-IP-registry"/>. As a
+        consequence, the signature consumes 32 octets and is computed according
+        to the following steps:
 
-      <section anchor="AsymmetricMethod" title="Asymmetric key based signature">
-        <t>This method assumes that asymmetric keys have been generated per
-        IOAM node and the respective nodes can access their keys (the
-        Validator receives all the public keys). The details of the mechanisms
-        responsible for key distribution are outside the scope of this
-        document.</t>
+          <list style="numbers">
+            <t>The encapsulating node creates a nonce and stores it in the Nonce
+            field of the IOAM Integrity Protection header (the Nonce length
+            field is set accordingly). The Signature-suite field is set to 1.
+            The signature is generated over the hash of header fields (see
+            <xref target="NewIOAMOptionTypes"/> for the exact list of header
+            fields to include in the signature, depending on the IOAM
+            Option-Type) and IOAM-Data-Fields it has inserted, i.e.,
+            sign(hash(Header-Fields || IOAM-Data-Fields)), with the Nonce field
+            provided as the nonce. IOAM-Data-Fields supposed to be modified by
+            other IOAM nodes on the path MUST be excluded from the signature
+            (e.g., the POT Cumulative field). The signature is stored in the
+            Signature field of the IOAM Integrity Protection header. Important
+            note: if all the inserted IOAM-Data-Fields are supposed to be
+            modified by other IOAM nodes on the path, or if there is no
+            IOAM-Data-Field inserted at all, then the encapsulating node MUST
+            NOT use an Integrity Protected Option-Type.</t>
 
-        <t>This method MUST use an algorithm pair defined in <xref
-        target="IOAM-IP-registry"/> and the approach MUST be asymmetric.</t>
+            <t>A transit node generates a signature over the hash of
+            IOAM-Data-Fields it has inserted, i.e., sign(hash(IOAM-Data-Fields)),
+            with the Signature field provided as the nonce. IOAM-Data-Fields
+            modified in-place by the transit node MUST be excluded from the
+            signature (e.g., the POT Cumulative field). The signature is stored
+            in the Signature field of the IOAM Integrity Protection header.
+            Important note: if the transit node does not insert IOAM-Data-Fields
+            (e.g., it only modifies IOAM-Data-Fields in-place, or does nothing),
+            then the transit node MUST NOT generate a signature and MUST NOT
+            update the Signature field.</t>
+
+            <t>The decapsulating node (i.e., the Validator) is responsible for
+            the integrity verification of the IOAM-Data-Fields collected.
+            Serving as the Validator, the decapsulating node MUST NOT generate a
+            signature based on IOAM-Data-Fields it has inserted, if any, and
+            therefore MUST NOT update the Signature field. In order to check the
+            IOAM-Data-Fields integrity, the Validator recomputes the signature
+            chain by iteratively following the same procedure as for the
+            encapsulating and transit nodes, in that order, using the respective
+            symmetric keys. The recomputed signature is then compared to the
+            Signature field. As a result, the Validator can detect if the
+            IOAM-Data-Fields integrity is intact or altered. The validation is
+            trivial in some cases (e.g., with POT Type-0 or E2E Option-Types),
+            where only the encapsulating node generates a signature, as
+            specified above by this method. For other cases where transit nodes
+            also generate a signature (e.g., with Trace Option-Types), node-ids
+            MUST be included in IOAM-Data-Fields. Details on how the mapping
+            between node-ids and keys is implemented on the Validator are
+            outside the scope of this document.</t>
+          </list>
+        </t>
       </section>
     </section>
 
@@ -714,9 +780,9 @@
       </section>
 
       <section anchor="IOAM-IP-registry"
-               title="IOAM Integrity Protection Algorithm Suite">
+               title="IOAM Integrity Protection Signature Suite">
         <t>IANA is requested to define a new registry named "IOAM Integrity
-        Protection Algorithm Suite", inside the "In Situ OAM (IOAM)" registry
+        Protection Signature Suite", inside the "In Situ OAM (IOAM)" registry
         group.</t>
 
         <t>The new registry defines 256 code points to identify the digest and
@@ -724,33 +790,29 @@
         <xref target="NewIOAMOptionTypes"/>. The following code points are
         defined in this document:
 
-        <figure title="IOAM Integrity Protection Algorithm Suite">
+        <figure title="IOAM Integrity Protection Signature Suite">
             <artwork>
- Algorithm
- Suite        Digest       Signature                  Specification
- Identifier   Algorithm    Algorithm     Approach     Pointer
-+-----------+------------+------------+------------+----------------+
-| 0x00      | Reserved   | Reserved   |    None    | This document  |
-+-----------+------------+------------+------------+----------------+
-| 0x01      | SHA-256    | ECDSA      | Asymmetric | [SHS] [DSS]    |
-|           |            | P-256      |            | [RFC6090]      |
-|           |            |            |            | This document  |
-+-----------+------------+------------+----------------+------------+
-| 0x02      | SHA-256    | AES-256    | Symmetric  | [AES]          |
-|           |            |            |            | [NIST.800-38D] |
-|           |            |            |            | This document  |
-+-----------+------------+------------+------------+----------------+
-| 0x03-0xFE | Unassigned | Unassigned |            |                |
-+-----------+------------+------------+------------+----------------+
-| 0xFF      | Reserved   | Reserved   |    None    | This document  |
-+-----------+------------+------------+------------+----------------+
+ Signature
+ Suite        Digest       Signature     Specification
+ Identifier   Algorithm    Algorithm     Pointer
++-----------+------------+-------------+----------------+
+| 0x00      | Reserved   | Reserved    | This document  |
++-----------+------------+-------------+----------------+
+| 0x01      | SHA-256    | AES-256-GCM | This document  |
++-----------+------------+-------------+----------------+
+| 0x02      |            |             |                |
+| ...       | Unassigned | Unassigned  |                |
+| 0xFE      |            |             |                |
++-----------+------------+-------------+----------------+
+| 0xFF      | Reserved   | Reserved    | This document  |
++-----------+------------+-------------+----------------+
       </artwork>
-          </figure> Code points 3-254 are available for assignment via the "IETF
+          </figure> Code points 2-254 are available for assignment via the "IETF
         Review" process, as per <xref target="RFC8126"/>.</t>
 
         <t>New registration requests MUST use the following template: the value
         of the requested code point, the associated digest algorithm name and
-        signature algorithm name, the corresponding approach, and a reference to
+        signature algorithm name, and a reference to
         the document that defines the requested code point.</t>
       </section>
     </section>
@@ -858,13 +920,15 @@
 
       &RFC9055;
 
+<!--
       &RFC9326;
+-->
 
       &RFC7276;
 
       &RFC7384;
 
-      &RFC6090;
+<!--      &RFC6090; -->
 
 <!--
       &RFC4302;
@@ -924,6 +988,8 @@
                     value="NIST FIPS Publication 180-4,               DOI 10.6028/NIST.FIPS.180-4"/>
       </reference>
 
+      <!--
+
       <reference anchor="DSS"
                  target="http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf">
         <front>
@@ -940,6 +1006,7 @@
         <seriesInfo name=""
                     value="NIST FIPS Publication 186-4,               DOI 10.6028/NIST.FIPS.186-4"/>
       </reference>
+      -->
 
       <reference anchor="AES"
                  target="http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf">
