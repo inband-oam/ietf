@@ -5,12 +5,12 @@
 ippm                                                        F. Brockners
 Internet-Draft                                                     Cisco
 Intended status: Standards Track                             S. Bhandari
-Expires: 17 December 2023                                    Thoughtspot
+Expires: 4 January 2024                                      Thoughtspot
                                                               T. Mizrahi
                                                                   Huawei
                                                                J. Iurman
                                                                   ULiege
-                                                            15 June 2023
+                                                             3 July 2023
 
 
                   Integrity of In-situ OAM Data Fields
@@ -39,7 +39,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 December 2023.
+   This Internet-Draft will expire on 4 January 2024.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Brockners, et al.       Expires 17 December 2023                [Page 1]
+Brockners, et al.        Expires 4 January 2024                 [Page 1]
 
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
 
 
    and restrictions with respect to this document.  Code Components
@@ -66,7 +66,7 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   2.  Conventions . . . . . . . . . . . . . . . . . . . . . . . . .   4
      2.1.  Requirements Language . . . . . . . . . . . . . . . . . .   4
      2.2.  Abbreviations . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Threat Analysis . . . . . . . . . . . . . . . . . . . . . . .   4
@@ -74,26 +74,27 @@ Table of Contents
      3.2.  Modification: IOAM Option-Type Headers  . . . . . . . . .   5
      3.3.  Injection: IOAM-Data-Fields . . . . . . . . . . . . . . .   5
      3.4.  Injection: IOAM Option-Type Headers . . . . . . . . . . .   6
-     3.5.  Management and Exporting  . . . . . . . . . . . . . . . .   6
-     3.6.  Delay . . . . . . . . . . . . . . . . . . . . . . . . . .   6
-     3.7.  Threat Summary  . . . . . . . . . . . . . . . . . . . . .   7
-   4.  Integrity Protected Option-Types  . . . . . . . . . . . . . .   7
-     4.1.  Integrity Protected Trace Option-Types  . . . . . . . . .   8
-     4.2.  Integrity Protected POT Option-Type . . . . . . . . . . .   9
-     4.3.  Integrity Protected E2E Option-Type . . . . . . . . . . .   9
-   5.  Methods for space optimized integrity protection  . . . . . .  10
-     5.1.  Symmetric key based signature . . . . . . . . . . . . . .  11
-     5.2.  Asymmetric key based signature  . . . . . . . . . . . . .  11
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
-     6.1.  IOAM Option-Types . . . . . . . . . . . . . . . . . . . .  12
-     6.2.  IOAM Integrity Protection Algorithm Suite . . . . . . . .  12
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  13
-     7.1.  Replay protection . . . . . . . . . . . . . . . . . . . .  13
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  13
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  13
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  13
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+     3.5.  Replay  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     3.6.  Management and Exporting  . . . . . . . . . . . . . . . .   6
+     3.7.  Delay . . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     3.8.  Threat Summary  . . . . . . . . . . . . . . . . . . . . .   7
+   4.  Integrity Protected Option-Types  . . . . . . . . . . . . . .   8
+     4.1.  Integrity Protected Trace Option-Types  . . . . . . . . .   9
+       4.1.1.  Header fields for integrity protection  . . . . . . .  10
+     4.2.  Integrity Protected POT Option-Type . . . . . . . . . . .  10
+       4.2.1.  Header fields for integrity protection  . . . . . . .  11
+     4.3.  Integrity Protected E2E Option-Type . . . . . . . . . . .  11
+       4.3.1.  Header fields for integrity protection  . . . . . . .  12
+   5.  Integrity Protection method . . . . . . . . . . . . . . . . .  12
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
+     6.1.  IOAM Option-Types . . . . . . . . . . . . . . . . . . . .  13
+     6.2.  IOAM Integrity Protection Signature Suite . . . . . . . .  14
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  15
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .  15
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -105,15 +106,15 @@ Table of Contents
    mechanisms such as Ping or Traceroute.  In terms of "active" or
    "passive" OAM, "in-situ" OAM can be considered a hybrid OAM type.
    "In-situ" mechanisms do not require extra packets to be sent.  IOAM
-   adds information to the already available data packets and therefore
 
 
 
-Brockners, et al.       Expires 17 December 2023                [Page 2]
+Brockners, et al.        Expires 4 January 2024                 [Page 2]
 
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
 
 
+   adds information to the already available data packets and therefore
    cannot be considered passive.  In terms of the classification given
    in [RFC7799], IOAM could be portrayed as Hybrid Type I.  IOAM
    mechanisms can be leveraged where mechanisms using, e.g., ICMP do not
@@ -147,28 +148,29 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 
    2.  IOAM data is carried within packets.  Additional space required
        to prove integrity of the IOAM-Data-Fields needs to be optimal,
-       i.e.  should not exceed the MTU or have adverse effect on packet
-       processing.
+       i.e.  should not exceed the Maximum Transmission Unit (MTU) or
+       have adverse effect on packet processing.
 
-   3.  Replay protection of older IOAM data should be possible.  Without
-       replay protection, a rogue node can present the old IOAM data,
-       masking any ongoing network issues/activity and making the IOAM-
-       Data-Fields collection useless.
+   3.  Protection against replay of old IOAM data should be possible.
+       Without replay protection, a rogue node can present the old IOAM
+       data, masking any ongoing network issues/activity and making the
+       IOAM-Data-Fields collection useless.
 
-   This document defines the methods to protect the integrity of IOAM-
-   Data-Fields, using the IOAM Option-Types specified in [RFC9197] as an
-   example.  The methods similarly apply to other IOAM Option-Types
+   This document defines a method to protect the integrity of IOAM-Data-
+   Fields, using the IOAM Option-Types specified in [RFC9197] as an
+   example.  The method similarly applies to other IOAM Option-Types
    which contain IOAM-Data-Fields.
 
-2.  Conventions
 
 
 
 
-Brockners, et al.       Expires 17 December 2023                [Page 3]
+Brockners, et al.        Expires 4 January 2024                 [Page 3]
 
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
 
+
+2.  Conventions
 
 2.1.  Requirements Language
 
@@ -182,11 +184,9 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 
    Abbreviations used in this document:
 
-   IOAM:      In-situ Operations, Administration, and Maintenance
-
-   MTU:       Maximum Transmit Unit
-
    OAM:       Operations, Administration, and Maintenance
+
+   IOAM:      In-situ OAM
 
    POT:       Proof of Transit
 
@@ -221,9 +221,9 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 
 
 
-Brockners, et al.       Expires 17 December 2023                [Page 4]
+Brockners, et al.        Expires 4 January 2024                 [Page 4]
 
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
 
 
    processing in some of the IOAM nodes along the path, and may cause
@@ -235,10 +235,9 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 
    Threat
 
-      An attacker can maliciously modify the IOAM-Data-Fields of in-
-      transit packets.  The modification can either be applied to all
-      packets or selectively applied to a subset of the en route
-      packets.  This threat is applicable to on-path attackers.
+      An on-path attacker can modify the IOAM-Data-Fields of in-transit
+      packets.  The modification can either be applied to all packets or
+      selectively applied to a subset of the en route packets.
 
    Impact
 
@@ -253,8 +252,7 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 
       An on-path attacker can modify the header in IOAM Option-Types in
       order to change or disrupt the behavior of nodes processing IOAM-
-      Data-Fields along the path.  This threat is not within the scope
-      of this document.
+      Data-Fields along the path.
 
    Impact
 
@@ -265,22 +263,28 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
       the IOAM-Trace-Type field in the IOAM Trace Option-Type header.
       An attacker can also prevent some of the nodes that process IOAM-
       Data-Fields from incorporating IOAM-Data-Fields, by modifying the
-      RemainingLen field in the IOAM Trace Option-Type header.
+      RemainingLen field in the IOAM Trace Option-Type header.  Another
+      possibility for the attacker is to change the context of IOAM-
+      Data-Fields by modifying the Namespace-ID field in IOAM Option-
+      Type headers, which makes the integrity protection of IOAM-Data-
+      Fields completely useless.
 
 3.3.  Injection: IOAM-Data-Fields
 
    Threat
 
+
+
+
+
+Brockners, et al.        Expires 4 January 2024                 [Page 5]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
+
       An attacker can inject packets with IOAM Option-Types and IOAM-
       Data-Fields.  This threat is applicable to both on-path and off-
       path attackers.
-
-
-
-Brockners, et al.       Expires 17 December 2023                [Page 5]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
 
    Impact
 
@@ -293,13 +297,30 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
       An attacker can inject packets with IOAM Option-Type headers, thus
       manipulating other nodes that process IOAM-Data-Fields in the
       network.  This threat is applicable to both on-path and off-path
-      attackers.  This threat is not within the scope of this document.
+      attackers.
 
    Impact
 
       This attack and its impacts are similar to Section 3.2.
 
-3.5.  Management and Exporting
+3.5.  Replay
+
+   Threat
+
+      An attacker can replay packets with IOAM-Data-Fields.
+      Specifically, an attacker may replay a previously transmitted IOAM
+      Option-Type with a new data packet, therefore attaching old IOAM-
+      Data-Fields to a fresh user packet.  This threat is applicable to
+      both on-path and off-path attackers.
+
+   Impact
+
+      By replaying old IOAM-Data-Fields, an attacker can create a false
+      picture of the network status.  The attacker could simulate a
+      nonexistent failure, or incur non-required processing load on
+      nodes that process these IOAM-Data-Fields.
+
+3.6.  Management and Exporting
 
    Threat
 
@@ -309,6 +330,14 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
       Fields that are exported to a receiving entity can also be
       compromised.  Management plane attacks are not within the scope of
       this document; the network management protocol is expected to
+
+
+
+Brockners, et al.        Expires 4 January 2024                 [Page 6]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
+
       include inherent security capabilities.  The integrity of exported
       data is also not within the scope of this document.  It is
       expected that the specification of the export format will discuss
@@ -323,21 +352,13 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
       Fields is similar to the impacts of previous threats that were
       described in this section.
 
-3.6.  Delay
+3.7.  Delay
 
    Threat
 
       An on-path attacker may delay some or all of the in-transit
       packets that include IOAM-Data-Fields in order to create the false
       illusion of congestion.  Delay attacks are well known in the
-
-
-
-Brockners, et al.       Expires 17 December 2023                [Page 6]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
-
       context of deterministic networks [RFC9055] and synchronization
       [RFC7384], and may be somewhat mitigated in these environments by
       using redundant paths in a way that is resilient to an attack
@@ -354,7 +375,23 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
       Data-Fields, thus preventing the authenticity of delay and load
       measurements.
 
-3.7.  Threat Summary
+3.8.  Threat Summary
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires 4 January 2024                 [Page 7]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
 
 
    +-------------------------------------------+--------+------------+
@@ -362,11 +399,13 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
    +-------------------------------------------+--------+------------+
    |Modification: IOAM-Data-Fields             |   +    |            |
    +-------------------------------------------+--------+------------+
-   |Modification: IOAM Option-Type Headers     |        |     +      |
+   |Modification: IOAM Option-Type Headers     |   +    |            |
    +-------------------------------------------+--------+------------+
    |Injection: IOAM-Data-Fields                |   +    |            |
    +-------------------------------------------+--------+------------+
-   |Injection: IOAM Option-Type Headers        |        |     +      |
+   |Injection: IOAM Option-Type Headers        |   +    |            |
+   +-------------------------------------------+--------+------------+
+   |Replay                                     |   +    |            |
    +-------------------------------------------+--------+------------+
    |Management and Exporting                   |        |     +      |
    +-------------------------------------------+--------+------------+
@@ -386,14 +425,6 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
       integrity protection.
 
    65  IOAM Incremental Trace Integrity Protected Option-Type:
-
-
-
-Brockners, et al.       Expires 17 December 2023                [Page 7]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
-
       corresponds to the IOAM Incremental Trace Option-Type with
       integrity protection.
 
@@ -407,14 +438,30 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
    header when the IOAM Option-Type is an Integrity Protected Option-
    Type.  It is defined as follows:
 
+
+
+
+
+
+
+
+Brockners, et al.        Expires 4 January 2024                 [Page 8]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
+
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |Signature-suite|  Nonce length |           Reserved            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                             Nonce                             ~
+   |                                                               |
+   ~                             Nonce                             ~
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                           Signature                           ~
+   |                                                               |
+   ~                           Signature                           ~
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
                  Figure 2: IOAM Integrity Protection header
@@ -431,8 +478,9 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 
    Nonce:  Variable length field with length specified in Nonce length.
 
-   Signature:  Digital signature value generated by the method and
-      algorithm specified by Signature-suite.
+   Signature:  Digital signature value generated by the algorithm pair
+      specified by Signature-suite.  The Signature length depends on the
+      Signature-suite value.
 
 4.1.  Integrity Protected Trace Option-Types
 
@@ -445,9 +493,17 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 
 
 
-Brockners, et al.       Expires 17 December 2023                [Page 8]
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires 4 January 2024                 [Page 9]
 
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
 
 
     0                   1                   2                   3
@@ -459,16 +515,52 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |Signature-suite|  Nonce length |           Reserved            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                             Nonce                             ~
+   |                                                               |
+   ~                             Nonce                             ~
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                           Signature                           ~
+   |                                                               |
+   ~                           Signature                           ~
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+4.1.1.  Header fields for integrity protection
+
+   The following IOAM Pre-allocated or Incremental Option-Type header
+   fields are involved in the integrity protection of IOAM-Data-Fields:
+
+   1.  Namespace-ID
+
+   2.  NodeLen
+
+   3.  Flags: only bits 1 (Loopback) and 2 (Active)
+
+   4.  IOAM-Trace-Type
 
 4.2.  Integrity Protected POT Option-Type
 
    The IOAM POT Option-Type header, as defined in [RFC9197], is followed
    by the Integrity Protection header when the IOAM Option-Type is set
    to the IOAM POT Integrity Protected Option-Type:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires 4 January 2024                [Page 10]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -477,34 +569,29 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |Signature-suite|  Nonce length |           Reserved            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                             Nonce                             ~
+   |                                                               |
+   ~                             Nonce                             ~
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                           Signature                           ~
+   |                                                               |
+   ~                           Signature                           ~
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+4.2.1.  Header fields for integrity protection
+
+   The following IOAM POT Option-Type header fields are involved in the
+   integrity protection of IOAM-Data-Fields:
+
+   1.  Namespace-ID
+
+   2.  IOAM-POT-Type
 
 4.3.  Integrity Protected E2E Option-Type
 
    The IOAM E2E Option-Type header, as defined in [RFC9197], is followed
    by the Integrity Protection header when the IOAM Option-Type is set
    to the IOAM E2E Integrity Protected Option-Type:
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Brockners, et al.       Expires 17 December 2023                [Page 9]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -513,110 +600,112 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |Signature-suite|  Nonce length |           Reserved            |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                             Nonce                             ~
+   |                                                               |
+   ~                             Nonce                             ~
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |                           Signature                           ~
+   |                                                               |
+   ~                           Signature                           ~
+   |                                                               |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-5.  Methods for space optimized integrity protection
 
-   Methods for space optimized integrity protection can leverage
-   symmetric or asymmetric key based signatures, as described in the
-   subsections below.  The Signature consumes 32 octets and is carried
-   only once for the entire packet.  In case of performance concerns,
-   such method can be applied to a subset of the traffic by using
-   sampling of data to enable IOAM with integrity protection.  Both
-   symmetric and asymmetric signature methods work similarly, as
-   follows:
+
+
+
+Brockners, et al.        Expires 4 January 2024                [Page 11]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
+
+4.3.1.  Header fields for integrity protection
+
+   The following IOAM E2E Option-Type header fields are involved in the
+   integrity protection of IOAM-Data-Fields:
+
+   1.  Namespace-ID
+
+   2.  IOAM-E2E-Type
+
+5.  Integrity Protection method
+
+   This section defines a method that uses a symmetric key based
+   signature algorithm for integrity protection of IOAM-Data-Fields.  In
+   case of performance concerns, the method can be applied to a subset
+   of the traffic by using sampling of data.
+
+   The method assumes that symmetric keys have been distributed to the
+   respective nodes as well as the Validator (the Validator receives all
+   the keys).  The details of the mechanisms used for key distribution
+   are outside the scope of this document.
+
+   The symmetric key based signature algorithm MUST use SHA-256 ([SHS])
+   as the Digest Algorithm, and MUST use Advanced Encryption Standard
+   ([AES]) with a key length of 256 bits and the Galois/Counter Mode
+   ([NIST.800-38D]) as the Signature Algorithm (AES-256-GCM).  The
+   corresponding Signature Suite Identifier is 1, as defined in
+   Section 6.2.  As a consequence, the signature consumes 32 octets and
+   is computed according to the following steps:
 
    1.  The encapsulating node creates a nonce and stores it in the Nonce
-       field of the IOAM Integrity Protection header.  The signature is
-       generated over the Nonce field and the hash of IOAM-Data-Fields
-       it has inserted, i.e., sign(Nonce || hash(IOAM-Data-Fields)).
+       field of the IOAM Integrity Protection header (the Nonce length
+       field is set accordingly).  The Signature-suite field is set to
+       1.  The signature is generated over the hash of header fields
+       (see Section 4.1.1, Section 4.2.1, or Section 4.3.1, for the
+       exact list of header fields to include in the signature,
+       depending on the IOAM Integrity Protected Option-Type) and IOAM-
+       Data-Fields it has inserted, i.e., sign(hash(Header-Fields ||
+       IOAM-Data-Fields)), with the Nonce field provided as the nonce.
        IOAM-Data-Fields supposed to be modified by other IOAM nodes on
        the path MUST be excluded from the signature (e.g., the POT
        Cumulative field).  The signature is stored in the Signature
-       field of the IOAM Integrity Protection header.  Important note:
-       if all the inserted IOAM-Data-Fields are supposed to be modified
+       field of the IOAM Integrity Protection header.
+
+   2.  If all the inserted IOAM-Data-Fields are supposed to be modified
        by other IOAM nodes on the path, or if there is no IOAM-Data-
        Field inserted at all, then the encapsulating node MUST NOT use
        an Integrity Protected Option-Type.
 
-   2.  A transit node generates a signature over the Signature field and
-       the hash of IOAM-Data-Fields it has inserted, i.e.,
-       sign(Signature || hash(IOAM-Data-Fields)).  IOAM-Data-Fields
+
+
+
+Brockners, et al.        Expires 4 January 2024                [Page 12]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
+
+   3.  A transit node generates a signature over the hash of IOAM-Data-
+       Fields it has inserted, i.e., sign(hash(IOAM-Data-Fields)), with
+       the Signature field provided as the nonce.  IOAM-Data-Fields
        modified in-place by the transit node MUST be excluded from the
        signature (e.g., the POT Cumulative field).  The signature is
        stored in the Signature field of the IOAM Integrity Protection
-       header.  Important note: if the transit node does not insert
-       IOAM-Data-Fields (e.g., it only modifies IOAM-Data-Fields in-
-       place, or does nothing), then the transit node MUST NOT generate
-       a signature and MUST NOT update the Signature field.
+       header.
 
+   4.  If the transit node does not insert IOAM-Data-Fields (e.g., it
+       only modifies IOAM-Data-Fields in-place, or does nothing), then
+       the transit node MUST NOT generate a signature and MUST NOT
+       update the Signature field.
 
-
-
-
-Brockners, et al.       Expires 17 December 2023               [Page 10]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
-
-   3.  The decapsulating node (aka the Validator) is responsible for the
-       integrity verification of the IOAM-Data-Fields collected.
-       Serving as the Validator, the decapsulating node MUST NOT
-       generate a signature based on IOAM-Data-Fields it has inserted,
-       if any, and therefore MUST NOT update the Signature field.  In
-       order to check the IOAM-Data-Fields integrity, the Validator
-       verifies the signature chain by iteratively following the same
-       procedure in the reverse order (i.e., from the last node to the
-       encapsulating node).  For each node, the Validator applies the
-       corresponding key (see Section 5.1 or Section 5.2 depending on
-       the approach, i.e., symmetric or asymmetric) to the signature
-       (initially, the Signature field) to retrieve both the previous
-       signature and the hash of the IOAM-Data-Fields signed by the
-       node.  The retrieved hash is then compared to the computed hash
-       of the corresponding IOAM-Data-Fields inserted by the node.  As a
-       result, the Validator can detect if the IOAM-Data-Fields
-       integrity is intact or was altered.  The validation is trivial in
-       some cases (e.g., with POT Type-0 or E2E Option-Types), where
-       only the encapsulating node generates a signature, as specified
-       by the method described above in this section.  For other cases
-       where transit nodes also generate a signature (e.g., with Trace
-       Option-Types), node-ids MUST be included in IOAM-Data-Fields.
-       Details on how the mapping between node-ids and keys is
+   5.  The decapsulating node performs the validation of the integrity
+       protection.  It is referred to as "Validator" in the context of
+       the integrity protection method.  The Validator MUST NOT generate
+       a signature based on IOAM-Data-Fields it has inserted, if any,
+       and therefore MUST NOT update the Signature field.  In order to
+       check the IOAM-Data-Fields integrity, the Validator recomputes
+       the signature chain by iteratively following the same procedure
+       as for the encapsulating and transit nodes, in that order, using
+       the respective symmetric keys.  The recomputed signature is then
+       compared to the Signature field.  As a result, the Validator can
+       detect if the IOAM-Data-Fields integrity is intact or was
+       altered.  The validation is trivial in some cases (e.g., with POT
+       Type-0 or E2E Option-Types), where only the encapsulating node
+       generates a signature, as specified above by this method.  For
+       other cases where transit nodes also generate a signature (e.g.,
+       with Trace Option-Types), node-ids MUST be included in IOAM-Data-
+       Fields.  Details on how the mapping between node-ids and keys is
        implemented on the Validator are outside the scope of this
        document.
-
-5.1.  Symmetric key based signature
-
-   This method assumes that symmetric keys have been distributed to the
-   respective nodes as well as the Validator (the Validator receives all
-   the keys).  The details of the mechanisms responsible for key
-   distribution are outside the scope of this document.
-
-   This method MUST use an algorithm pair defined in Section 6.2 and the
-   approach MUST be symmetric.
-
-5.2.  Asymmetric key based signature
-
-   This method assumes that asymmetric keys have been generated per IOAM
-   node and the respective nodes can access their keys (the Validator
-   receives all the public keys).  The details of the mechanisms
-   responsible for key distribution are outside the scope of this
-   document.
-
-   This method MUST use an algorithm pair defined in Section 6.2 and the
-   approach MUST be asymmetric.
-
-
-
-
-
-Brockners, et al.       Expires 17 December 2023               [Page 11]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
 
 6.  IANA Considerations
 
@@ -633,12 +722,25 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
 
    66  IOAM POT Integrity Protected Option-Type (see Section 4)
 
+
+
+
+Brockners, et al.        Expires 4 January 2024                [Page 13]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
+
    67  IOAM E2E Integrity Protected Option-Type (see Section 4)
 
-6.2.  IOAM Integrity Protection Algorithm Suite
+   A document defining a new IOAM Integrity Protected Option-Type MUST
+   define the IOAM Option-Type header fields involved in the integrity
+   protection of IOAM-Data-Fields, as done in Section 4.1.1,
+   Section 4.2.1, and Section 4.3.1 of this document.
+
+6.2.  IOAM Integrity Protection Signature Suite
 
    IANA is requested to define a new registry named "IOAM Integrity
-   Protection Algorithm Suite", inside the "In Situ OAM (IOAM)" registry
+   Protection Signature Suite", inside the "In Situ OAM (IOAM)" registry
    group.
 
    The new registry defines 256 code points to identify the digest and
@@ -646,51 +748,56 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
    in Section 4.  The following code points are defined in this
    document:
 
-    Algorithm
-    Suite        Digest       Signature                  Specification
-    Identifier   Algorithm    Algorithm     Approach     Pointer
-   +-----------+------------+------------+------------+----------------+
-   | 0x00      | Reserved   | Reserved   |    None    | This document  |
-   +-----------+------------+------------+------------+----------------+
-   | 0x01      | SHA-256    | ECDSA      | Asymmetric | [SHS] [DSS]    |
-   |           |            | P-256      |            | [RFC6090]      |
-   |           |            |            |            | This document  |
-   +-----------+------------+------------+----------------+------------+
-   | 0x02      | SHA-256    | AES-256    | Symmetric  | [AES]          |
-   |           |            |            |            | [NIST.800-38D] |
-   |           |            |            |            | This document  |
-   +-----------+------------+------------+------------+----------------+
-   | 0x03-0xFE | Unassigned | Unassigned |            |                |
-   +-----------+------------+------------+------------+----------------+
-   | 0xFF      | Reserved   | Reserved   |    None    | This document  |
-   +-----------+------------+------------+------------+----------------+
+    Signature
+    Suite        Digest       Signature     Specification
+    Identifier   Algorithm    Algorithm     Pointer
+   +-----------+------------+-------------+----------------+
+   | 0x00      | Reserved   | Reserved    | This document  |
+   +-----------+------------+-------------+----------------+
+   | 0x01      | SHA-256    | AES-256-GCM | This document  |
+   +-----------+------------+-------------+----------------+
+   | 0x02      |            |             |                |
+   | ...       | Unassigned | Unassigned  |                |
+   | 0xFE      |            |             |                |
+   +-----------+------------+-------------+----------------+
+   | 0xFF      | Reserved   | Reserved    | This document  |
+   +-----------+------------+-------------+----------------+
 
-            Figure 3: IOAM Integrity Protection Algorithm Suite
+            Figure 3: IOAM Integrity Protection Signature Suite
 
-
-
-Brockners, et al.       Expires 17 December 2023               [Page 12]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
-
-   Code points 3-254 are available for assignment via the "IETF Review"
+   Code points 2-254 are available for assignment via the "IETF Review"
    process, as per [RFC8126].
 
    New registration requests MUST use the following template: the value
    of the requested code point, the associated digest algorithm name and
-   signature algorithm name, the corresponding approach, and a reference
-   to the document that defines the requested code point.
+   signature algorithm name, and a reference to the document that
+   defines the requested code point.
 
 7.  Security Considerations
 
-   This section discusses additional security aspects.
+   Please refer to Section 3 for a threat analysis of integrity-related
+   threats in the context of IOAM.
 
-7.1.  Replay protection
 
-   The nonce makes a signature chain unique but does not necessarily
+
+
+Brockners, et al.        Expires 4 January 2024                [Page 14]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
+
+   The Integrity Protection method defined in this document (see
+   Section 5) comes with some limitations.  First, it leverages the use
+   of symmetric keys, which initially requires a key exchange.  Details
+   about key exchange is outside the scope of this document.  Also, an
+   equivalent solution that leverages asymmetric keys is not possible
+   due to the computational requirements of the method.
+
+   The Nonce makes a signature chain unique but does not necessarily
    prevent replay attacks.  To enable replay protection, the
-   encapsulating node and the Validator MUST use a common, unique nonce.
+   encapsulating node and the Validator MUST agree on a common
+   methodology to keep the Nonce valid only for a specific period of
+   time, which is outside the scope of this document.
 
 8.  Acknowledgements
 
@@ -723,31 +830,21 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
               <http://csrc.nist.gov/publications/fips/fips197/fips-
               197.pdf>.
 
-
-
-Brockners, et al.       Expires 17 December 2023               [Page 13]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
-
-   [DSS]      National Institute of Standards and Technology, "Digital
-              Signature Standard (DSS)",  NIST FIPS Publication 186-4,
-              DOI 10.6028/NIST.FIPS.186-4, 2013,
-              <http://nvlpubs.nist.gov/nistpubs/FIPS/
-              NIST.FIPS.186-4.pdf>.
-
    [NIST.800-38D]
               National Institute of Standards and Technology,
               "Recommendation for Block Cipher Modes of Operation:
               Galois/Counter Mode (GCM) and GMAC",  NIST Special
+
+
+
+Brockners, et al.        Expires 4 January 2024                [Page 15]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
+
+
               Publication 800-38D, 2001,
               <http://csrc.nist.gov/publications/nistpubs/800-38D/SP-
               800-38D.pdf>.
-
-   [RFC6090]  McGrew, D., Igoe, K., and M. Salter, "Fundamental Elliptic
-              Curve Cryptography Algorithms", RFC 6090,
-              DOI 10.17487/RFC6090, February 2011,
-              <https://www.rfc-editor.org/info/rfc6090>.
 
    [RFC7276]  Mizrahi, T., Sprecher, N., Bellagamba, E., and Y.
               Weingarten, "An Overview of Operations, Administration,
@@ -773,19 +870,6 @@ Internet-Draft         IOAM-Data-Fields Integrity              June 2023
               and Maintenance (IOAM)", RFC 9197, DOI 10.17487/RFC9197,
               May 2022, <https://www.rfc-editor.org/info/rfc9197>.
 
-   [RFC9326]  Song, H., Gafni, B., Brockners, F., Bhandari, S., and T.
-              Mizrahi, "In Situ Operations, Administration, and
-              Maintenance (IOAM) Direct Exporting", RFC 9326,
-              DOI 10.17487/RFC9326, November 2022,
-              <https://www.rfc-editor.org/info/rfc9326>.
-
-
-
-Brockners, et al.       Expires 17 December 2023               [Page 14]
-
-Internet-Draft         IOAM-Data-Fields Integrity              June 2023
-
-
    [SHS]      National Institute of Standards and Technology, "Secure
               Hash Standard (SHS)",  NIST FIPS Publication 180-4, DOI
               10.6028/NIST.FIPS.180-4, 2015,
@@ -800,6 +884,18 @@ Authors' Addresses
    40549 DUESSELDORF
    Germany
    Email: fbrockne@cisco.com
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires 4 January 2024                [Page 16]
+
+Internet-Draft         IOAM-Data-Fields Integrity              July 2023
 
 
    Shwetha Bhandari
@@ -837,4 +933,20 @@ Authors' Addresses
 
 
 
-Brockners, et al.       Expires 17 December 2023               [Page 15]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Brockners, et al.        Expires 4 January 2024                [Page 17]
