@@ -182,7 +182,7 @@
       </address>
     </author>
 
-    <date day="03" month="July" year="2023"/>
+    <date day="04" month="July" year="2023"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -275,10 +275,9 @@
       </list></t>
 
       <t>This document defines a method to protect the integrity of
-	      IOAM-Data-Fields, using the IOAM Option-Types
-	      specified in <xref target="RFC9197"/>
-	      as an example. The method similarly applies to
-		      other IOAM Option-Types which contain IOAM-Data-Fields.</t>
+      IOAM-Data-Fields, using the IOAM Option-Types specified in
+      <xref target="RFC9197"/> and <xref target="RFC9326"/> as an example. The
+      method will similarly apply to future IOAM Option-Types.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
@@ -302,6 +301,8 @@
           <t hangText="POT:">Proof of Transit</t>
 
           <t hangText="E2E:">Edge to Edge</t>
+
+          <t hangText="DEX:">Direct Exporting</t>
         </list></t>
         </section>
     </section>
@@ -501,22 +502,29 @@
     <section anchor="NewIOAMOptionTypes" title="Integrity Protected Option-Types">
     <t>This section defines new IOAM Option-Types. Their purpose is to carry
     IOAM-Data-Fields with integrity protection. Each of the IOAM Option-Types
-    defined in <xref target="RFC9197"/> is extended as follows:</t>
+    defined in <xref target="RFC9197"/> and <xref target="RFC9326"/> is extended
+    as follows:</t>
 
         <t><list style="hanging">
             <t hangText="64">IOAM Pre-allocated Trace Integrity Protected
             Option-Type: corresponds to the IOAM Pre-allocated Trace Option-Type
-            with integrity protection.</t>
+            (<xref target="RFC9197"/>) with integrity protection.</t>
 
             <t hangText="65">IOAM Incremental Trace Integrity Protected
             Option-Type: corresponds to the IOAM Incremental Trace Option-Type
-            with integrity protection.</t>
+            (<xref target="RFC9197"/>) with integrity protection.</t>
 
             <t hangText="66">IOAM POT Integrity Protected Option-Type:
-            corresponds to the IOAM POT Option-Type with integrity protection.</t>
+            corresponds to the IOAM POT Option-Type (<xref target="RFC9197"/>)
+            with integrity protection.</t>
 
             <t hangText="67">IOAM E2E Integrity Protected Option-Type:
-            corresponds to the IOAM E2E Option-Type with integrity protection.</t>
+            corresponds to the IOAM E2E Option-Type (<xref target="RFC9197"/>)
+            with integrity protection.</t>
+
+            <t hangText="68">IOAM DEX Integrity Protected Option-Type:
+            corresponds to the IOAM DEX Option-Type (<xref target="RFC9326"/>)
+            with integrity protection.</t>
           </list></t>
 
       <t>The IOAM Integrity Protection header follows the IOAM Option-Type
@@ -679,9 +687,56 @@
           </list></t>
         </section>
       </section>
+
+      <section title="Integrity Protected DEX Option-Type">
+        <t>The IOAM DEX Option-Type header, as defined in <xref
+        target="RFC9326"/>, is followed by the Integrity
+        Protection header when the IOAM Option-Type is set to the IOAM DEX
+        Integrity Protected Option-Type: <figure>
+            <artwork>
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|        Namespace-ID           |     Flags     |Extension-Flags|
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|               IOAM-Trace-Type                 |   Reserved    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                         Flow ID (Optional)                    |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                     Sequence Number  (Optional)               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|Signature-suite|  Nonce length |           Reserved            |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+~                             Nonce                             ~
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                                                               |
+~                           Signature                           ~
+|                                                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+</artwork>
+        </figure></t>
+
+        <section anchor="DEXOptTypeHdrFields" title="Header fields for integrity protection">
+          <t>The following IOAM DEX Option-Type header fields are involved in
+          the integrity protection of IOAM-Data-Fields:
+
+          <list style="numbers">
+            <t>Namespace-ID</t>
+            <t>Extension-Flags: only bits 0 (Flow ID) and 1 (Sequence Number)</t>
+            <t>IOAM-Trace-Type</t>
+          </list>
+
+          The optional fields (i.e., Flow ID and Sequence Number) are treated as
+          optional IOAM-Data-Fields, not header fields.
+          </t>
+        </section>
+      </section>
     </section>
 
-    <section anchor="IPM" title="Integrity Protection method">
+    <section anchor="IPM" title="Integrity Protection Method">
       <t>This section defines a method that uses a symmetric key based signature
       algorithm for integrity protection of IOAM-Data-Fields.
       In case of performance
@@ -708,8 +763,9 @@
           field is set accordingly). The Signature-suite field is set to 1.
           The signature is generated over the hash of header fields (see
           <xref target="TraceOptTypeHdrFields"/>,
-          <xref target="POTOptTypeHdrFields"/>, or
-          <xref target="E2EOptTypeHdrFields"/>, for the exact list of header
+          <xref target="POTOptTypeHdrFields"/>,
+          <xref target="E2EOptTypeHdrFields"/>, or
+          <xref target="DEXOptTypeHdrFields"/>, for the exact list of header
           fields to include in the signature, depending on the IOAM Integrity
           Protected Option-Type) and IOAM-Data-Fields it has inserted, i.e.,
           sign(hash(Header-Fields || IOAM-Data-Fields)), with the Nonce field
@@ -717,11 +773,6 @@
           other IOAM nodes on the path MUST be excluded from the signature
           (e.g., the POT Cumulative field). The signature is stored in the
           Signature field of the IOAM Integrity Protection header.</t>
-
-          <t>If all the inserted IOAM-Data-Fields are supposed to be
-          modified by other IOAM nodes on the path, or if there is no
-          IOAM-Data-Field inserted at all, then the encapsulating node MUST
-          NOT use an Integrity Protected Option-Type.</t>
 
           <t>A transit node generates a signature over the hash of
           IOAM-Data-Fields it has inserted, i.e., sign(hash(IOAM-Data-Fields)),
@@ -747,7 +798,7 @@
           symmetric keys. The recomputed signature is then compared to the
           Signature field. As a result, the Validator can detect if the
           IOAM-Data-Fields integrity is intact or was altered. The validation is
-          trivial in some cases (e.g., with POT Type-0 or E2E Option-Types),
+          trivial in some cases (e.g., with POT Type-0, E2E or DEX Option-Types),
           where only the encapsulating node generates a signature, as
           specified above by this method. For other cases where transit nodes
           also generate a signature (e.g., with Trace Option-Types), node-ids
@@ -776,14 +827,18 @@
 
             <t hangText="67">IOAM E2E Integrity Protected Option-Type
             (see <xref target="NewIOAMOptionTypes"/>)</t>
+
+            <t hangText="68">IOAM DEX Integrity Protected Option-Type
+            (see <xref target="NewIOAMOptionTypes"/>)</t>
         </list></t>
 
         <t>A document defining a new IOAM Integrity Protected Option-Type MUST
         define the IOAM Option-Type header fields involved in the integrity
         protection of IOAM-Data-Fields, as done in
         <xref target="TraceOptTypeHdrFields"/>,
-        <xref target="POTOptTypeHdrFields"/>, and
-        <xref target="E2EOptTypeHdrFields"/> of this document.</t>
+        <xref target="POTOptTypeHdrFields"/>,
+        <xref target="E2EOptTypeHdrFields"/>, and
+        <xref target="DEXOptTypeHdrFields"/> of this document.</t>
       </section>
 
       <section anchor="IOAM-IP-registry"
@@ -828,12 +883,11 @@
       <t>Please refer to <xref target="ThreatAnalysis"/> for a threat analysis
       of integrity-related threats in the context of IOAM.</t>
 
-      <t>The Integrity Protection method defined in this document (see
-      <xref target="IPM"/>) comes with some limitations. First, it leverages the
-      use of symmetric keys, which initially requires a key exchange. Details
-      about key exchange is outside the scope of this document. Also, an
-      equivalent solution that leverages asymmetric keys is not possible due to
-      the computational requirements of the method.</t>
+      <t>The Integrity Protection Method defined in this document (see
+      <xref target="IPM"/>) leverages symmetric keys. The symmetric keys need to
+      be exchanged in a secure way between the nodes involved with integrity
+      protection of IOAM-Data-Fields. The details of the key exchange are
+      outside the scope of this document.</t>
 
       <t>The Nonce makes a signature chain unique but does not necessarily
       prevent replay attacks. To enable replay protection, the encapsulating node
@@ -934,9 +988,7 @@
 
       &RFC9055;
 
-<!--
       &RFC9326;
--->
 
       &RFC7276;
 
