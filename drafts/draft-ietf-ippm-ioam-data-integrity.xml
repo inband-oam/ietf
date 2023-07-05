@@ -182,7 +182,7 @@
       </address>
     </author>
 
-    <date day="04" month="July" year="2023"/>
+    <date day="05" month="July" year="2023"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -527,11 +527,11 @@
             with integrity protection.</t>
           </list></t>
 
-      <t>The IOAM Integrity Protection header follows the IOAM Option-Type
+      <t>The IOAM Integrity Protection Header follows the IOAM Option-Type
       header when the IOAM Option-Type is an Integrity Protected Option-Type.
       It is defined as follows:</t>
 
-      <t><figure title="IOAM Integrity Protection header">
+      <t><figure title="IOAM Integrity Protection Header">
             <artwork>
 
  0                   1                   2                   3
@@ -759,7 +759,7 @@
 
         <list style="numbers">
           <t>The encapsulating node creates a nonce and stores it in the Nonce
-          field of the IOAM Integrity Protection header (the Nonce length
+          field of the IOAM Integrity Protection Header (the Nonce length
           field is set accordingly). The Signature-suite field is set to 1.
           The signature is generated over the hash of header fields (see
           <xref target="TraceOptTypeHdrFields"/>,
@@ -772,14 +772,14 @@
           provided as the nonce. IOAM-Data-Fields supposed to be modified by
           other IOAM nodes on the path MUST be excluded from the signature
           (e.g., the POT Cumulative field). The signature is stored in the
-          Signature field of the IOAM Integrity Protection header.</t>
+          Signature field of the IOAM Integrity Protection Header.</t>
 
           <t>A transit node generates a signature over the hash of
           IOAM-Data-Fields it has inserted, i.e., sign(hash(IOAM-Data-Fields)),
           with the Signature field provided as the nonce. IOAM-Data-Fields
           modified in-place by the transit node MUST be excluded from the
           signature (e.g., the POT Cumulative field). The signature is stored
-          in the Signature field of the IOAM Integrity Protection header.</t>
+          in the Signature field of the IOAM Integrity Protection Header.</t>
 
           <t>If the transit node does not insert IOAM-Data-Fields
           (e.g., it only modifies IOAM-Data-Fields in-place, or does nothing),
@@ -788,7 +788,7 @@
 
           <t>The decapsulating node performs the validation of the integrity
           protection. It is referred to as "Validator" in the context of the
-          integrity protection method.
+          Integrity Protection Method.
           The Validator MUST NOT generate a
           signature based on IOAM-Data-Fields it has inserted, if any, and
           therefore MUST NOT update the Signature field. In order to check the
@@ -888,6 +888,14 @@
       be exchanged in a secure way between the nodes involved with integrity
       protection of IOAM-Data-Fields. The details of the key exchange are
       outside the scope of this document.</t>
+
+      <t>The Integrity Protection Method defined in this document requires
+      additional per-packet processing by each node that uses it. Inappropriate
+      use of the Integrity Protection Method might overload nodes and cause them
+      to stop functioning properly. Operators deploying IOAM with the Integrity
+      Protection Method MUST ensure that such overload situations are avoided.
+      This could for example be achieved by applying IOAM only to a subset of
+      the entire traffic.</t>
 
       <t>The Nonce makes a signature chain unique but does not necessarily
       prevent replay attacks. To enable replay protection, the encapsulating node
