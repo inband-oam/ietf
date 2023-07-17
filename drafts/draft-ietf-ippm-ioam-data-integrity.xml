@@ -81,7 +81,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-integrity-05"
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-integrity-06"
      ipr="trust200902">
   <!-- ipr="full3978"-->
 
@@ -182,7 +182,7 @@
       </address>
     </author>
 
-    <date day="05" month="July" year="2023"/>
+    <date day="23" month="July" year="2023"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -743,73 +743,90 @@
       concerns, the method can be applied to a subset of the traffic by using
       sampling of data.</t>
 
-      <t>The method assumes that symmetric keys have been distributed to
-      the respective nodes as well as the Validator (the Validator receives
-      all the keys). The details of the mechanisms used for key
-      distribution are outside the scope of this document.</t>
-
       <t>The symmetric key based signature algorithm MUST use SHA-256
       (<xref target="SHS"/>) as the Digest Algorithm, and MUST use Advanced
       Encryption Standard (<xref target="AES"/>) with a key length of 256 bits
       and the Galois/Counter Mode (<xref target="NIST.800-38D"/>) as the
       Signature Algorithm (AES-256-GCM). The corresponding Signature Suite
       Identifier is 1, as defined in <xref target="IOAM-IP-registry"/>. As a
-      consequence, the signature consumes 32 octets and is computed according
-      to the following steps:
+      consequence, the signature consumes 32 octets. The Integrity Protection
+      Method is defined by the following steps:
 
-        <list style="numbers">
-          <t>The encapsulating node creates a nonce and stores it in the Nonce
-          field of the IOAM Integrity Protection Header (the Nonce length
-          field is set accordingly). The Signature-suite field is set to 1.
-          The signature is generated over the hash of header fields (see
-          <xref target="TraceOptTypeHdrFields"/>,
-          <xref target="POTOptTypeHdrFields"/>,
-          <xref target="E2EOptTypeHdrFields"/>, or
-          <xref target="DEXOptTypeHdrFields"/>, for the exact list of header
-          fields to include in the signature, depending on the IOAM Integrity
-          Protected Option-Type) and IOAM-Data-Fields it has inserted, i.e.,
-          sign(hash(Header-Fields || IOAM-Data-Fields)), with the Nonce field
-          provided as the nonce. IOAM-Data-Fields supposed to be modified by
-          other IOAM nodes on the path MUST be excluded from the signature
-          (e.g., the POT Cumulative field). The signature is stored in the
-          Signature field of the IOAM Integrity Protection Header.</t>
+      <list style="numbers">
+        <t>The encapsulating node creates a nonce and stores it in the Nonce
+        field of the IOAM Integrity Protection Header (the Nonce length
+        field is set accordingly). The Signature-suite field is set to 1.
+        The signature is generated over the hash of header fields (see
+        <xref target="TraceOptTypeHdrFields"/>,
+        <xref target="POTOptTypeHdrFields"/>,
+        <xref target="E2EOptTypeHdrFields"/>, or
+        <xref target="DEXOptTypeHdrFields"/>, for the exact list of header
+        fields to include in the signature, depending on the IOAM Integrity
+        Protected Option-Type) and IOAM-Data-Fields it has inserted, i.e.,
+        sign(hash(Header-Fields || IOAM-Data-Fields)), with the Nonce field
+        provided as the nonce. IOAM-Data-Fields supposed to be modified by
+        other IOAM nodes on the path MUST be excluded from the signature
+        (e.g., the POT Cumulative field). The signature is stored in the
+        Signature field of the IOAM Integrity Protection Header.</t>
 
-          <t>A transit node generates a signature over the hash of
-          IOAM-Data-Fields it has inserted, i.e., sign(hash(IOAM-Data-Fields)),
-          with the Signature field provided as the nonce. IOAM-Data-Fields
-          modified in-place by the transit node MUST be excluded from the
-          signature (e.g., the POT Cumulative field). The signature is stored
-          in the Signature field of the IOAM Integrity Protection Header.</t>
+        <t>A transit node generates a signature over the hash of
+        IOAM-Data-Fields it has inserted, i.e., sign(hash(IOAM-Data-Fields)),
+        with the Signature field provided as the nonce. IOAM-Data-Fields
+        modified in-place by the transit node MUST be excluded from the
+        signature (e.g., the POT Cumulative field). The signature is stored
+        in the Signature field of the IOAM Integrity Protection Header.
 
+        <list style="bullets">
           <t>If the transit node does not insert IOAM-Data-Fields
           (e.g., it only modifies IOAM-Data-Fields in-place, or does nothing),
           then the transit node MUST NOT generate a signature and MUST NOT
           update the Signature field.</t>
-
-          <t>For an Integrity Protected DEX Option-Type, each transit node acts
-          as a "Validator" (see below).</t>
-
-          <t>The decapsulating node performs the validation of the integrity
-          protection. It is referred to as "Validator" in the context of the
-          Integrity Protection Method.
-          The Validator MUST NOT generate a
-          signature based on IOAM-Data-Fields it has inserted, if any, and
-          therefore MUST NOT update the Signature field. In order to check the
-          IOAM-Data-Fields integrity, the Validator recomputes the signature
-          chain by iteratively following the same procedure as for the
-          encapsulating and transit nodes, in that order, using the respective
-          symmetric keys. The recomputed signature is then compared to the
-          Signature field. As a result, the Validator can detect if the
-          IOAM-Data-Fields integrity is intact or was altered. The validation is
-          trivial in some cases (e.g., with POT Type-0, E2E or DEX Option-Types),
-          where only the encapsulating node generates a signature, as
-          specified above by this method. For other cases where transit nodes
-          also generate a signature (e.g., with Trace Option-Types), node-ids
-          MUST be included in IOAM-Data-Fields. Details on how the mapping
-          between node-ids and keys is implemented on the Validator are
-          outside the scope of this document.</t>
-          </list>
+        </list>
         </t>
+
+        <t>In the context of the Integrity Protection Method, a node that
+        performs the validation of the integrity protection is referred to as
+        a "Validator". The role of a Validator is to recompute the signature by
+        iteratively following the previous steps of the method, in the same
+        order and up to itself, using the respective symmetric keys. The
+        recomputed signature is then compared to the Signature field. As a
+        result, the Validator can detect if the IOAM-Data-Fields integrity is
+        intact or was altered. The validation is trivial in some cases (e.g.,
+        with POT Type-0, E2E or DEX Option-Types), where only the encapsulating
+        node generates a signature, as specified above by this method. For other
+        cases where transit nodes also generate a signature (e.g., with Trace
+        Option-Types), node-ids MUST be included in IOAM-Data-Fields. Details on
+        how the mapping between node-ids and keys is implemented on a Validator
+        are outside the scope of this document.
+
+        <list style="bullets">
+          <t>Each node that take actions triggered by fields included in the
+          integrity protection MUST act as a Validator. Otherwise, an attacker
+          could modify the IOAM header along the path and change the actions a
+          node performs. Examples:
+
+          <list style="bullets">
+            <t>For an Integrity Protected Trace Option-Type (Pre-allocated or
+            Incremental), each transit node MUST act as a Validator, if either
+            the IOAM Loopback or Active mode is used.</t>
+
+            <t>For an Integrity Protected DEX Option-Type, each transit node
+            MUST act as a Validator.</t>
+          </list>
+          </t>
+
+          <t>The decapsulating node MUST act as a Validator. The decapsulating
+          node MUST NOT generate a signature based on IOAM-Data-Fields it has
+          inserted, if any, and therefore MUST NOT update the Signature field.</t>
+        </list>
+        </t>
+      </list>
+      </t>
+
+      <t>The method assumes that symmetric keys have been distributed to
+      the respective nodes as well as the Validator(s). The details of the
+      mechanisms used for key distribution are outside the scope of this
+      document.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -902,7 +919,7 @@
 
       <t>The Nonce makes a signature chain unique but does not necessarily
       prevent replay attacks. To enable replay protection, the encapsulating node
-      and the Validator MUST agree on a common methodology to keep the Nonce valid
+      and the Validator(s) MUST agree on a common methodology to keep the Nonce valid
       only for a specific period of time, which is outside the scope of this document.</t>
     </section>
 
