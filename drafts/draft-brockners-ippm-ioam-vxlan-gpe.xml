@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="US-ASCII"?>
 <!-- This template is for creating an Internet Draft using xml2rfc,
      which is available here: http://xml2rfc.tools.ietf.org. -->
-<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!DOCTYPE rfc [
 <!-- One method to get references from the online citation libraries.
      There has to be one entity for each item to be referenced.
      An alternate method (rfc include) is described in the references. -->
@@ -22,7 +22,7 @@
 <!ENTITY I-D.draft-ietf-sfc-proof-of-transit SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-sfc-proof-of-transit.xml">
 <!ENTITY I-D.ietf-nvo3-vxlan-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-nvo3-vxlan-gpe.xml">
 <!ENTITY I-D.ietf-lisp-gpe SYSTEM "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-lisp-gpe.xml">
-<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers/address-family-numbers.xml">
+<!ENTITY AFI SYSTEM "http://www.iana.org/assignments/address-family-numbers">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
@@ -49,8 +49,8 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-brockners-ippm-ioam-vxlan-gpe-04"
-     ipr="trust200902">
+<rfc category="info" docName="draft-brockners-ippm-ioam-vxlan-gpe-05"
+     ipr="trust200902" submissionType="IETF">
   <!-- ipr="full3978"-->
 
   <!-- category values: std, bcp, info, exp, and historic
@@ -64,8 +64,8 @@
     <!-- The abbreviated title is used in the page header - it is only necessary if the
          full title is longer than 39 characters -->
 
-    <title abbrev="In-situ OAM VXLAN-GPE encapsulation">VXLAN-GPE
-    Encapsulation for In-situ OAM Data</title>
+    <title abbrev="VXLAN-GPE Encapsulation for IOAM">VXLAN-GPE
+    Encapsulation for In Situ OAM (IOAM) Data</title>
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
@@ -114,9 +114,14 @@
       </address>
     </author>
 
-    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro">
+    <author fullname="Carlos Pignataro" initials="C." surname="Pignataro" role="editor">
+      <organization abbrev="NC State University">North Carolina State University</organization>
       <address>
-        <email>carlos@pignataro.net</email>
+        <postal>
+          <country>US</country>
+        </postal>        
+        <email>cpignata@gmail.com</email>
+        <email>cmpignat@ncsu.edu</email>
       </address>
     </author>
 
@@ -181,7 +186,7 @@
 
           <code>94085</code>
 
-          <country>USA</country>
+          <country>US</country>
         </postal>
 
         <email>avivk@nvidia.com</email>
@@ -199,7 +204,7 @@
 
           <code>94085</code>
 
-          <country>USA</country>
+          <country>US</country>
         </postal>
 
         <email>gbarak@nvidia.com</email>
@@ -272,7 +277,7 @@
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>In-situ Operations, Administration, and Maintenance (IOAM) records
+      <t>In situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path between two points in the network. This document
       outlines how IOAM data fields are encapsulated in VXLAN-GPE.</t>
@@ -281,8 +286,8 @@
 
   <middle>
     <section title="Introduction" toc="default">
-      <t>In-situ OAM (IOAM) records OAM information within the packet while
-      the packet traverses a particular network domain. The term "in-situ"
+      <t>In situ OAM (IOAM) records OAM information within the packet while
+      the packet traverses a particular network domain. The term "in situ"
       refers to the fact that the IOAM data fields are added to the data
       packets rather than being sent within packets specifically dedicated to
       OAM. This document defines how IOAM data fields are transported as part
@@ -290,11 +295,11 @@
       The IOAM data fields are defined in <xref
       target="RFC9197"/>. An implementation of IOAM which
       leverages VXLAN-GPE to carry the IOAM data is available from the FD.io
-      open source software project <xref target="FD.io"/>.</t>
+      open-source software project <xref target="FD.io"/>.</t>
     </section>
 
     <section anchor="Conventions" title="Conventions">
-      <section title="Requirement Language">
+      <section title="Requirements Language">
         <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
         "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
         document are to be interpreted as described in <xref
@@ -304,13 +309,14 @@
       <section title="Abbreviations">
         <t>Abbreviations used in this document:</t>
 
-        <t><list hangIndent="11" style="hanging">
-            <t hangText="IOAM:">In-situ Operations, Administration, and
+        <t>
+          <list style="hanging">
+            <t hangText="IOAM:"><br />In Situ Operations, Administration, and
             Maintenance</t>
 
-            <t hangText="OAM:">Operations, Administration, and Maintenance</t>
+            <t hangText="OAM:"><br />Operations, Administration, and Maintenance</t>
 
-            <t hangText="VXLAN-GPE:">Virtual eXtensible Local Area Network,
+            <t hangText="VXLAN-GPE:"><br />Virtual eXtensible Local Area Network,
             Generic Protocol Extension</t>
           </list></t>
       </section>
@@ -329,7 +335,7 @@
       <t/>
 
       <t><figure align="center" anchor="IOAMinVXLANGPE"
-          title="IOAM data encapsulation in VXLAN-GPE">
+          title="IOAM Data Encapsulation in VXLAN-GPE">
           <artwork><![CDATA[
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -340,15 +346,15 @@
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 |                       Outer UDP Header                        |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+--+
-|R|R|Ver|I|P|R|O|          Reserved             |  NP=TBD_IOAM  |  |
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ GPE
-|     Virtual Network Identifier (VNI)          | Reserved      |  |
+|R|R|Ver|I|P|R|O|          Reserved             |  NP=TBD_IOAM  | VXL
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+ AN-
+|                VXLAN Network Identifier (VNI) |   Reserved    | GPE
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
-| IOAM-Type     | IOAM HDR len  |    Reserved   | Next Protocol |  |
+|   IOAM-Type   |   IOAM Len    |    Reserved   | Next Protocol |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+  I
-!                                                               |  O
-!                                                               |  A
-~                 IOAM Option and Data Space                    ~  M
+|                                                               |  O
+|                                                               |  A
+~                 IOAM Option and Optional Data Space           ~  M
 |                                                               |  |
 |                                                               |  |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+<-+
@@ -363,35 +369,37 @@
         </figure></t>
 
       <t>The VXLAN-GPE header and fields are defined in <xref
-      target="I-D.ietf-nvo3-vxlan-gpe"/>. The VXLAN Next Protocol value for
+      target="I-D.ietf-nvo3-vxlan-gpe"/>. The VXLAN-GPE Next Protocol value for
       IOAM is TBD_IOAM.</t>
 
       <t>The IOAM related fields in VXLAN-GPE are defined as follows:</t>
 
       <t><list style="hanging">
-          <t hangText="IOAM-Type:">8-bit field defining the IOAM Option type,
+          <t hangText="IOAM-Type:"><br />8-bit field defining the IOAM Option type,
           as defined in Section 7.2 of <xref
           target="RFC9197"/>.</t>
 
-          <t hangText="IOAM HDR len:">8-bit unsigned integer. Length of the
-          IOAM HDR in 4-octet units not including the first 4 octects.</t>
+          <t hangText="IOAM Len:"><br />8-bit unsigned integer. Length of the
+          IOAM protocol message shim, expressed in 4-octet units not including the first 4 octets.</t>
 
-          <t hangText="Reserved:">8-bit reserved field MUST be set to zero
+          <t hangText="Reserved:"><br />8-bit reserved field MUST be set to zero
           upon transmission and ignored upon receipt.</t>
 
-          <t hangText="Next Protocol:">8-bit unsigned integer that determines
+          <t hangText="Next Protocol:"><br />8-bit unsigned integer that determines
           the type of header following IOAM protocol. The value is from the
-          IANA registry setup for VXLAN GPE Next Protocol defined in <xref
+          IANA registry setup for VXLAN-GPE Next Protocol defined in <xref
           target="I-D.ietf-nvo3-vxlan-gpe"/>.</t>
 
-          <t hangText="IOAM Option and Data Space:">IOAM option header and
+          <t hangText="IOAM Option and Optional Data Space:"><br />IOAM option header and
           data is present as specified by the IOAM-Type field, and is defined
           in Section 4 of <xref target="RFC9197"/>.</t>
-        </list>Multiple IOAM options MAY be included within the VXLAN-GPE
+        </list>
+      </t><t>
+      Multiple IOAM options MAY be included within the VXLAN-GPE
       encapsulation. For example, if a VXLAN-GPE encapsulation contains two
       IOAM options before a data payload, the Next Protocol field of the first
       IOAM option will contain the value of TBD_IOAM, while the Next Protocol
-      field of the second IOAM option will contain the VXLAN "Next Protocol"
+      field of the second IOAM option will contain the VXLAN-GPE "Next Protocol"
       number indicating the type of the data payload.</t>
     </section>
 
@@ -400,7 +408,7 @@
       approach taken for IOAM data encapsulation in VXLAN-GPE, as well as
       deployment considerations.</t>
 
-      <section title="Discussion of the encapsulation approach">
+      <section title="Discussion of the Encapsulation Approach">
         <t>This section is to support the working group discussion in
         selecting the most appropriate approach for encapsulating IOAM data
         fields in VXLAN-GPE.</t>
@@ -408,13 +416,13 @@
         <t>An encapsulation of IOAM data fields in VXLAN-GPE should be
         friendly to an implementation in both hardware as well as software
         forwarders. Hardware forwarders benefit from an encapsulation that
-        minimizes iterative look-ups of fields within the packet: Any
+        minimizes iterative lookups of fields within the packet: Any
         operation which looks up the value of a field within the packet, based
         on which another lookup is performed, consumes additional gates and
         time in an implementation - both of which are desired to be kept to a
         minimum. This means that flat TLV structures are to be preferred over
         nested TLV structures. IOAM data fields are grouped into three option
-        categories: Trace, proof-of-transit, and edge-to-edge. Each of these
+        categories: trace, proof-of-transit, and edge-to-edge. Each of these
         three options defines a TLV structure. A hardware-friendly
         encapsulation approach avoids grouping these three option categories
         into yet another TLV structure, but would rather carry the options as
@@ -426,11 +434,11 @@
         <t><list style="numbers">
             <t>Use a single GPE protocol type for all IOAM types: IOAM would
             receive a single GPE protocol type code point. A "sub-type" field
-            would then specify what IOAM options type (trace,
-            proof-of-transit, edge-to-edge) is carried.</t>
+            would then specify what IOAM options type (e.g., trace,
+            proof-of-transit, and edge-to-edge) is carried.</t>
 
             <t>Use one GPE protocol type per IOAM options type: Each IOAM data
-            field option (trace, proof-of-transit, and edge-to-edge) would be
+            field option (e.g., trace, proof-of-transit, and edge-to-edge) would be
             specified by its own "next protocol", i.e. each IOAM options type
             becomes its own GPE protocol type with a dedicated code point.
             This implies that in case additional IOAM option types would be
@@ -442,7 +450,7 @@
         each IOAM header, but different sub-types within each IOAM header.</t>
       </section>
 
-      <section title="IOAM and the use of the VXLAN O-bit">
+      <section title="IOAM and the Use of the VXLAN-GPE O-bit">
         <t><xref target="I-D.ietf-nvo3-vxlan-gpe"/> defines an "O bit" for OAM
         packets. Per <xref target="I-D.ietf-nvo3-vxlan-gpe"/> the O bit
         indicates that the packet contains an OAM message instead of data
@@ -452,7 +460,7 @@
         bit.</t>
       </section>
 
-      <section title="Transit devices">
+      <section title="Transit Devices">
         <t>If IOAM is deployed in domains where UDP port numbers are not
         controlled and do not have a domain-wide meaning, such as on the
         global Internet, transit devices MUST NOT attempt to modify the IOAM
@@ -462,7 +470,7 @@
         4790, but with a payload that is not VXLAN-GPE. The scenario and
         associated reasoning is discussed in <xref target="RFC7605"/> which
         states that "it is important to recognize that any interpretation of
-        port numbers -- except at the endpoints -- may be incorrect, because
+        port numbers -- except at the endpoints -- may be incorrect because
         port numbers are meaningful only at the endpoints."</t>
       </section>
     </section>
@@ -549,21 +557,23 @@
 
       &RFC7605;
 
+<!-- Unused Reference:
       <reference anchor="ETYPES"
-                 target="https://www.iana.org/assignments/ethernet-numbers/ethernet-numbers.xhtml">
+                 target="https://www.iana.org/assignments/ethernet-numbers">
         <front>
-          <title>IANA Ethernet Numbers</title>
+          <title>IANA OUI Ethernet Numbers</title>
 
           <author/>
 
           <date/>
         </front>
       </reference>
+-->
     </references>
 
     <references title="Informative References">
 
-      <reference anchor="FD.io" target="https://fd.io/">
+      <reference anchor="FD.io" target="https://fd.io">
         <front>
           <title>Fast Data Project: FD.io</title>
 
