@@ -84,20 +84,20 @@ Table of Contents
      4.3.  E2E Integrity Protected Option-Type . . . . . . . . . . .  12
    5.  Integrity Protection Method . . . . . . . . . . . . . . . . .  13
      5.1.  Encapsulating node  . . . . . . . . . . . . . . . . . . .  13
-       5.1.1.  Nonce requirements  . . . . . . . . . . . . . . . . .  13
+       5.1.1.  Nonce requirements  . . . . . . . . . . . . . . . . .  14
        5.1.2.  Selection of header fields  . . . . . . . . . . . . .  14
-     5.2.  Transit node  . . . . . . . . . . . . . . . . . . . . . .  15
+     5.2.  Transit node  . . . . . . . . . . . . . . . . . . . . . .  16
      5.3.  Decapsulating node  . . . . . . . . . . . . . . . . . . .  16
-     5.4.  Validator . . . . . . . . . . . . . . . . . . . . . . . .  16
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  17
-     6.1.  IOAM Option-Types . . . . . . . . . . . . . . . . . . . .  17
+     5.4.  Validator . . . . . . . . . . . . . . . . . . . . . . . .  17
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
+     6.1.  IOAM Option-Types . . . . . . . . . . . . . . . . . . . .  18
      6.2.  IOAM Integrity Protection Method Suite  . . . . . . . . .  18
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  18
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  19
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  20
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  20
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  20
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  20
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .  21
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 
 
@@ -706,22 +706,22 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
 
    The Integrity Check Value (ICV) is the result of a GMAC operation
    over a selection of header fields (see Section 5.1.2) and immutable
-   IOAM-Data-Fields added by the encapsulating node.  With the nonce
+   IOAM-Data-Fields added by the encapsulating node.  In the case of
+   pre-allocated IOAM-Data-Fields, only those updated by the
+   encapsulating node are part of the GMAC operation.  With the nonce
    provided to GMAC, the encapsulating node performs the following
    operation:
 
-   *  AAD = (header fields || node's immutable IOAM-Data-Fields)
+   *  AAD = (header fields || node's IOAM-Data-Fields)
 
    *  ICV = GMAC(AAD)
 
    The encapsulating node stores the ICV in the corresponding field of
    the IOAM Integrity Protection header.
 
-5.1.1.  Nonce requirements
 
-   The size of the nonce MUST be 12 octets.  The nonce MUST be based on
-   the "Deterministic Construction" ([NIST.800-38D], Sec. 8), as
-   follows:
+
+
 
 
 
@@ -729,6 +729,12 @@ Brockners, et al.        Expires 2 February 2025               [Page 13]
 
 Internet-Draft         IOAM-Data-Fields Integrity            August 2024
 
+
+5.1.1.  Nonce requirements
+
+   The size of the nonce MUST be 12 octets.  The nonce MUST be based on
+   the "Deterministic Construction" ([NIST.800-38D], Sec. 8), as
+   follows:
 
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -772,12 +778,6 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    participate (in that order) in the integrity protection of IOAM-Data-
    Fields:
 
-   1.  Namespace-ID
-
-   2.  IOAM-Trace-Type
-
-
-
 
 
 
@@ -785,6 +785,10 @@ Brockners, et al.        Expires 2 February 2025               [Page 14]
 
 Internet-Draft         IOAM-Data-Fields Integrity            August 2024
 
+
+   1.  Namespace-ID
+
+   2.  IOAM-Trace-Type
 
    The NodeLen field is not included in the list because it can be
    deduced from the IOAM-Trace-Type field.  Other header fields that are
@@ -825,14 +829,10 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
       included in the list.  Once specified, the list MUST NOT change
       for interoperability reasons.
 
-5.2.  Transit node
 
-   For a transit node, the Integrity Check Value (ICV) is the result of
-   a GMAC operation over the received ICV field and immutable IOAM-Data-
-   Fields added by the transit node.  With the received Nonce field
-   provided to GMAC, the transit node performs the following operation:
 
-   *  AAD = (ICV field || node's immutable IOAM-Data-Fields)
+
+
 
 
 
@@ -842,10 +842,28 @@ Brockners, et al.        Expires 2 February 2025               [Page 15]
 Internet-Draft         IOAM-Data-Fields Integrity            August 2024
 
 
+5.2.  Transit node
+
+   For a transit node, the Integrity Check Value (ICV) is the result of
+   a GMAC operation over the received ICV field and immutable IOAM-Data-
+   Fields added by the transit node.  In the case of IOAM-Data-Fields
+   pre-allocated by the encapsulating node, only those updated by the
+   transit node are part of the GMAC operation.  With the received Nonce
+   field provided to GMAC, the transit node performs the following
+   operation:
+
+   *  AAD = (ICV field || node's IOAM-Data-Fields)
+
    *  ICV = GMAC(AAD)
 
    The transit node updates the ICV field in the IOAM Integrity
    Protection header.
+
+   If the transit node does not add any immutable IOAM-Data-Fields
+   (e.g., it only modifies mutable IOAM-Data-Fields or does nothing),
+   and if the transit node does not update any IOAM-Data-Fields pre-
+   allocated by the encapsulating node, then the transit node MUST NOT
+   update the ICV field in the IOAM Integrity Protection header.
 
    A transit node MUST NOT add or remove the IOAM Integrity Protection
    header.  Also, a transit node MUST NOT modify the Method-ID field,
@@ -866,12 +884,28 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    ICV field in the IOAM Integrity Protection header.  The Integrity
    Check Value (ICV) is the result of a GMAC operation over the received
    ICV field and immutable IOAM-Data-Fields added by the decapsulating
-   node.  With the received Nonce field provided to GMAC, the
-   decapsulating node performs the following operation:
+   node.  In the case of IOAM-Data-Fields pre-allocated by the
+   encapsulating node, only those updated by the decapsulating node are
+   part of the GMAC operation.  With the received Nonce field provided
+   to GMAC, the decapsulating node performs the following operation:
 
-   *  AAD = (ICV field || node's immutable IOAM-Data-Fields)
+   *  AAD = (ICV field || node's IOAM-Data-Fields)
+
+
+
+Brockners, et al.        Expires 2 February 2025               [Page 16]
+
+Internet-Draft         IOAM-Data-Fields Integrity            August 2024
+
 
    *  ICV = GMAC(AAD)
+
+   If the decapsulating node does not add any immutable IOAM-Data-Fields
+   (e.g., it only modifies mutable IOAM-Data-Fields or does nothing),
+   and if the decapsulating node does not update any IOAM-Data-Fields
+   pre-allocated by the encapsulating node, then the decapsulating node
+   MUST NOT update the ICV field in the IOAM Integrity Protection
+   header.
 
    The decapsulating node MUST NOT add the IOAM Integrity Protection
    header.  Also, the decapsulating node MUST NOT modify the Method-ID
@@ -889,14 +923,6 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    IOAM nodes need to be trusted.  The Validator is the only point of
    trust, meaning the method is considered a full integrity protection
    of IOAM-Data-Fields.
-
-
-
-
-Brockners, et al.        Expires 2 February 2025               [Page 16]
-
-Internet-Draft         IOAM-Data-Fields Integrity            August 2024
-
 
    The Validator MUST recompute the ICV by iteratively following the
    previous steps of the method in the same order, using the respective
@@ -917,8 +943,16 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
 
    The Validator MUST NOT update the ICV field in the IOAM Integrity
    Protection header.  Since its role is to validate the integrity of
-   IOAM-Data-Fields, it trusts itself whether it adds IOAM-Data-Fields
-   or not.
+   IOAM-Data-Fields, it MUST trust itself.
+
+
+
+
+
+Brockners, et al.        Expires 2 February 2025               [Page 17]
+
+Internet-Draft         IOAM-Data-Fields Integrity            August 2024
+
 
 6.  IANA Considerations
 
@@ -945,15 +979,6 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    participate in the integrity protection of IOAM-Data-Fields.  See
    Section 5.1.2 as an example.
 
-
-
-
-
-Brockners, et al.        Expires 2 February 2025               [Page 17]
-
-Internet-Draft         IOAM-Data-Fields Integrity            August 2024
-
-
 6.2.  IOAM Integrity Protection Method Suite
 
    IANA is requested to define a new registry named "IOAM Integrity
@@ -976,6 +1001,14 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    +------+-------------------------------------+---------------+
    | 0xFF | Reserved                            | This document |
    +------+-------------------------------------+---------------+
+
+
+
+
+Brockners, et al.        Expires 2 February 2025               [Page 18]
+
+Internet-Draft         IOAM-Data-Fields Integrity            August 2024
+
 
               Figure 4: IOAM Integrity Protection Method Suite
 
@@ -1002,14 +1035,6 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    Inappropriate use of this Integrity Protection Method might overload
    nodes and cause them to stop functioning properly.  Operators
    deploying IOAM with this Integrity Protection Method MUST ensure that
-
-
-
-Brockners, et al.        Expires 2 February 2025               [Page 18]
-
-Internet-Draft         IOAM-Data-Fields Integrity            August 2024
-
-
    such overload situations are avoided.  This could for example be
    achieved by applying IOAM only to a subset of the entire traffic,
    keeping in mind that only that IOAM subset would be integrity
@@ -1034,6 +1059,13 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    protection is enabled.  Implementation details are outside the scope
    of this document.
 
+
+
+Brockners, et al.        Expires 2 February 2025               [Page 19]
+
+Internet-Draft         IOAM-Data-Fields Integrity            August 2024
+
+
    To ensure the integrity protection of IOAM-Data-Fields, the Integrity
    Protection Method defined in this document uses AES-GMAC ([AES]
    [NIST.800-38D]).  In that context, a generated key MUST be fresh.
@@ -1055,16 +1087,6 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    of time, which is outside the scope of this document.  However, a
    suggestion would be to put a 64-bit timestamp in the Invocation field
    of the nonce (see Section 5.1.1).
-
-
-
-
-
-
-Brockners, et al.        Expires 2 February 2025               [Page 19]
-
-Internet-Draft         IOAM-Data-Fields Integrity            August 2024
-
 
    The Integrity Protection Method defined in this document is intended
    for Intra-IOAM-Domain use cases (i.e., no confidentiality, integrity
@@ -1091,6 +1113,15 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
               RFC 8126, DOI 10.17487/RFC8126, June 2017,
               <https://www.rfc-editor.org/info/rfc8126>.
 
+
+
+
+
+Brockners, et al.        Expires 2 February 2025               [Page 20]
+
+Internet-Draft         IOAM-Data-Fields Integrity            August 2024
+
+
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -1109,18 +1140,6 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
               Publication 800-38D, 2001,
               <http://csrc.nist.gov/publications/nistpubs/800-38D/SP-
               800-38D.pdf>.
-
-
-
-
-
-
-
-
-Brockners, et al.        Expires 2 February 2025               [Page 20]
-
-Internet-Draft         IOAM-Data-Fields Integrity            August 2024
-
 
    [RFC7276]  Mizrahi, T., Sprecher, N., Bellagamba, E., and Y.
               Weingarten, "An Overview of Operations, Administration,
@@ -1152,6 +1171,13 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
               DOI 10.17487/RFC9326, November 2022,
               <https://www.rfc-editor.org/info/rfc9326>.
 
+
+
+Brockners, et al.        Expires 2 February 2025               [Page 21]
+
+Internet-Draft         IOAM-Data-Fields Integrity            August 2024
+
+
 Authors' Addresses
 
    Frank Brockners
@@ -1170,14 +1196,6 @@ Authors' Addresses
    Email: shwetha.bhandari@thoughtspot.com
 
 
-
-
-
-Brockners, et al.        Expires 2 February 2025               [Page 21]
-
-Internet-Draft         IOAM-Data-Fields Integrity            August 2024
-
-
    Tal Mizrahi
    Huawei
    8-2 Matam
@@ -1192,24 +1210,6 @@ Internet-Draft         IOAM-Data-Fields Integrity            August 2024
    4000 Sart-Tilman
    Belgium
    Email: justin.iurman@uliege.be
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

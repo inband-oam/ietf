@@ -682,10 +682,12 @@
         <t>The Integrity Check Value (ICV) is the result of a GMAC operation
         over a selection of header fields (see
         <xref target="SelectHdrFields"/>) and immutable IOAM-Data-Fields added
-        by the encapsulating node. With the nonce provided to
-        GMAC, the encapsulating node performs the following operation:
+        by the encapsulating node. In the case of pre-allocated
+        IOAM-Data-Fields, only those updated by the encapsulating node are part
+        of the GMAC operation. With the nonce provided to GMAC, the
+        encapsulating node performs the following operation:
           <list style="bullets">
-            <t>AAD = (header fields || node's immutable IOAM-Data-Fields)</t>
+            <t>AAD = (header fields || node's IOAM-Data-Fields)</t>
             <t>ICV = GMAC(AAD)</t>
           </list>
         </t>
@@ -800,11 +802,13 @@
       <section anchor="IPM-Transit" title="Transit node">
         <t>For a transit node, the Integrity Check Value (ICV) is the result of
         a GMAC operation over the received ICV field and immutable
-        IOAM-Data-Fields added by the transit node. With the
+        IOAM-Data-Fields added by the transit node. In the case of
+        IOAM-Data-Fields pre-allocated by the encapsulating node, only those
+        updated by the transit node are part of the GMAC operation. With the
         received Nonce field provided to GMAC, the transit node performs the
         following operation:
           <list style="bullets">
-            <t>AAD = (ICV field || node's immutable IOAM-Data-Fields)</t>
+            <t>AAD = (ICV field || node's IOAM-Data-Fields)</t>
             <t>ICV = GMAC(AAD)</t>
           </list>
         </t>
@@ -812,10 +816,11 @@
         <t>The transit node updates the ICV field in the IOAM Integrity
         Protection header.</t>
 
-        <!--<t>If the transit node does not add any IOAM-Data-Fields (e.g., it
-        only modifies mutable IOAM-Data-Fields or does nothing), then the
-        transit node MUST NOT update the ICV field in the IOAM Integrity
-        Protection header.</t>-->
+        <t>If the transit node does not add any immutable IOAM-Data-Fields
+        (e.g., it only modifies mutable IOAM-Data-Fields or does nothing), and
+        if the transit node does not update any IOAM-Data-Fields pre-allocated
+        by the encapsulating node, then the transit node MUST NOT update the ICV
+        field in the IOAM Integrity Protection header.</t>
 
         <t>A transit node MUST NOT add or remove the IOAM Integrity Protection
         header. Also, a transit node MUST NOT modify the Method-ID field, the
@@ -835,19 +840,22 @@
         this document. Before that, the decapsulating node updates the ICV field
         in the IOAM Integrity Protection header. The Integrity Check Value (ICV)
         is the result of a GMAC operation over the received ICV field and
-        immutable IOAM-Data-Fields added by the decapsulating node. With the
-        received Nonce field provided to GMAC, the decapsulating node performs
-        the following operation:
+        immutable IOAM-Data-Fields added by the decapsulating node. In the case
+        of IOAM-Data-Fields pre-allocated by the encapsulating node, only those
+        updated by the decapsulating node are part of the GMAC operation. With
+        the received Nonce field provided to GMAC, the decapsulating node
+        performs the following operation:
           <list style="bullets">
-            <t>AAD = (ICV field || node's immutable IOAM-Data-Fields)</t>
+            <t>AAD = (ICV field || node's IOAM-Data-Fields)</t>
             <t>ICV = GMAC(AAD)</t>
           </list>
         </t>
 
-        <!--<t>If the decapsulating node does not add any IOAM-Data-Fields (e.g., it
-        only modifies mutable IOAM-Data-Fields or does nothing), then the
-        decapsulating node MUST NOT update the ICV field in the IOAM Integrity
-        Protection header.</t>-->
+        <t>If the decapsulating node does not add any immutable IOAM-Data-Fields
+        (e.g., it only modifies mutable IOAM-Data-Fields or does nothing), and
+        if the decapsulating node does not update any IOAM-Data-Fields
+        pre-allocated by the encapsulating node, then the decapsulating node
+        MUST NOT update the ICV field in the IOAM Integrity Protection header.</t>
 
         <t>The decapsulating node MUST NOT add the IOAM Integrity Protection
         header. Also, the decapsulating node MUST NOT modify the Method-ID
@@ -885,8 +893,7 @@
 
         <t>The Validator MUST NOT update the ICV field in the IOAM Integrity
         Protection header. Since its role is to validate the integrity of
-        IOAM-Data-Fields, it trusts itself whether it adds IOAM-Data-Fields or
-        not.</t>
+        IOAM-Data-Fields, it MUST trust itself.</t>
       </section>
     </section>
 
