@@ -56,8 +56,8 @@
     <!-- The abbreviated title is used in the page header - it is only necessary if the 
          full title is longer than 39 characters -->
 
-    <title abbrev="IOAM-Data-Fields Integrity">Integrity of In-situ OAM Data
-    Fields</title>
+    <title abbrev="IOAM-Data-Fields Integrity Protection">Integrity Protection
+    of In-situ OAM Data Fields</title>
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
@@ -121,7 +121,7 @@
     </author>
 
     <author fullname="Justin Iurman" initials="J." surname="Iurman">
-      <organization abbrev="">Universite de Liege</organization>
+      <organization abbrev="">University of Liege</organization>
 
       <address>
         <postal>
@@ -138,7 +138,7 @@
       </address>
     </author>
 
-    <date day="01" month="August" year="2024"/>
+    <date day="06" month="August" year="2024"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -664,7 +664,8 @@
       plaintext and an Authentication Tag. GMAC is the special case of GCM in
       which the plaintext has a length of zero. Therefore, the empty ciphertext
       output is ignored, and the only output is the Authentication Tag.
-      GMAC supports all AES key sizes (128, 192, 256 bits).</t>
+      Although GMAC supports all AES key sizes (128, 192, 256 bits), it is
+      always RECOMMENDED to use the longest key size when possible.</t>
 
       <t>In this method, the GMAC Authentication Tag MUST NOT be truncated,
       meaning its size MUST always be 16 octets (i.e., a full Authentication
@@ -673,18 +674,20 @@
       GMAC Authentication Tag as the Integrity Check Value (ICV).</t>
 
       <section anchor="IPM-Encap" title="Encapsulating node">
-        <t>The encapsulating node generates a nonce based on some mandatory
-        requirements (see <xref target="NonceRequirements"/>) and stores it in
-        the Nonce field of the IOAM Integrity Protection header (the Nonce
+        <t>The encapsulating node generates a nonce based on mandatory
+        requirements defined in <xref target="NonceRequirements"/> and stores it
+        in the Nonce field of the IOAM Integrity Protection header (the Nonce
         Length field is set accordingly). The Method-ID field MUST be set to 1,
         as defined in <xref target="IOAM-IP-registry"/>.</t>
 
         <t>The Integrity Check Value (ICV) is the result of a GMAC operation
         over a selection of header fields (see
         <xref target="SelectHdrFields"/>) and immutable IOAM-Data-Fields added
-        by the encapsulating node. In the case of pre-allocated
-        IOAM-Data-Fields, only those updated by the encapsulating node are part
-        of the GMAC operation. With the nonce provided to GMAC, the
+        by the encapsulating node. In the case the Pre-allocated Trace Integrity
+        Protected Option-Type is used, the encapsulating node includes the
+        IOAM-Data-Fields that correspond to itself, i.e., "node data list [n]"
+        (see <xref target="RFC9197"/>), into the GMAC operation.
+        With the nonce provided to GMAC, the
         encapsulating node performs the following operation:
           <list style="bullets">
             <t>AAD = (header fields || node's IOAM-Data-Fields)</t>
@@ -729,7 +732,7 @@
 
               <t>The Invocation field identifies the sets of inputs (i.e.,
               packets) to the authenticated encryption function in that
-              encapsulating node, and MUST be unique for each packet. It
+              encapsulating node and MUST be unique for each packet. It
               typically is either an integer counter or a linear feedback shift
               register that is driven by a primitive polynomial to ensure a
               maximal cycle length. In either case, the Invocation field
@@ -802,11 +805,12 @@
       <section anchor="IPM-Transit" title="Transit node">
         <t>For a transit node, the Integrity Check Value (ICV) is the result of
         a GMAC operation over the received ICV field and immutable
-        IOAM-Data-Fields added by the transit node. In the case of
-        IOAM-Data-Fields pre-allocated by the encapsulating node, only those
-        updated by the transit node are part of the GMAC operation. With the
-        received Nonce field provided to GMAC, the transit node performs the
-        following operation:
+        IOAM-Data-Fields added by the transit node. In the case the
+        Pre-allocated Trace Integrity Protected Option-Type is used, a transit
+        node includes the IOAM-Data-Fields that correspond to itself (the ones
+        it updated), i.e., "node data list [i]" (see <xref target="RFC9197"/>),
+        into the GMAC operation. With the received Nonce field provided to GMAC,
+        the transit node performs the following operation:
           <list style="bullets">
             <t>AAD = (ICV field || node's IOAM-Data-Fields)</t>
             <t>ICV = GMAC(AAD)</t>
@@ -818,9 +822,10 @@
 
         <t>If the transit node does not add any immutable IOAM-Data-Fields
         (e.g., it only modifies mutable IOAM-Data-Fields or does nothing), and
-        if the transit node does not update any IOAM-Data-Fields pre-allocated
-        by the encapsulating node, then the transit node MUST NOT update the ICV
-        field in the IOAM Integrity Protection header.</t>
+        if the transit node, in case the Pre-allocated Trace Integrity Protected
+        Option-Type is used, does not update the "node data list" array, then
+        the transit node MUST NOT update the ICV field in the IOAM Integrity
+        Protection header.</t>
 
         <t>A transit node MUST NOT add or remove the IOAM Integrity Protection
         header. Also, a transit node MUST NOT modify the Method-ID field, the
@@ -841,10 +846,12 @@
         in the IOAM Integrity Protection header. The Integrity Check Value (ICV)
         is the result of a GMAC operation over the received ICV field and
         immutable IOAM-Data-Fields added by the decapsulating node. In the case
-        of IOAM-Data-Fields pre-allocated by the encapsulating node, only those
-        updated by the decapsulating node are part of the GMAC operation. With
-        the received Nonce field provided to GMAC, the decapsulating node
-        performs the following operation:
+        the Pre-allocated Trace Integrity Protected Option-Type is used, the
+        decapsulating node includes the IOAM-Data-Fields that correspond to
+        itself (the ones it updated), i.e., "node data list [i]" (see
+        <xref target="RFC9197"/>), into the GMAC operation. With the received
+        Nonce field provided to GMAC, the decapsulating node performs the
+        following operation:
           <list style="bullets">
             <t>AAD = (ICV field || node's IOAM-Data-Fields)</t>
             <t>ICV = GMAC(AAD)</t>
@@ -853,9 +860,10 @@
 
         <t>If the decapsulating node does not add any immutable IOAM-Data-Fields
         (e.g., it only modifies mutable IOAM-Data-Fields or does nothing), and
-        if the decapsulating node does not update any IOAM-Data-Fields
-        pre-allocated by the encapsulating node, then the decapsulating node
-        MUST NOT update the ICV field in the IOAM Integrity Protection header.</t>
+        if the decapsulating node, in case the Pre-allocated Trace Integrity
+        Protected Option-Type is used, does not update the "node data list"
+        array, then the decapsulating node MUST NOT update the ICV field in the
+        IOAM Integrity Protection header.</t>
 
         <t>The decapsulating node MUST NOT add the IOAM Integrity Protection
         header. Also, the decapsulating node MUST NOT modify the Method-ID
@@ -978,22 +986,17 @@
       would be integrity protected. When enabled, the integrity protection MUST
       be applied to the entire IOAM set, not a subset.</t>
 
-      <t>A compromised IOAM transit node could reinitialize both the Nonce and
-      ICV fields in the Integrity Protection header, in order to pretend to be
-      an encapsulating node and fool the Validator. Therefore, the compromised
-      node could modify IOAM-Data-Fields and cause the integrity validation
-      to succeed. To avoid such a situation, the Validator MUST know all
-      encapsulating nodes currently allowed, and so for each IOAM Namespace-ID,
-      thanks to, e.g., a list of encapsulating node identifiers. Implementation
-      details are outside the scope of this document.</t>
-
-      <t>A compromised IOAM transit node could remove the Integrity Protection
-      header and replace the IOAM Option-Type value with an equivalent one
-      that has no integrity protection, in order to be able to modify
-      IOAM-Data-Fields and bypass the Validator. To avoid such a situation, the
-      Validator MUST know all IOAM Namespace-IDs on which the integrity
-      protection is enabled. Implementation details are outside the scope of
-      this document.</t>
+      <t>A compromised transit node could remove the Integrity Protection header
+      and replace the IOAM Option-Type value with an equivalent one that has no
+      integrity protection, in order to be able to modify IOAM-Data-Fields and
+      bypass the Validator. Also, a compromised IOAM transit node could
+      reinitialize both the Nonce and ICV fields in the Integrity Protection
+      header, in order to pretend to be an encapsulating node and fool the
+      Validator. To avoid such situations, the Validator MUST know all IOAM
+      Namespace-IDs for which the integrity protection is enabled. And, for each
+      of those Namespace-IDs, the Validator MUST know the IOAM nodes playing the
+      role of encapsulating nodes. Implementation details are outside the scope
+      of this document.</t>
 
       <t>To ensure the integrity protection of IOAM-Data-Fields, the Integrity
       Protection Method defined in this document uses AES-GMAC
