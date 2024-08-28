@@ -41,7 +41,7 @@
 <?rfc subcompact="no" ?>
 <!-- keep one blank line between list items -->
 <!-- end of list of popular I-D processing instructions -->
-<rfc category="std" docName="draft-ietf-ippm-ioam-data-integrity-11"
+<rfc category="std" docName="draft-ietf-ippm-ioam-data-integrity-12"
      ipr="trust200902" submissionType="IETF" consensus="true">
   <!-- ipr="full3978"-->
 
@@ -57,7 +57,8 @@
          full title is longer than 39 characters -->
 
     <title abbrev="IOAM-Data-Fields Integrity Protection">Integrity Protection
-    of In-situ OAM Data Fields</title>
+    of In Situ Operations, Administration, and Maintenance (IOAM) Data
+    Fields</title>
 
     <!-- add 'role="editor"' below for the editors if appropriate -->
 
@@ -138,7 +139,7 @@
       </address>
     </author>
 
-    <date day="19" month="August" year="2024"/>
+    <date day="28" month="August" year="2024"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -158,9 +159,12 @@
 	 If this element is not present, the default is "Network Working Group",
          which is used by the RFC Editor as a nod to the history of the IETF. -->
 
-    <keyword>in-situ</keyword>
-
-    <keyword>Telemetry, Tracing</keyword>
+    <keyword>OAM</keyword>
+    <keyword>In Situ</keyword>
+    <keyword>IOAM</keyword>
+    <keyword>Integrity</keyword>
+    <keyword>Telemetry</keyword>
+    <keyword>Tracing</keyword>
 
     <!-- Keywords will be incorporated into HTML output
          files in a meta tag but they have no effect on text or nroff
@@ -168,7 +172,7 @@
          keywords will be used for the search engine. -->
 
     <abstract>
-      <t>In-situ Operations, Administration, and Maintenance (IOAM) records 
+      <t>In Situ Operations, Administration, and Maintenance (IOAM) records
       operational and telemetry information in the packet while the packet
       traverses a path in the network. IETF protocols require features that
       can provide secure operation. This document describes the integrity
@@ -178,14 +182,14 @@
 
   <middle>
     <section title="Introduction" toc="default">
-      <t>"In-situ" Operations, Administration, and Maintenance (IOAM) records 
+      <t>In Situ Operations, Administration, and Maintenance (IOAM) records
       OAM information within the packet while the packet traverses a
-      particular network domain. The term "in-situ" refers to the fact that
+      particular network domain. The term "In Situ" refers to the fact that
       the OAM data is added to the data packets rather than being sent
       within packets specifically dedicated to OAM. IOAM is to complement
       mechanisms such as Ping or Traceroute.
-      In terms of "active" or "passive" OAM, "in-situ" OAM can be considered a
-      hybrid OAM type. "In-situ" mechanisms do not require extra packets to be
+      In terms of "active" or "passive" OAM, In Situ OAM can be considered a
+      hybrid OAM type. In Situ mechanisms do not require extra packets to be
       sent. IOAM adds information to the already available data packets and
       therefore cannot be considered passive. In terms of the classification
       given in <xref target="RFC7799"/>, IOAM could be portrayed as Hybrid Type
@@ -260,7 +264,7 @@
       <t><list hangIndent="11" style="hanging">
           <t hangText="OAM:">Operations, Administration, and Maintenance</t>
 
-          <t hangText="IOAM:">In-situ OAM</t>
+          <t hangText="IOAM:">In Situ OAM</t>
 
           <t hangText="POT:">Proof of Transit</t>
 
@@ -481,24 +485,24 @@
     defined in <xref target="RFC9197"/> are extended as follows:</t>
 
         <t><list style="hanging">
-            <t>IOAM Pre-allocated Trace Integrity Protected
+            <t>IOAM Integrity Protected Pre-allocated Trace
             Option-Type: corresponds to the IOAM Pre-allocated Trace Option-Type
             (<xref target="RFC9197"/>) with integrity protection.</t>
 
-            <t>IOAM Incremental Trace Integrity Protected
+            <t>IOAM Integrity Protected Incremental Trace
             Option-Type: corresponds to the IOAM Incremental Trace Option-Type
             (<xref target="RFC9197"/>) with integrity protection.</t>
 
-            <t>IOAM POT Integrity Protected Option-Type:
+            <t>IOAM Integrity Protected POT Option-Type:
             corresponds to the IOAM POT Option-Type (<xref target="RFC9197"/>)
             with integrity protection.</t>
 
-            <t>IOAM E2E Integrity Protected Option-Type:
+            <t>IOAM Integrity Protected E2E Option-Type:
             corresponds to the IOAM E2E Option-Type (<xref target="RFC9197"/>)
             with integrity protection.</t>
           </list></t>
 
-      <t>The Direct Exporting (DEX) Option-Type <xref target="RFC9326"/> is not
+      <t>The Direct Export (DEX) Option-Type <xref target="RFC9326"/> is not
       covered by the Integrity Protection Method defined in this document (see
       <xref target="IPM"/>). This document focuses on the integrity
       protection of IOAM-Data-Fields, while DEX does not have IOAM-Data-Fields
@@ -554,13 +558,13 @@
       <t>In order to keep IOAM-Data-Fields aligned, the total length of the IOAM
       Integrity Protection header MUST be a multiple of 4 octets.</t>
 
-      <section title="Trace Integrity Protected Option-Types">
+      <section title="Integrity Protected Trace Option-Types">
         <t>Both the IOAM Pre-allocated Trace Option-Type header and the IOAM
         Incremental Trace Option-Type header, as defined in <xref
         target="RFC9197"/>, are followed by the IOAM Integrity
         Protection header when the IOAM Option-Type is respectively set to
-        the IOAM Pre-allocated Trace Integrity Protected Option-Type or the IOAM
-        Incremental Trace Integrity Protected Option-Type:
+        the IOAM Integrity Protected Pre-allocated Trace Option-Type or the IOAM
+        Integrity Protected Incremental Trace Option-Type:
         <figure>
           <artwork>
  0                   1                   2                   3
@@ -588,11 +592,11 @@
         </figure></t>
       </section>
 
-      <section title="POT Integrity Protected Option-Type">
+      <section title="Integrity Protected POT Option-Type">
         <t>The IOAM POT Option-Type header, as defined in <xref
         target="RFC9197"/>, is followed by the IOAM Integrity
-        Protection header when the IOAM Option-Type is set to the IOAM POT
-        Integrity Protected Option-Type:
+        Protection header when the IOAM Option-Type is set to the IOAM
+        Integrity Protected POT Option-Type:
         <figure>
           <artwork>
  0                   1                   2                   3
@@ -618,11 +622,11 @@
         </figure></t>
       </section>
 
-      <section title="E2E Integrity Protected Option-Type">
+      <section title="Integrity Protected E2E Option-Type">
         <t>The IOAM E2E Option-Type header, as defined in <xref
         target="RFC9197"/>, is followed by the IOAM Integrity
-        Protection header when the IOAM Option-Type is set to the IOAM E2E
-        Integrity Protected Option-Type:
+        Protection header when the IOAM Option-Type is set to the IOAM
+        Integrity Protected E2E Option-Type:
         <figure>
           <artwork>
  0                   1                   2                   3
@@ -681,8 +685,8 @@
         <t>The Integrity Check Value (ICV) is the result of a GMAC operation
         over a selection of header fields (see
         <xref target="SelectHdrFields"/>) and immutable IOAM-Data-Fields added
-        by the encapsulating node. In the case the Pre-allocated Trace Integrity
-        Protected Option-Type is used, the encapsulating node includes the
+        by the encapsulating node. In the case the Integrity Protected Pre-allocated
+        Trace Option-Type is used, the encapsulating node includes the
         IOAM-Data-Fields that correspond to itself, i.e., "node data list [n]"
         (see <xref target="RFC9197"/>), into the GMAC operation.
         With the nonce provided to GMAC, the
@@ -804,7 +808,7 @@
         <t>For a transit node, the Integrity Check Value (ICV) is the result of
         a GMAC operation over the received ICV field and immutable
         IOAM-Data-Fields added by the transit node. In the case the
-        Pre-allocated Trace Integrity Protected Option-Type is used, a transit
+        Integrity Protected Pre-allocated Trace Option-Type is used, a transit
         node includes the IOAM-Data-Fields that correspond to itself (the ones
         it updated), i.e., "node data list [i]" (see <xref target="RFC9197"/>),
         into the GMAC operation. With the received Nonce field provided to GMAC,
@@ -820,7 +824,7 @@
 
         <t>If the transit node does not add any immutable IOAM-Data-Fields
         (e.g., it only modifies mutable IOAM-Data-Fields or does nothing), and
-        if the transit node, in case the Pre-allocated Trace Integrity Protected
+        if the transit node, in case the Integrity Protected Pre-allocated Trace
         Option-Type is used, does not update the "node data list" array, then
         the transit node MUST NOT update the ICV field in the IOAM Integrity
         Protection header.</t>
@@ -844,7 +848,7 @@
         in the IOAM Integrity Protection header. The Integrity Check Value (ICV)
         is the result of a GMAC operation over the received ICV field and
         immutable IOAM-Data-Fields added by the decapsulating node. In the case
-        the Pre-allocated Trace Integrity Protected Option-Type is used, the
+        the Integrity Protected Pre-allocated Trace Option-Type is used, the
         decapsulating node includes the IOAM-Data-Fields that correspond to
         itself (the ones it updated), i.e., "node data list [i]" (see
         <xref target="RFC9197"/>), into the GMAC operation. With the received
@@ -858,8 +862,8 @@
 
         <t>If the decapsulating node does not add any immutable IOAM-Data-Fields
         (e.g., it only modifies mutable IOAM-Data-Fields or does nothing), and
-        if the decapsulating node, in case the Pre-allocated Trace Integrity
-        Protected Option-Type is used, does not update the "node data list"
+        if the decapsulating node, in case the Integrity Protected Pre-allocated
+        Trace Option-Type is used, does not update the "node data list"
         array, then the decapsulating node MUST NOT update the ICV field in the
         IOAM Integrity Protection header.</t>
 
@@ -910,16 +914,16 @@
         "IOAM Option-Type" registry:</t>
 
         <t><list style="hanging">
-            <t hangText="64">(suggested) IOAM Pre-allocated Trace Integrity
-            Protected Option-Type (see <xref target="NewIOAMOptTypes"/>)</t>
+            <t hangText="64">(suggested) IOAM Integrity Protected Pre-allocated
+            Trace Option-Type (see <xref target="NewIOAMOptTypes"/>)</t>
 
-            <t hangText="65">(suggested) IOAM Incremental Trace Integrity
-            Protected Option-Type (see <xref target="NewIOAMOptTypes"/>)</t>
+            <t hangText="65">(suggested) IOAM Integrity Protected Incremental
+            Trace Option-Type (see <xref target="NewIOAMOptTypes"/>)</t>
 
-            <t hangText="66">(suggested) IOAM POT Integrity Protected
+            <t hangText="66">(suggested) IOAM Integrity Protected POT
             Option-Type (see <xref target="NewIOAMOptTypes"/>)</t>
 
-            <t hangText="67">(suggested) IOAM E2E Integrity Protected
+            <t hangText="67">(suggested) IOAM Integrity Protected E2E
             Option-Type (see <xref target="NewIOAMOptTypes"/>)</t>
         </list></t>
 
