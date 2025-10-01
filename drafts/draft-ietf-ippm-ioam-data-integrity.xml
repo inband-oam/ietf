@@ -138,7 +138,7 @@
       </address>
     </author>
 
-    <date day="29" month="September" year="2025"/>
+    <date day="01" month="October" year="2025"/>
 
     <!-- If the month and year are both specified and are the current ones, xml2rfc will fill 
          in the current day for you. If only the current year is specified, xml2rfc will fill 
@@ -292,7 +292,7 @@
       position that allows interception, modification, or dropping of in-flight
       protocol packets, whereas off-path attackers can only attack by generating
       protocol packets. Since IOAM operates within IOAM-Domains, this reduces
-      potential attack vectors and SHOULD naturally mitigates off-path
+      potential attack vectors and SHOULD naturally mitigate off-path
       threats.</t>
 
       <t>The analysis also includes the impact of each of the threats.
@@ -763,10 +763,13 @@
         authentication tag, it is extremely important to have high confidence in
         nonce non-reuse.</t>
 
-        <t>For this method, the size of the nonce MUST always be 12 octets. A
-        nonce MUST NOT be reused with the same key. The nonce is based on the
-        "Deterministic Construction" <xref target="NIST.800-38D"/> and has the
-        following format:
+        <t>For this method, the size of the nonce MUST always be 12 octets. If a
+        node receives a Nonce Length value other than 12, it MUST NOT change the
+        contents of the Integrity Protection header and MUST NOT change the
+        contents of the IOAM-Data-Fields. In other words, the node MUST NOT
+        process the IOAM Option-Type. A nonce MUST NOT be reused with the same
+        key. The nonce is based on the "Deterministic Construction"
+        <xref target="NIST.800-38D"/> and has the following format:
 
           <figure title="Structure of the Nonce field (12 octets)">
             <artwork>
@@ -1154,7 +1157,7 @@
       integrity protected IOAM-Data-Fields produced by other nodes without being
       detected by a Validator. In particular, a transit node is limited in what
       forgery can be made without detection because a Validator will validate
-      the encapuslating node's ICV as part of validating the final ICV, thus
+      the encapsulating node's ICV as part of validating the final ICV, thus
       modification to content protected by the encapsulating node would be
       detected at the time of validation.</t>
 
@@ -1231,7 +1234,7 @@
             <organization>National Institute of Standards and
             Technology</organization>
           </author>
-          <date year="2001"/>
+          <date year="2007"/>
         </front>
         <seriesInfo name="" value="NIST Special Publication 800-38D"/>
       </reference>
